@@ -145,6 +145,18 @@ class User
         return self::update($userId, ['force_password_change' => 0]);
     }
 
+    public static function updatePassword($email, $newPasswordHash)
+    {
+        $pdo = Database::getConnection();
+
+        try {
+            $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
+            return $stmt->execute([$newPasswordHash, $email]);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     // --- MÉTODOS DE CRIPTOGRAFIA (COM A CORREÇÃO FINAL) ---
 
     private static function getIvBinary()

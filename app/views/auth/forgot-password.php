@@ -6,22 +6,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
+            animation: pageFadeIn 0.4s ease-out both;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -29,7 +50,6 @@
 <body class="bg-[#0D1117] text-white">
 
     <div class="flex min-h-screen">
-        <!-- Seção da Imagem (Esquerda) -->
         <div class="hidden lg:flex w-1/2 bg-cover bg-center relative items-center justify-center" style="background-image: url('https://images.pexels.com/photos/3768916/pexels-photo-3768916.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');">
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10 text-center px-12 animate-fadeInUp">
@@ -39,7 +59,6 @@
             </div>
         </div>
 
-        <!-- Seção do Formulário (Direita) -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8">
             <div class="w-full max-w-md bg-[#161B22] p-8 rounded-2xl border border-gray-800 lg:border-none lg:bg-transparent lg:p-0 animate-fadeInUp" style="animation-delay: 200ms;">
                 <a href="index.html" class="lg:hidden mb-6 inline-block w-full text-center">
@@ -48,8 +67,19 @@
 
                 <h2 class="text-3xl font-bold text-center mb-2">Esqueceu sua senha?</h2>
                 <p class="text-gray-400 text-center mb-8">Sem problemas! Digite seu e-mail e enviaremos um link para você criar uma nova.</p>
-
-                <form action="#" method="POST" class="space-y-6">
+                <?php
+                if (isset($_GET['status']) && $_GET['status'] === 'sent') {
+                    echo '<div class="bg-green-500/20 border border-green-500 text-green-300 px-4 py-3 rounded-lg text-center mb-6 text-sm">'
+                        . 'Se um e-mail com este endereço existir, um link foi enviado.'
+                        . '</div>';
+                }
+                if (isset($_GET['error']) && $_GET['error'] === 'invalid_email') {
+                    echo '<div class="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg text-center mb-6 text-sm">'
+                        . 'Por favor, insira um e-mail válido.'
+                        . '</div>';
+                }
+                ?>
+                <form action="<?= BASE_URL ?>/forgot-password" method="POST" class="space-y-6">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
                         <div class="mt-1">
@@ -66,7 +96,7 @@
 
                 <p class="mt-8 text-center text-sm text-gray-400">
                     Lembrou da senha?
-                    <a href="http://localhost/colae/login" class="font-medium text-cyan-400 hover:text-cyan-300">Voltar para o Login</a>
+                    <a href="<?= BASE_URL ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300">Voltar para o Login</a>
                 </p>
             </div>
         </div>

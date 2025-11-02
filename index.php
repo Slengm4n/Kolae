@@ -1,7 +1,5 @@
 <?php
 
-// --- Importação dos Controllers ---
-// TODO O BLOCO DE 'use' DEVE VIR PRIMEIRO!
 use App\Core\Router;
 use App\Controllers\HomeController;
 use App\Controllers\AuthController;
@@ -15,7 +13,6 @@ use App\Controllers\SportApiController;
 use App\Controllers\GameApiController;
 
 
-// Inicia a sessão para toda a aplicação.
 session_start();
 
 // --- Constantes Globais ---
@@ -33,12 +30,11 @@ $host = $_SERVER['HTTP_HOST'];
 if ($host == 'localhost') {
     // --- AMBIENTE LOCAL (SEU PC) ---
     define('BASE_URL', 'http://localhost/colae');
-    define('BASE_DIR_URL', '/colae'); // <-- A NOVA CONSTANTE PARA O ROUTER
-
+    define('BASE_DIR_URL', '/colae');
 } else {
-    // --- AMBIENTE DE PRODUÇÃO (InfinityFree) ---
+    // --- AMBIENTE DE PRODUÇÃO ---
     define('BASE_URL', $protocol . '://' . $host);
-    define('BASE_DIR_URL', ''); // <-- A NOVA CONSTANTE PARA O ROUTER (vazio)
+    define('BASE_DIR_URL', '');
 }
 
 /* -------------------------------------- */
@@ -62,6 +58,10 @@ $router->post('/login/authenticate', [AuthController::class, 'authenticate']);
 $router->get('/register', [AuthController::class, 'register']);
 $router->post('/register/store', [AuthController::class, 'store']);
 $router->get('/logout', [AuthController::class, 'logout']);
+$router->get('/forgot-password', [AuthController::class, 'showForgotPasswordForm']);
+$router->post('/forgot-password', [AuthController::class, 'handleForgotPassword']);
+$router->get('/reset-password', [AuthController::class, 'showResetForm']);
+$router->post('/reset-password', [AuthController::class, 'handleResetPassword']);
 
 // --- ROTAS DO PAINEL DO UTILIZADOR ---
 $router->group('/dashboard', function ($router) {

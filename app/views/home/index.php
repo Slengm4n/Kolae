@@ -6,19 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -34,9 +26,9 @@
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            animation: pageFadeIn 0.4s ease-out both;
         }
 
-        /* Animação para o carrossel de parceiros */
         @keyframes scroll {
             0% {
                 transform: translateX(0);
@@ -51,18 +43,13 @@
             animation: scroll 30s linear infinite;
         }
 
-        /* Estilos para a paginação do Swiper */
         .swiper-pagination-bullet {
             background: #B0B0B0;
-            /* Cor secundária */
         }
 
         .swiper-pagination-bullet-active {
             background: #38BDF8;
-            /* Cor de destaque */
         }
-
-        /* ... (seus outros estilos como .animate-scroll, .swiper-pagination-bullet, etc. ficam aqui) ... */
 
         .vimeo-bg-cover {
             position: absolute;
@@ -70,14 +57,20 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: -2;
-
-            /* Mágica para forçar o "cover" (assumindo vídeo 16:9) */
             width: 100vw;
             height: 56.25vw;
-            /* 100 * (9/16) = 56.25 */
             min-height: 100vh;
             min-width: 177.78vh;
-            /* 100 * (16/9) = 177.78 */
+
+            @keyframes pageFadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
         }
     </style>
 </head>
@@ -127,7 +120,7 @@
             <div class="container mx-auto px-4 relative z-10">
                 <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold max-w-lg leading-tight mx-auto md:mx-0">Cole com quem ama esporte</h1>
                 <div class="flex flex-wrap gap-4 mt-8 justify-center md:justify-start">
-                    <li><a href="<?php echo BASE_URL;?>/login" class="py-3 px-8 rounded-full font-semibold transition-all duration-300 bg-white text-black border-2 border-white hover:bg-transparent hover:text-white">Comece de graça</a>
+                    <li><a href="<?php echo BASE_URL; ?>/login" class="py-3 px-8 rounded-full font-semibold transition-all duration-300 bg-white text-black border-2 border-white hover:bg-transparent hover:text-white">Comece de graça</a>
                 </div>
             </div>
         </section>

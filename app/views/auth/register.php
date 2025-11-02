@@ -6,22 +6,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
+
+            animation: pageFadeIn 0.4s ease-out both;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -29,7 +51,6 @@
 <body class="bg-[#0D1117] text-white">
 
     <div class="flex min-h-screen">
-        <!-- Seção da Imagem (Esquerda) -->
         <div class="hidden lg:flex w-1/2 bg-cover bg-center relative items-center justify-center" style="background-image: url('https://images.pexels.com/photos/1571658/pexels-photo-1571658.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');">
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10 text-center px-12 animate-fadeInUp">
@@ -38,18 +59,21 @@
                 <p class="mt-4 text-lg text-gray-300">Crie sua conta e comece a se conectar com outros atletas hoje mesmo.</p>
             </div>
         </div>
-
-        <!-- Seção do Formulário (Direita) -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8">
-            <div class="w-full max-w-md bg-[#161B22] p-8 rounded-2xl border border-gray-800 lg:border-none lg:bg-transparent lg:p-0 animate-fadeInUp" style="animation-delay: 200ms;">
-                <a href="index.html" class="lg:hidden mb-6 inline-block w-full text-center">
+            <div class="relative w-full max-w-md bg-[#161B22] p-8 rounded-2xl border border-gray-800 lg:border-none lg:bg-transparent lg:p-0 animate-fadeInUp" style="animation-delay: 200ms;">
+
+                <!-- Botão de Voltar para Home -->
+                <a href="<?php echo BASE_URL; ?>/" class="absolute top-4 left-4 lg:top-0 lg:left-0 text-gray-400 hover:text-white transition-colors" title="Voltar para a Home">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </a>
+
+                <a href="<?php echo BASE_URL; ?>/index" class="lg:hidden mb-6 inline-block w-full text-center">
                     <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-10 mx-auto">
                 </a>
 
                 <h2 class="text-3xl font-bold text-center mb-2">Crie sua Conta</h2>
                 <p class="text-gray-400 text-center mb-8">É rápido e fácil!</p>
 
-                <!-- Bloco para exibir mensagens de erro -->
                 <?php if (isset($_GET['error'])): ?>
                     <div class="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg text-center mb-6 text-sm">
                         <?php
@@ -73,7 +97,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form action="<?php echo BASE_URL; ?>/register/store" method="POST" class="space-y-5">
+                <form id="register-form" action="<?php echo BASE_URL; ?>/register/store" method="POST" class="space-y-5">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-300">Nome Completo</label>
                         <div class="mt-1">
@@ -109,7 +133,7 @@
                     </div>
 
                     <div class="pt-2">
-                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-colors">
+                        <button id="register-button" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-colors">
                             Registrar
                         </button>
                     </div>
@@ -122,6 +146,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const registerForm = document.getElementById('register-form');
+        const registerButton = document.getElementById('register-button');
+
+        if (registerForm && registerButton) {
+            registerForm.addEventListener('submit', function() {
+                registerButton.disabled = true;
+                registerButton.innerHTML = `
+                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                    Aguarde...
+                `;
+            });
+        }
+    </script>
 
 </body>
 
