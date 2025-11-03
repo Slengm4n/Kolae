@@ -91,7 +91,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
             <?php else: ?>
 
                 <form id="venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/atualizar/<?php echo $venue['id']; ?>" method="POST" enctype="multipart/form-data" class="w-full h-full flex flex-col space-y-12">
-                    
+
                     <input type="hidden" name="address_id" value="<?php echo $venue['address_id']; ?>">
                     <input type="hidden" id="floor_type_input" name="floor_type" value="<?php echo htmlspecialchars($venue['floor_type']); ?>">
                     <input type="hidden" id="court_capacity_input" name="court_capacity" value="<?php echo htmlspecialchars($venue['court_capacity']); ?>">
@@ -218,8 +218,9 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
 
                 </form>
 
-                <section id="section-danger-zone" class="mt-12"> <h2 class="text-3xl font-bold text-red-500 mb-6">Área de Perigo</h2>
-                    
+                <section id="section-danger-zone" class="mt-12">
+                    <h2 class="text-3xl font-bold text-red-500 mb-6">Área de Perigo</h2>
+
                     <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div>
                             <h3 class="font-bold text-lg text-white">Desativar esta quadra</h3>
@@ -227,27 +228,57 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                                 Uma vez desativada, a quadra não aparecerá mais nos resultados de busca e não poderá ser reservada.
                             </p>
                         </div>
-                        
-                        <form action="<?php echo BASE_URL . $prefix; ?>/quadras/excluir/<?php echo $venue['id']; ?>" 
-                              method="POST" 
-                              class="mt-4 sm:mt-0"
-                              onsubmit="return confirm('Tem a certeza que deseja desativar esta quadra?');">
-                            
-                            <button type="submit" 
-                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+
+                        <form id="delete-venue-form"
+                            action="<?php echo BASE_URL . $prefix; ?>/quadras/excluir/<?php echo $venue['id']; ?>"
+                            method="POST"
+                            class="mt-4 sm:mt-0">
+
+                            <button type="button"
+                                id="open-delete-modal-btn"
+                                data-venue-name="<?php echo htmlspecialchars($venue['name']); ?>"
+                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                                 Desativar Quadra
                             </button>
                         </form>
                     </div>
                 </section>
 
-            <?php endif; ?> </main>
+            <?php endif; ?>
+        </main>
 
         <footer class="w-full p-4 border-t border-gray-800 sticky bottom-0 bg-[#0D1117] z-10">
             <div class="max-w-3xl mx-auto flex justify-end">
                 <button type="submit" form="venue-form" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-lg transition-colors">Salvar Alterações</button>
             </div>
         </footer>
+    </div>
+    <div id="delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm">
+        <div class="bg-[#161B22] border border-gray-700 rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-white">Você tem certeza?</h3>
+                <p class="text-gray-400 mt-2">
+                    Esta ação <strong class="text-red-400">não pode ser desfeita</strong>.
+                    Isso irá desativar permanentemente a quadra.
+                </p>
+
+                <div class="mt-4">
+                    <label for="confirmation-input" class="text-sm font-semibold text-gray-300">
+                        <span id="confirmation-prompt"></span>
+                    </label>
+                    <input type="text" id="confirmation-input" autocomplete="off" class="mt-2 w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 bg-[#0D1117] p-4 rounded-b-lg border-t border-gray-700">
+                <button type="button" id="cancel-delete-btn" class="py-2 px-4 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="confirm-delete-btn" class="py-2 px-4 bg-red-600 text-white font-bold rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>
+                    Eu entendo, desativar
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -268,12 +299,12 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 counter.querySelector('.minus').addEventListener('click', () => {
                     if (value > minValue) value--;
                     valueSpan.textContent = value;
-                    if(hiddenInput) hiddenInput.value = value;
+                    if (hiddenInput) hiddenInput.value = value;
                 });
                 counter.querySelector('.plus').addEventListener('click', () => {
                     value++;
                     valueSpan.textContent = value;
-                    if(hiddenInput) hiddenInput.value = value;
+                    if (hiddenInput) hiddenInput.value = value;
                 });
             });
 
@@ -348,17 +379,17 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 e.stopPropagation();
             }
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                if(dropArea) dropArea.addEventListener(eventName, preventDefaults, false);
+                if (dropArea) dropArea.addEventListener(eventName, preventDefaults, false);
                 document.body.addEventListener(eventName, preventDefaults, false);
             });
             ['dragenter', 'dragover'].forEach(eventName => {
-                if(dropArea) dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+                if (dropArea) dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
             });
             ['dragleave', 'drop'].forEach(eventName => {
-                if(dropArea) dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+                if (dropArea) dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
             });
-            if(dropArea) dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files), false);
-            if(fileInput) fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+            if (dropArea) dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files), false);
+            if (fileInput) fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
             function handleFiles(files) {
                 for (const file of files) {
@@ -367,7 +398,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                         previewNewFile(file);
                     }
                 }
-                if(fileInput) fileInput.files = newFilesDataTransfer.files;
+                if (fileInput) fileInput.files = newFilesDataTransfer.files;
             }
 
             function isFileInTransfer(fileName) {
@@ -383,12 +414,12 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                         <img src="${e.target.result}" alt="Preview" class="w-full h-32 object-cover rounded-lg">
                         <button type="button" class="delete-new-image absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-lg" data-file-name="${file.name}">&times;</button>
                     `;
-                    if(previewContainer) previewContainer.appendChild(previewDiv);
+                    if (previewContainer) previewContainer.appendChild(previewDiv);
                 };
                 reader.readAsDataURL(file);
             }
 
-            if(previewContainer) previewContainer.addEventListener('click', function(e) {
+            if (previewContainer) previewContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('delete-new-image')) {
                     e.preventDefault();
                     const fileName = e.target.dataset.fileName;
@@ -396,7 +427,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                     const filteredFiles = newFiles.filter(file => file.name !== fileName);
                     newFilesDataTransfer.items.clear();
                     filteredFiles.forEach(file => newFilesDataTransfer.items.add(file));
-                    if(fileInput) fileInput.files = newFilesDataTransfer.files;
+                    if (fileInput) fileInput.files = newFilesDataTransfer.files;
                     e.target.parentElement.remove();
                 }
 
@@ -446,6 +477,80 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 });
             }
         });
+
+        // PASSO 3: ADICIONE ESTE CÓDIGO DENTRO DO SEU SCRIPT 'DOMContentLoaded'
+
+        // --- Lógica do Modal de Exclusão (Estilo GitHub) ---
+        const openDeleteModalBtn = document.getElementById('open-delete-modal-btn');
+        const deleteModal = document.getElementById('delete-modal');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        const confirmationInput = document.getElementById('confirmation-input');
+        const confirmationPrompt = document.getElementById('confirmation-prompt');
+        const deleteVenueForm = document.getElementById('delete-venue-form');
+
+        // Verifica se todos os elementos existem (importante se a quadra falhar ao carregar)
+        if (openDeleteModalBtn && deleteModal && cancelDeleteBtn && confirmDeleteBtn && confirmationInput && confirmationPrompt && deleteVenueForm) {
+
+            let requiredName = '';
+
+            // 1. Abrir o modal
+            openDeleteModalBtn.addEventListener('click', () => {
+                requiredName = openDeleteModalBtn.dataset.venueName;
+
+                // Atualiza o texto de confirmação
+                confirmationPrompt.innerHTML = `Por favor, digite <strong class="text-cyan-400">${requiredName}</strong> para confirmar:`;
+
+                // Reseta o formulário
+                confirmationInput.value = '';
+                confirmDeleteBtn.disabled = true;
+                confirmDeleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                // Mostra o modal
+                deleteModal.classList.remove('hidden');
+                confirmationInput.focus(); // Foca no input
+            });
+
+            // 2. Fechar o modal (Botão Cancelar)
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.classList.add('hidden');
+            });
+
+            // 3. Fechar o modal (Clicando fora)
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.add('hidden');
+                }
+            });
+
+            // 4. Lógica de verificação do input
+            confirmationInput.addEventListener('input', () => {
+                const typedName = confirmationInput.value;
+                const isMatch = typedName === requiredName;
+
+                confirmDeleteBtn.disabled = !isMatch;
+                confirmDeleteBtn.classList.toggle('opacity-50', !isMatch);
+                confirmDeleteBtn.classList.toggle('cursor-not-allowed', !isMatch);
+
+                // Adiciona um feedback visual no botão de confirmação
+                if (isMatch) {
+                    confirmDeleteBtn.classList.remove('bg-red-600');
+                    confirmDeleteBtn.classList.add('bg-red-500', 'hover:bg-red-400');
+                } else {
+                    confirmDeleteBtn.classList.add('bg-red-600');
+                    confirmDeleteBtn.classList.remove('bg-red-500', 'hover:bg-red-400');
+                }
+            });
+
+            // 5. Ação de confirmar
+            confirmDeleteBtn.addEventListener('click', () => {
+                // Se estiver tudo certo (só por garantia), envia o formulário original
+                if (!confirmDeleteBtn.disabled) {
+                    deleteVenueForm.submit();
+                }
+            });
+        }
     </script>
 </body>
+
 </html>
