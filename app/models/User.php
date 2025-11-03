@@ -56,8 +56,8 @@ class User
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && !empty($user['cpf'])) {
-            $user['cpf'] = self::decryptCpf($user['cpf']);
+        if ($user && !empty($user['cnpj'])) {
+            $user['cnpj'] = self::decryptCnpj($user['cnpj']);
         }
         return $user;
     }
@@ -87,13 +87,13 @@ class User
 
     public static function update(int $id, array $data): bool
     {
-        if (isset($data['cpf'])) {
-            $encryptedCpf = self::encryptCpf($data['cpf']);
-            if ($encryptedCpf === false) {
+        if (isset($data['cnpj'])) {
+            $encryptedCnpj = self::encryptCnpj($data['cnpj']);
+            if ($encryptedCnpj === false) {
                 // Se a encriptação falhar, não continue para não salvar um valor inválido
                 return false;
             }
-            $data['cpf'] = $encryptedCpf;
+            $data['cnpj'] = $encryptedCnpj;
         }
 
         if (empty($data)) {
@@ -118,20 +118,20 @@ class User
         return self::update($id, ['status' => 'inactive']);
     }
 
-    // --- MÉTODOS DE CPF ---
+    // --- MÉTODOS DE CNPJ ---
 
-    public static function isCpfInUse(string $cpf, int $excludeUserId): bool
+    public static function isCnpjInUse(string $cnpj, int $excludeUserId): bool
     {
         $pdo = Database::getConnection();
-        $query = "SELECT id, cpf FROM users WHERE id != :exclude_id AND cpf IS NOT NULL";
+        $query = "SELECT id, cnpj FROM users WHERE id != :exclude_id AND cnpj IS NOT NULL";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':exclude_id', $excludeUserId);
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($users as $user) {
-            $decryptedCpf = self::decryptCpf($user['cpf']);
-            if ($decryptedCpf === $cpf) {
+            $decryptedCnpj = self::decryptCnpj($user['cnpj']);
+            if ($decryptedCnpj === $cnpj) {
                 return true;
             }
         }
@@ -169,22 +169,22 @@ class User
         return hex2bin(ENCRYPTION_IV);
     }
 
-    private static function encryptCpf(string $cpf)
+    private static function encryptCnpj(string $cnpj)
     {
         $iv = self::getIvBinary();
         if ($iv === false || !extension_loaded('openssl') || !defined('ENCRYPTION_KEY')) {
             return false;
         }
-        return openssl_encrypt($cpf, 'aes-256-cbc', ENCRYPTION_KEY, 0, $iv);
+        return openssl_encrypt($cnpj, 'aes-256-cbc', ENCRYPTION_KEY, 0, $iv);
     }
 
-    private static function decryptCpf(?string $encrypted_cpf)
+    private static function decryptCnpj(?string $encrypted_cnpj)
     {
         $iv = self::getIvBinary();
-        if ($iv === false || empty($encrypted_cpf) || !extension_loaded('openssl') || !defined('ENCRYPTION_KEY')) {
+        if ($iv === false || empty($encrypted_cnpj || !extension_loaded('openssl') || !defined('ENCRYPTION_KEY'))) {
             return null;
         }
-        $decrypted = openssl_decrypt($encrypted_cpf, 'aes-256-cbc', ENCRYPTION_KEY, 0, $iv);
+        $decrypted = openssl_decrypt($encrypted_cnpj, 'aes-256-cbc', ENCRYPTION_KEY, 0, $iv);
         return $decrypted === false ? null : $decrypted;
     }
 }

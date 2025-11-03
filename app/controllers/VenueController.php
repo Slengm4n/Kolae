@@ -39,9 +39,9 @@ class VenueController
      */
     public function create()
     {
-        $this->checkCpfStatus(); // Admin também precisa de CPF para criar
+        $this->checkCnpjStatus(); // Admin também precisa de CNPJ para criar
         $routePrefix = AuthHelper::isAdmin() ? '/admin' : '/dashboard';
-        $data = ['userName' => $_SESSION['user_name'] ?? 'Usuário','routePrefix' => $routePrefix];
+        $data = ['userName' => $_SESSION['user_name'] ?? 'Usuário', 'routePrefix' => $routePrefix];
         ViewHelper::render('venues/create', $data);
     }
 
@@ -51,7 +51,7 @@ class VenueController
      */
     public function store()
     {
-        $this->checkCpfStatus();
+        $this->checkCnpjStatus();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ... (O código de store() continua o mesmo) ...
@@ -268,20 +268,20 @@ class VenueController
     }
 
     /**
-     * Verifica se o usuário tem um CPF cadastrado.
+     * Verifica se o usuário tem um CNPJ cadastrado.
      */
-    private function checkCpfStatus()
+    private function checkCnpjStatus()
     {
         AuthHelper::check();
 
-        // Admin não precisa de CPF para criar/editar quadras
+        // Admin não precisa de CNPJ para criar/editar quadras
         if (AuthHelper::isAdmin()) {
             return;
         }
 
         $user = User::findById($_SESSION['user_id']);
-        if (empty($user['cpf'])) {
-            header('Location: ' . BASE_URL . '/dashboard?error=cpf_required');
+        if (empty($user['cnpj'])) {
+            header('Location: ' . BASE_URL . '/dashboard?error=cnpj_required');
             exit;
         }
     }

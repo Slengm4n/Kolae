@@ -18,7 +18,7 @@
         </h1>
 
         <p class="text-gray-400 mb-6 text-sm sm:text-base leading-relaxed">
-            Para começar a cadastrar suas quadras, precisamos que você informe um CPF válido. Este passo é importante para a segurança da plataforma.
+            Para começar a cadastrar suas quadras, precisamos que você informe um CNPJ válido. Este passo é importante para a segurança da plataforma.
         </p>
 
         <?php if (isset($error)): ?>
@@ -27,19 +27,19 @@
             </div>
         <?php endif; ?>
 
-        <form action="<?php echo BASE_URL; ?>/dashboard/cpf" method="POST">
+        <form action="<?php echo BASE_URL; ?>/dashboard/cnpj" method="POST">
             <div class="mb-5 text-left">
-                <label for="cpf" class="block text-gray-300 font-medium mb-2 text-sm">
-                    CPF
+                <label for="cnpj" class="block text-gray-300 font-medium mb-2 text-sm">
+                    CNPJ
                 </label>
-                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required
+                <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required
                     class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-500
                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base">
             </div>
 
             <button type="submit"
                 class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 shadow-md">
-                Validar e Salvar CPF
+                Validar e Salvar CNPJ
             </button>
         </form>
 
@@ -50,7 +50,7 @@
     </div>
 
     <script>
-        document.getElementById('cpf').addEventListener('input', function(e) {
+        document.getElementById('cnpj').addEventListener('input', function(e) {
             var value = e.target.value.replace(/\D/g, '');
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
             value = value.replace(/(\d{3})(\d)/, '$1.$2');

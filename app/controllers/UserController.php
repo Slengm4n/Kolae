@@ -23,7 +23,7 @@ class UserController
             'userName' => $_SESSION['user_name'] ?? 'Usuario',
             'userVenues' => Venue::findByUserId($userId),
 
-            'showCpfModal' => empty($user['cpf'])
+            'showCnpjModal' => empty($user['cnpj'])
         ];
 
         ViewHelper::render('users/dashboard', $data);
@@ -166,31 +166,31 @@ class UserController
         exit;
     }
 
-    public function addCpf()
+    public function addCnpj()
     {
         AuthHelper::check();
-        ViewHelper::render('users/add_cpf', ['userName' => $_SESSION['user_name'] ?? 'Utilizador']);
+        ViewHelper::render('users/add_cnpj', ['userName' => $_SESSION['user_name'] ?? 'Utilizador']);
     }
 
-    public function storeCpf()
+    public function storeCnpj()
     {
         AuthHelper::check();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $cpf = preg_replace('/[^0-9]/', '', $_POST['cpf'] ?? '');
+            $cnpj = preg_replace('/[^0-9]/', '', $_POST['cnpj'] ?? '');
             $userId = $_SESSION['user_id'];
 
-            if (!$this->validateCpf($cpf)) {
-                // Se o CPF for inválido, redireciona de volta com um erro para o popup.
-                header('Location: ' . BASE_URL . '/dashboard?error=cpf_invalid');
+            if (!$this->validateCnpj($cnpj)) {
+                // Se o CNPJ for inválido, redireciona de volta com um erro para o popup.
+                header('Location: ' . BASE_URL . '/dashboard?error=cnpj_invalid');
                 exit;
             }
-            if (User::isCpfInUse($cpf, $userId)) {
-                // Se o CPF já estiver em uso, redireciona com outro erro.
-                header('Location: ' . BASE_URL . '/dashboard?error=cpf_in_use');
+            if (User::isCnpjInUse($cnpj, $userId)) {
+                // Se o CNPJ já estiver em uso, redireciona com outro erro.
+                header('Location: ' . BASE_URL . '/dashboard?error=cnpj_in_use');
                 exit;
             }
-            if (User::update($userId, ['cpf' => $cpf])) {
-                header('Location: ' . BASE_URL . '/dashboard?status=cpf_success');
+            if (User::update($userId, ['cnpj' => $cnpj])) {
+                header('Location: ' . BASE_URL . '/dashboard?status=cnpj_success');
                 exit;
             }
         }
@@ -289,14 +289,32 @@ class UserController
 
     // --- MÉTODOS PRIVADOS DE AJUDA ---
 
-    private function validateCpf(string $cpf): bool
+    private function validateCnpj(string $cnpj): bool
     {
-        $cpf = preg_replace('/[^0-9]/is', '', $cpf);
-        if (strlen($cpf) != 11 || preg_match('/(\d)\1{10}/', $cpf)) return false;
-        for ($t = 9; $t < 11; $t++) {
-            for ($d = 0, $c = 0; $c < $t; $c++) $d += $cpf[$c] * (($t + 1) - $c);
-            $d = ((10 * $d) % 11) % 10;
-            if ($cpf[$c] != $d) return false;
+        $cnpj = preg_replace('/[^0-9]/is', '', $cnpj);
+        if (strlen($cnpj) != 14) {
+            return false;
+        }
+
+        if (preg_match('/(\d)\1{13}/', $cnpj)) {
+            return false;
+        }
+
+        $weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        for ($t = 12; $t < 14; $t++) {
+
+            $sum = 0;
+            $weight_start_index = 14 - ($t + 1);
+
+            for ($c = 0; $c < $t; $c++) {
+                $sum += (int)$cnpj[$c] * $weights[$weight_start_index + $c];
+            }
+            $remainder = $sum % 11;
+            $dv = ($remainder < 2) ? 0 : 11 - $remainder;
+            if ((int)$cnpj[$c] !== $dv) {
+                return false; // Dígito verificador inválido
+            }
         }
         return true;
     }

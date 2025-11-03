@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Core\BaseApiController; // Importa a classe base que criámos
 use App\Models\User;          // Importa o Model de Usuário existente
-use Firebase\JWT\JWT;         // Importa a classe principal da biblioteca JWT
-use Firebase\JWT\Key;         // Importa a classe Key para a chave secreta (necessário na versão 6+ da biblioteca)
+use Firebase\JWT\JWT;         // Importa a classe principal da biblioteca JWT     // Importa a classe Key para a chave secreta (necessário na versão 6+ da biblioteca)
 use Exception;                // Para capturar erros genéricos
 
-class AuthApiController extends BaseApiController {
+class AuthApiController extends BaseApiController
+{
 
     /**
      * Processa a tentativa de login via API.
@@ -15,7 +16,8 @@ class AuthApiController extends BaseApiController {
      * Recebe: JSON {"email": "...", "password": "..."}
      * Retorna: JSON {"token": "..."} ou erro.
      */
-    public function login() {
+    public function login()
+    {
         // 1. Tenta obter os dados do corpo da requisição JSON
         $input = json_decode(file_get_contents('php://input'), true);
 
@@ -33,8 +35,8 @@ class AuthApiController extends BaseApiController {
             $this->sendError('Email e senha são obrigatórios.', 'MISSING_CREDENTIALS', 400);
             return;
         }
-         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-             $this->sendError('Formato de email inválido.', 'INVALID_EMAIL_FORMAT', 400);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->sendError('Formato de email inválido.', 'INVALID_EMAIL_FORMAT', 400);
             return;
         }
 
@@ -65,12 +67,10 @@ class AuthApiController extends BaseApiController {
 
                 // 6. Envia a resposta de sucesso com o token
                 $this->sendSuccess(['token' => $jwt]);
-
             } else {
                 // Usuário não encontrado ou senha incorreta
                 $this->sendError('Credenciais inválidas.', 'INVALID_CREDENTIALS', 401); // 401 Unauthorized
             }
-
         } catch (Exception $e) {
             // Captura erros gerais (ex: falha na conexão com DB, erro ao gerar JWT)
             error_log("Erro no login da API: " . $e->getMessage()); // Loga o erro real no servidor

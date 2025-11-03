@@ -92,8 +92,8 @@ $router->post('/reset-password', [AuthController::class, 'handleResetPassword'])
 // --- ROTAS DO PAINEL DO UTILIZADOR ---
 $router->group('/dashboard', function ($router) {
     $router->get('/', [UserController::class, 'dashboard']);
-    $router->get('/cpf', [UserController::class, 'addCpf']);
-    $router->post('/cpf', [UserController::class, 'storeCpf']);
+    $router->get('/cnpj', [UserController::class, 'addCnpj']);
+    $router->post('/cnpj', [UserController::class, 'storeCnpj']);
     $router->get('/perfil', [UserController::class, 'profile']);
     $router->post('/perfil/atualizar', [UserController::class, 'updateProfile']);
     $router->get('/perfil/seguranca', [UserController::class, 'showSecurityPage']);

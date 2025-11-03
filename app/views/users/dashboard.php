@@ -58,24 +58,24 @@
         <!-- Notificações -->
         <div class="mb-10 space-y-4">
             <!-- ==================== CORREÇÃO AQUI ==================== -->
-            <!-- A verificação agora usa a variável $showCpfModal que vem do Controller -->
-            <?php if (isset($showCpfModal) && $showCpfModal): ?>
+            <!-- A verificação agora usa a variável $showCnpjModal que vem do Controller -->
+            <?php if (isset($showCnpjModal) && $showCnpjModal): ?>
                 <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 px-6 py-4 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
                     <i class="fas fa-exclamation-triangle text-xl flex-shrink-0"></i>
                     <div>
                         <p class="font-semibold">Complete seu perfil para continuar</p>
-                        <p class="text-sm">Para cadastrar e gerenciar seus locais, precisamos que valide seu CPF.</p>
+                        <p class="text-sm">Para cadastrar e gerenciar seus locais, precisamos que valide seu CNPJ.</p>
                     </div>
-                    <!-- O link continua a ir para a página de CPF, como no seu design original -->
-                    <a href="<?php echo BASE_URL; ?>/dashboard/cpf" class="bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg text-sm transition-colors hover:bg-yellow-300 mt-2 sm:mt-0 flex-shrink-0">Adicionar CPF</a>
+                    <!-- O link continua a ir para a página de CNPJ, como no seu design original -->
+                    <a href="<?php echo BASE_URL; ?>/dashboard/cnpj" class="bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg text-sm transition-colors hover:bg-yellow-300 mt-2 sm:mt-0 flex-shrink-0">Adicionar CNPJ</a>
                 </div>
             <?php endif; ?>
             <!-- ==================== FIM DA CORREÇÃO ==================== -->
 
-            <?php if (isset($_GET['status']) && $_GET['status'] === 'cpf_success'): ?>
+            <?php if (isset($_GET['status']) && $_GET['status'] === 'cnpj_success'): ?>
                 <div class="bg-green-500/10 border border-green-500/30 text-green-300 px-6 py-4 rounded-lg flex items-center gap-4">
                     <i class="fas fa-check-circle text-xl"></i>
-                    <span>Seu CPF foi validado com sucesso! Agora você pode cadastrar seus locais.</span>
+                    <span>Seu CNPJ foi validado com sucesso! Agora você pode cadastrar seus locais.</span>
                 </div>
             <?php endif; ?>
         </div>
