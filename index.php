@@ -47,6 +47,32 @@ require_once BASE_PATH . '/vendor/autoload.php';
 require_once BASE_PATH . '/config.php';
 
 
+// --- INÍCIO GLOBAL DE CORS ---
+/**
+ * Manipulador Global de Preflight (OPTIONS)
+ *
+ * Intercepta requisições 'OPTIONS' do navegador e envia os cabeçalhos
+ * de permissão CORS antes que o router tente processar a rota.
+ */
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+
+    // Permite qualquer origem para teste. Em produção, troque '*' pela URL do seu protótipo.
+    // Ex: header('Access-Control-Allow-Origin: http://127.0.0.1:5500');
+    header('Access-Control-Allow-Origin: *');
+
+    // Métodos permitidos
+    header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+
+    // Cabeçalhos permitidos (IMPORTANTE incluir 'Authorization')
+    header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With');
+
+    header('Access-Control-Max-Age: 86400'); // Cache de 1 dia
+
+    http_response_code(200); // Responde OK para a sondagem
+
+    exit; // Termina a execução. Não precisa do router.
+}
+
 // --- Instância do Roteador ---
 $router = new Router();
 
