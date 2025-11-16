@@ -1,6 +1,6 @@
 # Kolae
 
-[![Versão](https://img.shields.io/badge/version-v1.0.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.1.0)
+[![Versão](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.1.0)
 
 ## 🎯 Sobre o Projeto
 
@@ -12,7 +12,7 @@ Esta plataforma visa criar uma comunidade engajada onde os usuários podem encon
 
 **Status Atual:** Versão `v1.0.0` lançada! Funcionalidades básicas de usuário e gerenciamento de locais implementadas.
 
-## ✨ Funcionalidades Principais (v1.0.0)
+## ✨ Funcionalidades Principais (v1.1.0)
 
 - **Autenticação:** Cadastro e Login de usuários.
 - **Perfil de Usuário:** Visualização e edição de informações básicas (nome, foto de perfil).
