@@ -47,6 +47,12 @@ define('ENCRYPTION_IV', '');
 define('GOOGLE_MAPS_API_KEY', '');
 
 
+/**
+ * Chave JWT
+ */
+define('JWT_SECRET', 'SUA_CHAVE_SECRETA_SUPER_LONGA_E_ALEATORIA_AQUI');
+
+
 // --- CONFIGURAÇÕES REGIONAIS --- //
 /**
  * Define o fuso horário padrão para funções de data e hora da aplicação.

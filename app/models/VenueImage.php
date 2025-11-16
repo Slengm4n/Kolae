@@ -36,13 +36,22 @@ class VenueImage
     public static function findByVenueId(int $venueId): array
     {
         $pdo = Database::getConnection();
-        $sql = "SELECT * FROM venue_images WHERE venue_id = :venue_id ORDER BY id ASC";
+        $sql = "SELECT * FROM venue_images WHERE venue_id = :venue_id ORDER BY id DESC";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':venue_id', $venueId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function findById(int $id)
+    {
+        $pdo = Database::getConnection();
+        $sql = "SELECT * FROM venue_images WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     /**
      * Deleta uma imagem específica pelo seu ID.
      * @param int $imageId O ID da imagem a ser deletada.

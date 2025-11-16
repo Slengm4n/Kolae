@@ -58,6 +58,10 @@
                     <i class="fas fa-map-marker-alt w-5 text-center"></i>
                     <span>Mapa</span>
                 </a>
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 rounded-lg">
+                    <i class="fa-solid fa-flag w-5 text-center"></i>
+                    <span>Quadras</span>
+                </a>
             </nav>
 
             <div class="p-4 border-t border-gray-800">

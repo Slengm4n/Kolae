@@ -7,15 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -29,9 +26,7 @@
 <body class="bg-[#0D1117] text-gray-200">
 
     <div>
-        <!-- Sidebar -->
         <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform -translate-x-full md:translate-x-0">
-            <!-- Botão de Fechar para Mobile -->
             <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white">
                 <i class="fas fa-times text-2xl"></i>
             </button>
@@ -50,18 +45,16 @@
                 <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors"><i class="fas fa-users w-5 text-center"></i><span>Usuários</span></a>
                 <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 rounded-lg"><i class="fas fa-running w-5 text-center"></i><span>Esportes</span></a>
                 <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors"><i class="fas fa-map-marker-alt w-5 text-center"></i><span>Mapa</span></a>
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors"><i class="fa-solid fa-flag w-5 text-center"></i><span>Quadras</span></a>
             </nav>
             <div class="p-4 border-t border-gray-800">
                 <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><i class="fas fa-sign-out-alt w-5 text-center"></i><span>Sair</span></a>
             </div>
         </aside>
 
-        <!-- Overlay para fechar o menu em mobile -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden"></div>
 
-        <!-- Main Content -->
         <main class="md:ml-64 flex-1 p-6 sm:p-10">
-            <!-- Botão Hamburger para Mobile -->
             <button id="sidebar-toggle" class="md:hidden mb-6 text-gray-400 hover:text-white">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
@@ -85,11 +78,11 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-300">Selecione um Ícone</label>
+                            <legend classs="block text-sm font-medium text-gray-300">Selecione um Ícone</legend>
                             <input type="hidden" name="icon" id="selected-icon-input" value="<?php echo htmlspecialchars($sport['icon'] ?? ''); ?>" required>
-                            <div id="icon-selector" class="mt-2 grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-4 bg-gray-800 p-4 rounded-lg border border-gray-700">
-                                <!-- Ícones serão inseridos aqui via JS -->
-                            </div>
+
+                            <fieldset id="icon-selector" class="mt-2 grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-4 bg-gray-800 p-4 rounded-lg border border-gray-700">
+                            </fieldset>
                             <p id="icon-error" class="text-red-400 text-sm mt-2 hidden">Por favor, selecione um ícone.</p>
                         </div>
 
@@ -115,25 +108,25 @@
             const overlay = document.getElementById('sidebar-overlay');
 
             function openSidebar() {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
+                if (sidebar) sidebar.classList.remove('-translate-x-full');
+                if (overlay) overlay.classList.remove('hidden');
             }
 
             function closeSidebar() {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
+                if (sidebar) sidebar.classList.add('-translate-x-full');
+                if (overlay) overlay.classList.add('hidden');
             }
 
             if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
 
+            // --- INÍCIO DA LÓGICA DE ÍCONE CORRIGIDA ---
             const iconSelector = document.getElementById('icon-selector');
             if (iconSelector) {
                 const selectedIconInput = document.getElementById('selected-icon-input');
                 const form = document.querySelector('form');
                 const iconError = document.getElementById('icon-error');
-
                 const currentIcon = selectedIconInput.value;
 
                 const icons = [
@@ -143,40 +136,68 @@
                     'fa-snowboarding', 'fa-skiing', 'fa-person-snowboarding', 'fa-water', 'fa-fish'
                 ];
 
+                // 1. Popula os ícones
                 icons.forEach(iconClass => {
-                    const iconWrapper = document.createElement('div');
-                    iconWrapper.className = 'cursor-pointer p-4 bg-gray-900 rounded-md flex items-center justify-center aspect-square border-2 border-transparent hover:border-cyan-400 transition-all';
-                    iconWrapper.dataset.icon = iconClass;
+                    // MUDANÇA: O 'div' agora é um <button type="button">
+                    // Isso o torna focável pelo teclado (Tab) e clicável (Enter/Espaço)
+                    const iconWrapper = document.createElement('button');
+                    iconWrapper.type = 'button'; // Previne que ele envie o formulário
+                    iconWrapper.className = 'cursor-pointer p-4 bg-gray-900 rounded-md flex items-center justify-center aspect-square border-2 border-transparent hover:border-cyan-400 focus:border-cyan-400 focus:outline-none transition-all';
+                    iconWrapper.dataset.icon = iconClass; // Armazena o nome do ícone no próprio elemento
+
+                    // Adiciona um nome acessível para leitores de tela
+                    iconWrapper.setAttribute('aria-label', iconClass.replace('fa-', ' '));
 
                     const iconElement = document.createElement('i');
                     iconElement.className = `fas ${iconClass} text-3xl text-gray-400`;
+                    iconElement.setAttribute('aria-hidden', 'true'); // O ícone é decorativo
 
                     iconWrapper.appendChild(iconElement);
                     iconSelector.appendChild(iconWrapper);
 
+                    // 2. Destaca o ícone que já estava salvo
                     if (iconClass === currentIcon) {
                         iconWrapper.classList.add('border-cyan-400', 'bg-cyan-500/10');
                         iconElement.classList.add('text-cyan-400');
                     }
-
-                    iconWrapper.addEventListener('click', () => {
-                        document.querySelectorAll('#icon-selector > div').forEach(el => {
-                            el.classList.remove('border-cyan-400', 'bg-cyan-500/10');
-                            el.querySelector('i').classList.remove('text-cyan-400');
-                        });
-                        iconWrapper.classList.add('border-cyan-400', 'bg-cyan-500/10');
-                        iconElement.classList.add('text-cyan-400');
-                        selectedIconInput.value = iconClass;
-                        iconError.classList.add('hidden');
-                    });
                 });
 
-                form.addEventListener('submit', function(event) {
-                    if (!selectedIconInput.value) {
-                        event.preventDefault();
-                        iconError.classList.remove('hidden');
+                // 3. Adiciona UM listener no PAI (o <fieldset>)
+                iconSelector.addEventListener('click', function(event) {
+                    // Encontra o <button> que foi clicado (ou que é pai do <i> clicado)
+                    const clickedButton = event.target.closest('button[data-icon]');
+
+                    if (!clickedButton) {
+                        return; // Sai se o clique não foi em um botão de ícone
                     }
+
+                    const clickedIconClass = clickedButton.dataset.icon;
+
+                    // 4. Limpa a seleção de TODOS os ícones
+                    iconSelector.querySelectorAll('button[data-icon]').forEach(button => {
+                        button.classList.remove('border-cyan-400', 'bg-cyan-500/10');
+                        button.querySelector('i').classList.remove('text-cyan-400');
+                    });
+
+                    // 5. Adiciona a seleção APENAS no ícone clicado
+                    clickedButton.classList.add('border-cyan-400', 'bg-cyan-500/10');
+                    clickedButton.querySelector('i').classList.add('text-cyan-400');
+
+                    // 6. Define o valor do input hidden e esconde o erro
+                    selectedIconInput.value = clickedIconClass;
+                    iconError.classList.add('hidden');
                 });
+                // --- FIM DA LÓGICA DE ÍCONE CORRIGIDA ---
+
+                // Validação do formulário (como antes)
+                if (form) {
+                    form.addEventListener('submit', function(event) {
+                        if (!selectedIconInput.value) {
+                            event.preventDefault();
+                            iconError.classList.remove('hidden');
+                        }
+                    });
+                }
             }
         });
     </script>

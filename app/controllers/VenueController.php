@@ -11,35 +11,54 @@ use App\Models\VenueImage;
 
 class VenueController
 {
-    /*** Exibe a lista de quadras do usuário logado.*/
+    /**
+     * Exibe a lista (tabela) de TODAS as quadras para o admin.
+     */
     public function index()
     {
-        AuthHelper::check();
-        $venues = Venue::findByUserId($_SESSION['user_id']);
+        // --- MODIFICAÇÃO 1 ---
+        // Esta rota agora é só para admins
+        AuthHelper::checkAdmin();
+
+        // Busca TODAS as quadras (assumindo que Venue::getAllForAdmin() existe)
+        $venues = Venue::getAllForAdmin();
 
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
             'venues' => $venues
         ];
 
+        // Renderiza a view da tabela de admin
         ViewHelper::render('venues/index', $data);
+        // --- FIM DA MODIFICAÇÃO 1 ---
     }
 
-    /*** Exibe o formulário para criar uma nova quadra.*/
+    /**
+     * Exibe o formulário para criar uma nova quadra.
+     * (Usado tanto pelo Usuário quanto pelo Admin)
+     */
     public function create()
     {
-        $this->checkCpfStatus();
-        $data = ['userName' => $_SESSION['user_name'] ?? 'Usuário'];
+        $this->checkCnpjStatus(); // Admin também precisa de CNPJ para criar
+        $routePrefix = AuthHelper::isAdmin() ? '/admin' : '/dashboard';
+        $data = ['userName' => $_SESSION['user_name'] ?? 'Usuário', 'routePrefix' => $routePrefix];
         ViewHelper::render('venues/create', $data);
     }
 
-    /*** Salva uma nova quadra, seu endereço e suas imagens no banco de dados.*/
+    /**
+     * Salva uma nova quadra.
+     * (Usado tanto pelo Usuário quanto pelo Admin)
+     */
     public function store()
     {
-        $this->checkCpfStatus();
+        $this->checkCnpjStatus();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 1. Cria o endereço e obtém o ID
+            // ... (O código de store() continua o mesmo) ...
+            // (Ele corretamente associa a nova quadra ao ID do usuário logado,
+            // seja ele um usuário normal ou um admin)
+
+            // 1. Cria o endereço
             $addressData = [
                 'cep' => $_POST['cep'],
                 'street' => $_POST['street'],
@@ -52,12 +71,12 @@ class VenueController
             $addressId = Address::create($addressData);
 
             if (!$addressId) {
-                // Tratar erro de criação de endereço
-                header('Location: ' . BASE_URL . '/quadras/criar?status=address_error');
+                // Tratar erro
+                header('Location: ' . BASE_URL . '/dashboard/quadras/criar?status=address_error');
                 exit;
             }
 
-            // 2. Cria a quadra usando o ID do endereço
+            // 2. Cria a quadra
             $venueData = [
                 'user_id' => $_SESSION['user_id'],
                 'address_id' => $addressId,
@@ -73,8 +92,8 @@ class VenueController
             $venueId = Venue::create($venueData);
 
             if (!$venueId) {
-                // Tratar erro de criação de quadra
-                header('Location: ' . BASE_URL . '/quadras/criar?status=venue_error');
+                // Tratar erro
+                header('Location: ' . BASE_URL . '/dashboard/quadras/criar?status=venue_error');
                 exit;
             }
 
@@ -83,13 +102,15 @@ class VenueController
                 $this->handleImageUploads($venueId);
             }
 
-            header('Location: ' . BASE_URL . '/dashboard?status=venue_created');
+            $redirectUrl = $this->getRedirectUrl();
+            header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
             exit;
         }
     }
 
     /**
      * Exibe o formulário para editar uma quadra.
+     * (Permite admin editar quadras de outros)
      * @param int $id
      */
     public function edit(int $id)
@@ -97,21 +118,30 @@ class VenueController
         AuthHelper::check();
         $venue = Venue::findById($id);
 
-        // Validação de segurança: o usuário só pode editar suas próprias quadras
-        if (!$venue || $venue['user_id'] != $_SESSION['user_id']) {
+        // --- INÍCIO DA MODIFICAÇÃO ---
+        $isAdmin = AuthHelper::isAdmin(); // Verifica se é admin
+
+        // Validação de segurança: (Esta parte você já tem)
+        if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !$isAdmin)) {
             header('Location: ' . BASE_URL . '/dashboard?error=not_found');
             exit;
         }
 
+        // Define o prefixo da rota com base no 'role' do usuário
+        $routePrefix = $isAdmin ? '/admin' : '/dashboard';
+        // --- FIM DA MODIFICAÇÃO ---
+
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
-            'venue' => $venue
+            'venue' => $venue,
+            'routePrefix' => $routePrefix // <-- Passa o prefixo para a view
         ];
         ViewHelper::render('venues/edit', $data);
     }
 
     /**
      * Atualiza uma quadra e seu endereço.
+     * (Permite admin atualizar quadras de outros)
      * @param int $id
      */
     public function update(int $id)
@@ -120,10 +150,15 @@ class VenueController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validação de segurança
             $venue = Venue::findById($id);
-            if (!$venue || $venue['user_id'] != $_SESSION['user_id']) {
+
+            // --- MODIFICAÇÃO 3 ---
+            // Redireciona se a quadra não existe OU
+            // se o usuário NÃO for o dono E também NÃO for admin
+            if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !AuthHelper::isAdmin())) {
                 header('Location: ' . BASE_URL . '/dashboard?error=unauthorized');
                 exit;
             }
+            // --- FIM DA MODIFICAÇÃO 3 ---
 
             // 1. Atualiza o endereço
             $addressData = [
@@ -151,15 +186,36 @@ class VenueController
             ];
             Venue::update($id, $venueData);
 
-            // Lógica para upload de novas imagens (opcional)
-
-            header('Location: ' . BASE_URL . '/dashboard?status=venue_updated');
+            // --- Lógica de Imagem (já estava correta) ---
+            if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
+                $uploadDir = BASE_PATH . "/uploads/venues/" . $id . "/";
+                foreach ($_POST['delete_images'] as $imageId) {
+                    $image = VenueImage::findById((int)$imageId);
+                    if ($image) {
+                        $fileName = $image['file_path'];
+                        $filePath = $uploadDir . $fileName;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
+                        VenueImage::delete((int)$imageId);
+                    }
+                }
+            }
+            if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+                $this->handleImageUploads($id);
+            }
+            // --- Fim da Lógica de Imagem ---
+            // Pega o prefixo de rota que o formulário enviou 
+            // Pega o prefixo de rota que o formulário enviou
+            $redirectUrl = $this->getRedirectUrl();
+            header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
             exit;
         }
     }
 
     /**
      * Deleta (soft delete) uma quadra.
+     * (Permite admin deletar quadras de outros)
      * @param int $id
      */
     public function delete(int $id)
@@ -167,42 +223,74 @@ class VenueController
         AuthHelper::check();
         // Validação de segurança
         $venue = Venue::findById($id);
-        if (!$venue || $venue['user_id'] != $_SESSION['user_id']) {
+
+        // --- MODIFICAÇÃO 4 ---
+        // Redireciona se a quadra não existe OU
+        // se o usuário NÃO for o dono E também NÃO for admin
+        if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !AuthHelper::isAdmin())) {
             header('Location: ' . BASE_URL . '/dashboard?error=unauthorized');
             exit;
         }
+        // --- FIM DA MODIFICAÇÃO 4 ---
+
+        $redirectUrl = $this->getRedirectUrl();
+        header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
 
         if (Venue::delete($id)) {
-            header("Location: " . BASE_URL . "/dashboard?status=deleted");
+            header("Location: " . BASE_URL . $redirectUrl . "?status=deleted");
         } else {
-            header("Location: " . BASE_URL . "/dashboard?status=error");
+            header("Location: " . BASE_URL . $redirectUrl . "?status=error");
         }
         exit;
     }
 
 
     // --- MÉTODOS PRIVADOS DE AJUDA ---
+    private function getRedirectUrl(): string
+    {
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+
+        // 1. Tenta pelo Referer (de onde o usuário veio)
+        if (str_contains($referer, '/admin/')) {
+            return '/admin/quadras';
+        }
+
+        if (str_contains($referer, '/dashboard/')) {
+            return '/dashboard';
+        }
+
+        // 2. Se o Referer falhar (estiver vazio), usa o "role" como fallback
+        if (AuthHelper::isAdmin()) {
+            return '/admin/quadras';
+        } else {
+            return '/dashboard';
+        }
+    }
 
     /**
-     * Verifica se o usuário tem um CPF cadastrado, redirecionando caso não tenha.
+     * Verifica se o usuário tem um CNPJ cadastrado.
      */
-    private function checkCpfStatus()
+    private function checkCnpjStatus()
     {
         AuthHelper::check();
+
+        // Admin não precisa de CNPJ para criar/editar quadras
+        if (AuthHelper::isAdmin()) {
+            return;
+        }
+
         $user = User::findById($_SESSION['user_id']);
-        if (empty($user['cpf'])) {
-            header('Location: ' . BASE_URL . '/dashboard?error=cpf_required');
+        if (empty($user['cnpj'])) {
+            header('Location: ' . BASE_URL . '/dashboard?error=cnpj_required');
             exit;
         }
     }
 
     /**
      * Processa o upload de múltiplas imagens para uma quadra.
-     * @param int $venueId
      */
     private function handleImageUploads(int $venueId)
     {
-        // Linha 203 (CORRIGIDA)
         $uploadDir = BASE_PATH . "/uploads/venues/" . $venueId . "/";
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -217,7 +305,6 @@ class VenueController
                 $newFileName = uniqid('venue_', true) . '.' . $fileExtension;
                 $destinationPath = $uploadDir . $newFileName;
 
-                // Aqui você pode adicionar a otimização de imagem se tiver um ImageHelper
                 if (move_uploaded_file($tmpName, $destinationPath)) {
                     VenueImage::create($venueId, $newFileName);
                 }

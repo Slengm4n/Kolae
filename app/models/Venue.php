@@ -47,10 +47,17 @@ class Venue
     public static function getAllForAdmin(): array
     {
         $pdo = Database::getConnection();
-        $query = "SELECT v.*, u.name as owner_name 
-                  FROM venues v
-                  LEFT JOIN users u ON v.user_id = u.id
-                  ORDER BY v.created_at DESC";
+
+        // --- CORREÇÃO AQUI ---
+        // Adicionamos o 'LEFT JOIN' para a tabela 'addresses' (usando 'a')
+        // E selecionamos 'a.street' e 'a.number'
+        $query = "SELECT v.*, u.name as owner_name, a.street, a.number
+              FROM venues v
+              LEFT JOIN users u ON v.user_id = u.id
+              LEFT JOIN addresses a ON v.address_id = a.id
+              ORDER BY v.created_at DESC";
+        // --- FIM DA CORREÇÃO ---
+
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -68,10 +75,10 @@ class Venue
         // Trocado para LEFT JOIN para garantir que as quadras apareçam
         // mesmo que o endereço associado tenha um problema.
         $query = "SELECT v.*, a.street, a.number,
-                         (SELECT vi.file_path FROM venue_images vi WHERE vi.venue_id = v.id ORDER BY vi.id ASC LIMIT 1) as image_path
+                         (SELECT vi.file_path FROM venue_images vi WHERE vi.venue_id = v.id ORDER BY vi.id DESC LIMIT 1) as image_path
                   FROM venues v
                   LEFT JOIN addresses a ON v.address_id = a.id
-                  WHERE v.user_id = :user_id
+                  WHERE v.user_id = :user_id AND v.status = 'available'
                   ORDER BY v.created_at DESC";
         // --- FIM DA CORREÇÃO ---
         $stmt = $pdo->prepare($query);
@@ -106,9 +113,11 @@ class Venue
     {
         $pdo = Database::getConnection();
         $query = "SELECT v.id, v.name, a.street, a.number, a.city, a.latitude, a.longitude,
-                         (SELECT vi.file_path FROM venue_images vi WHERE vi.venue_id = v.id ORDER BY vi.id ASC LIMIT 1) as image_path
+                         u.name as owner_name,
+                         (SELECT vi.file_path FROM venue_images vi WHERE vi.venue_id = v.id ORDER BY vi.id DESC LIMIT 1) as image_path
                   FROM venues v
-                  JOIN addresses a ON v.address_id = a.id";
+                  JOIN addresses a ON v.address_id = a.id
+                  LEFT JOIN users u ON v.user_id = u.id WHERE v.status = 'available'";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

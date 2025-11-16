@@ -7,5 +7,9 @@
             "App\\": "app/"
         }
     },
-    "require": {}
+    "require": {
+        "php": ">=8.2",
+        "phpmailer/phpmailer": "^6.9",
+        "firebase/php-jwt": "^6.10"
+    }
 }

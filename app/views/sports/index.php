@@ -53,6 +53,10 @@
                     <i class="fas fa-map-marker-alt w-5 text-center"></i>
                     <span>Mapa</span>
                 </a>
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-flag w-5 text-center"></i>
+                    <span>Quadras</span>
+                </a>
             </nav>
             <div class="p-4 border-t border-gray-800">
                 <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">

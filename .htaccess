@@ -1,21 +1,29 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # ---- ADICIONE ESTAS LINHAS ----
+    # Permite que o cabeçalho Authorization seja passado para o PHP
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+    # ---- FIM DAS LINHAS ADICIONADAS ----
+
     # --- Bloco de Regra para LOCALHOST ---
     # Se o Host for "localhost"
     RewriteCond %{HTTP_HOST} ^localhost$
-    # E o arquivo ou pasta não existir
+    # E o arquivo ou pasta não existir...
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    # Reescreve para /colae/index.php (o caminho do seu XAMPP)
-    RewriteRule . /colae/index.php [L]
+    # ...então reescreve para o index.php (nesta pasta) 
+    # e passa a URL como parâmetro.
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
 
-    # --- Bloco de Regra para PRODUÇÃO ---
-    # Se o Host NÃO for "localhost" (ex: colae.42web.io)
+    # --- Bloco de Regra para PRODUÇÃO (ex: InfinityFree) ---
+    # Se o Host NÃO for "localhost"
     RewriteCond %{HTTP_HOST} !^localhost$
-    # E o arquivo ou pasta não existir
+    # E o arquivo ou pasta não existir...
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    # Reescreve para /index.php (o caminho da raiz no InfinityFree)
-    RewriteRule . /index.php [L]
+    # ...então reescreve para o /index.php (na raiz do servidor)
+    # e passa a URL como parâmetro.
+    RewriteRule ^(.*)$ /index.php?url=$1 [L,QSA]
 </IfModule>

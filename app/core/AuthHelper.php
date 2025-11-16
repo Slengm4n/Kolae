@@ -64,4 +64,16 @@ class AuthHelper
             exit;
         }
     }
+
+    /**
+     * Apenas VERIFICA se o usuário logado é um admin.
+     * Esta é uma "check" (verificação) - ela retorna true/false, mas não bloqueia.
+     * Útil para lógicas condicionais dentro de controllers.
+     * * @return bool
+     */
+    public static function isAdmin(): bool
+    {
+        // Garante que a sessão existe e que o 'role' é 'admin'
+        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    }
 }

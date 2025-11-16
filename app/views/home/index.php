@@ -6,19 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -34,9 +26,9 @@
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            animation: pageFadeIn 0.4s ease-out both;
         }
 
-        /* Animação para o carrossel de parceiros */
         @keyframes scroll {
             0% {
                 transform: translateX(0);
@@ -51,18 +43,13 @@
             animation: scroll 30s linear infinite;
         }
 
-        /* Estilos para a paginação do Swiper */
         .swiper-pagination-bullet {
             background: #B0B0B0;
-            /* Cor secundária */
         }
 
         .swiper-pagination-bullet-active {
             background: #38BDF8;
-            /* Cor de destaque */
         }
-
-        /* ... (seus outros estilos como .animate-scroll, .swiper-pagination-bullet, etc. ficam aqui) ... */
 
         .vimeo-bg-cover {
             position: absolute;
@@ -70,14 +57,20 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: -2;
-
-            /* Mágica para forçar o "cover" (assumindo vídeo 16:9) */
             width: 100vw;
             height: 56.25vw;
-            /* 100 * (9/16) = 56.25 */
             min-height: 100vh;
             min-width: 177.78vh;
-            /* 100 * (16/9) = 177.78 */
+
+            @keyframes pageFadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
         }
     </style>
 </head>
@@ -92,7 +85,6 @@
 
             <nav class="hidden md:block">
                 <ul class="flex items-center space-x-10">
-                    <li><a href="#encontrar" class="font-semibold hover:text-cyan-400 transition-colors">Encontrar</a></li>
                     <li><a href="#sobre-nos" class="font-semibold hover:text-cyan-400 transition-colors">Sobre Nós</a></li>
                 </ul>
             </nav>
@@ -118,6 +110,7 @@
         <!-- ==================== SEÇÃO HERO (VÍDEO) ==================== -->
         <section class="relative h-screen flex items-center justify-center text-center md:justify-start md:text-left p-0">
             <iframe
+                title=" Vídeo de fundo com atletas praticando esportes"
                 src="https://player.vimeo.com/video/1129399439?background=1&autoplay=1&loop=1&muted=1&autopause=0"
                 class="vimeo-bg-cover"
                 frameborder="0"
@@ -127,7 +120,7 @@
             <div class="container mx-auto px-4 relative z-10">
                 <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold max-w-lg leading-tight mx-auto md:mx-0">Cole com quem ama esporte</h1>
                 <div class="flex flex-wrap gap-4 mt-8 justify-center md:justify-start">
-                    <li><a href="<?php echo BASE_URL;?>/login" class="py-3 px-8 rounded-full font-semibold transition-all duration-300 bg-white text-black border-2 border-white hover:bg-transparent hover:text-white">Comece de graça</a>
+                    <a href="<?php echo BASE_URL; ?>/login" class="py-3 px-8 rounded-full font-semibold transition-all duration-300 bg-white text-black border-2 border-white hover:bg-transparent hover:text-white">Comece de graça</a>
                 </div>
             </div>
         </section>
@@ -239,7 +232,7 @@
                 <h4 class="text-lg font-semibold mb-4">Receba nossas novidades</h4>
                 <p class="text-sm text-gray-400">Cadastre-se para ficar por dentro dos próximos eventos e atualizações.</p>
                 <form class="flex mt-4">
-                    <input type="email" placeholder="Seu melhor e-mail" required class="w-full bg-gray-900 border border-gray-700 rounded-l-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                    <input type="email" class="sr-only" placeholder="Seu melhor e-mail" required class="w-full bg-gray-900 border border-gray-700 rounded-l-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400">
                     <button type="submit" aria-label="Enviar email" class="bg-cyan-400 text-black font-bold px-4 py-2 rounded-r-md hover:bg-cyan-300 transition-colors"><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>

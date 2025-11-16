@@ -68,6 +68,10 @@
                 <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
                     <i class="fas fa-map-marker-alt w-5 text-center"></i><span>Mapa</span>
                 </a>
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-flag w-5 text-center"></i>
+                    <span>Quadras</span>
+                </a>
             </nav>
             <div class="p-4 border-t border-gray-800">
                 <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
@@ -137,9 +141,20 @@
                     </div>
                 <?php endif; ?>
             </div>
+            <div class="mb-6">
+                <label for="searchInput" class="sr-only">Pesquisar Usuários</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="searchInput"
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-cyan-500 sm:text-sm"
+                        placeholder="Pesquisar por usuário...">
+                </div>
+            </div>
             <div class="bg-[#161B22] rounded-2xl border border-gray-800 overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-700">
+                    <table id="userTable" class="min-w-full divide-y divide-gray-700">
                         <thead>
                             <tr>
                                 <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">#</th>
@@ -305,6 +320,61 @@
             sidebarCloseBtn.addEventListener('click', closeSidebar);
             overlay.addEventListener('click', closeSidebar);
         }
+
+
+        // --- LÓGICA DA BARRA DE PESQUISA ---
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('userTable');
+
+        if (table && searchInput) {
+            const tableBody = table.querySelector('tbody');
+
+            if (tableBody) {
+                const tableRows = tableBody.querySelectorAll(':scope > tr');
+                const noVenuesRow = tableBody.querySelector('tr > td[colspan="4"]'); // Pega a linha "Nenhuma quadra"
+
+                console.log("Número de linhas (TRs) encontradas no tbody:", tableRows.length);
+
+                searchInput.addEventListener('keyup', function() {
+                    const searchTerm = searchInput.value.toLowerCase().trim();
+                    let visibleRowCount = 0;
+
+                    tableRows.forEach((row) => {
+                        const cells = row.cells;
+
+                        // Pula a linha "Nenhuma quadra encontrada"
+                        if (cells.length === 1 && cells[0].getAttribute('colspan')) {
+                            return; // Não filtra esta linha
+                        }
+
+                        if (cells.length < 2) return; // Pula linhas mal formatadas
+
+                        const nameCellText = (cells[0].textContent || cells[0].innerText).trim();
+                        const addressCellText = (cells[1].textContent || cells[1].innerText).trim(); // Coluna 1 é o endereço
+                        const rowText = (nameCellText + ' ' + addressCellText).toLowerCase();
+
+                        if (rowText.includes(searchTerm)) {
+                            row.style.display = '';
+                            visibleRowCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Mostra/Esconde a linha "Nenhuma quadra encontrada"
+                    if (noVenuesRow) {
+                        // Mostra se NENHUMA linha de dados está visível E há mais de uma linha na tabela (a própria linha "nenhuma")
+                        noVenuesRow.parentElement.style.display = (visibleRowCount === 0 && tableRows.length > 1) ? '' : 'none';
+                    }
+
+                });
+            } else {
+                console.error("Erro: Elemento <tbody> não encontrado dentro da tabela #venuesTable.");
+            }
+        } else {
+            console.error("Erro: Tabela #venuesTable ou Input #searchInput não encontrado.");
+        }
+        // --- FIM PESQUISA ---
     </script>
 </body>
 

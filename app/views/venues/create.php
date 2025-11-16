@@ -46,12 +46,13 @@
         <!-- Cabeçalho -->
         <header class="py-4 px-8 flex justify-between items-center border-b border-gray-800">
             <a href="<?php echo BASE_URL; ?>/dashboard" class="text-2xl font-bold tracking-widest text-white">KOLAE</a>
-            <a href="<?php echo BASE_URL; ?>/dashboard" class="text-sm font-semibold bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-full transition-colors">Salvar e Sair</a>
+            <?php $prefix = $data['routePrefix'] ?? '/dashboard'; ?>
+            <a href="<?php echo BASE_URL . $prefix; ?>" class="text-sm font-semibold ...">Salvar e Sair</a>
         </header>
 
         <!-- Conteúdo Principal -->
         <main class="flex-grow flex items-center justify-center">
-            <form id="venue-form" action="<?php echo BASE_URL; ?>/quadras/salvar" method="POST" enctype="multipart/form-data" class="w-full h-full flex flex-col">
+            <form id="venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/salvar" method="POST" enctype="multipart/form-data" class="w-full h-full flex flex-col">
 
                 <!-- Etapa 1: Tipo de Piso -->
                 <div id="step-1" class="step active w-full max-w-2xl mx-auto p-8">

@@ -6,6 +6,9 @@ use App\Core\ViewHelper;
 use App\Models\User;
 use DateTime;
 use Exception;
+use App\Models\PasswordReset;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 class AuthController
 {
@@ -85,6 +88,152 @@ class AuthController
                 header('Location: ' . BASE_URL . '/register?error=generic');
                 exit;
             }
+        }
+    }
+
+    /**
+     * Exibe o formulário "Esqueci minha senha".
+     */
+    public function showForgotPasswordForm()
+    {
+        // Seu HTML que você já tem (vamos supor que está em 'auth/forgot-password')
+        ViewHelper::render('auth/forgot-password');
+    }
+
+    /**
+     * Processa a solicitação de redefinição de senha e envia o e-mail.
+     */
+    public function handleForgotPassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/forgot-password');
+            exit;
+        }
+
+        $email = $_POST['email'] ?? '';
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            header('Location: ' . BASE_URL . '/forgot-password?error=invalid_email');
+            exit;
+        }
+
+        $user = User::findByEmail($email); // Lembre-se que o usuário precisa estar 'active'
+
+        if ($user) {
+            try {
+                // 1. Gerar e armazenar o token
+                $token = bin2hex(random_bytes(32));
+                $expires_at = (new DateTime('+1 hour'))->format('Y-m-d H:i:s');
+
+                PasswordReset::deleteTokensForEmail($email); // Invalida tokens antigos
+                PasswordReset::createToken($email, $token, $expires_at);
+
+                // 2. Enviar o e-mail com PHPMailer
+                $mail = new PHPMailer(true);
+
+                // $mail->SMTPDebug = SMTP::DEBUG_SERVER; // REMOVIDO
+                $mail->isSMTP();
+                $mail->Host       = SMTP_HOST;
+                $mail->SMTPAuth   = true;
+                $mail->Username   = SMTP_USER;
+                $mail->Password   = SMTP_PASS;
+                $mail->SMTPSecure = SMTP_SECURE;
+                $mail->Port       = SMTP_PORT;
+                $mail->CharSet    = 'UTF-8';
+
+                // Destinatários
+                $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+                $mail->addAddress($email, $user['name']);
+
+                // Conteúdo
+                $mail->isHTML(true);
+                $mail->Subject = 'Recuperação de Senha - Kolae';
+                $reset_link = BASE_URL . '/reset-password?token=' . $token;
+
+                $mail->Body = "Olá " . htmlspecialchars($user['name']) . ",<br><br>"
+                    . "Recebemos uma solicitação para redefinir sua senha no Kolae.<br>"
+                    . "Clique no link abaixo para criar uma nova senha:<br><br>"
+                    . "<a href='$reset_link' style='color: #06b6d4; text-decoration: none; font-weight: bold;'>Redefinir Minha Senha</a><br><br>"
+                    . "Este link expira em 1 hora.<br><br>"
+                    . "Se você não solicitou isso, ignore este e-mail.";
+
+                $mail->send();
+
+                // echo "E-mail enviado...!"; // REMOVIDO
+            } catch (Exception $e) {
+                // echo "<h1>Ocorreu um Erro!</h1>"; // REMOVIDO
+                // var_dump($e->getMessage()); // REMOVIDO
+
+                // Apenas logue o erro silenciosamente
+                error_log("PHPMailer Error: " . $mail->ErrorInfo);
+            }
+        }
+
+        // Resposta de segurança: SEMPRE mostre sucesso,
+        // mesmo que o e-mail não exista, para evitar enumeração de usuários.
+        header('Location: ' . BASE_URL . '/forgot-password?status=sent'); // REATIVADO
+        exit; // REATIVADO
+    }
+
+    public function showResetForm()
+    {
+        $token = $_GET['token'] ?? '';
+
+        // Verifica se o token é válido e não expirou
+        $resetRequest = PasswordReset::findValidToken($token);
+
+        if (!$resetRequest) {
+            // Token inválido ou expirado
+            header('Location: ' . BASE_URL . '/login?error=invalid_token');
+            exit;
+        }
+
+        // Token é válido, mostre o formulário de reset
+        // Passamos o token para a view para incluí-lo em um campo oculto
+        ViewHelper::render('auth/reset-password', ['token' => $token]);
+    }
+
+    /**
+     * Processa a submissão da nova senha.
+     */
+    public function handleResetPassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/login');
+            exit;
+        }
+
+        $token = $_POST['token'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $password_confirmation = $_POST['password_confirmation'] ?? '';
+
+        // 1. Validar token novamente
+        $resetRequest = PasswordReset::findValidToken($token);
+        if (!$resetRequest) {
+            header('Location: ' . BASE_URL . '/reset-password?token=' . $token . '&error=invalid_token');
+            exit;
+        }
+
+        // 2. Validar senhas
+        if (empty($password) || $password !== $password_confirmation) {
+            header('Location: ' . BASE_URL . '/reset-password?token=' . $token . '&error=password_mismatch');
+            exit;
+        }
+
+        // 3. Tudo OK - Atualizar o usuário
+        $email = $resetRequest['email'];
+        $newPasswordHash = password_hash($password, PASSWORD_DEFAULT);
+
+        if (User::updatePassword($email, $newPasswordHash)) {
+            // 4. Sucesso! Invalidar o token
+            PasswordReset::deleteTokensForEmail($email);
+
+            // 5. Redirecionar para o login com mensagem de sucesso
+            header('Location: ' . BASE_URL . '/login?status=password_reset');
+            exit;
+        } else {
+            // Erro ao atualizar
+            header('Location: ' . BASE_URL . '/reset-password?token=' . $token . '&error=generic');
+            exit;
         }
     }
 
