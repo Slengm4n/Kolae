@@ -1,5 +1,7 @@
 <?php
-
+// ====================================================
+// LÓGICA PHP (Obrigatório ficar no topo)
+// ====================================================
 $message = null;
 $messageType = 'error';
 
@@ -35,15 +37,21 @@ if (isset($_GET['error'])) {
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
+
+    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    </noscript>
+
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
 
     <style>
         body {
@@ -80,27 +88,39 @@ if (isset($_GET['error'])) {
     </style>
 </head>
 
-<body class="bg-[#0D1117] text-white">
+<body class="bg-gray-900 text-white">
 
-    <div class="flex min-h-screen">
-        <div class="hidden lg:flex w-1/2 bg-cover bg-center relative items-center justify-center" style="background-image: url('https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');">
+    <div class="flex min-h-screen relative">
+
+        <div class="absolute inset-0 z-0 lg:hidden">
+            <img src="<?php echo BASE_URL; ?>/assets/img/login_bg.webp"
+                alt="Background"
+                class="w-full h-full object-cover opacity-40">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
+        </div>
+
+        <div class="hidden lg:flex w-1/2 bg-cover bg-center relative items-center justify-center"
+            style="background-image: url('<?php echo BASE_URL; ?>/assets/img/login_bg.webp');">
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10 text-center px-12 animate-fadeInUp">
-                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-16 mx-auto mb-6">
-                <h1 class="text-4xl font-bold leading-tight">Sua jornada esportiva começa aqui.</h1>
-                <p class="mt-4 text-lg text-gray-300">Conecte-se, treine e evolua com a maior comunidade de atletas.</p>
+                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-16 mx-auto mb-6 drop-shadow-lg">
+                <h1 class="text-4xl font-bold leading-tight drop-shadow-md">Sua jornada esportiva começa aqui.</h1>
+                <p class="mt-4 text-lg text-gray-200 drop-shadow-md">Conecte-se, treine e evolua com a maior comunidade de atletas.</p>
             </div>
         </div>
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8">
-            <div class="relative w-full max-w-md bg-[#161B22] p-8 rounded-2xl border border-gray-800 lg:border-none lg:bg-transparent lg:p-0 animate-fadeInUp" style="animation-delay: 200ms;">
+
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 relative z-10">
+
+            <div class="relative w-full max-w-md bg-[#161B22]/85 backdrop-blur-md p-8 rounded-2xl border border-white/10 shadow-2xl lg:border-none lg:bg-transparent lg:backdrop-blur-none lg:shadow-none animate-fadeInUp" style="animation-delay: 200ms;">
+
                 <a href="<?php echo BASE_URL; ?>/"
                     class="absolute top-4 left-4 lg:top-0 lg:left-0 text-gray-400 hover:text-white transition-colors"
                     title="Voltar para a Home"
                     aria-label="Voltar para a página inicial"> <i class="fas fa-arrow-left text-xl"></i>
                 </a>
 
-                <a href="<?php echo BASE_URL; ?>/index" class="lg:hidden mb-6 inline-block w-full text-center">>
-                    <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-10 mx-auto">
+                <a href="<?php echo BASE_URL; ?>/" class="lg:hidden mb-8 inline-block w-full text-center">
+                    <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-12 mx-auto drop-shadow-lg">
                 </a>
 
                 <h2 class="text-3xl font-bold text-center mb-2">Bem-vindo de volta!</h2>
@@ -109,46 +129,54 @@ if (isset($_GET['error'])) {
                 <?php if ($message): ?>
                     <?php
                     $bgColor = ($messageType === 'success') ? 'bg-green-500/20' : 'bg-red-500/20';
-                    $borderColor = ($messageType === 'success') ? 'border-green-500' : 'border-red-500';
+                    $borderColor = ($messageType === 'success') ? 'border-green-500/50' : 'border-red-500/50';
                     $textColor = ($messageType === 'success') ? 'text-green-300' : 'text-red-300';
                     ?>
-                    <div class="<?= $bgColor ?> <?= $borderColor ?> <?= $textColor ?> border px-4 py-3 rounded-lg text-center mb-6 text-sm" role="alert">
+                    <div class="<?= $bgColor ?> <?= $borderColor ?> <?= $textColor ?> border px-4 py-3 rounded-lg text-center mb-6 text-sm backdrop-blur-sm" role="alert">
                         <?= htmlspecialchars($message) ?>
                     </div>
                 <?php endif; ?>
+
                 <form id="login-form" action="<?php echo BASE_URL; ?>/login/authenticate" method="POST" class="space-y-6">
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-                        <div class="mt-1">
-                            <input id="email" name="email" type="email" autocomplete="email" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <label for="email" class="block text-sm font-medium text-gray-300 ml-1">Email</label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-500"></i>
+                            </div>
+                            <input id="email" name="email" type="email" autocomplete="email" required
+                                class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all" placeholder="Digite seu e-mail">
                         </div>
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300">Senha</label>
-                        <div class="mt-1">
-                            <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <label for="password" class="block text-sm font-medium text-gray-300 ml-1">Senha</label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-500"></i>
+                            </div>
+                            <input id="password" name="password" type="password" autocomplete="current-password" required
+                                class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all" placeholder="Digite sua senha">
                         </div>
                     </div>
 
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <label for="remember-me" class="flex items-center cursor-pointer">
+                            <label for="remember-me" class="flex items-center cursor-pointer group">
                                 <input id="remember-me" name="remember-me" type="checkbox" class="sr-only peer">
-                                <span class="flex items-center justify-center w-4 h-4 bg-gray-700 border-2 border-gray-600 rounded-sm mr-2 transition-colors peer-checked:bg-cyan-500 peer-checked:border-cyan-500">
+                                <span class="flex items-center justify-center w-5 h-5 bg-gray-800 border-2 border-gray-600 rounded mr-2 transition-all peer-checked:bg-cyan-500 peer-checked:border-cyan-500 group-hover:border-gray-500">
                                     <i class="fas fa-check text-xs text-black opacity-0 transition-opacity peer-checked:opacity-100"></i>
                                 </span>
-                                <span class="block text-sm text-gray-300">Lembrar de mim</span>
+                                <span class="block text-sm text-gray-300 select-none">Lembrar de mim</span>
                             </label>
                         </div>
                         <div class="text-sm">
-                            <a href="<?php echo BASE_URL; ?>/forgot-password" class="font-medium text-cyan-400 hover:text-cyan-300">Esqueceu a senha?</a>
+                            <a href="<?php echo BASE_URL; ?>/forgot-password" class="font-medium text-cyan-400 hover:text-cyan-300 transition-colors">Esqueceu a senha?</a>
                         </div>
                     </div>
 
                     <div>
-                        <!-- Adicionado id="login-button" -->
-                        <button id="login-button" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-colors">
+                        <button id="login-button" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 hover:shadow-cyan-400/20 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-all duration-200 transform">
                             Entrar
                         </button>
                     </div>
@@ -156,7 +184,7 @@ if (isset($_GET['error'])) {
 
                 <p class="mt-8 text-center text-sm text-gray-400">
                     Não tem uma conta?
-                    <a href="<?php echo BASE_URL; ?>/register" class="font-medium text-cyan-400 hover:text-cyan-300">Cadastre-se</a>
+                    <a href="<?php echo BASE_URL; ?>/register" class="font-medium text-cyan-400 hover:text-cyan-300 transition-colors hover:underline">Cadastre-se</a>
                 </p>
             </div>
         </div>
@@ -169,6 +197,7 @@ if (isset($_GET['error'])) {
         if (loginForm && loginButton) {
             loginForm.addEventListener('submit', function() {
                 loginButton.disabled = true;
+                loginButton.classList.add('opacity-75', 'cursor-not-allowed', 'scale-100');
                 loginButton.innerHTML = `
                     <i class="fas fa-spinner fa-spin mr-2"></i>
                     Aguarde...

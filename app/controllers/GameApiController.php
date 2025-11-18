@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Core\BaseApiController;
@@ -8,28 +9,26 @@ use App\Models\Sport;
 use DateTime;
 use App\Models\Game;
 
-class GameApiController extends BaseApiController {
+class GameApiController extends BaseApiController
+{
 
-    /**
-     * Cria uma nova partida.
-     * Endpoint: POST /api/v1/matches
-     * Requer autenticação JWT.
-     */
-    public function createGame() {
+
+    public function createGame()
+    {
         // 1. Autentica a requisição (verifica o token JWT)
         $this->authenticateRequest();
         $creatorId = $this->userId; // Pega o ID do usuário logado do token
 
         // 2. Pega e valida os dados de entrada (idealmente do corpo JSON)
-         $input = json_decode(file_get_contents('php://input'), true);
-         if (json_last_error() !== JSON_ERROR_NONE) {
-             $this->sendError('Corpo da requisição JSON inválido.', 'INVALID_JSON', 400);
-         }
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendError('Corpo da requisição JSON inválido.', 'INVALID_JSON', 400);
+        }
 
         $venueId = filter_var($input['venue_id'] ?? null, FILTER_VALIDATE_INT);
         $sportId = filter_var($input['sport_id'] ?? null, FILTER_VALIDATE_INT);
         $startTimeStr = $input['start_time'] ?? null; // Ex: "2025-10-28 20:00:00"
-        $duration = filter_var($input['duration_minutes'] ?? 60, FILTER_VALIDATE_INT, ['options' => ['default' => 60]]); // Padrão 60
+        $duration = filter_var($input['duration_minutes'] ?? 60, FILTER_VALIDATE_INT, ['options' => ['default' => 60]]);
 
         // Validações básicas
         if (!$venueId || !$sportId || !$startTimeStr) {
@@ -43,12 +42,12 @@ class GameApiController extends BaseApiController {
             $this->sendError('Formato de start_time inválido (use YYYY-MM-DD HH:MM:SS) ou data no passado.', 'INVALID_START_TIME', 400);
         }
 
-        // Valida se venue e sport existem (exemplo)
+        // Valida se venue e sport existem
         if (!Venue::findById($venueId)) {
-             $this->sendError('Quadra (venue) não encontrada.', 'VENUE_NOT_FOUND', 404);
+            $this->sendError('Quadra (venue) não encontrada.', 'VENUE_NOT_FOUND', 404);
         }
-         if (!Sport::findById($sportId)) {
-             $this->sendError('Esporte não encontrado.', 'SPORT_NOT_FOUND', 404);
+        if (!Sport::findById($sportId)) {
+            $this->sendError('Esporte não encontrado.', 'SPORT_NOT_FOUND', 404);
         }
 
         // 3. Prepara os dados para o Model

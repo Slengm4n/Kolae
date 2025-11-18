@@ -1,555 +1,451 @@
 <?php
-// Garante que a sessão está iniciada e os dados do local existem.
-$venue = $data['venue'] ?? null; // A variável $data virá do seu controller
-
-// --- CORREÇÃO DE ROTA ---
-// Pega o prefixo que o VenueController::edit() enviou.
+$venue = $data['venue'] ?? null;
 $prefix = $data['routePrefix'] ?? '/dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Local - <?php echo htmlspecialchars($venue['name'] ?? 'Kolae'); ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kolae</title>
+
+    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    </noscript>
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        /* Estilos de card selecionado */
+        /* Cards Interativos */
+        .option-card,
+        .checkbox-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .option-card:hover,
+        .checkbox-card:hover {
+            transform: translateY(-2px);
+            border-color: #4b5563;
+        }
+
         .option-card.selected,
         .checkbox-card.selected {
             border-color: #22d3ee;
-            /* cyan-400 */
-            background-color: rgba(34, 211, 238, 0.1);
-            /* cyan-500/10 */
+            background-color: rgba(34, 211, 238, 0.05);
+            box-shadow: 0 4px 10px rgba(34, 211, 238, 0.1);
         }
 
         .checkbox-card.selected i {
             color: #22d3ee;
-            /* cyan-400 */
         }
 
-        /* Destaque da área de drop */
+        /* Upload */
         #drop-area.highlight {
             border-color: #22d3ee;
-            /* cyan-400 */
-            background-color: rgba(34, 211, 238, 0.1);
+            background-color: rgba(34, 211, 238, 0.05);
+            transform: scale(1.01);
+        }
+
+        .animate-up {
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
 <body class="bg-[#0D1117] text-gray-200">
 
-    <div class="flex flex-col min-h-screen">
-        <header class="bg-[#161B22] border-b border-gray-800 sticky top-0 z-30 py-4">
-            <div class="container mx-auto px-4 flex justify-between items-center">
-                <a href="<?php echo BASE_URL; ?>/" class="text-2xl font-bold tracking-widest text-white">KOLAE</a>
+    <header class="bg-[#161B22]/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-30 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="<?php echo BASE_URL . $prefix; ?>" class="flex items-center gap-2 group text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-chevron-left text-sm"></i>
+                <span class="font-medium">Voltar</span>
+            </a>
+            <h1 class="text-lg font-bold text-white">Editar Local</h1>
+            <div class="w-10"></div>
+        </div>
+    </header>
 
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="<?php echo BASE_URL . $prefix; ?>" class="font-semibold text-cyan-400 transition-colors">Meu Painel</a>
-                </nav>
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
 
-                <div class="relative">
-                    <div id="user-menu-button" class="flex items-center gap-3 p-2 border border-gray-700 rounded-full cursor-pointer transition-colors hover:bg-gray-700/50">
-                        <i class="fas fa-bars text-lg"></i>
-                        <i class="fas fa-user-circle text-xl"></i>
-                    </div>
-
-                    <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-72 bg-[#1c2128] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-300">
-                        <div class="p-4 border-b border-gray-700">
-                            <p class="font-semibold text-white"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Utilizador'); ?></p>
-                            <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-sm text-gray-400 hover:underline">Ver perfil</a>
-                        </div>
-                        <ul class="py-2">
-                            <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-4 px-5 py-3 text-sm hover:bg-gray-800 transition-colors"><i class="fas fa-cog w-5 text-center text-gray-400"></i> Configurações</a></li>
-                            <li><a href="#" class="flex items-center gap-4 px-5 py-3 text-sm hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-5 text-center text-gray-400"></i> Ajuda</a></li>
-                            <li class="border-t border-gray-700 my-2"></li>
-                            <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-5 py-3 text-sm text-red-400 hover:bg-gray-800 transition-colors"><i class="fas fa-sign-out-alt w-5 text-center"></i>Sair</a></li>
-                        </ul>
-                    </div>
-                </div>
+        <?php if (!$venue): ?>
+            <div class="text-center py-12 bg-[#161B22] rounded-2xl border border-red-900/50">
+                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-white">Erro</h2>
+                <p class="text-gray-400 mt-2">Local não encontrado.</p>
+                <a href="<?php echo BASE_URL . $prefix; ?>" class="mt-4 inline-block text-cyan-400 hover:underline">Voltar</a>
             </div>
-        </header>
+        <?php else: ?>
 
+            <form id="venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/atualizar/<?php echo $venue['id']; ?>" method="POST" enctype="multipart/form-data" class="space-y-8 pb-24 md:pb-8 animate-up">
 
-        <main class="flex-grow w-full max-w-3xl mx-auto p-8">
-            <?php if (!$venue): ?>
-                <div class="text-center p-8">
-                    <h2 class="text-3xl font-bold text-red-400">Erro</h2>
-                    <p class="text-gray-400 mt-2">Os dados do local não foram encontrados.</p>
-                </div>
-            <?php else: ?>
+                <input type="hidden" name="address_id" value="<?php echo $venue['address_id']; ?>">
+                <input type="hidden" id="floor_type_input" name="floor_type" value="<?php echo htmlspecialchars($venue['floor_type']); ?>">
+                <input type="hidden" id="court_capacity_input" name="court_capacity" value="<?php echo htmlspecialchars($venue['court_capacity']); ?>">
+                <input type="hidden" id="leisure_area_capacity_input" name="leisure_area_capacity" value="<?php echo htmlspecialchars($venue['leisure_area_capacity']); ?>">
 
-                <form id="venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/atualizar/<?php echo $venue['id']; ?>" method="POST" enctype="multipart/form-data" class="w-full h-full flex flex-col space-y-12">
-
-                    <input type="hidden" name="address_id" value="<?php echo $venue['address_id']; ?>">
-                    <input type="hidden" id="floor_type_input" name="floor_type" value="<?php echo htmlspecialchars($venue['floor_type']); ?>">
-                    <input type="hidden" id="court_capacity_input" name="court_capacity" value="<?php echo htmlspecialchars($venue['court_capacity']); ?>">
-                    <input type="hidden" id="leisure_area_capacity_input" name="leisure_area_capacity" value="<?php echo htmlspecialchars($venue['leisure_area_capacity']); ?>">
-
-                    <section id="section-details">
-                        <h2 class="text-3xl font-bold text-white mb-6">Detalhes Principais</h2>
-                        <div class="space-y-6">
-                            <div>
-                                <label for="name" class="block text-gray-400 text-sm font-bold mb-2">Nome do Local</label>
-                                <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($venue['name']); ?>" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500">
-                            </div>
-                            <div>
-                                <label for="average_price_per_hour" class="block text-gray-400 text-sm font-bold mb-2">Preço Médio por Hora (R$)</label>
-                                <input type="number" step="0.01" id="average_price_per_hour" name="average_price_per_hour" value="<?php echo htmlspecialchars($venue['average_price_per_hour']); ?>" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500">
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="section-floor-type">
-                        <h2 class="text-3xl font-bold text-white mb-6">Tipo de Piso</h2>
-                        <div class="space-y-4" data-input-name="floor_type">
-                            <div class="option-card border border-gray-700 rounded-lg p-6 cursor-pointer hover:border-cyan-400 transition-colors" data-value="grama sintética">
-                                <h3 class="font-semibold text-lg">Grama Sintética</h3>
-                            </div>
-                            <div class="option-card border border-gray-700 rounded-lg p-6 cursor-pointer hover:border-cyan-400 transition-colors" data-value="cimento">
-                                <h3 class="font-semibold text-lg">Cimento / Poliesportivo</h3>
-                            </div>
-                            <div class="option-card border border-gray-700 rounded-lg p-6 cursor-pointer hover:border-cyan-400 transition-colors" data-value="areia">
-                                <h3 class="font-semibold text-lg">Areia</h3>
-                            </div>
-                            <div class="option-card border border-gray-700 rounded-lg p-6 cursor-pointer hover:border-cyan-400 transition-colors" data-value="saibro">
-                                <h3 class="font-semibold text-lg">Saibro</h3>
-                            </div>
-                            <div class="option-card border border-gray-700 rounded-lg p-6 cursor-pointer hover:border-cyan-400 transition-colors" data-value="grama natural">
-                                <h3 class="font-semibold text-lg">Grama Natural</h3>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="section-capacity">
-                        <h2 class="text-3xl font-bold text-white mb-6">Capacidade da Quadra</h2>
-                        <p class="text-gray-400 mb-6">Refere-se ao número de jogadores em campo ao mesmo tempo.</p>
-                        <div class="flex justify-between items-center max-w-xs">
-                            <label class="font-semibold text-lg">Jogadores</label>
-                            <div class="counter-input flex items-center gap-4" data-input-name="court_capacity" data-min-value="2" data-target-input="court_capacity_input">
-                                <button type="button" class="counter-btn minus w-10 h-10 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700">-</button>
-                                <span class="counter-value text-lg font-bold"><?php echo $venue['court_capacity']; ?></span>
-                                <button type="button" class="counter-btn plus w-10 h-10 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700">+</button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="section-amenities">
-                        <h2 class="text-3xl font-bold text-white mb-6">Comodidades</h2>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <label class="checkbox-card border border-gray-700 rounded-lg p-4 flex flex-col items-start justify-start space-y-2 cursor-pointer hover:border-cyan-400 transition-colors">
-                                <input type="checkbox" name="has_lighting" value="1" class="hidden" <?php echo $venue['has_lighting'] ? 'checked' : ''; ?>>
-                                <i class="fas fa-lightbulb text-2xl text-gray-400 mb-2"></i><span class="font-semibold text-base">Iluminação</span>
-                            </label>
-                            <label class="checkbox-card border border-gray-700 rounded-lg p-4 flex flex-col items-start justify-start space-y-2 cursor-pointer hover:border-cyan-400 transition-colors">
-                                <input type="checkbox" name="is_covered" value="1" class="hidden" <?php echo $venue['is_covered'] ? 'checked' : ''; ?>>
-                                <i class="fas fa-cloud-sun text-2xl text-gray-400 mb-2"></i><span class="font-semibold text-base">Quadra Coberta</span>
-                            </label>
-                            <label id="leisure-area-checkbox-card" class="checkbox-card border border-gray-700 rounded-lg p-4 flex flex-col items-start justify-start space-y-2 cursor-pointer hover:border-cyan-400 transition-colors">
-                                <input type="checkbox" name="has_leisure_area" value="1" class="hidden" <?php echo $venue['has_leisure_area'] ? 'checked' : ''; ?>>
-                                <i class="fas fa-utensils text-2xl text-gray-400 mb-2"></i><span class="font-semibold text-base">Área de Lazer</span>
-                            </label>
-                        </div>
-                        <div id="leisure-capacity-container" class="hidden mt-8">
-                            <hr class="border-gray-800 mb-8">
-                            <h3 class="text-2xl font-bold text-white mb-4">Qual a capacidade da sua área de lazer?</h3>
-                            <div class="flex justify-between items-center max-w-xs">
-                                <label class="font-semibold text-lg">Pessoas</label>
-                                <div class="counter-input flex items-center gap-4" data-input-name="leisure_area_capacity" data-min-value="0" data-target-input="leisure_area_capacity_input">
-                                    <button type="button" class="counter-btn minus w-10 h-10 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700">-</button>
-                                    <span class="counter-value text-lg font-bold"><?php echo $venue['leisure_area_capacity']; ?></span>
-                                    <button type="button" class="counter-btn plus w-10 h-10 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="section-address">
-                        <h2 class="text-3xl font-bold text-white mb-6">Endereço</h2>
-                        <div class="space-y-4">
-                            <div><label for="cep" class="block text-gray-400 text-sm font-bold mb-2">CEP</label><input type="text" id="cep" name="cep" required value="<?php echo htmlspecialchars($venue['cep']); ?>" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"></div>
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="col-span-2"><label for="street" class="block text-gray-400 text-sm font-bold mb-2">Rua</label><input type="text" id="street" name="street" value="<?php echo htmlspecialchars($venue['street']); ?>" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"></div>
-                                <div><label for="number" class="block text-gray-400 text-sm font-bold mb-2">Número</label><input type="text" id="number" name="number" value="<?php echo htmlspecialchars($venue['number']); ?>" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"></div>
-                            </div>
-                            <div><label for="neighborhood" class="block text-gray-400 text-sm font-bold mb-2">Bairro</label><input type="text" id="neighborhood" name="neighborhood" value="<?php echo htmlspecialchars($venue['neighborhood']); ?>" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"></div>
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="col-span-2"><label for="city" class="block text-gray-400 text-sm font-bold mb-2">Cidade</label><input type="text" id="city" name="city" value="<?php echo htmlspecialchars($venue['city']); ?>" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"></div>
-                                <div><label for="state" class="block text-gray-400 text-sm font-bold mb-2">Estado</label><input type="text" id="state" name="state" value="<?php echo htmlspecialchars($venue['state']); ?>" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"></div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="section-photos">
-                        <h2 class="text-3xl font-bold text-white mb-6">Fotos</h2>
-                        <div id="drop-area" class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-cyan-400 transition-colors">
-                            <label for="images" class="cursor-pointer"><i class="fas fa-cloud-upload-alt text-5xl text-gray-500"></i>
-                                <p class="mt-4 font-semibold">Arraste e solte novas fotos aqui</p>
-                                <p class="text-sm text-gray-500">ou clique para selecionar</p><input type="file" id="images" name="images[]" multiple accept="image/jpeg, image/png" class="hidden">
-                            </label>
-                        </div>
-
-                        <div id="preview-container" class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            <?php
-                            if (!empty($venue['images']) && is_array($venue['images'])) {
-                                foreach ($venue['images'] as $image) {
-                                    $imgUrl = BASE_URL . '/uploads/venues/' . $venue['id'] . '/' . htmlspecialchars($image['file_path']);
-                                    $imgId = htmlspecialchars($image['id']);
-                                    echo '<div class="relative existing-image-preview">';
-                                    echo '  <img src="' . $imgUrl . '" alt="Foto do local" class="w-full h-32 object-cover rounded-lg">';
-                                    echo '  <button type="button" class="delete-existing-image absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-lg" data-image-id="' . $imgId . '">&times;</button>';
-                                    echo '</div>';
-                                }
-                            }
-                            ?>
-                        </div>
-                    </section>
-
-                </form>
-
-                <section id="section-danger-zone" class="mt-12">
-                    <h2 class="text-3xl font-bold text-red-500 mb-6">Área de Perigo</h2>
-
-                    <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 shadow-lg">
+                    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3"><i class="fas fa-info-circle text-cyan-400"></i> Informações Básicas</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <h3 class="font-bold text-lg text-white">Desativar esta quadra</h3>
-                            <p class="text-sm text-gray-400 max-w-md mt-1">
-                                Uma vez desativada, a quadra não aparecerá mais nos resultados de busca e não poderá ser reservada.
-                            </p>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Nome</label>
+                            <input type="text" name="name" required value="<?php echo htmlspecialchars($venue['name']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none transition-all">
                         </div>
-
-                        <form id="delete-venue-form"
-                            action="<?php echo BASE_URL . $prefix; ?>/quadras/excluir/<?php echo $venue['id']; ?>"
-                            method="POST"
-                            class="mt-4 sm:mt-0">
-
-                            <button type="button"
-                                id="open-delete-modal-btn"
-                                data-venue-name="<?php echo htmlspecialchars($venue['name']); ?>"
-                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                                Desativar Quadra
-                            </button>
-                        </form>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Preço / Hora</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-3 text-gray-500">R$</span>
+                                <input type="number" step="0.01" name="average_price_per_hour" value="<?php echo htmlspecialchars($venue['average_price_per_hour']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-white focus:border-cyan-500 outline-none transition-all">
+                            </div>
+                        </div>
                     </div>
-                </section>
+                </div>
 
-            <?php endif; ?>
-        </main>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-[#161B22] p-6 rounded-2xl border border-gray-800 shadow-lg">
+                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-3"><i class="fas fa-layer-group text-purple-400"></i> Piso</h2>
+                        <div class="grid grid-cols-2 gap-3">
+                            <?php
+                            $floors = ['grama sintética' => 'Grama Sintética', 'cimento' => 'Cimento', 'areia' => 'Areia', 'saibro' => 'Saibro', 'grama natural' => 'Grama Natural', 'taco' => 'Taco'];
+                            foreach ($floors as $val => $label):
+                            ?>
+                                <div class="option-card border border-gray-700 bg-gray-900/30 p-3 rounded-xl text-center" data-value="<?php echo $val; ?>">
+                                    <span class="text-sm font-medium text-gray-300"><?php echo $label; ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
 
-        <footer class="w-full p-4 border-t border-gray-800 sticky bottom-0 bg-[#0D1117] z-10">
-            <div class="max-w-3xl mx-auto flex justify-end">
-                <button type="submit" form="venue-form" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-lg transition-colors">Salvar Alterações</button>
+                    <div class="bg-[#161B22] p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col justify-center">
+                        <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-3"><i class="fas fa-users text-green-400"></i> Capacidade</h2>
+                        <p class="text-sm text-gray-400 mb-6">Jogadores em campo</p>
+                        <div class="flex items-center justify-between bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+                            <span class="font-semibold">Total</span>
+                            <div class="counter-input flex items-center gap-4" data-input-name="court_capacity" data-min-value="2" data-target-input="court_capacity_input">
+                                <button type="button" class="minus w-10 h-10 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700 flex items-center justify-center text-xl">-</button>
+                                <span class="counter-value text-2xl font-bold w-8 text-center"><?php echo $venue['court_capacity']; ?></span>
+                                <button type="button" class="plus w-10 h-10 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700 flex items-center justify-center text-xl">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 shadow-lg">
+                    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3"><i class="fas fa-star text-yellow-400"></i> Comodidades</h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div class="checkbox-card border border-gray-700 bg-gray-900/30 rounded-xl p-4 flex flex-col items-center gap-2">
+                            <input type="checkbox" name="has_lighting" value="1" class="hidden" <?php echo $venue['has_lighting'] ? 'checked' : ''; ?>>
+                            <i class="fas fa-lightbulb text-2xl text-gray-500 transition-colors"></i>
+                            <span class="text-sm font-medium">Iluminação</span>
+                        </div>
+                        <div class="checkbox-card border border-gray-700 bg-gray-900/30 rounded-xl p-4 flex flex-col items-center gap-2">
+                            <input type="checkbox" name="is_covered" value="1" class="hidden" <?php echo $venue['is_covered'] ? 'checked' : ''; ?>>
+                            <i class="fas fa-umbrella text-2xl text-gray-500 transition-colors"></i>
+                            <span class="text-sm font-medium">Coberta</span>
+                        </div>
+                        <div class="checkbox-card border border-gray-700 bg-gray-900/30 rounded-xl p-4 flex flex-col items-center gap-2" id="leisure-card">
+                            <input type="checkbox" name="has_leisure_area" value="1" class="hidden" <?php echo $venue['has_leisure_area'] ? 'checked' : ''; ?>>
+                            <i class="fas fa-glass-cheers text-2xl text-gray-500 transition-colors"></i>
+                            <span class="text-sm font-medium">Lazer</span>
+                        </div>
+                    </div>
+
+                    <div id="leisure-capacity-container" class="hidden mt-6 pt-6 border-t border-gray-700">
+                        <div class="flex items-center justify-between bg-gray-900/50 p-4 rounded-xl border border-gray-700 max-w-md mx-auto">
+                            <span class="text-sm font-semibold">Capacidade da Área</span>
+                            <div class="counter-input flex items-center gap-4" data-input-name="leisure_area_capacity" data-min-value="0" data-target-input="leisure_area_capacity_input">
+                                <button type="button" class="minus w-8 h-8 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700">-</button>
+                                <span class="counter-value text-xl font-bold"><?php echo $venue['leisure_area_capacity']; ?></span>
+                                <button type="button" class="plus w-8 h-8 rounded-full border border-gray-600 text-gray-400 hover:bg-gray-700">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 shadow-lg">
+                    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3"><i class="fas fa-map-marker-alt text-red-400"></i> Localização</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">CEP</label>
+                            <div class="relative">
+                                <input type="text" id="cep" name="cep" required value="<?php echo htmlspecialchars($venue['cep']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-white focus:border-cyan-500 outline-none transition-all">
+                                <i class="fas fa-search absolute left-3.5 top-3.5 text-gray-500"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="md:col-span-2"><input type="text" id="street" name="street" value="<?php echo htmlspecialchars($venue['street']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="Rua"></div>
+                            <div><input type="text" id="number" name="number" value="<?php echo htmlspecialchars($venue['number']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="Nº"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div><input type="text" id="neighborhood" name="neighborhood" value="<?php echo htmlspecialchars($venue['neighborhood']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="Bairro"></div>
+                            <div><input type="text" id="city" name="city" value="<?php echo htmlspecialchars($venue['city']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="Cidade"></div>
+                            <div><input type="text" id="state" name="state" value="<?php echo htmlspecialchars($venue['state']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="UF"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 shadow-lg">
+                    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3"><i class="fas fa-camera text-blue-400"></i> Fotos</h2>
+
+                    <div id="drop-area" class="border-2 border-dashed border-gray-700 rounded-2xl p-8 text-center cursor-pointer hover:border-cyan-500 hover:bg-cyan-500/5 transition-all group">
+                        <label for="images" class="cursor-pointer w-full h-full block">
+                            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 group-hover:text-cyan-400"></i>
+                            </div>
+                            <p class="font-bold text-white">Arraste fotos aqui</p>
+                            <p class="text-sm text-gray-500">ou clique para selecionar</p>
+                            <input type="file" id="images" name="images[]" multiple accept="image/jpeg, image/png" class="hidden">
+                        </label>
+                    </div>
+
+                    <div id="preview-container" class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <?php if (!empty($venue['images'])): foreach ($venue['images'] as $image): ?>
+                                <div class="relative group aspect-square rounded-xl overflow-hidden">
+                                    <img src="<?php echo BASE_URL . '/uploads/venues/' . $venue['id'] . '/' . htmlspecialchars($image['file_path']); ?>" class="w-full h-full object-cover">
+                                    <button type="button" class="delete-existing-image absolute top-1 right-1 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg" data-image-id="<?php echo $image['id']; ?>">&times;</button>
+                                </div>
+                        <?php endforeach;
+                        endif; ?>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex justify-end mt-8">
+                    <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5">Salvar Alterações</button>
+                </div>
+            </form>
+
+            <div class="mt-12 mb-24 md:mb-10 bg-red-500/5 border border-red-500/20 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 animate-up delay-200">
+                <div>
+                    <h3 class="font-bold text-white text-lg">Desativar Quadra</h3>
+                    <p class="text-sm text-gray-400">Isso removerá a quadra das buscas.</p>
+                </div>
+                <button type="button" id="open-delete-modal-btn" data-venue-name="<?php echo htmlspecialchars($venue['name']); ?>" class="w-full md:w-auto bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500 font-bold py-2 px-6 rounded-xl transition-colors">
+                    Desativar
+                </button>
             </div>
-        </footer>
-    </div>
-    <div id="delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm">
-        <div class="bg-[#161B22] border border-gray-700 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 class="text-xl font-bold text-white">Você tem certeza?</h3>
-                <p class="text-gray-400 mt-2">
-                    Esta ação <strong class="text-red-400">não pode ser desfeita</strong>.
-                    Isso irá desativar permanentemente a quadra.
-                </p>
 
-                <div class="mt-4">
-                    <label for="confirmation-input" class="text-sm font-semibold text-gray-300">
-                        <span id="confirmation-prompt"></span>
-                    </label>
-                    <input type="text" id="confirmation-input" autocomplete="off" class="mt-2 w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500">
+        <?php endif; ?>
+    </main>
+
+    <div class="fixed bottom-0 left-0 w-full p-4 bg-[#161B22]/90 backdrop-blur-md border-t border-gray-800 flex justify-center z-40 md:hidden">
+        <button type="submit" form="venue-form" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-6 rounded-xl shadow-xl transition-transform active:scale-95">Salvar Alterações</button>
+    </div>
+
+    <div id="delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm transition-opacity">
+        <div class="bg-[#161B22] border border-gray-700 rounded-2xl shadow-2xl w-full max-w-md transform scale-100">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-white flex items-center"><i class="fas fa-trash-alt mr-3 text-red-500"></i> Desativar?</h3>
+                <p class="text-gray-400 mt-2 text-sm">Esta ação é irreversível. O histórico de reservas será mantido, mas a quadra ficará invisível.</p>
+                <div class="mt-6">
+                    <p class="text-sm text-gray-300 mb-2">Digite <strong class="text-white" id="confirmation-prompt-name"></strong> para confirmar:</p>
+                    <input type="text" id="confirmation-input" autocomplete="off" class="w-full px-4 py-3 bg-black/30 border border-gray-600 rounded-xl text-white outline-none focus:border-red-500 transition-all">
                 </div>
             </div>
-
-            <div class="flex justify-end gap-4 bg-[#0D1117] p-4 rounded-b-lg border-t border-gray-700">
-                <button type="button" id="cancel-delete-btn" class="py-2 px-4 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg transition-colors">
-                    Cancelar
-                </button>
-                <button type="button" id="confirm-delete-btn" class="py-2 px-4 bg-red-600 text-white font-bold rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>
-                    Eu entendo, desativar
-                </button>
+            <div class="p-4 bg-gray-900/50 rounded-b-2xl border-t border-gray-700 flex justify-end gap-3">
+                <button type="button" id="cancel-delete-btn" class="px-4 py-2 text-gray-400 hover:text-white">Cancelar</button>
+                <form id="delete-venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/excluir/<?php echo $venue['id']; ?>" method="POST">
+                    <button type="submit" id="confirm-delete-btn" class="px-6 py-2 bg-red-600 text-white font-bold rounded-lg opacity-50 cursor-not-allowed transition-all" disabled>Desativar</button>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const venueData = <?php echo json_encode($venue ?? null); ?>;
             if (!venueData) return;
 
-            const form = document.getElementById('venue-form');
+            // 1. Lógica de Piso
+            const floorCards = document.querySelectorAll('.option-card');
+            const floorInput = document.getElementById('floor_type_input');
 
-            // --- Lógica dos Contadores (Capacidade) ---
-            document.querySelectorAll('.counter-input').forEach(counter => {
-                const valueSpan = counter.querySelector('.counter-value');
-                const targetInputId = counter.dataset.targetInput;
-                const hiddenInput = document.getElementById(targetInputId);
-                const minValue = parseInt(counter.dataset.minValue, 10);
-                let value = parseInt(valueSpan.textContent, 10);
-
-                counter.querySelector('.minus').addEventListener('click', () => {
-                    if (value > minValue) value--;
-                    valueSpan.textContent = value;
-                    if (hiddenInput) hiddenInput.value = value;
-                });
-                counter.querySelector('.plus').addEventListener('click', () => {
-                    value++;
-                    valueSpan.textContent = value;
-                    if (hiddenInput) hiddenInput.value = value;
-                });
+            // Marca o atual
+            floorCards.forEach(c => {
+                if (c.dataset.value === floorInput.value) c.classList.add('selected');
             });
 
-            // --- Lógica dos Cards de Opção (Tipo de Piso) ---
-            const optionCards = document.querySelectorAll('.option-card');
-            const floorTypeInput = document.getElementById('floor_type_input');
-
-            optionCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    optionCards.forEach(c => c.classList.remove('selected'));
+            floorCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault(); // Impede recarregar
+                    floorCards.forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
-                    floorTypeInput.value = card.dataset.value;
+                    floorInput.value = card.dataset.value;
                 });
             });
 
-            // --- Lógica dos Checkbox-Cards (Comodidades) ---
-            const leisureCapacityContainer = document.getElementById('leisure-capacity-container');
-            const leisureCapacityInput = document.getElementById('leisure_area_capacity_input');
-            const leisureCapacityValueSpan = leisureCapacityContainer.querySelector('.counter-value');
-
+            // 2. Lógica de Checkboxes
+            const leisureContainer = document.getElementById('leisure-capacity-container');
             document.querySelectorAll('.checkbox-card').forEach(card => {
-                const checkbox = card.querySelector('input[type="checkbox"]');
-                const updateVisual = (isChecked) => {
-                    card.classList.toggle('selected', isChecked);
-                    if (card.id === 'leisure-area-checkbox-card') {
-                        leisureCapacityContainer.classList.toggle('hidden', !isChecked);
-                        if (!isChecked) {
-                            leisureCapacityValueSpan.textContent = '0';
-                            leisureCapacityInput.value = '0';
-                        }
+                const checkbox = card.querySelector('input');
+
+                // Função visual
+                const updateVisual = () => {
+                    card.classList.toggle('selected', checkbox.checked);
+                    const icon = card.querySelector('i');
+                    icon.classList.toggle('text-cyan-400', checkbox.checked);
+                    icon.classList.toggle('text-gray-500', !checkbox.checked);
+
+                    if (checkbox.name === 'has_leisure_area') {
+                        leisureContainer.classList.toggle('hidden', !checkbox.checked);
                     }
                 };
+
+                // Inicializa visual
+                updateVisual();
+
                 card.addEventListener('click', (e) => {
-                    if (e.target.tagName === 'INPUT') {
-                        updateVisual(checkbox.checked);
-                        return;
-                    }
-                    e.preventDefault();
-                    checkbox.checked = !checkbox.checked;
-                    updateVisual(checkbox.checked);
+                    e.preventDefault(); // Impede recarregar
+                    checkbox.checked = !checkbox.checked; // Troca manual
+                    updateVisual();
                 });
             });
 
-            // --- Lógica do ViaCEP ---
+            // 3. Lógica de Contadores
+            document.querySelectorAll('.counter-input').forEach(counter => {
+                const span = counter.querySelector('.counter-value');
+                const hiddenInput = document.getElementById(counter.dataset.targetInput);
+                const min = parseInt(counter.dataset.minValue);
+                let val = parseInt(span.textContent);
+
+                counter.querySelector('.minus').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (val > min) {
+                        val--;
+                        span.textContent = val;
+                        hiddenInput.value = val;
+                    }
+                });
+                counter.querySelector('.plus').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    val++;
+                    span.textContent = val;
+                    hiddenInput.value = val;
+                });
+            });
+
+            // ViaCEP
             document.getElementById('cep').addEventListener('blur', async function() {
                 const cep = this.value.replace(/\D/g, '');
                 if (cep.length === 8) {
                     try {
-                        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-                        const data = await response.json();
+                        const data = await (await fetch(`https://viacep.com.br/ws/${cep}/json/`)).json();
                         if (!data.erro) {
                             document.getElementById('street').value = data.logradouro;
                             document.getElementById('neighborhood').value = data.bairro;
                             document.getElementById('city').value = data.localidade;
                             document.getElementById('state').value = data.uf;
-                            document.getElementById('number').focus();
                         }
-                    } catch (error) {
-                        console.error('Erro ao buscar CEP:', error);
-                    }
+                    } catch (e) {}
                 }
             });
 
-            // --- Lógica de Upload/Preview de Imagens ---
-            const dropArea = document.getElementById('drop-area');
+            // Upload Logic
             const fileInput = document.getElementById('images');
+            const dropArea = document.getElementById('drop-area');
             const previewContainer = document.getElementById('preview-container');
-            const newFilesDataTransfer = new DataTransfer();
+            const dt = new DataTransfer();
 
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                if (dropArea) dropArea.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false);
-            });
-            ['dragenter', 'dragover'].forEach(eventName => {
-                if (dropArea) dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
-            });
-            ['dragleave', 'drop'].forEach(eventName => {
-                if (dropArea) dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
-            });
-            if (dropArea) dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files), false);
-            if (fileInput) fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
-
-            function handleFiles(files) {
+            const handleFiles = (files) => {
                 for (const file of files) {
-                    if (file.type.startsWith('image/') && !isFileInTransfer(file.name)) {
-                        newFilesDataTransfer.items.add(file);
-                        previewNewFile(file);
+                    if (file.type.startsWith('image/')) {
+                        dt.items.add(file);
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const div = document.createElement('div');
+                            div.className = 'relative group aspect-square rounded-xl overflow-hidden';
+                            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover"><button type="button" class="delete-new absolute top-1 right-1 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">&times;</button>`;
+                            previewContainer.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
                     }
                 }
-                if (fileInput) fileInput.files = newFilesDataTransfer.files;
-            }
+                fileInput.files = dt.files;
+            };
 
-            function isFileInTransfer(fileName) {
-                return Array.from(newFilesDataTransfer.files).some(f => f.name === fileName);
-            }
+            fileInput.addEventListener('change', e => handleFiles(e.target.files));
+            dropArea.addEventListener('click', () => fileInput.click());
+            dropArea.addEventListener('dragover', e => {
+                e.preventDefault();
+                dropArea.classList.add('highlight');
+            });
+            dropArea.addEventListener('dragleave', e => dropArea.classList.remove('highlight'));
+            dropArea.addEventListener('drop', e => {
+                e.preventDefault();
+                dropArea.classList.remove('highlight');
+                handleFiles(e.dataTransfer.files);
+            });
 
-            function previewNewFile(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const previewDiv = document.createElement('div');
-                    previewDiv.classList.add('relative', 'new-image-preview');
-                    previewDiv.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview" class="w-full h-32 object-cover rounded-lg">
-                        <button type="button" class="delete-new-image absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-lg" data-file-name="${file.name}">&times;</button>
-                    `;
-                    if (previewContainer) previewContainer.appendChild(previewDiv);
-                };
-                reader.readAsDataURL(file);
-            }
+            previewContainer.addEventListener('click', e => {
+                if (e.target.closest('.delete-new')) {
+                    const parentDiv = e.target.closest('div.relative');
+                    parentDiv.remove();
+                    // Melhorar a remoção do DataTransfer se necessário para evitar submissão de arquivos removidos
+                    const remainingFiles = Array.from(dt.files).filter(f => f.name !== parentDiv.querySelector('img').src.split('/').pop()); // Adapte se o nome do arquivo não for o último na URL
+                    dt.items.clear();
+                    remainingFiles.forEach(f => dt.items.add(f));
+                    fileInput.files = dt.files;
 
-            if (previewContainer) previewContainer.addEventListener('click', function(e) {
-                if (e.target.classList.contains('delete-new-image')) {
-                    e.preventDefault();
-                    const fileName = e.target.dataset.fileName;
-                    const newFiles = Array.from(newFilesDataTransfer.files);
-                    const filteredFiles = newFiles.filter(file => file.name !== fileName);
-                    newFilesDataTransfer.items.clear();
-                    filteredFiles.forEach(file => newFilesDataTransfer.items.add(file));
-                    if (fileInput) fileInput.files = newFilesDataTransfer.files;
-                    e.target.parentElement.remove();
                 }
-
-                if (e.target.classList.contains('delete-existing-image')) {
-                    e.preventDefault();
-                    const imageId = e.target.dataset.imageId;
-                    const deleteInput = document.createElement('input');
-                    deleteInput.type = 'hidden';
-                    deleteInput.name = 'delete_images[]';
-                    deleteInput.value = imageId;
-                    form.appendChild(deleteInput);
-                    e.target.parentElement.remove();
+                if (e.target.closest('.delete-existing-image')) {
+                    const id = e.target.closest('.delete-existing-image').dataset.imageId;
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'delete_images[]';
+                    input.value = id;
+                    document.getElementById('venue-form').appendChild(input);
+                    e.target.closest('.group').remove();
                 }
             });
 
-            // --- Pré-preenchimento Visual ---
-            function prefillVisuals() {
-                const floorCard = document.querySelector(`.option-card[data-value="${venueData.floor_type}"]`);
-                if (floorCard) floorCard.classList.add('selected');
-                document.querySelectorAll('.checkbox-card input').forEach(checkbox => {
-                    if (checkbox.checked) {
-                        checkbox.parentElement.classList.add('selected');
-                        if (checkbox.name === 'has_leisure_area' && leisureCapacityContainer) {
-                            leisureCapacityContainer.classList.remove('hidden');
-                        }
-                    }
-                });
-            }
-            prefillVisuals();
+            // Modal Logic
+            const deleteModal = document.getElementById('delete-modal');
+            const openDeleteBtn = document.getElementById('open-delete-modal-btn');
+            const confirmInput = document.getElementById('confirmation-input');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
-            // --- Lógica do Menu Dropdown ---
-            const userMenuButton = document.getElementById('user-menu-button');
-            const profileDropdown = document.getElementById('profile-dropdown');
-            if (userMenuButton && profileDropdown) {
-                userMenuButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    profileDropdown.classList.toggle('opacity-0');
-                    profileDropdown.classList.toggle('invisible');
-                    profileDropdown.classList.toggle('-translate-y-2');
+            if (openDeleteBtn) {
+                openDeleteBtn.addEventListener('click', () => {
+                    document.getElementById('confirmation-prompt-name').textContent = openDeleteBtn.dataset.venueName;
+                    confirmInput.value = ''; // Limpa o input cada vez que abre
+                    confirmDeleteBtn.disabled = true;
+                    confirmDeleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    deleteModal.classList.remove('hidden');
                 });
-                window.addEventListener('click', (event) => {
-                    if (!profileDropdown.classList.contains('invisible')) {
-                        if (!profileDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
-                            profileDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
-                        }
-                    }
+                document.getElementById('cancel-delete-btn').addEventListener('click', () => deleteModal.classList.add('hidden'));
+                confirmInput.addEventListener('input', () => {
+                    const match = confirmInput.value === openDeleteBtn.dataset.venueName;
+                    confirmDeleteBtn.disabled = !match;
+                    confirmDeleteBtn.classList.toggle('opacity-50', !match);
+                    confirmDeleteBtn.classList.toggle('cursor-not-allowed', !match);
                 });
             }
         });
-
-        // PASSO 3: ADICIONE ESTE CÓDIGO DENTRO DO SEU SCRIPT 'DOMContentLoaded'
-
-        // --- Lógica do Modal de Exclusão (Estilo GitHub) ---
-        const openDeleteModalBtn = document.getElementById('open-delete-modal-btn');
-        const deleteModal = document.getElementById('delete-modal');
-        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
-        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-        const confirmationInput = document.getElementById('confirmation-input');
-        const confirmationPrompt = document.getElementById('confirmation-prompt');
-        const deleteVenueForm = document.getElementById('delete-venue-form');
-
-        // Verifica se todos os elementos existem (importante se a quadra falhar ao carregar)
-        if (openDeleteModalBtn && deleteModal && cancelDeleteBtn && confirmDeleteBtn && confirmationInput && confirmationPrompt && deleteVenueForm) {
-
-            let requiredName = '';
-
-            // 1. Abrir o modal
-            openDeleteModalBtn.addEventListener('click', () => {
-                requiredName = openDeleteModalBtn.dataset.venueName;
-
-                // Atualiza o texto de confirmação
-                confirmationPrompt.innerHTML = `Por favor, digite <strong class="text-cyan-400">${requiredName}</strong> para confirmar:`;
-
-                // Reseta o formulário
-                confirmationInput.value = '';
-                confirmDeleteBtn.disabled = true;
-                confirmDeleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-                // Mostra o modal
-                deleteModal.classList.remove('hidden');
-                confirmationInput.focus(); // Foca no input
-            });
-
-            // 2. Fechar o modal (Botão Cancelar)
-            cancelDeleteBtn.addEventListener('click', () => {
-                deleteModal.classList.add('hidden');
-            });
-
-            // 3. Fechar o modal (Clicando fora)
-            deleteModal.addEventListener('click', (e) => {
-                if (e.target === deleteModal) {
-                    deleteModal.classList.add('hidden');
-                }
-            });
-
-            // 4. Lógica de verificação do input
-            confirmationInput.addEventListener('input', () => {
-                const typedName = confirmationInput.value;
-                const isMatch = typedName === requiredName;
-
-                confirmDeleteBtn.disabled = !isMatch;
-                confirmDeleteBtn.classList.toggle('opacity-50', !isMatch);
-                confirmDeleteBtn.classList.toggle('cursor-not-allowed', !isMatch);
-
-                // Adiciona um feedback visual no botão de confirmação
-                if (isMatch) {
-                    confirmDeleteBtn.classList.remove('bg-red-600');
-                    confirmDeleteBtn.classList.add('bg-red-500', 'hover:bg-red-400');
-                } else {
-                    confirmDeleteBtn.classList.add('bg-red-600');
-                    confirmDeleteBtn.classList.remove('bg-red-500', 'hover:bg-red-400');
-                }
-            });
-
-            // 5. Ação de confirmar
-            confirmDeleteBtn.addEventListener('click', () => {
-                // Se estiver tudo certo (só por garantia), envia o formulário original
-                if (!confirmDeleteBtn.disabled) {
-                    deleteVenueForm.submit();
-                }
-            });
-        }
     </script>
 </body>
 

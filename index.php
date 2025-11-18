@@ -11,6 +11,8 @@ use App\Controllers\AuthApiController;
 use App\Controllers\VenueApiController;
 use App\Controllers\SportApiController;
 use App\Controllers\GameApiController;
+use App\Core\AuthHelper;
+
 
 
 session_start();
@@ -73,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit; // Termina a execução. Não precisa do router.
 }
 
+AuthHelper::checkRememberMe();
 // --- Instância do Roteador ---
 $router = new Router();
 

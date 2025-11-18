@@ -47,16 +47,11 @@ class Venue
     public static function getAllForAdmin(): array
     {
         $pdo = Database::getConnection();
-
-        // --- CORREÇÃO AQUI ---
-        // Adicionamos o 'LEFT JOIN' para a tabela 'addresses' (usando 'a')
-        // E selecionamos 'a.street' e 'a.number'
         $query = "SELECT v.*, u.name as owner_name, a.street, a.number
               FROM venues v
               LEFT JOIN users u ON v.user_id = u.id
               LEFT JOIN addresses a ON v.address_id = a.id
               ORDER BY v.created_at DESC";
-        // --- FIM DA CORREÇÃO ---
 
         $stmt = $pdo->prepare($query);
         $stmt->execute();
@@ -71,16 +66,12 @@ class Venue
     public static function findByUserId(int $userId): array
     {
         $pdo = Database::getConnection();
-        // --- CORREÇÃO AQUI ---
-        // Trocado para LEFT JOIN para garantir que as quadras apareçam
-        // mesmo que o endereço associado tenha um problema.
         $query = "SELECT v.*, a.street, a.number,
                          (SELECT vi.file_path FROM venue_images vi WHERE vi.venue_id = v.id ORDER BY vi.id DESC LIMIT 1) as image_path
                   FROM venues v
                   LEFT JOIN addresses a ON v.address_id = a.id
                   WHERE v.user_id = :user_id AND v.status = 'available'
                   ORDER BY v.created_at DESC";
-        // --- FIM DA CORREÇÃO ---
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
         $stmt->execute();

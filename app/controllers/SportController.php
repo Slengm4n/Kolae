@@ -27,8 +27,6 @@ class SportController
         AuthHelper::checkAdmin();
 
         $data = ['userName' => $_SESSION['user_name'] ?? 'Admin'];
-
-        // --- CORREÇÃO AQUI ---
         ViewHelper::render('sports/create', $data);
     }
 
@@ -55,8 +53,8 @@ class SportController
     }
 
     /**
-     * Exibe o formulário para editar um desporto.
-     * @param int $id O ID do desporto.
+     * Exibe o formulário para editar um esporte.
+     * @param int $id O ID do esporte.
      */
     public function edit(int $id)
     {
@@ -73,7 +71,6 @@ class SportController
             'sport' => $sport
         ];
 
-        // --- CORREÇÃO AQUI ---
         ViewHelper::render('sports/edit', $data);
     }
 
@@ -103,8 +100,8 @@ class SportController
     }
 
     /**
-     * Deleta um desporto.
-     * @param int $id O ID do desporto.
+     * Deleta um esporte.
+     * @param int $id O ID do esporte.
      */
     public function delete(int $id)
     {

@@ -58,60 +58,59 @@ class ImageHelper
      */
     public static function optimize($sourcePath, $destinationPath, $quality = 80, $maxWidth = 800)
     {
-        $imageInfo = \getimagesize($sourcePath); // <-- ADICIONADO \
+        $imageInfo = \getimagesize($sourcePath);
         if ($imageInfo === false) return false;
 
         $mime = $imageInfo['mime'];
         switch ($mime) {
             case 'image/jpeg':
-                $image = \imagecreatefromjpeg($sourcePath); // <-- ADICIONADO \
+                $image = \imagecreatefromjpeg($sourcePath);
                 break;
             case 'image/png':
-                $image = \imagecreatefrompng($sourcePath); // <-- ADICIONADO \
+                $image = \imagecreatefrompng($sourcePath);
                 break;
             case 'image/gif': // Suporte para GIF (sem otimização de qualidade, apenas redimensionamento)
-                $image = \imagecreatefromgif($sourcePath); // <-- ADICIONADO \
+                $image = \imagecreatefromgif($sourcePath);
                 break;
             default:
                 return false; // Formato não suportado
         }
 
-        $width = \imagesx($image); // <-- ADICIONADO \
-        $height = \imagesy($image); // <-- ADICIONADO \
+        $width = \imagesx($image);
+        $height = \imagesy($image);
 
         if ($width > $maxWidth) {
             $newHeight = ($height / $width) * $maxWidth;
-            $newImage = \imagecreatetruecolor($maxWidth, $newHeight); // <-- ADICIONADO \
+            $newImage = \imagecreatetruecolor($maxWidth, $newHeight);
 
             // Preserva a transparência para PNG e GIF
             if ($mime == 'image/png' || $mime == 'image/gif') {
-                \imagealphablending($newImage, false); // <-- ADICIONADO \
-                \imagesavealpha($newImage, true); // <-- ADICIONADO \
-                $transparent = \imagecolorallocatealpha($newImage, 255, 255, 255, 127); // <-- ADICIONADO \
-                \imagefilledrectangle($newImage, 0, 0, $maxWidth, $newHeight, $transparent); // <-- ADICIONADO \
+                \imagealphablending($newImage, false);
+                \imagesavealpha($newImage, true);
+                $transparent = \imagecolorallocatealpha($newImage, 255, 255, 255, 127);
+                \imagefilledrectangle($newImage, 0, 0, $maxWidth, $newHeight, $transparent);
             }
 
-            \imagecopyresampled($newImage, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height); // <-- ADICIONADO \
-            \imagedestroy($image); // <-- ADICIONADO \
-            $image = $newImage;
+            \imagecopyresampled($newImage, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height);
+            \imagedestroy($image);
         }
 
         $success = false;
         switch ($mime) {
             case 'image/jpeg':
-                $success = \imagejpeg($image, $destinationPath, $quality); // <-- ADICIONADO \
+                $success = \imagejpeg($image, $destinationPath, $quality);
                 break;
             case 'image/png':
                 $pngQuality = round(($quality / 100) * 9);
-                \imagesavealpha($image, true); // <-- ADICIONADO \
-                $success = \imagepng($image, $destinationPath, $pngQuality); // <-- ADICIONADO \
+                \imagesavealpha($image, true);
+                $success = \imagepng($image, $destinationPath, $pngQuality);
                 break;
             case 'image/gif':
-                $success = \imagegif($image, $destinationPath); // <-- ADICIONADO \
+                $success = \imagegif($image, $destinationPath);
                 break;
         }
 
-        \imagedestroy($image); // <-- ADICIONADO \
+        \imagedestroy($image);
         return $success;
     }
 }

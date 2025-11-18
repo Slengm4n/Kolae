@@ -7,21 +7,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* === ANIMAÇÕES === */
+        .animate-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .delay-300 {
+            animation-delay: 300ms;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -29,87 +56,90 @@
 <body class="bg-[#0D1117] text-gray-200">
 
     <div>
-        <!-- Sidebar -->
-        <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform -translate-x-full md:translate-x-0">
-            <!-- Botão de Fechar para Mobile -->
-            <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white">
+        <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
+            <button name="close-btn" id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
                 <i class="fas fa-times text-2xl"></i>
             </button>
 
-            <!-- Logo & User Info -->
-            <div class="p-6 text-center border-b border-gray-800">
-                <div class="w-24 h-24 rounded-full bg-gray-700 mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-user-shield text-4xl text-cyan-400"></i>
+            <div class="p-8 text-center border-b border-gray-800/50">
+                <div class="w-20 h-20 rounded-full bg-gray-800 border border-gray-700 mx-auto flex items-center justify-center mb-4 shadow-inner">
+                    <i class="fas fa-user-shield text-3xl text-cyan-400"></i>
                 </div>
-                <h2 class="text-xl font-bold">
+                <h2 class="text-lg font-bold text-white tracking-wide">
                     <?php echo htmlspecialchars($data['userName'] ?? 'Admin'); ?>
                 </h2>
-                <p class="text-sm text-gray-400">Admin Kolae</p>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mt-1">Admin Kolae</p>
             </div>
 
-            <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 rounded-lg">
-                    <i class="fas fa-home w-5 text-center"></i>
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 border-l-4 border-cyan-400 rounded-r-lg transition-all shadow-md"">
+                    <i class=" fas fa-home w-5 text-center group-hover:text-cyan-400 transition-colors"></i>
                     <span>Início</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
+
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
                     <i class="fas fa-users w-5 text-center"></i>
                     <span>Usuários</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
-                    <i class="fas fa-running w-5 text-center"></i>
+
+                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-running w-5 text-center group-hover:text-purple-400 transition-colors"></i>
                     <span>Esportes</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
-                    <i class="fas fa-map-marker-alt w-5 text-center"></i>
+
+                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-400 transition-colors"></i>
                     <span>Mapa</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
-                    <i class="fa-solid fa-flag w-5 text-center"></i>
+
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-400 transition-colors"></i>
                     <span>Quadras</span>
                 </a>
             </nav>
 
-            <!-- Logout -->
-            <div class="p-4 border-t border-gray-800">
-                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
-                    <i class="fas fa-sign-out-alt w-5 text-center"></i>
+            <div class="p-4 border-t border-gray-800/50">
+                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors group">
+                    <i class="fas fa-sign-out-alt w-5 text-center group-hover:rotate-180 transition-transform duration-300"></i>
                     <span>Sair</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Overlay para fechar o menu em mobile -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden"></div>
 
-        <!-- Main Content -->
         <main class="md:ml-64 flex-1 p-6 sm:p-10">
-            <!-- Botão Hamburger para Mobile -->
             <button id="sidebar-toggle" class="md:hidden mb-6 text-gray-400 hover:text-white">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
 
-            <h1 class="text-3xl font-bold mb-8">Dashboard</h1>
+            <h1 class="text-3xl font-bold mb-8 animate-up">Dashboard</h1>
 
-            <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <div class="bg-gradient-to-br from-green-500 to-green-600 p-6 rounded-2xl shadow-lg">
+
+                <div class="bg-gradient-to-br from-green-500 to-green-600 p-6 rounded-2xl shadow-lg 
+                            transform transition-all duration-300 hover:-translate-y-1 hover:shadow-green-500/20 
+                            animate-up delay-100">
                     <p class="text-sm text-green-100 font-medium">Total de Usuários</p>
                     <p class="text-4xl font-bold mt-2"><?php echo $data['totalUsers'] ?? '0'; ?></p>
                 </div>
-                <div class="bg-gradient-to-br from-purple-500 to-purple-600 p-6 rounded-2xl shadow-lg">
+
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 p-6 rounded-2xl shadow-lg 
+                            transform transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/20 
+                            animate-up delay-200">
                     <p class="text-sm text-purple-100 font-medium">Total de Esportes</p>
                     <p class="text-4xl font-bold mt-2"><?php echo $data['totalSports'] ?? '0'; ?></p>
                 </div>
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 p-6 rounded-2xl shadow-lg">
+
+                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 p-6 rounded-2xl shadow-lg 
+                            transform transition-all duration-300 hover:-translate-y-1 hover:shadow-yellow-500/20 
+                            animate-up delay-300">
                     <p class="text-sm text-yellow-100 font-medium">Total de Locais</p>
                     <p class="text-4xl font-bold mt-2"><?php echo $data['totalLocations'] ?? '0'; ?></p>
                 </div>
             </div>
 
-            <!-- Users Table -->
-            <div class="bg-[#161B22] p-6 rounded-2xl border border-gray-800">
+            <div class="bg-[#161B22] p-6 rounded-2xl border border-gray-800 animate-up delay-300">
                 <h2 class="text-xl font-semibold mb-6">Usuários Recentes</h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-700">
@@ -124,13 +154,12 @@
                         <tbody class="divide-y divide-gray-700">
                             <?php if (!empty($data['recentUsers'])) : ?>
                                 <?php foreach ($data['recentUsers'] as $user) : ?>
-                                    <tr>
+                                    <tr class="hover:bg-gray-800/50 transition-colors">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white"><?php echo htmlspecialchars($user['name'] ?? 'N/D'); ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400"><?php echo htmlspecialchars($user['role'] ?? 'N/D'); ?></td>
                                         <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-400"><?php echo htmlspecialchars($user['email'] ?? 'N/D'); ?></td>
                                         <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                             <?php
-                                            // Define um valor padrão para o status se ele for nulo ou não existir
                                             $status = $user['status'] ?? 'inactive';
                                             $statusClass = $status === 'active' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300';
                                             ?>

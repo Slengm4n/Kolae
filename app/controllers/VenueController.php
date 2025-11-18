@@ -16,11 +16,10 @@ class VenueController
      */
     public function index()
     {
-        // --- MODIFICAÇÃO 1 ---
-        // Esta rota agora é só para admins
+
+
         AuthHelper::checkAdmin();
 
-        // Busca TODAS as quadras (assumindo que Venue::getAllForAdmin() existe)
         $venues = Venue::getAllForAdmin();
 
         $data = [
@@ -28,9 +27,7 @@ class VenueController
             'venues' => $venues
         ];
 
-        // Renderiza a view da tabela de admin
         ViewHelper::render('venues/index', $data);
-        // --- FIM DA MODIFICAÇÃO 1 ---
     }
 
     /**
@@ -54,9 +51,7 @@ class VenueController
         $this->checkCnpjStatus();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // ... (O código de store() continua o mesmo) ...
-            // (Ele corretamente associa a nova quadra ao ID do usuário logado,
-            // seja ele um usuário normal ou um admin)
+
 
             // 1. Cria o endereço
             $addressData = [
@@ -118,10 +113,9 @@ class VenueController
         AuthHelper::check();
         $venue = Venue::findById($id);
 
-        // --- INÍCIO DA MODIFICAÇÃO ---
         $isAdmin = AuthHelper::isAdmin(); // Verifica se é admin
 
-        // Validação de segurança: (Esta parte você já tem)
+        // Validação de segurança:
         if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !$isAdmin)) {
             header('Location: ' . BASE_URL . '/dashboard?error=not_found');
             exit;
@@ -129,7 +123,6 @@ class VenueController
 
         // Define o prefixo da rota com base no 'role' do usuário
         $routePrefix = $isAdmin ? '/admin' : '/dashboard';
-        // --- FIM DA MODIFICAÇÃO ---
 
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
@@ -148,17 +141,15 @@ class VenueController
     {
         AuthHelper::check();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validação de segurança
+
             $venue = Venue::findById($id);
 
-            // --- MODIFICAÇÃO 3 ---
             // Redireciona se a quadra não existe OU
             // se o usuário NÃO for o dono E também NÃO for admin
             if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !AuthHelper::isAdmin())) {
                 header('Location: ' . BASE_URL . '/dashboard?error=unauthorized');
                 exit;
             }
-            // --- FIM DA MODIFICAÇÃO 3 ---
 
             // 1. Atualiza o endereço
             $addressData = [
@@ -186,7 +177,7 @@ class VenueController
             ];
             Venue::update($id, $venueData);
 
-            // --- Lógica de Imagem (já estava correta) ---
+            // Lógica de Imagem 
             if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
                 $uploadDir = BASE_PATH . "/uploads/venues/" . $id . "/";
                 foreach ($_POST['delete_images'] as $imageId) {
@@ -204,8 +195,6 @@ class VenueController
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $this->handleImageUploads($id);
             }
-            // --- Fim da Lógica de Imagem ---
-            // Pega o prefixo de rota que o formulário enviou 
             // Pega o prefixo de rota que o formulário enviou
             $redirectUrl = $this->getRedirectUrl();
             header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
@@ -224,14 +213,12 @@ class VenueController
         // Validação de segurança
         $venue = Venue::findById($id);
 
-        // --- MODIFICAÇÃO 4 ---
         // Redireciona se a quadra não existe OU
         // se o usuário NÃO for o dono E também NÃO for admin
         if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !AuthHelper::isAdmin())) {
             header('Location: ' . BASE_URL . '/dashboard?error=unauthorized');
             exit;
         }
-        // --- FIM DA MODIFICAÇÃO 4 ---
 
         $redirectUrl = $this->getRedirectUrl();
         header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');

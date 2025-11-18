@@ -7,12 +7,12 @@ use PDO;
 
 /**
  * Class Sport
- * Gerencia todas as operações de banco de dados para a entidade de desporto.
+ * Gerencia todas as operações de banco de dados para a entidade de esportes.
  */
 class Sport
 {
     /**
-     * Conta o total de desportos ativos.
+     * Conta o total de esportess ativos.
      * @return int
      */
     public static function countAll(): int
@@ -25,23 +25,21 @@ class Sport
     }
 
     /**
-     * Busca todos os desportos ATIVOS.
+     * Busca todos os esportess ATIVOS.
      * @return array
      */
     public static function getAll(): array
     {
         $pdo = Database::getConnection();
-        // --- CORREÇÃO AQUI ---
-        // Adicionamos o filtro para buscar apenas desportos com status 'active'.
+        // filtro para buscar apenas esportess com status 'active'.
         $query = "SELECT * FROM sports WHERE status = 'active' ORDER BY name ASC";
-        // --- FIM DA CORREÇÃO ---
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Busca um desporto específico pelo seu ID.
+     * Busca um esportes específico pelo seu ID.
      * @param int $id
      * @return mixed
      */
@@ -56,7 +54,7 @@ class Sport
     }
 
     /**
-     * Cria um novo desporto no banco de dados.
+     * Cria um novo esportes no banco de dados.
      * @param array $data
      * @return bool
      */
@@ -70,7 +68,7 @@ class Sport
     }
 
     /**
-     * Atualiza um desporto existente.
+     * Atualiza um esportes existente.
      * @param int $id
      * @param array $data
      * @return bool
@@ -90,16 +88,13 @@ class Sport
 
         $stmt = $pdo->prepare($query);
 
-        // --- CORREÇÃO AQUI ---
         // Adicionamos o ID ao array de dados antes de executar a query.
         $data['id'] = $id;
-        // --- FIM DA CORREÇÃO ---
-
         return $stmt->execute($data);
     }
 
     /**
-     * Realiza um "soft delete" de um desporto.
+     * Realiza um "soft delete" de um esportes.
      * @param int $id
      * @return bool
      */

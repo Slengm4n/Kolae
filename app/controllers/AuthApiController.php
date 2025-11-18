@@ -2,20 +2,14 @@
 
 namespace App\Controllers;
 
-use App\Core\BaseApiController; // Importa a classe base que criámos
-use App\Models\User;          // Importa o Model de Usuário existente
-use Firebase\JWT\JWT;         // Importa a classe principal da biblioteca JWT     // Importa a classe Key para a chave secreta (necessário na versão 6+ da biblioteca)
-use Exception;                // Para capturar erros genéricos
+use App\Core\BaseApiController;
+use App\Models\User;
+use Firebase\JWT\JWT;
+use Exception;
 
 class AuthApiController extends BaseApiController
 {
 
-    /**
-     * Processa a tentativa de login via API.
-     * Endpoint: POST /api/v1/auth/login
-     * Recebe: JSON {"email": "...", "password": "..."}
-     * Retorna: JSON {"token": "..."} ou erro.
-     */
     public function login()
     {
         // 1. Tenta obter os dados do corpo da requisição JSON
@@ -24,7 +18,7 @@ class AuthApiController extends BaseApiController
         // Verifica se o JSON foi decodificado corretamente
         if (json_last_error() !== JSON_ERROR_NONE) {
             $this->sendError('Corpo da requisição JSON inválido.', 'INVALID_JSON_BODY', 400);
-            return; // Garante que a execução para aqui
+            return;
         }
 
         $email = filter_var($input['email'] ?? null, FILTER_SANITIZE_EMAIL);
@@ -42,23 +36,20 @@ class AuthApiController extends BaseApiController
 
         try {
             // 3. Busca o usuário pelo email
-            $user = User::findByEmail($email); // Reutiliza o método do seu Model
-
-            // 4. Verifica se o usuário existe e se a senha está correta
-            if ($user && password_verify($password, $user['password_hash'])) { // Reutiliza a lógica de verificação
-
+            $user = User::findByEmail($email);
+            if ($user && password_verify($password, $user['password_hash'])) {
                 // 5. Credenciais válidas -> Gerar o Token JWT
                 if (!defined('JWT_SECRET')) {
                     throw new Exception('Chave secreta JWT não está configurada no servidor.'); // Erro de configuração
                 }
                 $secretKey = JWT_SECRET; // Pega a chave do config.php
                 $issuedAt = time();
-                $expire = $issuedAt + (60 * 60 * 8); // Token expira em 8 horas (ajuste conforme necessário)
+                $expire = $issuedAt + (60 * 60 * 8); // Token expira em 8 horas
 
                 $payload = [
                     'iat' => $issuedAt,          // Timestamp: Quando o token foi emitido
                     'exp' => $expire,            // Timestamp: Quando o token expira
-                    'user_id' => (int)$user['id'], // ID do usuário (importante converter para int)
+                    'user_id' => (int)$user['id'], // ID do usuário
                     'role' => $user['role']       // Papel/Função do usuário
                 ];
 
@@ -77,7 +68,4 @@ class AuthApiController extends BaseApiController
             $this->sendError('Ocorreu um erro interno durante o login.', 'LOGIN_FAILED', 500); // 500 Internal Server Error
         }
     }
-
-    // Você pode adicionar outros métodos relacionados à autenticação aqui se precisar no futuro
-    // Ex: refresh token, forgot password API, etc.
 }

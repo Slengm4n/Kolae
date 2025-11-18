@@ -29,10 +29,45 @@ class AuthController
             $user = User::findByEmail($email);
 
             if ($user && password_verify($password, $user['password_hash'])) {
-                // Inicia a sessão e armazena os dados
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
                 $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user_avatar'] = $user['avatar_path'];
+
+                if (isset($_POST['remember-me'])) {
+
+                    $selector = bin2hex(random_bytes(16));
+                    $validator = bin2hex(random_bytes(32));
+
+                    //Define validade (30 dias a partir de agora)
+                    $expiry = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60));
+
+                    //Hash do validador para salvar no banco (segurança caso vazem o banco)
+                    $hashedValidator = hash('sha256', $validator);
+
+                    //Salva na tabela user_tokens
+                    try {
+                        $conn = \App\Core\Database::getConnection();
+                        $sql = "INSERT INTO user_tokens (user_id, selector, hashed_validator, expiry) VALUES (?, ?, ?, ?)";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->execute([$user['id'], $selector, $hashedValidator, $expiry]);
+
+                        // Cria o Cookie no navegador do usuário
+                        // O valor é "selector:validator"
+                        setcookie(
+                            'remember_me',              // Nome do cookie
+                            $selector . ':' . $validator, // Valor
+                            time() + (30 * 24 * 60 * 60), // Expira em 30 dias
+                            '/',                        // Disponível em todo o site
+                            '',                         // Domínio (vazio = atual)
+                            false,                      // Secure (Mude para true se usar HTTPS/SSL)
+                            true                        // HttpOnly (JavaScript não acessa, evita XSS)
+                        );
+                    } catch (\Exception $e) {
+                        // Se der erro no token, não barra o login, apenas loga o erro silenciosamente
+                        error_log("Erro ao criar token remember me: " . $e->getMessage());
+                    }
+                }
 
                 // Redireciona com base na role
                 $redirect_to = ($user['role'] === 'admin') ? '/admin' : '/dashboard';
@@ -56,7 +91,6 @@ class AuthController
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // --- VALIDAÇÃO ---
             if ($_POST['password'] !== $_POST['password_confirmation']) {
                 header('Location: ' . BASE_URL . '/register?error=password_mismatch');
                 exit;
@@ -70,14 +104,12 @@ class AuthController
                 exit;
             }
 
-            // --- CORREÇÃO APLICADA AQUI ---
-            // Agrupe os dados em um array associativo
             $userData = [
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
                 'birthdate' => $_POST['birthdate'],
                 'password_hash' => password_hash($_POST['password'], PASSWORD_DEFAULT),
-                'role' => 'user' // Define a role padrão
+                'role' => 'user'
             ];
 
             // Passe o array único para o método create
@@ -96,7 +128,6 @@ class AuthController
      */
     public function showForgotPasswordForm()
     {
-        // Seu HTML que você já tem (vamos supor que está em 'auth/forgot-password')
         ViewHelper::render('auth/forgot-password');
     }
 
@@ -116,7 +147,7 @@ class AuthController
             exit;
         }
 
-        $user = User::findByEmail($email); // Lembre-se que o usuário precisa estar 'active'
+        $user = User::findByEmail($email); // o usuário precisa estar 'active'
 
         if ($user) {
             try {
@@ -130,7 +161,6 @@ class AuthController
                 // 2. Enviar o e-mail com PHPMailer
                 $mail = new PHPMailer(true);
 
-                // $mail->SMTPDebug = SMTP::DEBUG_SERVER; // REMOVIDO
                 $mail->isSMTP();
                 $mail->Host       = SMTP_HOST;
                 $mail->SMTPAuth   = true;
@@ -157,21 +187,14 @@ class AuthController
                     . "Se você não solicitou isso, ignore este e-mail.";
 
                 $mail->send();
-
-                // echo "E-mail enviado...!"; // REMOVIDO
             } catch (Exception $e) {
-                // echo "<h1>Ocorreu um Erro!</h1>"; // REMOVIDO
-                // var_dump($e->getMessage()); // REMOVIDO
-
-                // Apenas logue o erro silenciosamente
                 error_log("PHPMailer Error: " . $mail->ErrorInfo);
             }
         }
 
         // Resposta de segurança: SEMPRE mostre sucesso,
-        // mesmo que o e-mail não exista, para evitar enumeração de usuários.
-        header('Location: ' . BASE_URL . '/forgot-password?status=sent'); // REATIVADO
-        exit; // REATIVADO
+        header('Location: ' . BASE_URL . '/forgot-password?status=sent');
+        exit;
     }
 
     public function showResetForm()
@@ -240,8 +263,53 @@ class AuthController
     /*** Processa o logout do usuário.*/
     public function logout()
     {
-        // A sessão já deve ter sido iniciada no index.php
+        // 1. Apagar do banco (se tiver cookie e ele for válido)
+        if (isset($_COOKIE['remember_me'])) {
+            // Separa com segurança para evitar erro se o cookie estiver malformado
+            $parts = explode(':', $_COOKIE['remember_me']);
+
+            if (count($parts) === 2) {
+                list($selector,) = $parts;
+
+                try {
+
+                    $conn = \App\Core\Database::getConnection();
+                    $sql = "DELETE FROM user_tokens WHERE selector = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->execute([$selector]);
+                } catch (\Exception $e) {
+                    // Se der erro no banco, segue o logout normalmente (não trava o usuário)
+                    error_log("Erro ao limpar token de logout: " . $e->getMessage());
+                }
+            }
+
+            // 2. Matar o cookie
+            setcookie('remember_me', '', time() - 3600, '/');
+
+            // Remove do array global para garantir que o script atual não o veja mais
+            unset($_COOKIE['remember_me']);
+        }
+
+        // 3. Destruir sessão
+        // Limpa todas as variáveis de sessão
+        $_SESSION = [];
+
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+        // Destrói a sessão no servidor
         session_destroy();
+
         header('Location: ' . BASE_URL . '/login');
         exit;
     }

@@ -3,18 +3,16 @@
 namespace App\Controllers;
 
 use App\Core\ViewHelper;
+use App\Core\AuthHelper;
 
-/**
- * Class HomeController* Controla a exibição da página inicial.*/
 class HomeController
 {
-    /*** Exibe a página inicial do site.*/
     public function index()
     {
-        // Prepara quaisquer dados que a página inicial possa precisar (mesmo que vazios por agora)
-        $data = [];
+        // 1. Tenta restaurar a sessão silenciosamente
+        AuthHelper::checkRememberMe();
 
-        // Renderiza a view da página inicial usando a classe View.
-        ViewHelper::render('home/index', $data);
+        // 2. Carrega a view (o header da view vai se adaptar sozinho se a sessão existir)
+        ViewHelper::render('home/index');
     }
 }

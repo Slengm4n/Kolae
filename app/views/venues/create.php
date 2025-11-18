@@ -2,15 +2,16 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
+    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -44,10 +45,49 @@
 
     <div class="flex flex-col h-screen">
         <!-- Cabeçalho -->
-        <header class="py-4 px-8 flex justify-between items-center border-b border-gray-800">
-            <a href="<?php echo BASE_URL; ?>/dashboard" class="text-2xl font-bold tracking-widest text-white">KOLAE</a>
-            <?php $prefix = $data['routePrefix'] ?? '/dashboard'; ?>
-            <a href="<?php echo BASE_URL . $prefix; ?>" class="text-sm font-semibold ...">Salvar e Sair</a>
+        <header class="bg-[#161B22]/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-40 py-4 transition-all">
+            <div class="container mx-auto px-4 flex justify-between items-center">
+                <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
+                    <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto group-hover:opacity-80 transition-opacity">
+                </a>
+
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="<?php echo BASE_URL; ?>/dashboard" class="font-medium text-gray-400 hover:text-white transition-colors">Meu Painel</a>
+                </nav>
+
+                <div class="relative">
+                    <button id="user-menu-button" class="flex items-center gap-3 p-2 px-3 border border-gray-700 rounded-full cursor-pointer transition-all hover:bg-gray-700/50 hover:border-gray-600">
+                        <?php if (!empty($_SESSION['user_avatar'])): ?>
+                            <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
+                                class="w-8 h-8 rounded-full object-cover border border-gray-600"
+                                alt="Avatar"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
+                                <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                                <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                    </button>
+
+                    <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-[#161B22] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
+                        <div class="p-4 border-b border-gray-800">
+                            <p class="font-semibold text-white truncate"><?php echo htmlspecialchars($userName); ?></p>
+                        </div>
+                        <ul class="py-2 text-sm">
+                            <li><a href="<?php echo BASE_URL; ?>/dashboard" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-home w-4 text-center text-gray-400"></i> Voltar para Home</a></li>
+                            <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-4 text-center text-gray-400"></i> Ajuda</a></li>
+                            <li class="border-t border-gray-800 my-2"></li>
+                            <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <!-- Conteúdo Principal -->
@@ -207,6 +247,28 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu do Usuário
+            const userBtn = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('profile-dropdown');
+
+            if (userBtn && userDropdown) {
+                userBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('opacity-0');
+                    userDropdown.classList.toggle('invisible');
+                    userDropdown.classList.toggle('-translate-y-2');
+                });
+
+                window.addEventListener('click', (e) => {
+                    if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                    }
+                });
+            }
+        });
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('venue-form');
             const steps = Array.from(document.querySelectorAll('.step'));

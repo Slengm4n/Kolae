@@ -65,9 +65,6 @@ class Router
     /**
      * Encontra a rota correspondente à requisição atual e a executa.
      */
-    /**
-     * Encontra a rota correspondente à requisição atual e a executa.
-     */
     public function dispatch()
     {
         $method = $_SERVER['REQUEST_METHOD'];

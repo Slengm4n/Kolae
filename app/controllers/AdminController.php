@@ -27,15 +27,12 @@ class AdminController
                 'totalUsers' => User::countAll(),
                 'totalSports' => Sport::countAll(),
                 'totalLocations' => Venue::countAll(),
-                // Busca apenas os 5 usuários mais recentes.
                 'recentUsers' => User::getRecent(5)
             ];
 
             // Renderiza a view do dashboard, passando os dados para ela.
             ViewHelper::render('admin/dashboard', $data);
         } catch (Exception $e) {
-            // Em caso de erro, exibe uma mensagem. O ideal em produção seria logar o erro.
-            // Por exemplo: error_log($e->getMessage());
             echo "Erro ao carregar o dashboard: " . $e->getMessage();
         }
     }
@@ -43,11 +40,9 @@ class AdminController
     /*** Exibe o mapa com a localização de todas as quadras.*/
     public function showMap()
     {
-        // Garante que apenas administradores possam acessar esta página.
         AuthHelper::checkAdmin();
 
         try {
-            // Busca todas as quadras que possuem coordenadas geográficas.
             $venuesWithCoords = Venue::getAllWithCoordinates();
 
             // Prepara os dados para a view.
@@ -57,10 +52,8 @@ class AdminController
                 'venuesJson' => json_encode($venuesWithCoords)
             ];
 
-            // Renderiza a view do mapa, passando os dados para ela.
             ViewHelper::render('admin/map', $data);
         } catch (Exception $e) {
-            // Em caso de erro, exibe uma mensagem.
             echo "Erro ao carregar o mapa: " . $e->getMessage();
         }
     }

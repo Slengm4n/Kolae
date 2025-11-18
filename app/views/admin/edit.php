@@ -2,153 +2,204 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kolae</title>
 
-    <!-- Google Fonts -->
+    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome (para ícones) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    </noscript>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Animação Suave */
+        .animate-up {
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
 <body class="bg-[#0D1117] text-gray-200">
 
-    <div>
-        <!-- Sidebar -->
-        <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform -translate-x-full md:translate-x-0">
-            <!-- Botão de Fechar para Mobile -->
-            <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white">
+    <div class="flex min-h-screen w-full overflow-hidden">
+
+        <aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
+            <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
                 <i class="fas fa-times text-2xl"></i>
             </button>
 
-            <!-- Logo & User Info -->
-            <div class="p-6 text-center border-b border-gray-800">
-                <div class="w-24 h-24 rounded-full bg-gray-700 mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-user-shield text-4xl text-cyan-400"></i>
+            <div class="p-8 text-center border-b border-gray-800/50">
+                <div class="w-20 h-20 rounded-full bg-gray-800 border border-gray-700 mx-auto flex items-center justify-center mb-4 shadow-inner">
+                    <i class="fas fa-user-shield text-3xl text-cyan-400"></i>
                 </div>
-                <h2 class="text-xl font-bold">
-                    <?php echo htmlspecialchars($userName ?? 'Admin'); ?>
+                <h2 class="text-lg font-bold text-white tracking-wide">
+                    <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
                 </h2>
-                <p class="text-sm text-gray-400">Admin Kolae</p>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mt-1">Admin Kolae</p>
             </div>
 
-            <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
-                    <i class="fas fa-home w-5 text-center"></i>
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-home w-5 text-center group-hover:text-cyan-400"></i>
                     <span>Início</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 rounded-lg">
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 border-l-4 border-cyan-400 rounded-r-lg transition-all">
                     <i class="fas fa-users w-5 text-center"></i>
                     <span>Usuários</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
-                    <i class="fas fa-running w-5 text-center"></i>
+                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-running w-5 text-center group-hover:text-purple-400"></i>
                     <span>Esportes</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700/50 hover:text-white rounded-lg transition-colors">
-                    <i class="fas fa-map-marker-alt w-5 text-center"></i>
+                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-400"></i>
                     <span>Mapa</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 rounded-lg">
-                    <i class="fa-solid fa-flag w-5 text-center"></i>
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-400"></i>
                     <span>Quadras</span>
                 </a>
             </nav>
 
-            <!-- Logout -->
-            <div class="p-4 border-t border-gray-800">
-                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+            <div class="p-4 border-t border-gray-800/50">
+                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
                     <i class="fas fa-sign-out-alt w-5 text-center"></i>
                     <span>Sair</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Overlay para fechar o menu em mobile -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden"></div>
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
-        <!-- Main Content -->
-        <main class="md:ml-64 flex-1 p-6 sm:p-10">
-            <!-- Botão Hamburger para Mobile -->
-            <button id="sidebar-toggle" class="md:hidden mb-6 text-gray-400 hover:text-white">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-            <h1 class="text-3xl font-bold mb-8">Editar Usuário</h1>
+        <main class="md:ml-64 flex-1 p-4 md:p-10 relative z-10 w-full max-w-[100vw]">
 
-            <!-- Edit User Form -->
-            <div class="bg-[#161B22] p-8 rounded-2xl border border-gray-800 max-w-4xl mx-auto">
+            <div class="flex items-center gap-3 md:hidden mb-6 animate-up">
+                <button id="sidebar-toggle" class="p-2.5 bg-gray-800 rounded-lg text-cyan-400 border border-gray-700 active:bg-gray-700">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-xl font-bold text-white leading-tight">Editar Usuário</h1>
+                </div>
+            </div>
+
+            <h1 class="hidden md:block text-3xl font-bold mb-8 animate-up">Editar Usuário</h1>
+
+            <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 max-w-3xl mx-auto shadow-xl animate-up delay-100">
 
                 <?php if (!isset($userData) || !$userData): ?>
-                    <div class="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg text-center">
-                        Dados do usuário não encontrados.
+                    <div class="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-center text-sm flex flex-col items-center">
+                        <i class="fas fa-times-circle text-2xl mb-2"></i>
+                        <span class="font-medium">Usuário não encontrado.</span>
+                        <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="mt-3 text-white underline">Voltar para lista</a>
                     </div>
                 <?php else: ?>
 
-                    <form action="<?php echo BASE_URL; ?>/admin/usuarios/atualizar" method="POST" class="space-y-6">
+                    <form action="<?php echo BASE_URL; ?>/admin/usuarios/atualizar" method="POST" class="space-y-5 md:space-y-6">
 
                         <input type="hidden" name="id" value="<?php echo htmlspecialchars($userData['id']); ?>">
 
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-300">Nome Completo</label>
-                            <div class="mt-1">
-                                <input id="name" name="name" type="text" value="<?php echo htmlspecialchars($userData['name']); ?>" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="name" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Nome Completo</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-500 text-sm"></i>
+                                    </div>
+                                    <input id="name" name="name" type="text" value="<?php echo htmlspecialchars($userData['name']); ?>" required
+                                        class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-300">Endereço de E-mail</label>
-                            <div class="mt-1">
-                                <input id="email" name="email" type="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">E-mail</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-500 text-sm"></i>
+                                    </div>
+                                    <input id="email" name="email" type="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required
+                                        class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <label for="birthdate" class="block text-sm font-medium text-gray-300">Data de Nascimento</label>
-                            <div class="mt-1">
-                                <input id="birthdate" name="birthdate" type="date" value="<?php echo htmlspecialchars($userData['birthdate']); ?>" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                            <div>
+                                <label for="birthdate" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Nascimento</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar text-gray-500 text-sm"></i>
+                                    </div>
+                                    <input id="birthdate" name="birthdate" type="date" value="<?php echo htmlspecialchars($userData['birthdate']); ?>" required
+                                        class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <label for="role" class="block text-sm font-medium text-gray-300">Cargo do Usuário</label>
-                            <div class="mt-1">
-                                <select id="role" name="role" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                            <div>
+                                <label for="role" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Cargo</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-shield-alt text-gray-500 text-sm"></i>
+                                    </div>
 
-                                    <option value="user" <?php if ($userData['role'] === 'user') echo 'selected'; ?>>
-                                        Usuário Padrão
-                                    </option>
-                                    <option value="admin" <?php if ($userData['role'] === 'admin') echo 'selected'; ?>>
-                                        Administrador
-                                    </option>
+                                    <select id="role" name="role" required
+                                        class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-8 py-2.5 md:py-3 text-sm text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 appearance-none transition-all cursor-pointer">
 
-                                </select>
+                                        <option value="user" class="bg-[#161B22] text-gray-200 py-2" <?php if ($userData['role'] === 'user') echo 'selected'; ?>>
+                                            Usuário Padrão
+                                        </option>
+
+                                        <option value="admin" class="bg-[#161B22] text-gray-200 py-2" <?php if ($userData['role'] === 'admin') echo 'selected'; ?>>
+                                            Administrador
+                                        </option>
+
+                                    </select>
+
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="pt-4 flex items-center space-x-4">
-                            <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2 px-6 rounded-lg transition-colors">
-                                Salvar Alterações
-                            </button>
-                            <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-                                Cancelar
-                            </a>
-                        </div>
+                            <div class="pt-6 flex gap-3 md:justify-end">
+                                <a href="<?php echo BASE_URL; ?>/admin/usuarios"
+                                    class="flex-1 md:flex-none text-center bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-3 px-6 rounded-xl transition-colors border border-gray-700 text-sm">
+                                    Cancelar
+                                </a>
+                                <button type="submit"
+                                    class="flex-1 md:flex-none text-center bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 text-sm">
+                                    Salvar
+                                </button>
+                            </div>
+
                     </form>
 
                 <?php endif; ?>
@@ -172,9 +223,9 @@
             overlay.classList.add('hidden');
         }
 
-        toggleBtn.addEventListener('click', openSidebar);
-        closeBtn.addEventListener('click', closeSidebar);
-        overlay.addEventListener('click', closeSidebar);
+        if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
     </script>
 </body>
 

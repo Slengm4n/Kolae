@@ -1,16 +1,20 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Core\BaseApiController;
 use App\Models\Sport;
 
-class SportApiController extends BaseApiController {
+class SportApiController extends BaseApiController
+{
 
     /**
      * Retorna lista de esportes ativos.
      * Endpoint: GET /api/v1/sports
      */
-    public function getActiveSports() {
+
+    public function getActiveSports()
+    {
         try {
             $sports = Sport::getAll();
             $this->sendSuccess($sports);

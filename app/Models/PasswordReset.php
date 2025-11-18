@@ -30,7 +30,6 @@ class PasswordReset
             $stmt = $pdo->prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)");
             return $stmt->execute([$email, $token, $expires_at]);
         } catch (\Exception $e) {
-            // Lidar com o erro, talvez logar
             return false;
         }
     }

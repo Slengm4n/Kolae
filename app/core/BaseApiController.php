@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 
 use Firebase\JWT\JWT;
@@ -7,13 +8,15 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 use App\Models\User;
 
-abstract class BaseApiController {
+abstract class BaseApiController
+{
 
     protected $userId = null;
     protected $userRole = null;
 
-    public function __construct() {
-        header('Content-Type: application/json; charset=utf-8'); 
+    public function __construct()
+    {
+        header('Content-Type: application/json; charset=utf-8');
         // Especifica UTF-8
         // Configuração CORS (Cross-Origin Resource Sharing) - Ajuste para produção!
         // '*' permite qualquer origem (bom para teste local), mas inseguro em produção.
@@ -31,13 +34,15 @@ abstract class BaseApiController {
         }
     }
 
-    protected function sendSuccess($data = null, $statusCode = 200) {
+    protected function sendSuccess($data = null, $statusCode = 200)
+    {
         http_response_code($statusCode);
         echo json_encode(['success' => true, 'data' => $data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT); // Melhora a legibilidade e lida com acentos
         exit;
     }
 
-    protected function sendError($message, $errorCode = null, $statusCode = 400) {
+    protected function sendError($message, $errorCode = null, $statusCode = 400)
+    {
         http_response_code($statusCode);
         $errorPayload = ['message' => $message];
         if ($errorCode) {
@@ -53,7 +58,8 @@ abstract class BaseApiController {
      * Popula $this->userId e $this->userRole se o token for válido.
      * Envia erro 401 e termina a execução se for inválido.
      */
-    protected function authenticateRequest() {
+    protected function authenticateRequest()
+    {
         $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null; // Algumas configs de servidor usam REDIRECT_
 
         if (!$authHeader) {
@@ -81,22 +87,20 @@ abstract class BaseApiController {
             $this->userRole = $decoded->role ?? null;
 
             if (!$this->userId) {
-                 throw new \Exception('Payload do token inválido (sem user_id).');
+                throw new \Exception('Payload do token inválido (sem user_id).');
             }
 
             // Opcional: Revalidar se o usuário ainda existe e está ativo
             $user = User::findById($this->userId);
             if (!$user || $user['status'] !== 'active') {
-               $this->sendError('Usuário associado ao token é inválido ou inativo.', 'AUTH_INVALID_USER', 401);
+                $this->sendError('Usuário associado ao token é inválido ou inativo.', 'AUTH_INVALID_USER', 401);
             }
-
-
         } catch (ExpiredException $e) {
             $this->sendError('Token expirado. Faça login novamente.', 'AUTH_TOKEN_EXPIRED', 401);
         } catch (SignatureInvalidException $e) {
             $this->sendError('Assinatura de token inválida.', 'AUTH_SIGNATURE_INVALID', 401);
         } catch (\Exception $e) { // Captura outros erros do JWT ou a falta de JWT_SECRET
-             error_log("Erro na autenticação JWT: " . $e->getMessage()); // Loga o erro real
+            error_log("Erro na autenticação JWT: " . $e->getMessage()); // Loga o erro real
             $this->sendError('Token inválido ou erro interno.', 'AUTH_INVALID_TOKEN', 401);
         }
     }

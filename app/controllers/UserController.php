@@ -52,10 +52,10 @@ class UserController
         $userId = $_SESSION['user_id'];
         $newAvatarFileName = null; // Variável para guardar o nome do novo arquivo
 
-        // --- LÓGICA DO UPLOAD (ADICIONADA) ---
+
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
 
-            // Define o diretório CORRETO (sem /public/)
+            // Define o diretório CORRETO
             $uploadDir = BASE_PATH . '/uploads/avatars/';
 
             // Chama o helper para processar e salvar (passando $userId para criar subpasta)
@@ -63,14 +63,12 @@ class UserController
 
             if (!$newAvatarFileName) {
                 // Se o upload falhar, redireciona com erro 
-                // (Você pode criar uma mensagem mais específica no HTML depois)
                 header('Location: ' . BASE_URL . '/dashboard/perfil?error=avatar_upload');
                 exit;
             }
         }
-        // --- FIM DA LÓGICA DO UPLOAD ---
 
-        // Prepara os dados para atualizar no banco
+
         $updateData = [
             'name' => htmlspecialchars(trim($_POST['name'] ?? ''))
             // A data de nascimento é desabilitada no form, então não precisamos enviá-la
@@ -78,6 +76,8 @@ class UserController
 
         if ($newAvatarFileName !== null) {
             $updateData['avatar_path'] = $newAvatarFileName;
+
+            // Remove a foto antiga para não acumular lixo no servidor
             $oldUser = User::findById($userId);
             if ($oldUser && !empty($oldUser['avatar_path'])) {
                 $oldAvatarFullPath = BASE_PATH . '/uploads/avatars/' . $userId . '/' . $oldUser['avatar_path'];
@@ -87,15 +87,17 @@ class UserController
             }
         }
 
-        // Atualiza o usuário no banco de dados (array_filter remove valores vazios, se houver)
         if (User::update($userId, array_filter($updateData))) {
-            // Atualiza o nome na sessão também, se mudou
+
             if (isset($updateData['name'])) {
                 $_SESSION['user_name'] = $updateData['name'];
             }
+
+            if ($newAvatarFileName !== null) {
+                $_SESSION['user_avatar'] = $newAvatarFileName;
+            }
+
             header('Location: ' . BASE_URL . '/dashboard/perfil?status=updated');
-        } else {
-            header('Location: ' . BASE_URL . '/dashboard/perfil?error=update_failed');
         }
         exit;
     }
@@ -116,36 +118,28 @@ class UserController
             $newPassword = $_POST['new_password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
-            // --- VALIDAÇÕES ---
 
-            // 1. Busca o usuário atual para pegar o hash da senha
             $user = User::findById($userId);
             if (!$user) {
-                // Se não encontrar o usuário (muito improvável), erro genérico
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?error=update_failed');
                 exit;
             }
 
-            // 2. Verifica se a senha ATUAL está correta (ESSENCIAL!)
             if (!password_verify($currentPassword, $user['password_hash'])) {
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?error=current_mismatch');
                 exit;
             }
 
-            // 3. Verifica se a nova senha e a confirmação coincidem
             if ($newPassword !== $confirmPassword) {
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?error=new_mismatch');
                 exit;
             }
 
-            // 4. (Opcional, mas recomendado) Verifica a força da nova senha
-            if (strlen($newPassword) < 8) { // Exemplo: mínimo 8 caracteres
-                // Crie essa mensagem 'weak_password' no HTML se quiser usá-la
+            if (strlen($newPassword) < 8) {
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?error=weak_password');
                 exit;
             }
 
-            // --- ATUALIZAÇÃO ---
 
             // Se todas as validações passaram, hash a nova senha
             $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
