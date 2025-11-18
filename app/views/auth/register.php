@@ -32,7 +32,7 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae</title>
+    <title>Kolae - Criar Conta</title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
 
@@ -45,7 +45,7 @@ if (isset($_GET['error'])) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=" rel="stylesheet">
 
     <style>
         body {
@@ -55,13 +55,8 @@ if (isset($_GET['error'])) {
         }
 
         @keyframes pageFadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .animate-fadeInUp {
@@ -69,15 +64,8 @@ if (isset($_GET['error'])) {
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -158,6 +146,17 @@ if (isset($_GET['error'])) {
                     </div>
 
                     <div>
+                        <label for="birthdate" class="block text-sm font-medium text-gray-300 ml-1">Data de Nascimento</label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-calendar text-gray-500"></i>
+                            </div>
+                            <input id="birthdate" name="birthdate" type="date" required
+                                class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all">
+                        </div>
+                    </div>
+
+                    <div>
                         <label for="password" class="block text-sm font-medium text-gray-300 ml-1">Senha</label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -170,12 +169,12 @@ if (isset($_GET['error'])) {
                     </div>
 
                     <div>
-                        <label for="confirm_password" class="block text-sm font-medium text-gray-300 ml-1">Confirmar Senha</label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-300 ml-1">Confirmar Senha</label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-key text-gray-500"></i>
                             </div>
-                            <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required
+                            <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required
                                 class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
                                 placeholder="Repita a senha">
                         </div>

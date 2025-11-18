@@ -1,6 +1,6 @@
 # Kolae
 
-[![Versão](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.1.0)
+[![Versão](https://img.shields.io/badge/version-v1.2.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.2.0)
 
 ## 🎯 Sobre o Projeto
 
