@@ -1,6 +1,4 @@
 <?php
-// Define o título da página
-$pageTitle = "Kolae";
 
 $token = $data['token'] ?? '';
 
@@ -36,7 +34,7 @@ if (isset($_GET['error'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
         body {

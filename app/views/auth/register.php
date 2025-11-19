@@ -1,7 +1,5 @@
 <?php
-// ====================================================
-// LÓGICA PHP DE FEEDBACK
-// ====================================================
+
 $message = null;
 $messageType = 'error';
 
@@ -32,7 +30,7 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae - Criar Conta</title>
+    <title>Kolae</title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
 
@@ -45,7 +43,7 @@ if (isset($_GET['error'])) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
         body {
@@ -55,8 +53,13 @@ if (isset($_GET['error'])) {
         }
 
         @keyframes pageFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .animate-fadeInUp {
@@ -64,8 +67,15 @@ if (isset($_GET['error'])) {
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>

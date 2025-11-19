@@ -18,7 +18,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
         body {
@@ -81,14 +81,50 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
 
 <body class="bg-[#0D1117] text-gray-200">
 
-    <header class="bg-[#161B22]/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-30 py-4">
+    <!-- Cabeçalho -->
+    <header class="bg-[#161B22]/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-40 py-4 transition-all">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="<?php echo BASE_URL . $prefix; ?>" class="flex items-center gap-2 group text-gray-400 hover:text-white transition-colors">
-                <i class="fas fa-chevron-left text-sm"></i>
-                <span class="font-medium">Voltar</span>
+            <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
+                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto group-hover:opacity-80 transition-opacity">
             </a>
-            <h1 class="text-lg font-bold text-white">Editar Local</h1>
-            <div class="w-10"></div>
+
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-medium text-gray-400 hover:text-white transition-colors">Meu Painel</a>
+            </nav>
+
+            <div class="relative">
+                <button id="user-menu-button" class="flex items-center gap-3 p-2 px-3 border border-gray-700 rounded-full cursor-pointer transition-all hover:bg-gray-700/50 hover:border-gray-600">
+                    <?php if (!empty($_SESSION['user_avatar'])): ?>
+                        <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
+                            class="w-8 h-8 rounded-full object-cover border border-gray-600"
+                            alt="Avatar"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
+                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                </button>
+
+                <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-[#161B22] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
+                    <div class="p-4 border-b border-gray-800">
+                        <p class="font-semibold text-white truncate"><?php echo htmlspecialchars($userName); ?></p>
+                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-400 hover:underline">Ver perfil completo</a>
+                    </div>
+                    <ul class="py-2 text-sm">
+                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-cog w-4 text-center text-gray-400"></i> Configurações</a></li>
+                        <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-4 text-center text-gray-400"></i> Ajuda</a></li>
+                        <li class="border-t border-gray-800 my-2"></li>
+                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> Sair</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -207,6 +243,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                             <div><input type="text" id="city" name="city" value="<?php echo htmlspecialchars($venue['city']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="Cidade"></div>
                             <div><input type="text" id="state" name="state" value="<?php echo htmlspecialchars($venue['state']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="UF"></div>
                         </div>
+                        <div><input type="text" id="complement" name="complement" value="<?php echo htmlspecialchars($venue['complement']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none" placeholder="Complemento"></div>
                     </div>
                 </div>
 
@@ -236,6 +273,9 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 </div>
 
                 <div class="hidden md:flex justify-end mt-8">
+                    <a href="<?php echo BASE_URL; ?>/dashboard" class="text-gray-400 hover:text-white text-sm font-semibold px-4 py-2 transition-colors">
+                        Cancelar
+                    </a>
                     <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5">Salvar Alterações</button>
                 </div>
             </form>
@@ -278,6 +318,25 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            const userBtn = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('profile-dropdown');
+
+            if (userBtn && userDropdown) {
+                userBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('opacity-0');
+                    userDropdown.classList.toggle('invisible');
+                    userDropdown.classList.toggle('-translate-y-2');
+                });
+
+                window.addEventListener('click', (e) => {
+                    if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                    }
+                });
+            }
+
             const venueData = <?php echo json_encode($venue ?? null); ?>;
             if (!venueData) return;
 
@@ -349,7 +408,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 });
             });
 
-            // ViaCEP
+            // ViaCEP com Complemento
             document.getElementById('cep').addEventListener('blur', async function() {
                 const cep = this.value.replace(/\D/g, '');
                 if (cep.length === 8) {
@@ -360,6 +419,8 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                             document.getElementById('neighborhood').value = data.bairro;
                             document.getElementById('city').value = data.localidade;
                             document.getElementById('state').value = data.uf;
+                            // Popula o complemento e limpa se vier vazio
+                            document.getElementById('complement').value = data.complemento || '';
                         }
                     } catch (e) {}
                 }

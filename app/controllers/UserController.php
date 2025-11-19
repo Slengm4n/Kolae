@@ -203,7 +203,7 @@ class UserController
             'userName' => $_SESSION['user_name'] ?? 'Admin',
             'users' => User::getAll()
         ];
-        ViewHelper::render('admin/index', $data);
+        ViewHelper::render('admin/users', $data);
     }
 
     public function create()

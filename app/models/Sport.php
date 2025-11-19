@@ -61,7 +61,7 @@ class Sport
     public static function create(array $data): bool
     {
         $pdo = Database::getConnection();
-        $data['status'] = 'active'; // Define um status padrão
+        $data['status'] = 'active';
         $query = "INSERT INTO sports (name, icon, status) VALUES (:name, :icon, :status)";
         $stmt = $pdo->prepare($query);
         return $stmt->execute($data);

@@ -23,9 +23,17 @@ $userId = $_SESSION['user_id'] ?? 0;
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
+        html {
+            /* Força a barra de rolagem a estar sempre visível.
+               Isso evita que o layout "pule" quando se navega entre páginas curtas e longas,
+               e evita o problema do "espaço comido" (faixa vazia) causado pelo scrollbar-gutter. */
+            overflow-y: scroll;
+        }
+
+
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;

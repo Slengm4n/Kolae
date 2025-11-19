@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
         body {
@@ -22,7 +22,6 @@
             overflow-x: hidden;
         }
 
-        /* === ANIMAÇÕES === */
         .animate-up {
             animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }

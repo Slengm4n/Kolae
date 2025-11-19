@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae - Recuperar Senha</title>
+    <title>Kolae</title>
 
     <link rel="icon" href="<?php echo BASE_URL; ?>/assets/img/favicon.png" type="image/png">
 
@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
         body {
@@ -133,7 +133,6 @@
     </div>
 
     <script>
-        // Script simples para feedback visual no botão
         document.getElementById('forgot-form').addEventListener('submit', function() {
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
