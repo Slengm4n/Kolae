@@ -29,7 +29,6 @@ class Game
             $pdo = Database::getConnection();
             $stmt = $pdo->prepare($sql);
 
-            // Bind dos parâmetros para segurança
             $stmt->bindParam(':venue_id', $data['venue_id'], PDO::PARAM_INT);
             $stmt->bindParam(':sport_id', $data['sport_id'], PDO::PARAM_INT);
             $stmt->bindParam(':creator_user_id', $data['creator_user_id'], PDO::PARAM_INT);

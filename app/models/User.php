@@ -157,7 +157,7 @@ class User
         }
     }
 
-    // --- MÉTODOS DE CRIPTOGRAFIA (COM A CORREÇÃO FINAL) ---
+    // --- MÉTODOS DE CRIPTOGRAFIA ---
 
     private static function getIvBinary()
     {

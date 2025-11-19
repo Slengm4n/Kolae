@@ -141,7 +141,6 @@ class Router
     private function sendNotFound(string $message = "Página não encontrada")
     {
         http_response_code(404);
-        // Pode criar uma view bonita para o 404 aqui
-        echo "<h1>404 - {$message}</h1>";
+        ViewHelper::render('errors/404');
     }
 }

@@ -31,8 +31,8 @@ $host = $_SERVER['HTTP_HOST'];
 
 if ($host == 'localhost') {
     // --- AMBIENTE LOCAL (SEU PC) ---
-    define('BASE_URL', 'http://localhost/colae');
-    define('BASE_DIR_URL', '/colae');
+    define('BASE_URL', 'http://localhost/kolae');
+    define('BASE_DIR_URL', '/kolae');
 } else {
     // --- AMBIENTE DE PRODUÇÃO ---
     define('BASE_URL', $protocol . '://' . $host);

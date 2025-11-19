@@ -3,67 +3,91 @@
 namespace App\Models;
 
 use App\Core\Database;
-
 use PDO;
 
 /**
  * Class Address
- * Gerencia todas as operações de banco de dados para a entidade de endereço,
- * incluindo a geocodificação para obter coordenadas.
+ * Gerencia operações de banco de dados para endereços com Geocodificação.
  */
 class Address
 {
     /**
-     * Cria um novo endereço no banco de dados, buscando as coordenadas geográficas.
-     * @param array $data Dados do endereço.
-     * @return string|false Retorna o ID do novo endereço ou false em caso de falha.
+     * Cria um novo endereço e busca coordenadas automaticamente.
      */
     public static function create(array $data)
     {
-        // --- Lógica de Geocodificação ---
-        $latitude = null;
-        $longitude = null;
-
-        if (defined('GOOGLE_MAPS_API_KEY') && GOOGLE_MAPS_API_KEY) {
-            $fullAddress = urlencode(
-                "{$data['street']}, {$data['number']}, {$data['neighborhood']}, {$data['city']}, {$data['state']}, {$data['cep']}"
-            );
-            $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$fullAddress}&key=" . GOOGLE_MAPS_API_KEY;
-
-            $responseJson = @file_get_contents($url);
-            if ($responseJson) {
-                $response = json_decode($responseJson);
-                if ($response && $response->status == 'OK') {
-                    $location = $response->results[0]->geometry->location;
-                    $latitude = $location->lat;
-                    $longitude = $location->lng;
-                }
-            }
-        }
-        // --- Fim da Geocodificação ---
+        // Busca coordenadas antes de salvar
+        $coords = self::getCoordinates($data);
+        $latitude = $coords['lat'] ?? null;
+        $longitude = $coords['lng'] ?? null;
 
         $pdo = Database::getConnection();
-        $query = "INSERT INTO addresses (cep, street, `number`, neighborhood, complement, city, state, latitude, longitude) 
+
+        $query = "INSERT INTO addresses (cep, street, number, neighborhood, complement, city, state, latitude, longitude) 
                   VALUES (:cep, :street, :number, :neighborhood, :complement, :city, :state, :latitude, :longitude)";
 
         $stmt = $pdo->prepare($query);
 
-        // Adiciona as coordenadas ao array de dados para inserção
-        $data['latitude'] = $latitude;
-        $data['longitude'] = $longitude;
+        $params = [
+            ':cep' => $data['cep'],
+            ':street' => $data['street'],
+            ':number' => $data['number'],
+            ':neighborhood' => $data['neighborhood'],
+            ':complement' => $data['complement'] ?? null,
+            ':city' => $data['city'],
+            ':state' => $data['state'],
+            ':latitude' => $latitude,
+            ':longitude' => $longitude
+        ];
 
-        if ($stmt->execute($data)) {
+        if ($stmt->execute($params)) {
             return $pdo->lastInsertId();
         }
-
         return false;
     }
 
     /**
-     * Busca um endereço pelo seu ID.
-     * @param int $id
-     * @return mixed
+     * Atualiza um endereço e RECALCULA as coordenadas.
      */
+    public static function update(int $id, array $data): bool
+    {
+        // Recalcula coordenadas pois o endereço mudou
+        $coords = self::getCoordinates($data);
+        $latitude = $coords['lat'] ?? null;
+        $longitude = $coords['lng'] ?? null;
+
+        $pdo = Database::getConnection();
+
+        $query = "UPDATE addresses SET 
+                    cep = :cep, 
+                    street = :street, 
+                    number = :number, 
+                    neighborhood = :neighborhood, 
+                    complement = :complement, 
+                    city = :city, 
+                    state = :state,
+                    latitude = :latitude,
+                    longitude = :longitude
+                  WHERE id = :id";
+
+        $stmt = $pdo->prepare($query);
+
+        $params = [
+            ':cep' => $data['cep'],
+            ':street' => $data['street'],
+            ':number' => $data['number'],
+            ':neighborhood' => $data['neighborhood'],
+            ':complement' => $data['complement'] ?? null,
+            ':city' => $data['city'],
+            ':state' => $data['state'],
+            ':latitude' => $latitude,
+            ':longitude' => $longitude,
+            ':id' => $id
+        ];
+
+        return $stmt->execute($params);
+    }
+
     public static function findById(int $id)
     {
         $pdo = Database::getConnection();
@@ -75,33 +99,35 @@ class Address
     }
 
     /**
-     * Atualiza um endereço existente.
-     * @param int $id
-     * @param array $data
-     * @return bool
+     * Método auxiliar privado para obter Latitude e Longitude.
      */
-    public static function update(int $id, array $data): bool
+    private static function getCoordinates(array $data): ?array
     {
-        if (empty($data)) {
-            return true;
+        // Verifica se a chave está definida e não está vazia
+        if (!defined('GOOGLE_MAPS_API_KEY') || empty(GOOGLE_MAPS_API_KEY)) {
+            return null;
         }
 
-        // Se o endereço for atualizado, podemos recalcular as coordenadas
-        // (Esta parte é opcional, mas recomendada)
-        // Você pode adicionar a lógica de geocodificação aqui também se desejar
+        // Monta string do endereço
+        $addressString = "{$data['street']}, {$data['number']} - {$data['neighborhood']}, {$data['city']} - {$data['state']}, {$data['cep']}";
+        $fullAddress = urlencode($addressString);
 
-        $pdo = Database::getConnection();
-        $fields = [];
-        foreach (array_keys($data) as $key) {
-            // A palavra 'number' é reservada, então a escapamos com crases
-            $fieldName = ($key === 'number') ? "`number`" : $key;
-            $fields[] = "$fieldName = :$key";
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$fullAddress}&key=" . GOOGLE_MAPS_API_KEY;
+
+        // Usa @ para suprimir warnings, mas idealmente usar cURL em produção
+        $responseJson = @file_get_contents($url);
+
+        if ($responseJson) {
+            $response = json_decode($responseJson);
+            if ($response && $response->status == 'OK' && !empty($response->results)) {
+                $location = $response->results[0]->geometry->location;
+                return [
+                    'lat' => $location->lat,
+                    'lng' => $location->lng
+                ];
+            }
         }
-        $query = "UPDATE addresses SET " . implode(', ', $fields) . " WHERE id = :id";
 
-        $stmt = $pdo->prepare($query);
-        $data['id'] = $id;
-
-        return $stmt->execute($data);
+        return null;
     }
 }

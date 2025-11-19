@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2025 at 08:22 AM
+-- Generation Time: Nov 19, 2025 at 06:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -156,17 +156,6 @@ CREATE TABLE `venue_images` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `venue_sports`
---
-
-CREATE TABLE `venue_sports` (
-  `venue_id` int(11) NOT NULL,
-  `sport_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 --
 -- Indexes for dumped tables
 --
@@ -226,13 +215,6 @@ ALTER TABLE `venues`
 ALTER TABLE `venue_images`
   ADD PRIMARY KEY (`id`),
   ADD KEY `venue_id` (`venue_id`);
-
---
--- Indexes for table `venue_sports`
---
-ALTER TABLE `venue_sports`
-  ADD PRIMARY KEY (`venue_id`,`sport_id`),
-  ADD KEY `sport_id` (`sport_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -316,13 +298,6 @@ ALTER TABLE `venues`
 --
 ALTER TABLE `venue_images`
   ADD CONSTRAINT `venue_images_ibfk_1` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `venue_sports`
---
-ALTER TABLE `venue_sports`
-  ADD CONSTRAINT `venue_sports_ibfk_1` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`id`),
-  ADD CONSTRAINT `venue_sports_ibfk_2` FOREIGN KEY (`sport_id`) REFERENCES `sports` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

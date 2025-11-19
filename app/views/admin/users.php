@@ -5,26 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kolae</title>
-
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            /* Impede rolagem horizontal na página inteira */
         }
 
         .link-button {
@@ -80,6 +76,18 @@
 </head>
 
 <body class="bg-[#0D1117] text-gray-200">
+
+    <div id="toast" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 100;"
+        class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-100 bg-gray-800 rounded-lg shadow-2xl border-l-4 border-gray-500 transform transition-all duration-300 translate-x-full opacity-0" role="alert">
+        <div id="toast-icon-container" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg">
+            <i id="toast-icon" class="fas fa-check"></i>
+        </div>
+        <div class="ml-3 text-sm font-normal" id="toast-message">Notificação</div>
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-gray-800 text-gray-400 hover:text-gray-200 rounded-lg focus:ring-2 focus:ring-gray-600 p-1.5 hover:bg-gray-700 inline-flex h-8 w-8" onclick="hideToast()">
+            <span class="sr-only">Fechar</span>
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
 
     <?php
     if (isset($_SESSION['flash_message']) && $_SESSION['flash_message']['type'] === 'success_with_password') {
@@ -168,14 +176,15 @@
                 </a>
             </div>
 
-            <div class="mb-4 space-y-3 animate-up delay-100">
-                <?php if (isset($_GET['status']) && !empty($message)): ?>
-                    <div class="p-3 border rounded-lg flex items-center text-sm <?php echo $bgColor; ?>" role="alert">
-                        <i class="fas fa-<?php echo $icon; ?> mr-2.5 text-base"></i>
-                        <?php echo htmlspecialchars($message); ?>
-                    </div>
-                <?php endif; ?>
-            </div>
+            <!-- TOAST TRIGGER (Substitui o alerta antigo) -->
+            <?php if (isset($_GET['status']) && !empty($message)): ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const type = "<?php echo (strpos($bgColor ?? '', 'red') !== false || $_GET['status'] === 'error') ? 'error' : 'success'; ?>";
+                        showToast("<?php echo htmlspecialchars($message); ?>", type);
+                    });
+                </script>
+            <?php endif; ?>
 
             <div class="mb-4 animate-up delay-100">
                 <div class="relative group">
@@ -189,7 +198,8 @@
             </div>
 
             <div class="bg-[#161B22] rounded-xl border border-gray-800 shadow-lg animate-up delay-200 overflow-hidden">
-                <div class="overflow-x-auto">
+                <!-- CORREÇÃO ANTERIOR MANTIDA: overflow-y-hidden para evitar scroll duplo na animação -->
+                <div class="overflow-x-auto overflow-y-hidden">
                     <table id="userTable" class="min-w-full divide-y divide-gray-800">
                         <thead>
                             <tr class="bg-gray-900/50 text-left">
@@ -311,7 +321,47 @@
         const timerBar = document.getElementById('modal-timer-bar');
         const timerCountdown = document.getElementById('modal-timer-countdown');
         let countdownTimer, progressBarInterval;
+        let toastTimer;
 
+        // --- FUNÇÕES DO TOAST ---
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastIconContainer = document.getElementById('toast-icon-container');
+
+            // Configura mensagem
+            toastMessage.textContent = message;
+
+            // Configura estilo baseado no tipo
+            if (type === 'success') {
+                toast.classList.remove('border-red-500');
+                toast.classList.add('border-green-500');
+                toastIconContainer.classList.remove('bg-red-100', 'text-red-500');
+                toastIconContainer.classList.add('bg-green-100', 'text-green-500');
+                toastIcon.className = 'fas fa-check';
+            } else {
+                toast.classList.remove('border-green-500');
+                toast.classList.add('border-red-500');
+                toastIconContainer.classList.remove('bg-green-100', 'text-green-500');
+                toastIconContainer.classList.add('bg-red-100', 'text-red-500');
+                toastIcon.className = 'fas fa-exclamation';
+            }
+
+            // Mostra o toast (remove classes de ocultação)
+            toast.classList.remove('translate-x-full', 'opacity-0');
+
+            // Esconde automaticamente após 4 segundos
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(hideToast, 4000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('translate-x-full', 'opacity-0');
+        }
+
+        // --- FUNÇÕES DO MODAL DE SENHA ---
         function showPasswordModal(password) {
             passwordDisplay.value = password;
             modal.classList.remove('hidden');
