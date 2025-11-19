@@ -3,45 +3,45 @@ name: Deploy to InfinityFree
 
 # Gatilho: Quando esse workflow deve rodar?
 on:
-  push:
-    branches:
-      - main # Mude para 'master' se for o nome da sua branch principal
+    push:
+        branches:
+            - main # Mude para 'master' se for o nome da sua branch principal
 
 # Tarefas que o workflow vai executar
 jobs:
-  ftp-deploy:
-    # O tipo de máquina que o workflow vai usar
-    runs-on: ubuntu-latest
+    ftp-deploy:
+        # O tipo de máquina que o workflow vai usar
+        runs-on: ubuntu-latest
 
-    steps:
-      # 1. Baixa o código do seu repositório para a máquina virtual
-      - name: Check out code
-        uses: actions/checkout@v4
+        steps:
+            # 1. Baixa o código do seu repositório para a máquina virtual
+            - name: Check out code
+              uses: actions/checkout@v4
 
-      # 2. Executa a ação de deploy via FTP
-      - name: FTP Deploy
-        # Esta é uma ação popular da comunidade para deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          # Servidor FTP (do Secret que você criou)
-          server: ${{ secrets.FTP_SERVER }}
+            # 2. Executa a ação de deploy via FTP
+            - name: FTP Deploy
+              # Esta é uma ação popular da comunidade para deploy via FTP
+              uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+              with:
+                  # Servidor FTP (do Secret que você criou)
+                  server: ${{ secrets.FTP_SERVER }}
 
-          # Usuário FTP (do Secret)
-          username: ${{ secrets.FTP_USERNAME }}
+                  # Usuário FTP (do Secret)
+                  username: ${{ secrets.FTP_USERNAME }}
 
-          # Senha FTP (do Secret)
-          password: ${{ secrets.FTP_PASSWORD }}
+                  # Senha FTP (do Secret)
+                  password: ${{ secrets.FTP_PASSWORD }}
 
-          # Diretório no servidor para onde os arquivos vão
-          # No InfinityFree, é quase sempre /htdocs/
-          server-dir: /htdocs/
+                  # Diretório no servidor para onde os arquivos vão
+                  # No InfinityFree, é quase sempre /htdocs/
+                  server-dir: /htdocs/
 
-          # (Opcional) Se o código do seu site não estiver na raiz do repositório
-          # local-dir: ./public/  # Descomente e ajuste se necessário
+                  # (Opcional) Se o código do seu site não estiver na raiz do repositório
+                  # local-dir: ./public/  # Descomente e ajuste se necessário
 
-          # (Opcional) Excluir arquivos (útil para não enviar o .git)
-          # A ação já costuma ignorar a pasta .git por padrão
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+                  # (Opcional) Excluir arquivos (útil para não enviar o .git)
+                  # A ação já costuma ignorar a pasta .git por padrão
+                  exclude: |
+                      **/.git*
+                      **/.git*/**
+                      **/node_modules/**
