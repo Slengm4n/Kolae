@@ -1,47 +1,50 @@
-# Nome do seu workflow (aparecerá na aba "Actions" do GitHub)
+# Nome do seu workflow
 name: Deploy to InfinityFree
 
 # Gatilho: Quando esse workflow deve rodar?
 on:
-  push:
-    branches:
-      - main # Mude para 'master' se for o nome da sua branch principal
+    push:
+        branches:
+            - main # Mude para 'master' se for o nome da sua branch principal
 
 # Tarefas que o workflow vai executar
 jobs:
-  ftp-deploy:
-    # O tipo de máquina que o workflow vai usar
-    runs-on: ubuntu-latest
+    ftp-deploy:
+        # O tipo de máquina que o workflow vai usar
+        runs-on: ubuntu-latest
 
-    steps:
-      # 1. Baixa o código do seu repositório para a máquina virtual
-      - name: Check out code
-        uses: actions/checkout@v4
+        steps:
+            # 1. Baixa o código do seu repositório para a máquina virtual
+            - name: Check out code
+              uses: actions/checkout@v4
 
-      # 2. Executa a ação de deploy via FTP
-      - name: FTP Deploy
-        # Esta é uma ação popular da comunidade para deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          # Servidor FTP (do Secret que você criou)
-          server: ${{ secrets.FTP_SERVER }}
+            # --- NOVOS PASSOS ADICIONADOS AQUI ---
 
-          # Usuário FTP (do Secret)
-          username: ${{ secrets.FTP_USERNAME }}
+            # 1.1 Prepara o ambiente PHP na máquina do GitHub
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2' # Importante: Use a mesma versão que configurou no InfinityFree (geralmente 8.1 ou 8.2)
 
-          # Senha FTP (do Secret)
-          password: ${{ secrets.FTP_PASSWORD }}
+            # 1.2 Roda o composer para criar a pasta 'vendor'
+            - name: Install Dependencies
+              run: composer install --no-dev --optimize-autoloader
+              # --no-dev: Não baixa ferramentas de teste (economiza espaço/inodes no InfinityFree)
+              # --optimize-autoloader: Deixa o carregamento das classes mais rápido
 
-          # Diretório no servidor para onde os arquivos vão
-          # No InfinityFree, é quase sempre /htdocs/
-          server-dir: /htdocs/
+            # -------------------------------------
 
-          # (Opcional) Se o código do seu site não estiver na raiz do repositório
-          # local-dir: ./public/  # Descomente e ajuste se necessário
+            # 2. Executa a ação de deploy via FTP
+            - name: FTP Deploy
+              uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+              with:
+                  server: ${{ secrets.FTP_SERVER }}
+                  username: ${{ secrets.FTP_USERNAME }}
+                  password: ${{ secrets.FTP_PASSWORD }}
+                  server-dir: /htdocs/
 
-          # (Opcional) Excluir arquivos (útil para não enviar o .git)
-          # A ação já costuma ignorar a pasta .git por padrão
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+                  # Nota: A ação vai pegar a pasta 'vendor' criada no passo anterior e enviar junto
+                  exclude: |
+                      **/.git*
+                      **/.git*/**
+                      **/node_modules/**
