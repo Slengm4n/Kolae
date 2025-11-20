@@ -103,8 +103,9 @@ class Venue
     public static function getAllWithCoordinates(): array
     {
         $pdo = Database::getConnection();
-        $query = "SELECT v.id, v.name, a.street, a.number, a.city, a.latitude, a.longitude,
+        $query = "SELECT v.id, v.name,v.user_id, a.street, a.number, a.city, a.latitude, a.longitude,
                          u.name as owner_name,
+                         u.avatar_path, 
                          (SELECT vi.file_path FROM venue_images vi WHERE vi.venue_id = v.id ORDER BY vi.id DESC LIMIT 1) as image_path
                   FROM venues v
                   JOIN addresses a ON v.address_id = a.id

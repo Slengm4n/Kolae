@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'joao_slengman/kolae',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '4244768869d22f83ba177ff96f545fec6f4f6f11',
+        'pretty_version' => '1.2.0',
+        'version' => '1.2.0.0',
+        'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'joao_slengman/kolae' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '4244768869d22f83ba177ff96f545fec6f4f6f11',
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

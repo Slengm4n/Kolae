@@ -25,6 +25,12 @@ class VenueApiController extends BaseApiController
                 } else {
                     $venue['full_image_url'] = null;
                 }
+
+                if (!empty($venue['avatar_path']) && !empty($venue['user_id'])){
+                    $venue['owner_image_url'] = BASE_URL . '/uploads/avatars/' . $venue['user_id'] . '/' .$venue['avatar_path'];
+                } else {
+                    $venue['owner_image_url'] = null;
+                }
             }
 
             $this->sendSuccess($venues);
