@@ -18,19 +18,28 @@ use App\Core\AuthHelper;
 // --- CONFIGURAÇÃO DE SEGURANÇA DA SESSÃO (BLINDAGEM) ---
 
 // Verifica se está rodando em HTTPS (Produção) ou HTTP (Localhost)
-$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+// Detecta HTTPS mesmo atrás de Proxy (Load Balancer)
+$isSecure = false;
+if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on') {
+    $isSecure = true;
+} elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
+    $isSecure = true;
+} elseif (isset($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) === 'on') {
+    $isSecure = true;
+}
 
 $cookieParams = [
-    'lifetime' => 86400,           // 1 dia de duração
-    'path' => '/',                 // Válido para todo o site
-    'domain' => $_SERVER['HTTP_HOST'], // Seu dominio (kolae.gamer.gd)
-    'secure' => $isSecure,         // TRUE no servidor, FALSE no localhost
-    'httponly' => true,            // O JavaScript NÃO consegue ler (Protege contra XSS)
-    'samesite' => 'Lax'            // Protege contra CSRF (Lax é mais compatível que Strict)
+    'lifetime' => 86400,
+    'path' => '/',
+    'domain' => $_SERVER['HTTP_HOST'],
+    'secure' => $isSecure, // Usa a detecção inteligente
+    'httponly' => true,
+    'samesite' => 'Lax'
 ];
 
 session_set_cookie_params($cookieParams);
 session_start();
+
 
 // --- Constantes Globais ---
 define('BASE_PATH', __DIR__);
