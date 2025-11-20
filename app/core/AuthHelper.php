@@ -22,29 +22,32 @@ class AuthHelper
      */
     public static function check()
     {
-        self::start();
+        // Garante que a sessão está iniciada
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // 1. Verifica se está logado
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . BASE_URL . '/login');
+            header('Location: ' . BASE_DIR_URL . '/login');
             exit;
         }
 
-        // Verifica se o usuário precisa trocar a senha
-        if (isset($_SESSION['force_password_change']) && $_SESSION['force_password_change'] == 1) {
+        // 2. SEGURANÇA EXTRA: Verifica se o navegador mudou (Session Hijacking)
+        // Se não tiver salvo o navegador na sessão ainda, salva agora (primeiro acesso)
+        if (!isset($_SESSION['user_agent'])) {
+            $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+        }
 
-            // Lista de URIs permitidas durante a troca de senha
-            $allowed_uris = [
-                BASE_URL . '/dashboard/perfil/seguranca',
-                BASE_URL . '/dashboard/perfil/seguranca/atualizar'
-                // Adicione outras rotas se necessário
-            ];
+        // Se o navegador atual for diferente do navegador que criou a sessão, bloqueia a sessão
+        if ($_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT']) {
+            // Destrói a sessão suspeita
+            session_unset();
+            session_destroy();
 
-            // Pega a URL atual sem query strings para uma verificação mais robusta
-            $current_uri = strtok($_SERVER['REQUEST_URI'], '?');
-
-            if (!in_array($current_uri, $allowed_uris)) {
-                header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca');
-                exit;
-            }
+            // Manda pro login
+            header('Location: ' . BASE_DIR_URL . '/login?error=session_hijack');
+            exit;
         }
     }
 

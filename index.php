@@ -15,6 +15,21 @@ use App\Core\AuthHelper;
 
 
 
+// --- CONFIGURAÇÃO DE SEGURANÇA DA SESSÃO (BLINDAGEM) ---
+
+// Verifica se está rodando em HTTPS (Produção) ou HTTP (Localhost)
+$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+
+$cookieParams = [
+    'lifetime' => 86400,           // 1 dia de duração
+    'path' => '/',                 // Válido para todo o site
+    'domain' => $_SERVER['HTTP_HOST'], // Seu dominio (kolae.gamer.gd)
+    'secure' => $isSecure,         // TRUE no servidor, FALSE no localhost
+    'httponly' => true,            // O JavaScript NÃO consegue ler (Protege contra XSS)
+    'samesite' => 'Lax'            // Protege contra CSRF (Lax é mais compatível que Strict)
+];
+
+session_set_cookie_params($cookieParams);
 session_start();
 
 // --- Constantes Globais ---

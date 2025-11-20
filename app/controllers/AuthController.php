@@ -32,6 +32,9 @@ class AuthController
             $user = User::findByEmail($email);
 
             if ($user && password_verify($password, $user['password_hash'])) {
+                // Troca o ID da sessão para um novo e deleta o antigo.
+                // Isso impede que alguém use um cookie antigo roubado.
+                session_regenerate_id(true);
                 // 1. Inicia a sessão
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
@@ -90,7 +93,7 @@ class AuthController
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+
             // CORREÇÃO PRINCIPAL AQUI:
             // Verifica se 'password' é igual a 'password_confirmation' (que alteramos no HTML)
             if ($_POST['password'] !== $_POST['password_confirmation']) {
@@ -251,9 +254,9 @@ class AuthController
     {
         if (isset($_COOKIE['remember_me'])) {
             $parts = explode(':', $_COOKIE['remember_me']);
-            
+
             if (count($parts) === 2) {
-                list($selector, ) = $parts;
+                list($selector,) = $parts;
                 try {
                     // Usa namespace completo para evitar erros
                     $conn = \App\Core\Database::getConnection();
@@ -272,9 +275,14 @@ class AuthController
 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
             );
         }
 
