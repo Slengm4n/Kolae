@@ -24,12 +24,9 @@ jobs:
             - name: Install Dependencies
               run: composer install --no-dev --optimize-autoloader
 
-            # --- O TRUQUE ESTÁ AQUI ---
-            # 1.3 Remove o .gitignore para enganar o robô de deploy
-            # Assim ele para de ignorar a pasta vendor e envia ela junto
+            # 1.3 O "Pulo do Gato" (Mantido)
             - name: Remove gitignore
               run: rm .gitignore
-            # --------------------------
 
             # 2. Envia tudo para o InfinityFree
             - name: FTP Deploy
@@ -38,11 +35,14 @@ jobs:
                   server: ${{ secrets.FTP_SERVER }}
                   username: ${{ secrets.FTP_USERNAME }}
                   password: ${{ secrets.FTP_PASSWORD }}
-                  server-dir: /htdocs/
 
-                  # Como deletamos o .gitignore, precisamos garantir que ele não suba
-                  # a pasta .git (que é pesada) manualmente aqui:
+                  # --- CORREÇÃO AQUI ---
+                  server-dir: ./htdocs/
+                  # ---------------------
+
                   exclude: |
                       **/.git*
                       **/.git*/**
+                      **/.github/**
                       **/node_modules/**
+                      README.md
