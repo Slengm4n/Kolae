@@ -13,6 +13,7 @@ return[
     'global_menu_exit' => 'Sair',
     'global_menu_register' => 'Cadastre-se',
     'global_menu_login' => 'Entrar',
+    'global_and' =>  'e',
 
 
 
@@ -36,7 +37,7 @@ return[
     'home_footer_phrase' => 'Conectando atletas, fortalecendo o esporte.',
     'home_footer_activity' => 'Receba nossas novidades',
     'home_footer_register' => 'Cadastre-se para ficar por dentro dos próximos eventos e atualizações.',
-    //FIM HOME**********
+    //FIM HOME***************************************************************************************
 
     //Login
     'login_title_jorney' => 'Sua jornada começa aqui!',
@@ -67,7 +68,7 @@ return[
 
     //Esqueceu a senha
     'forget_title_back' => 'Vamos te colocar de volta no jogo.',
-    'forget_ subtitle_back' => 'Recupere seu acesso e não perca nenhuma oportunidade de se conectar.',
+    'forget_subtitle_back' => 'Recupere seu acesso e não perca nenhuma oportunidade de se conectar.',
 
     'forget_title_password' => 'Esqueceu a senha?',
     'forget_subtitle_password' => 'Sem problemas! Digite seu e-mail e enviaremos um link para você criar uma nova.',
@@ -84,7 +85,53 @@ return[
     //Messages (Esqueceu a senha)
     'email_exists' => 'Se um e-mail com este endereço existir, um link foi enviado.',
     //Erros
+
     'email_invalid' => 'Por favor, insira um e-mail válido.',
+    //Fim esqueceu a senha****************************************************************
 
 
+    //Reset password
+    'reset_title' => 'Crie sua nova senha',
+    'reset_passoword_one' => 'Nova senha',
+    'reset_passoword_two' => 'Confirme a Nova senha',
+    'reset_password_btn' => 'Salvar nova senha',
+
+    //Erros
+    'password_mismatch' => 'As senhas não conferem. Tente novamente.',
+    'reset_invalid' => 'O link de redefinição é inválido ou expirou.',
+    'reset_unknown_error' => 'Houve um erro ao atualizar sua senha. Tente novamente.',
+
+    //Cadastro
+    'register_img_title' => 'Faça parte do time.',
+    'register_img_text' => 'Crie sua conta gratuita e comece a transformar sua rotina esportiva hoje mesmo.',
+
+    'register_title_forms' => 'Crie sua conta',
+    'register_subtitle_forms' => 'Preencha seus dados para começar',
+
+    //Cadastro (forms)
+    'register_name' => 'Nome Completo',
+    'register_name_ph' => 'Como quer ser chamado?',
+    'register_email_ph' => 'seu@email.com',
+    'register_birthday' => 'Data de nascimento',
+    'register_password' => 'Senha',
+    'register_password_ph' => 'Mínimo de 6 caracteres',
+    'register_password_two' => 'Confirmar senha',
+    'register_password_ph_two' => 'Repita a senha',
+
+    //Cadastro (Politicas)
+    'register_accept_agree' => 'Eu concordo com os termos',
+    'register_terms_btn' => 'Termos de uso',
+    'register_privacy_btn' => 'Privacidade',
+
+    'register_create_btn' => 'Criar conta',
+
+    'register_confirm_answer' => 'Já tem uma conta?',   
+    'register_answer_btn' => 'Fazer Login',
+    
+
+    //Cadastro (Erros)
+    'register_email_exists' => 'Este e-mail já está cadastrado. Tente fazer login.',
+    'register_failed' => 'Erro ao criar conta. Tente novamente mais tarde.',
+    'register_password_character' => 'A senha deve ter pelo menos 6 caracteres.',
+    
 ];

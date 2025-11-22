@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../../../Includes/i18n.php';
 $message = null;
 $messageType = 'error';
 
@@ -7,25 +7,25 @@ if (isset($_GET['error'])) {
     $messageType = 'error';
     switch ($_GET['error']) {
         case 'email_exists':
-            $message = 'Este e-mail já está cadastrado. Tente fazer login.';
+            $message = $lang['register_email_exists'];
             break;
         case 'password_mismatch':
-            $message = 'As senhas não coincidem.';
+            $message = $lang['password_mismatch'];
             break;
         case 'registration_failed':
-            $message = 'Erro ao criar conta. Tente novamente mais tarde.';
+            $message = $lang['register_failed'];
             break;
         case 'weak_password':
-            $message = 'A senha deve ter pelo menos 6 caracteres.';
+            $message = $lang['register_password_character'];
             break;
         default:
-            $message = 'Ocorreu um erro desconhecido.';
+            $message = $lang['unknown_error'];
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="<?php echo $_SESSION['idioma']; ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -96,8 +96,8 @@ if (isset($_GET['error'])) {
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10 text-center px-12 animate-fadeInUp">
                 <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-16 mx-auto mb-6 drop-shadow-lg">
-                <h1 class="text-4xl font-bold leading-tight drop-shadow-md">Faça parte do time.</h1>
-                <p class="mt-4 text-lg text-gray-200 drop-shadow-md">Crie sua conta gratuita e comece a transformar sua rotina esportiva hoje mesmo.</p>
+                <h1 class="text-4xl font-bold leading-tight drop-shadow-md"><?php echo $lang['register_img_title']; ?></h1>
+                <p class="mt-4 text-lg text-gray-200 drop-shadow-md"><?php echo $lang['register_img_text']; ?></p>
             </div>
         </div>
 
@@ -115,8 +115,8 @@ if (isset($_GET['error'])) {
                     <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-12 mx-auto drop-shadow-lg">
                 </a>
 
-                <h2 class="text-3xl font-bold text-center mb-2">Crie sua conta</h2>
-                <p class="text-gray-400 text-center mb-8">Preencha seus dados para começar.</p>
+                <h2 class="text-3xl font-bold text-center mb-2"><?php echo $lang['register_title_forms']; ?></h2>
+                <p class="text-gray-400 text-center mb-8"><?php echo $lang['register_subtitle_forms']; ?></p>
 
                 <?php if ($message): ?>
                     <?php
@@ -132,31 +132,31 @@ if (isset($_GET['error'])) {
                 <form id="register-form" action="<?php echo BASE_URL; ?>/register/store" method="POST" class="space-y-5">
 
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-300 ml-1">Nome Completo</label>
+                        <label for="name" class="block text-sm font-medium text-gray-300 ml-1"><?php echo $lang['register_name']; ?></label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-user text-gray-500"></i>
                             </div>
                             <input id="name" name="name" type="text" autocomplete="name" required
                                 class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
-                                placeholder="Como quer ser chamado?">
+                                placeholder="<?php echo $lang['register_name_ph']; ?>">
                         </div>
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300 ml-1">Email</label>
+                        <label for="email" class="block text-sm font-medium text-gray-300 ml-1"><?php echo $lang['global_email']; ?></label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-500"></i>
                             </div>
                             <input id="email" name="email" type="email" autocomplete="email" required
                                 class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
-                                placeholder="seu@email.com">
+                                placeholder="<?php echo $lang['register_email_ph']; ?>">
                         </div>
                     </div>
 
                     <div>
-                        <label for="birthdate" class="block text-sm font-medium text-gray-300 ml-1">Data de Nascimento</label>
+                        <label for="birthdate" class="block text-sm font-medium text-gray-300 ml-1"><?php echo $lang['register_birthday']; ?></label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-calendar text-gray-500"></i>
@@ -167,26 +167,26 @@ if (isset($_GET['error'])) {
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300 ml-1">Senha</label>
+                        <label for="password" class="block text-sm font-medium text-gray-300 ml-1"><?php echo $lang['register_password']; ?></label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-500"></i>
                             </div>
                             <input id="password" name="password" type="password" autocomplete="new-password" required
                                 class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
-                                placeholder="Mínimo 6 caracteres">
+                                placeholder="<?php echo $lang['register_password_ph']; ?>">
                         </div>
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-300 ml-1">Confirmar Senha</label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-300 ml-1"><?php echo $lang['register_password_two']; ?></label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-key text-gray-500"></i>
                             </div>
                             <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required
                                 class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
-                                placeholder="Repita a senha">
+                                placeholder="<?php echo $lang['register_password_ph_two']; ?>">
                         </div>
                     </div>
 
@@ -196,21 +196,21 @@ if (isset($_GET['error'])) {
                         </div>
                         <div class="ml-2 text-sm">
                             <label for="terms" class="font-medium text-gray-400">
-                                Eu concordo com os <a href="#" class="text-cyan-400 hover:underline">Termos de Uso</a> e <a href="#" class="text-cyan-400 hover:underline">Privacidade</a>.
+                                <?php echo $lang['register_accept_agree']; ?><a href="#" class="text-cyan-400 hover:underline"> <?php echo $lang['register_terms_btn']; ?></a> <?php echo $lang['global_and']; ?> <a href="#" class="text-cyan-400 hover:underline"><?php echo $lang['register_privacy_btn']; ?></a>.
                             </label>
                         </div>
                     </div>
 
                     <div>
                         <button id="register-button" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 hover:shadow-cyan-400/20 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-all duration-200 transform">
-                            Criar Conta
+                            <?php echo $lang['register_create_btn']; ?>
                         </button>
                     </div>
                 </form>
 
                 <p class="mt-8 text-center text-sm text-gray-400">
-                    Já tem uma conta?
-                    <a href="<?php echo BASE_URL; ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300 transition-colors hover:underline">Fazer Login</a>
+                    <?php echo $lang['register_confirm_answer']; ?>
+                    <a href="<?php echo BASE_URL; ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300 transition-colors hover:underline"><?php echo $lang['register_answer_btn']; ?></a>
                 </p>
             </div>
         </div>

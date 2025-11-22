@@ -13,6 +13,8 @@ return[
     'global_menu_exit' => 'बाहर निकलें',
     'global_menu_register' => 'साइन इन करें',
     'global_menu_login' => 'प्रवेश करें',
+    'global_and' =>  'और',
+
 
     //global Forms
     'global_email' => 'ईमेल',
@@ -80,4 +82,48 @@ return[
     'email_exists' => 'यदि इस ईमेल पते वाला कोई खाता मौजूद है, तो एक लिंक भेजा गया है।',
     // Erros
     'email_invalid' => 'कृपया एक वैध ईमेल दर्ज करें।',
+
+
+    // Reset password
+    'reset_title' => 'अपना नया पासवर्ड बनाएँ',
+    'reset_passoword_one' => 'नया पासवर्ड',
+    'reset_passoword_two' => 'नया पासवर्ड की पुष्टि करें',
+    'reset_password_btn' => 'नया पासवर्ड सहेजें',
+
+    // Errors
+    'reset_password_mismatch' => 'पासवर्ड मेल नहीं खाते। फिर से प्रयास करें।',
+    'reset_invalid' => 'रीसेट लिंक अमान्य है या समाप्त हो गया है।',
+    'reset_unknown_error' => 'आपका पासवर्ड अपडेट करते समय कोई त्रुटि हुई। कृपया पुन: प्रयास करें।',
+
+    // Cadastro
+    'register_img_title' => 'टीम का हिस्सा बनें।',
+    'register_img_text' => 'अपना निःशुल्क खाता बनाएँ और आज ही अपनी खेल दिनचर्या को बदलना शुरू करें।',
+
+    'register_title_forms' => 'अपना खाता बनाएँ',
+    'register_subtitle_forms' => 'शुरू करने के लिए अपना विवरण भरें',
+
+    // Cadastro (forms)
+    'register_name' => 'पूरा नाम',
+    'register_name_ph' => 'आप क्या कहलाना चाहते हैं?',
+    'register_email_ph' => 'आपका@ईमेल.कॉम',
+    'register_birthday' => 'जन्म तिथि',
+    'register_password' => 'पासवर्ड',
+    'register_password_ph' => 'न्यूनतम 6 वर्ण',
+    'register_password_two' => 'पासवर्ड की पुष्टि करें',
+    'register_password_ph_two' => 'पासवर्ड दोहराएँ',
+
+    // Cadastro (Politicas)
+    'register_accept_agree' => 'मैं शर्तों से सहमत हूँ',
+    'register_terms_btn' => 'उपयोग की शर्तें',
+    'register_privacy_btn' => 'गोपनीयता नीति',
+
+    'register_create_btn' => 'खाता बनाएँ',
+
+    'register_confirm_answer' => 'पहले से ही खाता है?',
+    'register_answer_btn' => 'लॉग इन करें',
+
+    // Cadastro (Erros)
+    'register_email_exists' => 'यह ईमेल पहले से पंजीकृत है। लॉग इन करने का प्रयास करें।',
+    'register_failed' => 'खाता बनाने में त्रुटि। कृपया बाद में पुन: प्रयास करें।',
+    'register_password_character' => 'पासवर्ड कम से कम 6 वर्ण लंबा होना चाहिए।',
 ];

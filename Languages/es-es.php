@@ -13,6 +13,7 @@ return[
     'global_menu_exit' => 'Salir',
     'global_menu_register' => 'Regístrate',
     'global_menu_login' => 'Entrar',
+    'global_and' =>  'y',
 
     //global Forms
     'global_email' => 'Correo electrónico',
@@ -83,5 +84,49 @@ return[
     // Erros
     'email_invalid' => 'Por favor, introduce un correo electrónico válido.',
 
+
+    //Reset password
+    'reset_title' => 'Crea tu nueva contraseña',
+    'reset_passoword_one' => 'Nueva contraseña',
+    'reset_passoword_two' => 'Confirma la Nueva contraseña',
+    'reset_password_btn' => 'Guardar nueva contraseña',
+
+    // Errors
+    'reset_password_mismatch' => 'Las contraseñas no coinciden. Inténtalo de nuevo.',
+    'reset_invalid' => 'El enlace de restablecimiento es inválido o ha expirado.',
+    'reset_unknown_error' => 'Hubo un error al actualizar tu contraseña. Inténtalo de nuevo.',
+    //Fim reset password
+
+    // Cadastro
+    'register_img_title' => 'Forma parte del equipo.',
+    'register_img_text' => 'Crea tu cuenta gratuita y comienza a transformar tu rutina deportiva hoy mismo.',
+
+    'register_title_forms' => 'Crea tu cuenta',
+    'register_subtitle_forms' => 'Completa tus datos para empezar',
+
+    // Cadastro (forms)
+    'register_name' => 'Nombre Completo',
+    'register_name_ph' => '¿Cómo quieres que te llamen?',
+    'register_email_ph' => 'tu@correo.com',
+    'register_birthday' => 'Fecha de nacimiento',
+    'register_password' => 'Contraseña',
+    'register_password_ph' => 'Mínimo 6 caracteres',
+    'register_password_two' => 'Confirmar contraseña',
+    'register_password_ph_two' => 'Repite la contraseña',
+
+    // Cadastro (Politicas)
+    'register_accept_agree' => 'Acepto los términos',
+    'register_terms_btn' => 'Términos de Uso',
+    'register_privacy_btn' => 'Privacidad',
+
+    'register_create_btn' => 'Crear cuenta',
+
+    'register_confirm_answer' => '¿Ya tienes una cuenta?',
+    'register_answer_btn' => 'Iniciar Sesión',
+
+    // Cadastro (Erros)
+    'register_email_exists' => 'Este correo electrónico ya está registrado. Intenta iniciar sesión.',
+    'register_failed' => 'Error al crear la cuenta. Inténtalo de nuevo más tarde.',
+    'register_password_character' => 'La contraseña debe tener al menos 6 caracteres.',
     
-];
+];  

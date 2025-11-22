@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../../../Includes/i18n.php';
 $token = $data['token'] ?? '';
 
 // Lógica para exibir mensagens de erro
@@ -7,20 +7,20 @@ $errorMessage = null;
 if (isset($_GET['error'])) {
     switch ($_GET['error']) {
         case 'password_mismatch':
-            $errorMessage = 'As senhas não conferem. Tente novamente.';
+            $errorMessage = $lang['reset_password_mismatch'];
             break;
         case 'invalid_token':
-            $errorMessage = 'O link de redefinição é inválido ou expirou.';
+            $errorMessage = $lang['reset_invalid'];
             break;
         case 'generic':
-            $errorMessage = 'Houve um erro ao atualizar sua senha. Tente novamente.';
+            $errorMessage = $lang['reset_unknown_error'];
             break;
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="<?php echo $_SESSION['idioma']; ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -82,7 +82,7 @@ if (isset($_GET['error'])) {
         <!-- Card do Formulário -->
         <div class="bg-[#161B22] p-8 rounded-2xl border border-gray-800">
 
-            <h2 class="text-3xl font-bold text-center mb-8">Crie sua Nova Senha</h2>
+            <h2 class="text-3xl font-bold text-center mb-8"><?php echo $lang['reset_title']; ?> </h2>
 
             <!-- Action aponta para a rota POST de reset -->
             <form id="reset-form" action="<?= BASE_URL ?>/reset-password" method="POST" class="space-y-6">
@@ -91,14 +91,14 @@ if (isset($_GET['error'])) {
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-300">Nova Senha</label>
+                    <label for="password" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_one']; ?> </label>
                     <div class="mt-1">
                         <input id="password" name="password" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
                     </div>
                 </div>
 
                 <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-300">Confirme a Nova Senha</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_two']; ?></label>
                     <div class="mt-1">
                         <input id="password_confirmation" name="password_confirmation" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
                     </div>
@@ -106,14 +106,14 @@ if (isset($_GET['error'])) {
 
                 <div>
                     <button id='reset-button' type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-colors">
-                        Salvar Nova Senha
+                        <?php echo $lang['reset_password_btn']; ?> 
                     </button>
                 </div>
             </form>
 
             <p class="mt-8 text-center text-sm text-gray-400">
-                Lembrou da senha?
-                <a href="<?= BASE_URL ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300">Voltar para o Login</a>
+                <?php echo $lang['remember_passoword_text']; ?> 
+                <a href="<?= BASE_URL ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300"><?php echo $lang['remember_password_btn']; ?> </a>
             </p>
         </div>
     </div>

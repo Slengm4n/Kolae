@@ -13,6 +13,8 @@ return[
     'global_menu_exit' => 'Exit',
     'global_menu_register' => 'Sig up',
     'global_menu_login' => 'Sig in',
+    'global_and' =>  'and',
+
 
     //global Forms
     'global_email' => 'Email',
@@ -83,6 +85,49 @@ return[
     'email_exists' => 'If an account with this email address exists, a link has been sent.',
     // Erros
     'email_invalid' => 'Please enter a valid email.',
+
+    // Reset password
+    'reset_title' => 'Create your new password',
+    'reset_passoword_one' => 'New password',
+    'reset_passoword_two' => 'Confirm New password',
+    'reset_password_btn' => 'Save new password',
+
+    // Errors
+    'reset_password_mismatch' => 'Passwords do not match. Try again.',
+    'reset_invalid' => 'The reset link is invalid or has expired.',
+    'reset_unknown_error' => 'There was an error updating your password. Please try again.',
+
+    // Cadastro
+    'register_img_title' => 'Be part of the team.',
+    'register_img_text' => 'Create your free account and start transforming your sports routine today.',
+
+    'register_title_forms' => 'Create your account',
+    'register_subtitle_forms' => 'Fill in your details to get started',
+
+    // Cadastro (forms)
+    'register_name' => 'Full Name',
+    'register_name_ph' => 'What do you want to be called?',
+    'register_email_ph' => 'your@email.com',
+    'register_birthday' => 'Date of birth',
+    'register_password' => 'Password',
+    'register_password_ph' => 'Minimum 6 characters',
+    'register_password_two' => 'Confirm password',
+    'register_password_ph_two' => 'Repeat password',
+
+    // Cadastro (Politicas)
+    'register_accept_agree' => 'I agree to the terms',
+    'register_terms_btn' => 'Terms of Use',
+    'register_privacy_btn' => 'Privacy Policy',
+
+    'register_create_btn' => 'Create account',
+
+    'register_confirm_answer' => 'Already have an account?',
+    'register_answer_btn' => 'Sign In',
+
+    // Cadastro (Erros)
+    'register_email_exists' => 'This email is already registered. Try signing in.',
+    'register_failed' => 'Error creating account. Please try again later.',
+    'register_password_character' => 'The password must be at least 6 characters long.',
 
 
 ];

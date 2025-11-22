@@ -13,6 +13,8 @@ return[
     'global_menu_exit' => '退出',
     'global_menu_register' => '登录',
     'global_menu_login' => '进入',
+    'global_and' =>  '以及',
+
 
     //global Forms
     'global_email' => '电子邮件',
@@ -80,4 +82,47 @@ return[
     'email_exists' => '如果存在此电子邮件地址的账户，则已发送链接。',
     // Erros
     'email_invalid' => '请输入有效的电子邮件。',
+
+    // Reset password
+    'reset_title' => '创建您的新密码',
+    'reset_passoword_one' => '新密码',
+    'reset_passoword_two' => '确认新密码',
+    'reset_password_btn' => '保存新密码',
+
+    // Errors
+    'reset_password_mismatch' => '密码不匹配。请重试。',
+    'reset_invalid' => '重置链接无效或已过期。',
+    'reset_unknown_error' => '更新您的密码时出错。请重试。',
+
+    // Cadastro
+    'register_img_title' => '加入团队。',
+    'register_img_text' => '创建您的免费账户，今天就开始改变您的运动日常。',
+
+    'register_title_forms' => '创建您的账户',
+    'register_subtitle_forms' => '填写您的详细信息以开始',
+
+    // Cadastro (forms)
+    'register_name' => '全名',
+    'register_name_ph' => '您希望被称为什么？',
+    'register_email_ph' => '您的@电子邮件.com',
+    'register_birthday' => '出生日期',
+    'register_password' => '密码',
+    'register_password_ph' => '最少 6 个字符',
+    'register_password_two' => '确认密码',
+    'register_password_ph_two' => '重复密码',
+
+    // Cadastro (Politicas)
+    'register_accept_agree' => '我同意条款',
+    'register_terms_btn' => '使用条款',
+    'register_privacy_btn' => '隐私政策',
+
+    'register_create_btn' => '创建账户',
+
+    'register_confirm_answer' => '已经有账户了？',
+    'register_answer_btn' => '登录',
+
+    // Cadastro (Erros)
+    'register_email_exists' => '此电子邮件已注册。请尝试登录。',
+    'register_failed' => '创建账户时出错。请稍后再试。',
+    'register_password_character' => '密码必须至少有 6 个字符。',
 ];

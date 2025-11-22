@@ -182,7 +182,7 @@ if (isset($_GET['error'])) {
 
                 <p class="mt-8 text-center text-sm text-gray-400">
                     <?php echo $lang['login_text_register']; ?>
-                    <a href="<?php echo BASE_URL; ?>/register" class="font-medium text-cyan-400 hover:text-cyan-300 transition-colors hover:underline"></a>
+                    <a href="<?php echo BASE_URL; ?>/register" class="font-medium text-cyan-400 hover:text-cyan-300 transition-colors hover:underline"><?php echo $lang['global_menu_register']; ?></a>
                 </p>
             </div>
         </div>
