@@ -12,6 +12,7 @@ return[
     'global_menu_profile' => '个人资料',
     'global_menu_exit' => '退出',
     'global_menu_register' => '登录',
+    'global_menu_login' => '进入',
     //Home
     'home_connect_message' => '与其他分享你对运动热情的人联系。',
     'home_search_message' => '找到兴趣、技能水平相同且在你所在地区的运动员。这不仅仅是联系，更是你的新团队。',

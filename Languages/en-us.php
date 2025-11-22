@@ -11,7 +11,8 @@ return[
     'global_home_panel' => 'My panel',
     'global_menu_profile' => 'Profile',
     'global_menu_exit' => 'Exit',
-    'global_menu_register' => 'Sig in',
+    'global_menu_register' => 'Sig up',
+    'global_menu_login' => 'Sig in',
     
     //Home
 

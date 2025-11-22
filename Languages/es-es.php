@@ -11,7 +11,8 @@ return[
     'global_home_panel' => 'Mi panel',
     'global_menu_profile' => 'Perfil',
     'global_menu_exit' => 'Salir',
-    'global_menu_register' => 'Iniciar sesión',
+    'global_menu_register' => 'Regístrate',
+    'global_menu_login' => 'Entrar',
     //Home
     'home_connect_message' => 'Conecta con otros que comparten tu pasión por el deporte.',
     'home_search_message' => 'Encuentra atletas con los mismos intereses, nivel de habilidad y en tu área. Más que una conexión, es tu nuevo equipo.',

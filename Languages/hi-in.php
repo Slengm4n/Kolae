@@ -12,6 +12,7 @@ return[
     'global_menu_profile' => 'प्रोफ़ाइल',
     'global_menu_exit' => 'बाहर निकलें',
     'global_menu_register' => 'साइन इन करें',
+    'global_menu_login' => 'प्रवेश करें',
     //Home
     'home_connect_message' => 'दूसरों से जुड़ें जो खेल के लिए आपके जुनून को साझा करते हैं।',
     'home_search_message' => 'समान रुचियों, कौशल स्तर और आपके क्षेत्र में एथलीटों को खोजें। सिर्फ़ एक कनेक्शन से ज़्यादा, यह आपकी नई टीम है।',
