@@ -11,10 +11,8 @@ return[
     'global_home_panel' => 'Meu Painel',
     'global_menu_profile' => 'Perfil',
     'global_menu_exit' => 'Sair',
-
     //Home
 
-    //home dropdown
     'perfil' => 'perfil',
     'home_start_free' => 'Comece de graça',
     'home_connect_message' => 'Conecte-se com quem compartilha a sua paixão pelo esporte.',

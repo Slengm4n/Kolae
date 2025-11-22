@@ -14,9 +14,6 @@ return[
     'global_menu_register' => 'Sig in',
     //Home
 
-    //home dropdown
-
-
     'home_connect_message' => 'Connect with others who share your passion for sports.',
     'home_search_message' => 'Find athletes with the same interests, skill level, and in your area. More than just a connection, its your new team.',
     'home_title_community' => 'Community',

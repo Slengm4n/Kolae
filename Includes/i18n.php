@@ -11,7 +11,10 @@ if (isset($_GET['lang'])){
         $_SESSION['idioma']= 'pt-br';
     } elseif ($_GET['lang'] == 'zh-cn') {
         $_SESSION['idioma'] = 'zh-cn';
-    } else{
+    } elseif($_GET['lang'] == 'es-es'){
+        $_SESSION['idioma'] = 'es-es';
+    }
+    else{
         $_SESSION ['idioma'] = 'pt-br'; 
     }
 } 
