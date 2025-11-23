@@ -14,6 +14,8 @@ return[
     'global_menu_register' => 'Cadastre-se',
     'global_menu_login' => 'Entrar',
     'global_and' =>  'e',
+    'global_menu_help' =>'Ajuda',
+    'global_menu_config' => 'Configurações',
 
 
 
@@ -100,6 +102,7 @@ return[
     'password_mismatch' => 'As senhas não conferem. Tente novamente.',
     'reset_invalid' => 'O link de redefinição é inválido ou expirou.',
     'reset_unknown_error' => 'Houve um erro ao atualizar sua senha. Tente novamente.',
+    //Fim reset Password*****************************************************************
 
     //Cadastro
     'register_img_title' => 'Faça parte do time.',
@@ -133,5 +136,31 @@ return[
     'register_email_exists' => 'Este e-mail já está cadastrado. Tente fazer login.',
     'register_failed' => 'Erro ao criar conta. Tente novamente mais tarde.',
     'register_password_character' => 'A senha deve ter pelo menos 6 caracteres.',
-    
+    //Fim cadastro************************************************
+
+    //Dashboard (Usuário)
+    'dashboard_view_profile' => 'Ver perfil completo',
+
+    'dashboard_user_greetings' => 'Olá',
+    'dashboard_user_activity' => 'Aqui está o resumo das suas atividades hoje.',
+
+    //Acões do dono da quadra
+    'dashboard_user_actions' => 'Ações Rápidas',
+
+    'dashboard_user_location_title' => 'Novo Local',
+    'dashboard_user_location_text' =>'Cadastre uma nova quadra',
+
+    'dashboard_user_account_title' => 'Minha conta',
+    'dashboard_user_account_text' => 'Gerenciar dados e senha',
+
+    //Locais já cadastrados
+    'dashboard_user_venues_title' => 'Meus locais',
+    'dashboard_user_venue_edit' => 'Editar',
+
+    //CNPJ
+    'dashboard_cnpj_title' => 'Complete seu perfil',
+    'dashboard_cnpj_text' => 'Valide seu CNPJ para começar a cadastrar e gerenciar seus locais.',
+    'dashboard_cnpj_add' => 'Adicionar CNPJ',
+    'dashboard_cnpj_success' => 'Parabéns! Seu CNPJ foi validado. Você já pode cadastrar locais.',
+ 
 ];

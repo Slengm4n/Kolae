@@ -14,6 +14,8 @@ return[
     'global_menu_register' => 'Regístrate',
     'global_menu_login' => 'Entrar',
     'global_and' =>  'y',
+    'global_menu_help' => 'Ayuda',
+    'global_menu_config' => 'Configuración',
 
     //global Forms
     'global_email' => 'Correo electrónico',
@@ -129,4 +131,28 @@ return[
     'register_failed' => 'Error al crear la cuenta. Inténtalo de nuevo más tarde.',
     'register_password_character' => 'La contraseña debe tener al menos 6 caracteres.',
     
+    // Dashboard (User)
+    'dashboard_view_profile' => 'Ver perfil completo',
+
+    'dashboard_user_greetings' => 'Hola',
+    'dashboard_user_activity' => 'Aquí está el resumen de tus actividades de hoy.',
+
+    // Actions for venue owner
+    'dashboard_user_actions' => 'Acciones Rápidas',
+
+    'dashboard_user_location_title' => 'Nuevo Local',
+    'dashboard_user_location_text' =>'Registrar una nueva cancha o instalación',
+
+    'dashboard_user_account_title' => 'Mi Cuenta',
+    'dashboard_user_account_text' => 'Administrar datos y contraseña',
+
+    // Registered venues
+    'dashboard_user_venues_title' => 'Mis Locales',
+    'dashboard_user_venue_edit' => 'Editar',
+
+    // CNPJ (Corporate Registration Number)
+    'dashboard_cnpj_title' => 'Completa tu perfil',
+    'dashboard_cnpj_text' => 'Valida tu CNPJ para empezar a registrar y gestionar tus locales.',
+    'dashboard_cnpj_add' => 'Añadir CNPJ',
+    'dashboard_cnpj_success' => '¡Felicidades! Tu CNPJ ha sido validado. Ya puedes registrar locales.',
 ];  

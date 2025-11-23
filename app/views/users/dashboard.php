@@ -1,11 +1,12 @@
 <?php
+require_once __DIR__ . '/../../../Includes/i18n.php';
 $userName = $data['userName'] ?? 'Utilizador';
 $userVenues = $data['userVenues'] ?? [];
 // Verificação segura do CNPJ
 $showCnpjModal = $data['showCnpjModal'] ?? false;
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="<?php echo $_SESSION['idioma']; ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -69,7 +70,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-400 after:scale-x-100 transition-transform">Meu Painel</a>
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-400 after:scale-x-100 transition-transform"><?php echo $lang['global_home_panel']?></a>
             </nav>
 
             <div class="relative">
@@ -95,13 +96,13 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                 <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-[#161B22] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
                     <div class="p-4 border-b border-gray-800">
                         <p class="font-semibold text-white truncate"><?php echo htmlspecialchars($userName); ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-400 hover:underline">Ver perfil completo</a>
+                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-400 hover:underline"><?php echo $lang['dashboard_view_profile']?></a>
                     </div>
                     <ul class="py-2 text-sm">
-                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-cog w-4 text-center text-gray-400"></i> Configurações</a></li>
-                        <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-4 text-center text-gray-400"></i> Ajuda</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-cog w-4 text-center text-gray-400"></i> <?php echo $lang['global_menu_config']?></a></li>
+                        <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-4 text-center text-gray-400"></i> <?php echo $lang['global_menu_help']?></a></li>
                         <li class="border-t border-gray-800 my-2"></li>
-                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> Sair</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> <?php echo $lang['global_menu_exit']?></a></li>
                     </ul>
                 </div>
             </div>
@@ -118,12 +119,12 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                             <i class="fas fa-exclamation-triangle text-2xl text-yellow-400"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-yellow-100">Complete seu perfil</h3>
-                            <p class="text-sm text-yellow-200/80">Valide seu CNPJ para começar a cadastrar e gerenciar seus locais.</p>
+                            <h3 class="font-bold text-lg text-yellow-100"><?php echo $lang['dashboard_cnpj_title']?></h3>
+                            <p class="text-sm text-yellow-200/80"><?php echo $lang['dashboard_cnpj_text']?></p>
                         </div>
                     </div>
                     <a href="<?php echo BASE_URL; ?>/dashboard/cnpj" class="w-full md:w-auto bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2.5 px-6 rounded-xl text-center transition-all hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">
-                        Adicionar CNPJ
+                        <?php echo $lang['dashboard_cnpj_add']?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -131,20 +132,20 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             <?php if (isset($_GET['status']) && $_GET['status'] === 'cnpj_success'): ?>
                 <div class="bg-green-500/10 border border-green-500/30 text-green-300 p-4 rounded-2xl flex items-center gap-3 shadow-lg">
                     <i class="fas fa-check-circle text-xl"></i>
-                    <span>Parabéns! Seu CNPJ foi validado. Você já pode cadastrar locais.</span>
+                    <span><?php echo $lang['dashboard_cnpj_success']?></span>
                 </div>
             <?php endif; ?>
         </div>
 
         <section class="mb-12 animate-up delay-100">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">
-                Olá, <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"><?php echo explode(' ', htmlspecialchars($userName))[0]; ?>!</span>
+                <?php echo $lang['dashboard_user_greetings']?> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"><?php echo explode(' ', htmlspecialchars($userName))[0]; ?>!</span>
             </h1>
-            <p class="text-gray-400">Aqui está o resumo das suas atividades hoje.</p>
+            <p class="text-gray-400"><?php echo $lang['dashboard_user_activity']?></p>
         </section>
 
         <section class="mb-16 animate-up delay-200">
-            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-2"><i class="fas fa-bolt text-yellow-400"></i> Ações Rápidas</h2>
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-2"><i class="fas fa-bolt text-yellow-400"></i> <?php echo $lang['dashboard_user_actions']?></h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="group bg-[#161B22] p-6 rounded-2xl border border-gray-800 hover:border-cyan-500/50 hover:bg-[#1c2128] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 flex items-center gap-5">
@@ -152,8 +153,8 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         <i class="fas fa-plus text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg text-white group-hover:text-cyan-400 transition-colors">Novo Local</h3>
-                        <p class="text-sm text-gray-400">Cadastre uma nova quadra</p>
+                        <h3 class="font-bold text-lg text-white group-hover:text-cyan-400 transition-colors"><?php echo $lang['dashboard_user_location_title']?></h3>
+                        <p class="text-sm text-gray-400"><?php echo $lang['dashboard_user_location_text']?></p>
                     </div>
                     <i class="fas fa-arrow-right ml-auto text-gray-600 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all"></i>
                 </a>
@@ -163,8 +164,8 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         <i class="fas fa-user-cog text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg text-white group-hover:text-purple-400 transition-colors">Minha Conta</h3>
-                        <p class="text-sm text-gray-400">Gerenciar dados e senha</p>
+                        <h3 class="font-bold text-lg text-white group-hover:text-purple-400 transition-colors"><?php echo $lang['dashboard_user_account_title']?></h3>
+                        <p class="text-sm text-gray-400"><?php echo $lang['dashboard_user_account_text']?></p>
                     </div>
                     <i class="fas fa-arrow-right ml-auto text-gray-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all"></i>
                 </a>
@@ -173,7 +174,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
         <section class="animate-up delay-300">
             <div class="flex justify-between items-end mb-6">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fas fa-map-marked-alt text-cyan-400"></i> Meus Locais</h2>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2"><i class="fas fa-map-marked-alt text-cyan-400"></i><?php echo $lang['dashboard_user_venues_title']?></h2>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

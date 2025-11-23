@@ -336,7 +336,7 @@ require_once __DIR__ . '/../../../Includes/i18n.php';
             </div>
         </div>
         <div class="mt-8 md:mt-12 py-6 border-t border-gray-700 text-center">
-            <p class="text-sm text-gray-400">&copy; 2025 Kolae. Todos os direitos reservados.</p>
+            <p class="text-sm text-gray-400">&copy; <?php echo $lang['global_Copyright_message'];?></p>
         </div>
     </footer>
 

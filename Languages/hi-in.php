@@ -14,6 +14,8 @@ return[
     'global_menu_register' => 'साइन इन करें',
     'global_menu_login' => 'प्रवेश करें',
     'global_and' =>  'और',
+    'global_menu_help' => 'मदद',
+    'global_menu_config' => 'सेटिंग्स',
 
 
     //global Forms
@@ -126,4 +128,29 @@ return[
     'register_email_exists' => 'यह ईमेल पहले से पंजीकृत है। लॉग इन करने का प्रयास करें।',
     'register_failed' => 'खाता बनाने में त्रुटि। कृपया बाद में पुन: प्रयास करें।',
     'register_password_character' => 'पासवर्ड कम से कम 6 वर्ण लंबा होना चाहिए।',
+
+    // Dashboard (User)
+    'dashboard_view_profile' => 'पूर्ण प्रोफ़ाइल देखें',
+
+    'dashboard_user_greetings' => 'नमस्ते',
+    'dashboard_user_activity' => 'यहाँ आज की आपकी गतिविधि का सारांश है।',
+
+    // Actions for venue owner
+    'dashboard_user_actions' => 'त्वरित कार्य',
+
+    'dashboard_user_location_title' => 'नया स्थान',
+    'dashboard_user_location_text' =>'एक नया कोर्ट या सुविधा पंजीकृत करें',
+
+    'dashboard_user_account_title' => 'मेरा खाता',
+    'dashboard_user_account_text' => 'डेटा और पासवर्ड प्रबंधित करें',
+
+    // Registered venues
+    'dashboard_user_venues_title' => 'मेरे स्थान',
+    'dashboard_user_venue_edit' => 'संपादित करें',
+
+    // CNPJ (Corporate Registration Number)
+    'dashboard_cnpj_title' => 'अपनी प्रोफ़ाइल पूरी करें',
+    'dashboard_cnpj_text' => 'अपने स्थानों को पंजीकृत और प्रबंधित करना शुरू करने के लिए अपना सीएनपीजे (CNPJ) मान्य करें।',
+    'dashboard_cnpj_add' => 'सीएनपीजे (CNPJ) जोड़ें',
+    'dashboard_cnpj_success' => 'बधाई हो! आपका सीएनपीजे (CNPJ) मान्य हो गया है। अब आप स्थान पंजीकृत कर सकते हैं।',
 ];

@@ -14,7 +14,8 @@ return[
     'global_menu_register' => '登录',
     'global_menu_login' => '进入',
     'global_and' =>  '以及',
-
+    'global_menu_help' => '帮助',
+    'global_menu_config' => '设置',
 
     //global Forms
     'global_email' => '电子邮件',
@@ -125,4 +126,29 @@ return[
     'register_email_exists' => '此电子邮件已注册。请尝试登录。',
     'register_failed' => '创建账户时出错。请稍后再试。',
     'register_password_character' => '密码必须至少有 6 个字符。',
+
+    // Dashboard (User)
+    'dashboard_view_profile' => '查看完整资料',
+
+    'dashboard_user_greetings' => '您好',
+    'dashboard_user_activity' => '这是您今天的活动摘要。',
+
+    // Actions for venue owner
+    'dashboard_user_actions' => '快速行动',
+
+    'dashboard_user_location_title' => '新场地',
+    'dashboard_user_location_text' =>'注册新的球场或设施',
+
+    'dashboard_user_account_title' => '我的账户',
+    'dashboard_user_account_text' => '管理数据和密码',
+
+    // Registered venues
+    'dashboard_user_venues_title' => '我的场地',
+    'dashboard_user_venue_edit' => '编辑',
+
+    // CNPJ (Corporate Registration Number)
+    'dashboard_cnpj_title' => '完善您的资料',
+    'dashboard_cnpj_text' => '验证您的 CNPJ 以开始注册和管理您的场地。',
+    'dashboard_cnpj_add' => '添加 CNPJ',
+    'dashboard_cnpj_success' => '恭喜！您的 CNPJ 已通过验证。您现在可以注册场地了。',
 ];

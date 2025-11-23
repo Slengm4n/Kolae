@@ -14,6 +14,8 @@ return[
     'global_menu_register' => 'Sig up',
     'global_menu_login' => 'Sig in',
     'global_and' =>  'and',
+    'global_menu_help' => 'Help',
+    'global_menu_config' => 'Settings',
 
 
     //global Forms
@@ -37,7 +39,7 @@ return[
     'home_footer_activity' => 'Get our latest news',
     'home_footer_register' => 'Sign up to stay informed about upcoming events and updates.',
 
-        // Login
+    // Login
     'login_title_jorney' => 'Your journey starts here!',
     'login_subtitle_jorney' => 'Connect, train, and evolve with the largest community of athletes.',
     
@@ -130,4 +132,28 @@ return[
     'register_password_character' => 'The password must be at least 6 characters long.',
 
 
+    // Dashboard (User)
+    'dashboard_view_profile' => 'View full profile',
+
+    'dashboard_user_greetings' => 'Hello',
+    'dashboard_user_activity' => 'Here is a summary of your activity today.',
+
+    // Actions for venue owner
+    'dashboard_user_actions' => 'Quick Actions',
+
+    'dashboard_user_location_title' => 'New Venue',
+    'dashboard_user_location_text' =>'Register a new court or facility',
+
+    'dashboard_user_account_title' => 'My Account',
+    'dashboard_user_account_text' => 'Manage data and password',
+
+    // Registered venues
+    'dashboard_user_venues_title' => 'My Venues',
+    'dashboard_user_venue_edit' => 'Edit',
+
+    // CNPJ (Corporate Registration Number)
+    'dashboard_cnpj_title' => 'Complete your profile',
+    'dashboard_cnpj_text' => 'Validate your CNPJ to start registering and managing your venues.',
+    'dashboard_cnpj_add' => 'Add CNPJ',
+    'dashboard_cnpj_success' => 'Congratulations! Your CNPJ has been validated. You can now register venues.',
 ];
