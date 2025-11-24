@@ -1,6 +1,5 @@
 <?php
 return[
-    //Chaves globais
     'global_slogan_headline' => 'Allenati con chi ama lo sport',
     'global_menu_about' => 'Chi Siamo',
     'global_title_about' => 'La Nostra Missione è Connettere gli Atleti',
@@ -21,11 +20,9 @@ return[
     'global_error' => 'Errore',
     'global_account' => 'Account',
 
-    //global Forms
     'global_email' => 'Email',
     'global_senha' => 'Password',
 
-    //Home
     'perfil' => 'profilo',
     'home_start_free' => 'Inizia gratuitamente',
     'home_connect_message' => 'Connettiti con chi condivide la tua passione per lo sport.',
@@ -37,77 +34,58 @@ return[
     'home_title_supporters' => 'Partner che rafforzano lo sport',
     'home_text_supporters' => 'Scopri i marchi che sostengono la crescita dello sport e della nostra comunità.',
     
-    //home footer
     'home_footer_phrase' => 'Connettiamo atleti, rafforzando lo sport.',
     'home_footer_activity' => 'Ricevi le nostre novità',
     'home_footer_register' => 'Registrati per rimanere aggiornato sui prossimi eventi e aggiornamenti.',
-    //FIM HOME
 
-
-    //Login
     'login_title_jorney' => 'La tua avventura inizia qui!',
     'login_subtitle_jorney' => 'Connettiti, allenati ed evolvi con la più grande comunità di atleti.',
     'login_title_welcome' => 'Bentornato',
     'login_subtitle_welcome' => 'Accedi al tuo account per continuare',
 
-    //Forms do login
     'login_email_ph' => 'Email',
     'login_senha_ph' => 'Password',
     'login_remember' => 'Ricordami',
     'login_forget' => 'Password dimenticata?',
     'login_btn_entry' => 'Accedi',
 
-    //Login botao de cadastrar
     'login_text_register' => 'Non hai un account?',
 
-    // Messaggi (Login)
     'message_password_redefinition' => 'Password ridefinita con successo!',
     'message_registration_success' => 'Registrazione effettuata! Accedi per continuare.',
 
-
-    //ERROS (LOGIN)
     'error_incorrect_access' => 'Email o password errati. Riprova.',
     'error_invalid_token' => 'Il link di reimpostazione non è valido o è già stato utilizzato.',
     'error_account_inactive' => 'Questo account è inattivo. Contatta l\'assistenza.',
     'unknown_error' => 'Si è verificato un errore sconosciuto.',
 
-    //Mensagens (Login)
     'forget_title_back' => 'Ti rimettiamo in gioco.',
     'forget_subtitle_back' => 'Recupera il tuo accesso e non perdere nessuna opportunità di connessione.',
     'forget_title_password' => 'Password dimenticata?',
     'forget_subtitle_password' => 'Nessun problema! Inserisci la tua email e ti invieremo un link per crearne una nuova.',
     'forget_email_registred' => 'Inserisci la tua Email registrata',
 
-    //Esqueceu a senha
     'forget_btn_recover' => 'Invia Link di recupero',
     'remember_passoword_text' => 'Hai ricordato la password?',
     'remember_password_btn' => 'Torna al login',
 
-
     'email_exists' => 'Se esiste un account con questa email, è stato inviato un link.',
     
-
     'email_invalid' => 'Per favore, inserisci un\'email valida.',
-
-
 
     'reset_title' => 'Crea la tua nuova password',
     'reset_passoword_one' => 'Nuova password',
     'reset_passoword_two' => 'Conferma la Nuova password',
     'reset_password_btn' => 'Salva nuova password',
 
-
     'password_mismatch' => 'Le password non corrispondono. Riprova.',
     'reset_invalid' => 'Il link di reimpostazione non è valido o è scaduto.',
     'reset_unknown_error' => 'Si è verificato un errore durante l\'aggiornamento della password. Riprova.',
-
-
 
     'register_img_title' => 'Entra a far parte del team.',
     'register_img_text' => 'Crea il tuo account gratuito e inizia a trasformare la tua routine sportiva oggi stesso.',
     'register_title_forms' => 'Crea il tuo account',
     'register_subtitle_forms' => 'Inserisci i tuoi dati per iniziare',
-
 
     'register_name' => 'Nome completo',
     'register_name_ph' => 'Come vuoi essere chiamato?',
@@ -118,7 +96,6 @@ return[
     'register_password_two' => 'Conferma password',
     'register_password_ph_two' => 'Ripeti la password',
 
-
     'register_accept_agree' => 'Accetto i termini',
     'register_terms_btn' => 'Termini di utilizzo',
     'register_privacy_btn' => 'Privacy',
@@ -126,13 +103,9 @@ return[
     'register_confirm_answer' => 'Hai già un account?',    
     'register_answer_btn' => 'Accedi',
     
-
     'register_email_exists' => 'Questa email è già registrata. Prova ad accedere.',
     'register_failed' => 'Errore durante la creazione dell\'account. Riprova più tardi.',
     'register_password_character' => 'La password deve contenere almeno 6 caratteri.',
-
-
-
 
     'dashboard_view_profile' => 'Vedi profilo completo',
     'dashboard_user_greetings' => 'Ciao',
@@ -141,23 +114,19 @@ return[
     'dashboard_venue_register_subtitle' => 'Non hai ancora campi o spazi sportivi registrati.',
     'dashboard_venue_register_btn' => 'Registra il primo campo',
 
-
     'dashboard_user_actions' => 'Azioni Rapide',
     'dashboard_user_location_title' => 'Nuovo Campo',
     'dashboard_user_location_text' =>'Registra un nuovo campo',
     'dashboard_user_account_title' => 'Il mio account',
     'dashboard_user_account_text' => 'Gestisci dati e password',
 
-
     'dashboard_user_venues_title' => 'I miei campi',
     'dashboard_user_venue_edit' => 'Modifica',
-
 
     'dashboard_cnpj_title' => 'Completa il tuo profilo',
     'dashboard_cnpj_text' => 'Convalida il tuo codice fiscale (CNPJ) per iniziare a registrare e gestire i tuoi campi.',
     'dashboard_cnpj_add' => 'Aggiungi CNPJ',
     'dashboard_cnpj_success' => 'Congratulazioni! Il tuo CNPJ è stato convalidato. Puoi già registrare i campi.',
-
 
     'cnpj_page_title' => 'Convalida la tua Registrazione',
     'cnpj_page_text' => 'Per garantire la sicurezza della piattaforma e registrare i tuoi campi, dobbiamo convalidare il tuo codice fiscale (CNPJ).',    
@@ -167,12 +136,8 @@ return[
     'cnpj_btn_back' => 'Torna al pannello',
     'cnpj_kolae_safe' => '2025 Kolae. Ambiente sicuro',
 
-
-
-
     'config_custom_profile' => 'Modifica Profilo',
     'config_security' => 'Sicurezza',
-
 
     'profile_title' => 'Informazioni Personali',
     'profile_subtitle' => 'Aggiorna i tuoi dati di identificazione.',
@@ -180,14 +145,11 @@ return[
     'profile_image_ph' => 'Modifica',
     'profile_btn_save' => 'Salva Modifiche',
 
-
     'profile_update_success' => 'Profilo aggiornato con successo',
-
 
     'profile_error_upload' => 'Errore nel caricamento dell\'immagine. Prova un file più piccolo (JPG/PNG).',
     'profile_error_update' => 'Errore durante l\'aggiornamento del profilo.',
     'profile_error_data' => 'Impossibile caricare i dati dell\'utente.',
-
 
     'security_change_password_title' => 'Cambia password',
     'security_change_password_text' => 'Mantieni il tuo account sicuro aggiornando periodicamente la password.',
@@ -196,11 +158,9 @@ return[
     'security_new_password_confirm' => 'Conferma nuova password',
     'security_update_password_btn' => 'Salva nuova password',
 
-
     'security_wrong_password_error' => 'La password attuale inserita non è corretta.',
     'security_strength_password_error' => 'La password è troppo debole.',
     'security_save_password_error' => 'Errore durante il salvataggio. Riprova.',
-
 
     'strength_password_title' => 'Forza della password',
     'strength_password_veryweak' => 'Molto debole',
@@ -209,11 +169,7 @@ return[
     'strength_password_strong' => 'Forte',
     'strength_password_verystrong' => 'Molto forte',
 
-
-
-
     'venue_validation_error' => 'Errore di convalida',
-
 
     'venue_floor_question' => 'Qual è il tipo di pavimento principale del tuo campo?',
     'venue_floor_answer_1' => 'Erba Sintetica',
@@ -223,11 +179,9 @@ return[
     'venue_floor_answer_5' => 'Erba Naturale',
     'venue_floor_answer_6' => 'Parquet (Taco)',
 
-
     'venue_max_capacity' => 'Qual è la capacità del tuo campo?',
     'venue_max_capacity_desc' => 'Si riferisce al numero di giocatori in campo contemporaneamente.',
     'venue_quantity_players' => 'Giocatori',
-
 
     'venue_additional_title' => 'Informa i giocatori sui servizi offerti dal tuo spazio',
     'venue_additional_1' => 'Illuminazione',
@@ -238,7 +192,6 @@ return[
     'venue_additional_6' => 'Spogliatoio',
     'venue_leisure_title' => 'Qual è la capacità della tua area ricreativa?',
     'venue_leisure_capacity' => 'Persone',
-
 
     'venue_name_price_title' => 'Ora, dai un nome e definisci un prezzo',
     'venue_name' => 'Nome del campo',
@@ -255,7 +208,6 @@ return[
     'venue_state' => 'Stato',
     'venue_complement' => 'Complemento',
 
-
     'venue_image_title' => 'Fai risaltare il tuo campo con le foto',
     'venue_image_text_1' => 'Trascina e rilascia qui le tue foto',
     'venue_image_text_2' => 'o clicca per selezionare',
@@ -263,12 +215,9 @@ return[
     'venue_btn_continue' => 'Avanti',
     'venue_btn_finish' => 'Completa e registra',
 
-
     'venue_floor_incomplete' => 'Per favore, seleziona un tipo di pavimento.',
     'venue_requirement' => 'Compila i campi obbligatori.',
     'venue_adress_incomplete' => 'Compila l\'indirizzo completo.',
-
-
 
     'edit_venue_info_title' => 'Informazioni di Base',
     'edit_venue_price' => 'Prezzo / ora',
@@ -293,7 +242,6 @@ return[
     'edit_venue_desativar_alert' => 'Questa azione è irreversibile. La cronologia delle prenotazioni verrà mantenuta, ma il campo diventerà invisibile.',
     'edit_venue_desativar_text_1' => 'Digita',
     'edit_venue_desativar_text_2' => 'per confermare:',
-
 
     'edit_venue_not_found' => 'Campo non trovato',
 ];

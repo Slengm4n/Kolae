@@ -43,7 +43,7 @@ return[
     'home_footer_phrase' => 'Conectando atletas, fortalecendo o esporte.',
     'home_footer_activity' => 'Receba nossas novidades',
     'home_footer_register' => 'Cadastre-se para ficar por dentro dos próximos eventos e atualizações.',
-    //FIM HOME***************************************************************************************
+    //FIM HOME
 
     //Login
     'login_title_jorney' => 'Sua jornada começa aqui!',
@@ -93,7 +93,7 @@ return[
     //Erros
 
     'email_invalid' => 'Por favor, insira um e-mail válido.',
-    //Fim esqueceu a senha****************************************************************
+    //Fim esqueceu a senha
 
 
     //Reset password
@@ -106,7 +106,7 @@ return[
     'password_mismatch' => 'As senhas não conferem. Tente novamente.',
     'reset_invalid' => 'O link de redefinição é inválido ou expirou.',
     'reset_unknown_error' => 'Houve um erro ao atualizar sua senha. Tente novamente.',
-    //Fim reset Password*****************************************************************
+    //Fim reset Password
 
     //Cadastro
     'register_img_title' => 'Faça parte do time.',
@@ -140,8 +140,7 @@ return[
     'register_email_exists' => 'Este e-mail já está cadastrado. Tente fazer login.',
     'register_failed' => 'Erro ao criar conta. Tente novamente mais tarde.',
     'register_password_character' => 'A senha deve ter pelo menos 6 caracteres.',
-
-    //Fim cadastro************************************************
+    //Fim cadastro
 
     //Dashboard (Usuário)
     'dashboard_view_profile' => 'Ver perfil completo',
@@ -173,7 +172,7 @@ return[
     'dashboard_cnpj_text' => 'Valide seu CNPJ para começar a cadastrar e gerenciar seus locais.',
     'dashboard_cnpj_add' => 'Adicionar CNPJ',
     'dashboard_cnpj_success' => 'Parabéns! Seu CNPJ foi validado. Você já pode cadastrar locais.',
-    //Fim dashboard***************************************************************************
+    //Fim dashboard
 
     //CNPJ (página de cadastro)
     'cnpj_page_title' => 'Valide seu Cadastro',
@@ -183,7 +182,7 @@ return[
     'cnpj_btn_register' => 'Validar e salvar',
     'cnpj_btn_back' => 'Voltar ao painel',
     'cnpj_kolae_safe' => '2025 Kolae. Ambiente seguro',
-    //Fim CNPJ*********************************************************************************
+    //Fim CNPJ
 
 
     //Configurações
@@ -228,7 +227,7 @@ return[
     'strength_password_reasonable' => 'Razoável',
     'strength_password_strong' => 'Forte',
     'strength_password_verystrong' => 'Muito forte',
-    //Fim configurações*****************************************************************************
+    //Fim configurações
 
     //Criar quadra
 
@@ -289,7 +288,7 @@ return[
     'venue_floor_incomplete' => 'Por favor, selecione um tipo de piso.',
     'venue_requirement' => 'Preencha os campos obrigatórios.',
     'venue_adress_incomplete' => 'Preencha o endereço completo.',
-    //Fim criar quadras******************************************************
+    //Fim criar quadras
 
     //Editar quadra
     'edit_venue_info_title' => 'Informações Básicas',

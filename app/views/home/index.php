@@ -356,7 +356,7 @@ require_once __DIR__ . '/../../../Includes/i18n.php';
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
 <script>
-    // Função de geração de link de idioma
+    //Função de geração de link de idioma
     function generateLangLink(langCode) {
         let currentUri = window.location.pathname + window.location.search;
 
@@ -370,7 +370,7 @@ require_once __DIR__ . '/../../../Includes/i18n.php';
 
     document.addEventListener("DOMContentLoaded", function() {
 
-        // --- 1. Inicialização do Swiper
+        //Inicialização do Swiper
         var swiper = new Swiper(".intro-carousel", {
 
             slidesPerView: 1,
@@ -417,7 +417,7 @@ require_once __DIR__ . '/../../../Includes/i18n.php';
         }
 
 
-        // --- 3. Lógica de Troca de Idioma (Correto) ---
+        //Lógica de Troca de Idioma
         const langButtons = document.querySelectorAll('#lang-box button');
 
         langButtons.forEach(button => {
@@ -432,7 +432,7 @@ require_once __DIR__ . '/../../../Includes/i18n.php';
         });
 
 
-        // --- 4. Lógica do Dropdown do Usuário (Correto) ---
+        // --- 4. Lógica do Dropdown do Usuário
         const userMenuButton = document.getElementById('user-menu-button');
         const profileDropdown = document.getElementById('profile-dropdown');
 

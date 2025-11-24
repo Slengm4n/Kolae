@@ -243,33 +243,28 @@ return[
     'edit_venue_capacity_text' => 'Players on field',
     'edit_venue_capacity' => 'Total',
 
-    // Edit Venue - Amenities
+
     'edit_venues_additional_title' => 'Amenities',
     'edit_venue_answer_1' => 'Lighting',
     'edit_venue_answer_2' => 'Covered',
     'edit_venue_answer_3' => 'Leisure',
     'edit_venue_capacity_leisure' => 'Area Capacity',
 
-    // Edit Venue - Location
     'edit_venue_location' => 'Location',
     'edit_venue_location_cep' => 'ZIP Code',
 
-    // Edit Venue - Photos
     'edit_venue_photo' => 'Photos',
     'edit_venue_photo_text_1' => 'Drag photos here',
     'edit_venue_photo_text_2' => 'or click to select',
 
-    // Edit Venue - Deactivate
     'edit_venue_desativar_Text_1' => 'Deactivate Court',
     'edit_venue_desativar_Text_2' => 'This will remove the court from searches.',
     'edit_venue_desativar_btn' => 'Deactivate',
 
-    // Confirm Deactivation
     'edit_venue_desativar_confirm' => 'Deactivate?',
     'edit_venue_desativar_alert' => 'This action is irreversible. The reservation history will be kept, but the court will become invisible.',
     'edit_venue_desativar_text_1' => 'Type',
     'edit_venue_desativar_text_2' => 'to confirm:',
 
-    // Errors
     'edit_venue_not_found' => 'Venue not found',
 ];
