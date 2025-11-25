@@ -1,9 +1,13 @@
 {
   "name": "kolae",
   "version": "1.2.3",
+  "type": "module",
   "description": "[![Versão](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.1.0)",
   "main": "index.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "vite build --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,11 +22,16 @@
   },
   "homepage": "https://github.com/Slengm4n/kolae#readme",
   "devDependencies": {
+    "autoprefixer": "^10.4.22",
     "esbuild": "^0.27.0",
-    "prettier": "^3.6.2"
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "vite": "^7.2.4"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.17",
+    "swiper": "^12.0.3",
     "tailwindcss": "^4.1.17"
   }
 }

@@ -6,21 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.postimg.cc">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <link href="<?php echo BASE_URL; ?>/assets/css/output.css" rel="stylesheet">
-
+    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
+    <?php include 'app/views/partials/theme_script.php'; ?>
     <style>
-        /* Estilos Críticos e Animações Personalizadas */
         html {
             overflow-x: hidden;
             scroll-behavior: smooth;
@@ -276,104 +271,7 @@
             <p class="text-sm text-content-secondary">&copy; 2025 Kolae. Todos os direitos reservados.</p>
         </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-
-    <script>
-        // --------------------------
-        // LÓGICA DE TOGGLE DE TEMA
-        // --------------------------
-        function applyTheme(theme) {
-            const html = document.documentElement;
-            if (theme === 'dark') {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            let initialTheme;
-
-            if (savedTheme) {
-                initialTheme = savedTheme;
-            } else {
-                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                initialTheme = systemPrefersDark ? 'dark' : 'light';
-            }
-
-            applyTheme(initialTheme);
-
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                    applyTheme(newTheme);
-                });
-            }
-        }
-
-        // --------------------------
-        // SCRIPTS GERAIS (SWIPER, DROPDOWN)
-        // --------------------------
-        document.addEventListener("DOMContentLoaded", function() {
-
-            // Inicia o Tema
-            initializeTheme();
-
-            // Swiper
-            var swiper = new Swiper(".intro-carousel", {
-                slidesPerView: 1,
-                spaceBetween: 30,
-                slidesPerGroup: 1,
-                loop: true,
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                autoplay: {
-                    delay: 3500,
-                    disableOnInteraction: false,
-                },
-                breakpoints: {
-                    768: {
-                        slidesPerView: 2,
-                        slidesPerGroup: 2
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                        slidesPerGroup: 3
-                    }
-                }
-            });
-
-            // Dropdown do Usuário
-            const userMenuButton = document.getElementById('user-menu-button');
-            const profileDropdown = document.getElementById('profile-dropdown');
-
-            if (userMenuButton) {
-                userMenuButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    profileDropdown.classList.toggle('opacity-0');
-                    profileDropdown.classList.toggle('invisible');
-                    profileDropdown.classList.toggle('transform');
-                    profileDropdown.classList.toggle('-translate-y-2');
-                });
-            }
-
-            window.addEventListener('click', (event) => {
-                if (profileDropdown && !profileDropdown.classList.contains('invisible')) {
-                    if (!profileDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
-                        profileDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
-                    }
-                }
-            });
-        });
-    </script>
+    <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 </body>
 
 </html>

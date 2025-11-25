@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="transition-colors duration-500">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolae</title>
-
-    <link rel="icon" href="<?php echo BASE_URL; ?>/assets/img/favicon.png" type="image/png">
-
+    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
+    <?php include 'app/views/partials/theme_script.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -54,7 +52,7 @@
     </style>
 </head>
 
-<body class="bg-[#161B22] text-white">
+<body class="bg-surface-base text-content-primary font-poppins transition-colors duration-500">
 
     <div class="flex min-h-screen relative">
 
@@ -62,7 +60,7 @@
             <img src="<?php echo BASE_URL; ?>/assets/img/forgot_bg.webp"
                 alt="Background"
                 class="w-full h-full object-cover opacity-40">
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
+            <div class="absolute inset-0 bg-white/40 dark:bg-black/60"></div>
         </div>
 
         <div class="hidden lg:flex w-1/2 bg-cover bg-center relative items-center justify-center"
@@ -70,17 +68,17 @@
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10 text-center px-12 animate-fadeInUp">
                 <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-16 mx-auto mb-6 drop-shadow-lg">
-                <h1 class="text-4xl font-bold leading-tight drop-shadow-md">Vamos te colocar de volta no jogo.</h1>
+                <h1 class="text-4xl font-bold leading-tight  text-white drop-shadow-md">Vamos te colocar de volta no jogo.</h1>
                 <p class="mt-4 text-lg text-gray-200 drop-shadow-md">Recupere seu acesso e não perca nenhuma oportunidade de se conectar.</p>
             </div>
         </div>
 
         <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 relative z-10">
 
-            <div class="relative w-full max-w-md bg-[#161B22]/85 backdrop-blur-md p-8 rounded-2xl border border-white/10 shadow-2xl lg:border-none lg:bg-transparent lg:backdrop-blur-none lg:shadow-none animate-fadeInUp" style="animation-delay: 200ms;">
+            <div class="relative w-full max-w-md bg-surface-elevated/90 backdrop-blur-md p-8 rounded-2xl border border-content-secondary/10 shadow-2xl lg:border-none lg:bg-transparent lg:shadow-none animate-fadeInUp transition-colors duration-500">
 
                 <a href="<?php echo BASE_URL; ?>/login"
-                    class="absolute top-4 left-4 lg:top-0 lg:left-0 text-gray-400 hover:text-white transition-colors"
+                    class="absolute top-4 left-4 lg:top-0 lg:left-0 text-content-secondary hover:text-white transition-colors"
                     title="Voltar para o Login">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </a>
@@ -90,7 +88,7 @@
                 </a>
 
                 <h2 class="text-3xl font-bold text-center mb-2">Esqueceu sua senha?</h2>
-                <p class="text-gray-400 text-center mb-8">Sem problemas! Digite seu e-mail e enviaremos um link para você criar uma nova.</p>
+                <p class="text-content-secondary text-center mb-8">Sem problemas! Digite seu e-mail e enviaremos um link para você criar uma nova.</p>
 
                 <?php
                 if (isset($_GET['status']) && $_GET['status'] === 'sent') {
@@ -107,13 +105,13 @@
 
                 <form action="<?= BASE_URL ?>/forgot-password" method="POST" class="space-y-6" id="forgot-form">
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300 ml-1">Email</label>
+                        <label for="email" class="block text-sm font-medium text-content-secondary ml-1">Email</label>
                         <div class="mt-1 relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-500"></i>
+                                <i class="fas fa-envelope text-content-secondary"></i>
                             </div>
                             <input id="email" name="email" type="email" autocomplete="email" placeholder="Digite seu E-mail cadastrado" required
-                                class="w-full bg-gray-900/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all">
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
                         </div>
                     </div>
 
@@ -132,14 +130,7 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('forgot-form').addEventListener('submit', function() {
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enviando...';
-        });
-    </script>
+    <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 
 </body>
 

@@ -24,7 +24,6 @@ jobs:
             - name: Install Dependencies
               run: composer install --no-dev --optimize-autoloader
 
-            # 1.3 O "Pulo do Gato" (Mantido)
             - name: Remove gitignore
               run: rm .gitignore
 
@@ -36,7 +35,7 @@ jobs:
                   username: ${{ secrets.FTP_USERNAME }}
                   password: ${{ secrets.FTP_PASSWORD }}
 
-                  # --- CORREÇÃO AQUI ---
+                  # ---------------------
                   server-dir: ./htdocs/
                   # ---------------------
                   protocol: ftp

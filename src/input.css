@@ -1,37 +1,44 @@
 @import 'tailwindcss';
+@variant dark (&:where(.dark, .dark *));
 
-/* 1. DEFINIÇÃO DAS VARIÁVEIS (A Lógica) */
 @layer base {
     :root {
-        /* Cores do Light Mode */
-        --color-surface-base: #ffffff;
-        --color-surface-secondary: #f3f4f6;
-        --color-surface-elevated: #e5e7eb;
-        --color-content-primary: #111827;
-        --color-content-secondary: #4b5563;
-        --color-border-default: #e5e7eb;
+        /* 1. Fundo da página: Um cinza azulado muuuito suave (Slate-50) */
+        /* Isso faz o branco do cartão "saltar" aos olhos */
+        --surface-base: #f8fafc;
+
+        /* 2. Inputs: Um cinza um pouquinho mais visível (Slate-100) */
+        --surface-secondary: #f1f5f9;
+
+        /* 3. O Cartão Flutuante: BRANCO PURO */
+        --surface-elevated: #ffffff;
+
+        --content-primary: #0f172a; /* Slate-900 (Quase preto) */
+        --content-secondary: #64748b; /* Slate-500 (Cinza elegante) */
     }
 
-    /* Cores do Dark Mode (quando a classe .dark está no HTML) */
     :root.dark {
-        --color-surface-base: #0d1117;
-        --color-surface-elevated: #21262d;
-        --color-surface-secondary: #161b22;
-        --color-content-primary: #ffffff;
-        --color-content-secondary: #99a1af;
-        --color-border-default: #30363d;
+        --surface-base: #161b22; /* Azul profundo (Slate-900) */
+        --surface-secondary: #0d1117; /* Inputs um pouco mais claros (Slate-800) */
+        --surface-elevated: #1e2939; /* Cartão igual ou levemente mais claro */
+
+        --content-primary: #f8fafc;
+        --content-secondary: #94a3b8;
     }
 }
 
-/* 2. REGISTRO DO TEMA (A Mágica) */
-/* Isso diz ao Tailwind: "Crie classes bg-*, text-* usando essas variáveis" */
 @theme {
-    --color-surface-base: var(--color-surface-base);
-    --color-surface-secondary: var(--color-surface-secondary);
-    --color-surface-elevated: var(--color-surface-elevated);
+    /* Mapeamento das variáveis para classes utilitárias */
+    --color-surface-base: var(--surface-base);
+    --color-surface-secondary: var(--surface-secondary);
+    --color-surface-elevated: var(--surface-elevated);
 
-    --color-content-primary: var(--color-content-primary);
-    --color-content-secondary: var(--color-content-secondary);
+    --color-content-primary: var(--content-primary);
+    --color-content-secondary: var(--content-secondary);
 
-    --color-border-default: var(--color-border-default);
+    /* Ciano vibrante */
+    --color-cyan-300: #67e8f9;
+    --color-cyan-400: #22d3ee;
+    --color-cyan-500: #06b6d4;
+    --color-cyan-600: #0891b2;
 }
