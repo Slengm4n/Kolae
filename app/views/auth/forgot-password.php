@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 
 
 $message = null;
@@ -10,23 +10,33 @@ $message = null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae - <?php echo $lang['forget_title_password'] ?? 'Recuperar Senha'; ?></title>
-    
+    <title>Kolae></title>
+
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
+
     <?php include 'app/views/partials/theme_script.php'; ?>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <style>
-        .animate-fadeInUp { animation: fadeInUp 0.5s ease-out both; }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -110,4 +120,5 @@ $message = null;
     <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 
 </body>
+
 </html>

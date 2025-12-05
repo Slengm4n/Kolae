@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../Includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 $token = $data['token'] ?? '';
 
 // Lógica para exibir mensagens de erro
@@ -106,13 +106,13 @@ if (isset($_GET['error'])) {
 
                 <div>
                     <button id='reset-button' type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-colors">
-                        <?php echo $lang['reset_password_btn']; ?> 
+                        <?php echo $lang['reset_password_btn']; ?>
                     </button>
                 </div>
             </form>
 
             <p class="mt-8 text-center text-sm text-gray-400">
-                <?php echo $lang['remember_passoword_text']; ?> 
+                <?php echo $lang['remember_passoword_text']; ?>
                 <a href="<?= BASE_URL ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300"><?php echo $lang['remember_password_btn']; ?> </a>
             </p>
         </div>

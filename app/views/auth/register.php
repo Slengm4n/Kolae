@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 
 $message = null;
 $messageType = 'error';
@@ -7,17 +7,30 @@ $messageType = 'error';
 if (isset($_GET['error'])) {
     $messageType = 'error';
     switch ($_GET['error']) {
-        case 'email_exists': $message = $lang['register_email_exists']; break;
-        case 'password_mismatch': $message = $lang['password_mismatch']; break;
-        case 'registration_failed': $message = $lang['register_failed']; break;
-        case 'weak_password': $message = $lang['register_password_character']; break;
-        default: $message = $lang['unknown_error'];
+        case 'email_exists':
+            $message = $lang['register_email_exists'];
+            break;
+        case 'password_mismatch':
+            $message = $lang['password_mismatch'];
+            break;
+        case 'registration_failed':
+            $message = $lang['register_failed'];
+            break;
+        case 'weak_password':
+            $message = $lang['register_password_character'];
+            break;
+        default:
+            $message = $lang['unknown_error'];
     }
 } elseif (isset($_GET['status'])) {
     $messageType = 'success';
     switch ($_GET['status']) {
-        case 'password_reset': $message = $lang['message_password_redefinition']; break;
-        case 'registered': $message = $lang['message_registration_success']; break;
+        case 'password_reset':
+            $message = $lang['message_password_redefinition'];
+            break;
+        case 'registered':
+            $message = $lang['message_registration_success'];
+            break;
     }
 }
 ?>
@@ -28,7 +41,7 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae - <?php echo $lang['global_menu_register'] ?? 'Cadastro'; ?></title>
+    <title>Kolae</title>
 
     <?php include 'app/views/partials/theme_script.php'; ?>
 
@@ -40,121 +53,131 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        .animate-enter { animation: enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        @keyframes enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
-<body class="bg-surface-base text-content-primary font-poppins transition-colors duration-500 antialiased flex items-center justify-center min-h-screen p-4 lg:p-0">
+<body class="bg-surface-base text-content-primary font-poppins transition-colors duration-500">
 
-    <div class="flex w-full h-full lg:h-screen max-w-[1920px] mx-auto rounded-3xl overflow-hidden shadow-2xl lg:shadow-none lg:rounded-none bg-surface-base lg:bg-transparent">
+    <div class="flex min-h-screen relative">
 
-        <div class="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden">
-            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-110"
-                 style="background-image: url('<?php echo BASE_URL; ?>/assets/img/register_bg.webp');">
+        <div class="absolute inset-0 z-0 lg:hidden">>
+            <img src="<?php echo BASE_URL; ?>/assets/img/register_bg.webp"
+                lt="Background" class="w-full h-full object-cover opacity-20 dark:opacity-40">
+            <div class="absolute inset-0 bg-white/40 dark:bg-black/60">
             </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
+        </div>
 
-            <div class="relative z-10 text-center px-12 animate-enter" style="animation-delay: 100ms;">
-                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-20 mx-auto mb-8 drop-shadow-xl">
+        <div class="hidden lg:flex w-1/2 bg-cover bg-center relative items-center justify-center"
+            style="background-image: url('<?php echo BASE_URL; ?>/assets/img/register_bg.webp');">
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div class="relative z-10 text-center px-12 animate-fadeInUp">
+                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-16 mx-auto mb-6 drop-shadow-lg">
                 <h1 class="text-4xl xl:text-5xl font-bold leading-tight text-white drop-shadow-lg"><?php echo $lang['register_img_title']; ?></h1>
                 <p class="mt-6 text-lg text-gray-200 drop-shadow-md max-w-md mx-auto font-medium"><?php echo $lang['register_img_text']; ?></p>
             </div>
         </div>
 
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative overflow-y-auto bg-surface-base">
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 relative z-10">
 
-            <div class="absolute inset-0 z-0 lg:hidden">
-                 <img src="<?php echo BASE_URL; ?>/assets/img/register_bg.webp" alt="Background" class="w-full h-full object-cover opacity-5 dark:opacity-20">
-            </div>
 
-            <div class="relative w-full max-w-md z-10 animate-enter my-auto py-8" style="animation-delay: 200ms;">
+            <div class="relative w-full max-w-md bg-surface-elevated/90 backdrop-blur-md p-8 rounded-2xl border border-content-secondary/10 shadow-2xl lg:border-none lg:bg-transparent lg:shadow-none animate-fadeInUp transition-colors duration-500">
 
                 <a href="<?php echo BASE_URL; ?>/"
-                    class="group inline-flex items-center text-content-secondary hover:text-cyan-500 transition-colors mb-6"
+                    class="absolute top-4 left-4 lg:top-0 lg:left-0 text-content-secondary hover:text-white transition-colors"
                     title="<?php echo $lang['global_back'] ?? 'Voltar'; ?>">
-                    <i class="fas fa-arrow-left text-lg transform group-hover:-translate-x-1 transition-transform mr-2"></i>
-                    <span class="font-medium"><?php echo $lang['global_back'] ?? 'Voltar'; ?></span>
+                    <i class="fas fa-arrow-left text-xl"></i>
                 </a>
 
                 <a href="<?php echo BASE_URL; ?>/" class="lg:hidden mb-8 block w-full text-center">
-                    <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-10 mx-auto filter dark:filter-none invert dark:invert-0 opacity-90">
+                    <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-12 mx-auto drop-shadow-lg">
                 </a>
 
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-content-primary mb-2 tracking-tight"><?php echo $lang['register_title_forms']; ?></h2>
-                    <p class="text-content-secondary"><?php echo $lang['register_subtitle_forms']; ?></p>
-                </div>
+                <h2 class="text-3xl font-bold text-center mb-2"><?php echo $lang['register_title_forms']; ?></h2>
+                <p class="text-content-secondary text-center mb-8"><?php echo $lang['register_subtitle_forms']; ?></p>
 
                 <?php if ($message): ?>
                     <?php
-                    $alertClasses = ($messageType === 'success')
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
-                        : 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
+                    $bgColor = ($messageType === 'success') ? 'bg-green-500/20' : 'bg-red-500/20';
+                    $borderColor = ($messageType === 'success') ? 'border-green-500/50' : 'border-red-500/50';
+                    $textColor = ($messageType === 'success') ? 'text-green-300' : 'text-red-300';
                     ?>
-                    <div class="<?= $alertClasses ?> border px-5 py-4 rounded-xl text-center mb-8 text-sm font-medium flex items-center justify-center">
-                        <i class="fas fa-info-circle mr-3 text-lg"></i>
+                    <div class="<?= $bgColor ?> <?= $borderColor ?> <?= $textColor ?> border px-4 py-3 rounded-lg text-center mb-6 text-sm backdrop-blur-sm" role="alert">
                         <?= htmlspecialchars($message) ?>
                     </div>
                 <?php endif; ?>
 
                 <form id="register-form" action="<?php echo BASE_URL; ?>/register/store" method="POST" class="space-y-5">
 
-                    <div class="group">
-                        <label for="name" class="block text-sm font-bold text-content-primary mb-2 ml-1"><?php echo $lang['register_name']; ?></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['register_name']; ?></label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-content-secondary"></i>
                             </div>
                             <input id="name" name="name" type="text" autocomplete="name" required
-                                class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-3.5 text-content-primary placeholder-content-secondary/50 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 font-medium shadow-sm"
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['register_name_ph']; ?>">
                         </div>
                     </div>
 
-                    <div class="group">
-                        <label for="email" class="block text-sm font-bold text-content-primary mb-2 ml-1"><?php echo $lang['global_email']; ?></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['global_email']; ?></label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-content-secondary"></i>
                             </div>
                             <input id="email" name="email" type="email" autocomplete="email" required
-                                class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-3.5 text-content-primary placeholder-content-secondary/50 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 font-medium shadow-sm"
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['register_email_ph']; ?>">
                         </div>
                     </div>
 
-                    <div class="group">
-                        <label for="birthdate" class="block text-sm font-bold text-content-primary mb-2 ml-1"><?php echo $lang['register_birthday']; ?></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-calendar text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
+                    <div>
+                        <label for="birthdate" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['register_birthday']; ?></label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-calendar text-content-secondary"></i>
                             </div>
                             <input id="birthdate" name="birthdate" type="date" required
-                                class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-3.5 text-content-primary placeholder-content-secondary/50 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 font-medium shadow-sm appearance-none">
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
                         </div>
                     </div>
 
-                    <div class="group">
-                        <label for="password" class="block text-sm font-bold text-content-primary mb-2 ml-1"><?php echo $lang['register_password']; ?></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['register_password']; ?></label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-calendar text-content-secondary"></i>
                             </div>
                             <input id="password" name="password" type="password" autocomplete="new-password" required
-                                class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-3.5 text-content-primary placeholder-content-secondary/50 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 font-medium shadow-sm"
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['register_password_ph']; ?>">
                         </div>
                     </div>
 
-                    <div class="group">
-                        <label for="password_confirmation" class="block text-sm font-bold text-content-primary mb-2 ml-1"><?php echo $lang['register_password_two']; ?></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-key text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['register_password_two']; ?></label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-calendar text-content-secondary"></i>
                             </div>
                             <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required
-                                class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-3.5 text-content-primary placeholder-content-secondary/50 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 font-medium shadow-sm"
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['register_password_ph_two']; ?>">
                         </div>
                     </div>
@@ -163,14 +186,14 @@ if (isset($_GET['error'])) {
                         <label for="terms" class="flex items-start cursor-pointer group select-none relative">
                             <input id="terms" name="terms" type="checkbox" required class="sr-only peer">
 
-                            <span class="flex items-center justify-center w-5 h-5 min-w-[1.25rem] bg-white dark:bg-surface-secondary/50 border-2 border-gray-300 dark:border-gray-600 rounded mr-3 transition-all peer-checked:bg-cyan-500 peer-checked:border-cyan-500 group-hover:border-cyan-500/50 shadow-sm mt-0.5">
-                                <i class="fas fa-check text-xs text-white scale-0 transition-transform peer-checked:scale-100 font-bold"></i>
+                            <span class="flex items-center justify-center w-5 h-5 bg-surface-secondary border-2 border-content-secondary/30 rounded mr-2 transition-all peer-checked:bg-cyan-500 peer-checked:border-cyan-500 group-hover:border-content-secondary/50">
+                                <i class="fas fa-check text-xs text-white opacity-0 transition-opacity peer-checked:opacity-100"></i>
                             </span>
 
                             <span class="text-sm font-medium text-content-secondary group-hover:text-content-primary transition-colors leading-snug">
-                                <?php echo $lang['register_accept_agree']; ?> 
-                                <a href="#" class="text-cyan-600 dark:text-cyan-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_terms_btn']; ?></a> 
-                                <?php echo $lang['global_and']; ?> 
+                                <?php echo $lang['register_accept_agree']; ?>
+                                <a href="#" class="text-cyan-600 dark:text-cyan-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_terms_btn']; ?></a>
+                                <?php echo $lang['global_and']; ?>
                                 <a href="#" class="text-cyan-600 dark:text-cyan-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_privacy_btn']; ?></a>.
                             </span>
                         </label>
@@ -194,4 +217,5 @@ if (isset($_GET['error'])) {
     <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 
 </body>
+
 </html>

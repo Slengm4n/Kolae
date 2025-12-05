@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../../../includes/i18n.php';
+
+$lang = require BASE_PATH . '/includes/i18n.php';
 
 $message = null;
 $messageType = 'error';
@@ -7,16 +8,27 @@ $messageType = 'error';
 if (isset($_GET['error'])) {
     $messageType = 'error';
     switch ($_GET['error']) {
-        case 'credentials': $message = $lang['error_incorrect_access']; break;
-        case 'invalid_token': $message = $lang['error_invalid_token']; break;
-        case 'inactive_account': $message = $lang['error_account_inactive']; break;
-        default: $message = $lang['unknown_error'];
+        case 'credentials':
+            $message = $lang['error_incorrect_access'];
+            break;
+        case 'invalid_token':
+            $message = $lang['error_invalid_token'];
+            break;
+        case 'inactive_account':
+            $message = $lang['error_account_inactive'];
+            break;
+        default:
+            $message = $lang['unknown_error'];
     }
 } elseif (isset($_GET['status'])) {
     $messageType = 'success';
     switch ($_GET['status']) {
-        case 'password_reset': $message = $lang['message_password_redefinition']; break;
-        case 'registered': $message = $lang['message_registration_success']; break;
+        case 'password_reset':
+            $message = $lang['message_password_redefinition'];
+            break;
+        case 'registered':
+            $message = $lang['message_registration_success'];
+            break;
     }
 }
 ?>
@@ -27,10 +39,10 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae - <?php echo $lang['global_menu_login'] ?? 'Login'; ?></title>
-    
+    <title>Kolae</title>
+
     <?php include 'app/views/partials/theme_script.php'; ?>
-    
+
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,8 +51,21 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        .animate-fadeInUp { animation: fadeInUp 0.5s ease-out both; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -69,7 +94,7 @@ if (isset($_GET['error'])) {
 
                 <a href="<?php echo BASE_URL; ?>/"
                     class="absolute top-4 left-4 lg:top-0 lg:left-0 text-content-secondary hover:text-content-primary transition-colors"
-                    title="<?php echo $lang['global_back'] ?? 'Voltar'; ?>"> 
+                    title="<?php echo $lang['global_back'] ?? 'Voltar'; ?>">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </a>
 
@@ -99,7 +124,7 @@ if (isset($_GET['error'])) {
                                 <i class="fas fa-envelope text-content-secondary"></i>
                             </div>
                             <input id="email" name="email" type="email" autocomplete="email" required
-                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all" 
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['login_email_ph']; ?>">
                         </div>
                     </div>
@@ -111,7 +136,7 @@ if (isset($_GET['error'])) {
                                 <i class="fas fa-lock text-content-secondary"></i>
                             </div>
                             <input id="password" name="password" type="password" autocomplete="current-password" required
-                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all" 
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['login_senha_ph']; ?>">
                         </div>
                     </div>
@@ -149,4 +174,5 @@ if (isset($_GET['error'])) {
     <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 
 </body>
+
 </html>

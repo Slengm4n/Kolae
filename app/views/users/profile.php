@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../Includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 // Recupera dados passados pelo Controller
 $user = $data['user'] ?? [];
 $userName = $_SESSION['user_name'] ?? 'Usuário';
@@ -12,7 +12,7 @@ $userId = $_SESSION['user_id'] ?? 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolael</title>
+    <title>Kolae</title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">

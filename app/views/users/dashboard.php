@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 
 $userName = $data['userName'] ?? 'Utilizador';
 $userVenues = $data['userVenues'] ?? [];
@@ -11,12 +11,12 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae - Dashboard</title>
+    <title>Kolae</title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
-    
+
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
-    
+
     <?php include 'app/views/partials/theme_script.php'; ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,11 +25,33 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        .animate-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .delay-300 {
+            animation-delay: 300ms;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -75,8 +97,8 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-cog w-4 text-center"></i> <?php echo $lang['global_menu_config']; ?></a></li>
                         <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-question-circle w-4 text-center"></i> <?php echo $lang['global_menu_help']; ?></a></li>
                         <li class="border-t border-content-secondary/10 my-2"></li>
-                        
-                        <li class="hidden">
+
+                        <li>
                             <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
                                 <i class="fas fa-moon w-4 text-center"></i>
                                 <span class="dark:hidden">Modo Escuro</span>
@@ -207,4 +229,5 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
     <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 
 </body>
+
 </html>

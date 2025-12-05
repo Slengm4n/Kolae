@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 
 use App\Core\Router;
@@ -45,6 +42,11 @@ $cookieParams = [
 session_set_cookie_params($cookieParams);
 session_start();
 
+if (!isset($_SESSION['idioma'])) {
+    // Tenta pegar do navegador ou define padrão
+    $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2);
+    $_SESSION['idioma'] = ($browserLang === 'pt') ? 'pt-br' : 'en-us';
+}
 
 // --- Constantes Globais ---
 define('BASE_PATH', __DIR__);

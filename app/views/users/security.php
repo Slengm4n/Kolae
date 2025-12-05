@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../Includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $_SESSION['idioma']; ?>">

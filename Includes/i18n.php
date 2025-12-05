@@ -1,29 +1,23 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+
+// 1. Lógica de detecção via URL (GET)
 if (isset($_GET['lang'])) {
-    if ($_GET['lang'] == 'en-us') {
-        $_SESSION['idioma'] = 'en-us';
-    } elseif ($_GET['lang'] == 'hi-in') {
-        $_SESSION['idioma'] = 'hi-in';
-    } elseif ($_GET['lang'] == 'pt-br') {
-        $_SESSION['idioma'] = 'pt-br';
-    } elseif ($_GET['lang'] == 'zh-cn') {
-        $_SESSION['idioma'] = 'zh-cn';
-    } elseif ($_GET['lang'] == 'es-es') {
-        $_SESSION['idioma'] = 'es-es';
-    } elseif ($_GET['lang'] == 'ja-jp') {
-        $_SESSION['idioma'] = 'ja-jp';
-    } elseif ($_GET['lang'] == 'it-it') {
-        $_SESSION['idioma'] = 'it-it';
+    $allowedLangs = ['en-us', 'hi-in', 'pt-br', 'zh-cn', 'es-es', 'ja-jp', 'it-it'];
+
+    // Verifica se o idioma solicitado está na lista permitida para segurança
+    if (in_array($_GET['lang'], $allowedLangs)) {
+        $_SESSION['idioma'] = $_GET['lang'];
     } else {
         $_SESSION['idioma'] = 'pt-br';
     }
 }
 
+// 2. Fallback se não houver sessão
 if (!isset($_SESSION['idioma'])) {
     $_SESSION['idioma'] = 'pt-br';
 }
 
-$lang = require_once(__DIR__ . '/../lang/' . $_SESSION['idioma'] . '.php');
+// 3. O PULO DO GATO:
+// Usamos 'return require' para passar o array de volta para quem chamou este arquivo.
+// Usamos apenas 'require' (sem _once) para garantir que o array venha, e não o booleano '1'.
+return require __DIR__ . '/../lang/' . $_SESSION['idioma'] . '.php';

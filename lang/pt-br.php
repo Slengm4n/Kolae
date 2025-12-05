@@ -1,11 +1,11 @@
 <?php
-return[
+return [
     //Chaves globais
     'global_slogan_headline' => 'Cole com quem ama esporte',
     'global_menu_about' => 'Sobre Nós',
     'global_title_about' => 'Nossa Missão é Conectar Atletas',
     'global_text_about' => 'Acreditamos que o esporte tem o poder de unir pessoas, criar comunidades e transformar vidas. A Kolae nasceu do desejo de facilitar essa conexão, oferecendo uma plataforma onde atletas de todos os níveis podem encontrar parceiros de treino, equipes e eventos na sua região.',
-    'global_button_language' =>'Selecione a linguagem',
+    'global_button_language' => 'Selecione a linguagem',
     'global_contact_kolae' => 'Contato',
     'global_Copyright_message' => '2025 Kolae. Todos os direitos reservados',
     'global_home_panel' => 'Meu Painel',
@@ -14,7 +14,7 @@ return[
     'global_menu_register' => 'Cadastre-se',
     'global_menu_login' => 'Entrar',
     'global_and' =>  'e',
-    'global_menu_help' =>'Ajuda',
+    'global_menu_help' => 'Ajuda',
     'global_menu_config' => 'Configurações',
     'global_cancel' => 'Cancelar',
     'global_back' => 'Voltar',
@@ -132,9 +132,9 @@ return[
 
     'register_create_btn' => 'Criar conta',
 
-    'register_confirm_answer' => 'Já tem uma conta?',   
+    'register_confirm_answer' => 'Já tem uma conta?',
     'register_answer_btn' => 'Fazer Login',
-    
+
 
     //Cadastro (Erros)
     'register_email_exists' => 'Este e-mail já está cadastrado. Tente fazer login.',
@@ -157,7 +157,7 @@ return[
     'dashboard_user_actions' => 'Ações Rápidas',
 
     'dashboard_user_location_title' => 'Novo Local',
-    'dashboard_user_location_text' =>'Cadastre uma nova quadra',
+    'dashboard_user_location_text' => 'Cadastre uma nova quadra',
 
     'dashboard_user_account_title' => 'Minha conta',
     'dashboard_user_account_text' => 'Gerenciar dados e senha',
@@ -176,7 +176,7 @@ return[
 
     //CNPJ (página de cadastro)
     'cnpj_page_title' => 'Valide seu Cadastro',
-    'cnpj_page_text' => 'Para garantir a segurança da plataforma e cadastrar suas quadras, precisamos validar seu CNPJ.',   
+    'cnpj_page_text' => 'Para garantir a segurança da plataforma e cadastrar suas quadras, precisamos validar seu CNPJ.',
     'cnpj_title_input' => 'CNPJ da Empresa',
     'cnpj_input_ph' => '00.000.000/000-00',
     'cnpj_btn_register' => 'Validar e salvar',
@@ -323,7 +323,7 @@ return[
     'edit_venue_desativar_text_2' => 'para confirmar:',
 
     //Erros
-    
+
     'edit_venue_not_found' => 'Local não encontrado',
 
 

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../Includes/i18n.php';
+$lang = require BASE_PATH . '/includes/i18n.php';
 $venue = $data['venue'] ?? null;
 $prefix = $data['routePrefix'] ?? '/dashboard';
 ?>
@@ -90,7 +90,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-medium text-gray-400 hover:text-white transition-colors"><?php echo $lang['global_home_panel'];?></a>
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-medium text-gray-400 hover:text-white transition-colors"><?php echo $lang['global_home_panel']; ?></a>
             </nav>
 
             <div class="relative">
@@ -116,13 +116,13 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-[#161B22] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
                     <div class="p-4 border-b border-gray-800">
                         <p class="font-semibold text-white truncate"><?php echo htmlspecialchars($userName); ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-400 hover:underline"><?php echo $lang['dashboard_view_profile'];?></a>
+                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-400 hover:underline"><?php echo $lang['dashboard_view_profile']; ?></a>
                     </div>
                     <ul class="py-2 text-sm">
-                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-cog w-4 text-center text-gray-400"></i> <?php echo $lang['global_menu_config'];?></a></li>
-                        <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-4 text-center text-gray-400"></i> <?php echo $lang['global_menu_help'];?></a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-cog w-4 text-center text-gray-400"></i> <?php echo $lang['global_menu_config']; ?></a></li>
+                        <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-question-circle w-4 text-center text-gray-400"></i> <?php echo $lang['global_menu_help']; ?></a></li>
                         <li class="border-t border-gray-800 my-2"></li>
-                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i><?php echo $lang['global_menu_exit'];?></a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i><?php echo $lang['global_menu_exit']; ?></a></li>
                     </ul>
                 </div>
             </div>
@@ -134,9 +134,9 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
         <?php if (!$venue): ?>
             <div class="text-center py-12 bg-[#161B22] rounded-2xl border border-red-900/50">
                 <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
-                <h2 class="text-2xl font-bold text-white"><?php echo $lang['global_error']?></h2>
-                <p class="text-gray-400 mt-2"><?php echo $lang['edit_venue_not_found']?></p>
-                <a href="<?php echo BASE_URL . $prefix; ?>" class="mt-4 inline-block text-cyan-400 hover:underline"><?php echo $lang['global_back']?></a>
+                <h2 class="text-2xl font-bold text-white"><?php echo $lang['global_error'] ?></h2>
+                <p class="text-gray-400 mt-2"><?php echo $lang['edit_venue_not_found'] ?></p>
+                <a href="<?php echo BASE_URL . $prefix; ?>" class="mt-4 inline-block text-cyan-400 hover:underline"><?php echo $lang['global_back'] ?></a>
             </div>
         <?php else: ?>
 
@@ -148,14 +148,14 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 <input type="hidden" id="leisure_area_capacity_input" name="leisure_area_capacity" value="<?php echo htmlspecialchars($venue['leisure_area_capacity']); ?>">
 
                 <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 shadow-lg">
-                    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3"><i class="fas fa-info-circle text-cyan-400"></i><?php echo $lang['edit_venue_info_title']?></h2>
+                    <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3"><i class="fas fa-info-circle text-cyan-400"></i><?php echo $lang['edit_venue_info_title'] ?></h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['venue_name']?></label>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['venue_name'] ?></label>
                             <input type="text" name="name" required value="<?php echo htmlspecialchars($venue['name']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500 outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['edit_venue_price']?></label>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['edit_venue_price'] ?></label>
                             <div class="relative">
                                 <span class="absolute left-4 top-3 text-gray-500">R$</span>
                                 <input type="number" step="0.01" name="average_price_per_hour" value="<?php echo htmlspecialchars($venue['average_price_per_hour']); ?>" class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-white focus:border-cyan-500 outline-none transition-all">
@@ -166,7 +166,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-[#161B22] p-6 rounded-2xl border border-gray-800 shadow-lg">
-                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-3"><i class="fas fa-layer-group text-purple-400"></i><?php echo $lang['edit_venue_floor_title']?></h2>
+                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-3"><i class="fas fa-layer-group text-purple-400"></i><?php echo $lang['edit_venue_floor_title'] ?></h2>
                         <div class="grid grid-cols-2 gap-3">
                             <?php
                             $floors = ['grama sintética' => $lang['venue_floor_answer_1'], 'cimento' => $lang['venue_floor_answer_2'], 'areia' => $lang['venue_floor_answer_3'], 'saibro' => $lang['venue_floor_answer_4'], 'grama natural' => $lang['venue_floor_answer_5'], 'taco' => $lang['venue_floor_answer_6']];

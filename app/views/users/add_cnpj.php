@@ -1,8 +1,9 @@
 <?php
-require_once __DIR__ . '/../../../includes/i18n.php';
+
+$lang = require BASE_PATH . '/includes/i18n.php';
 
 // Inicialização de variáveis de erro para evitar warnings
-$error = $error ?? null; 
+$error = $error ?? null;
 // Nota: Em MVC puro, esses dados viriam do Controller ($data['error']), mas mantive compatível com seu código atual.
 ?>
 <!DOCTYPE html>
@@ -11,10 +12,10 @@ $error = $error ?? null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae - <?php echo $lang['cnpj_page_title'] ?? 'Validar CNPJ'; ?></title>
+    <title>Kolae</title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
-    
+
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,8 +24,21 @@ $error = $error ?? null;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        .animate-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -36,13 +50,13 @@ $error = $error ?? null;
             <div class="w-24 h-24 bg-cyan-500/10 dark:bg-cyan-500/5 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/10 backdrop-blur-sm border border-cyan-500/20">
                 <i class="fas fa-shield-alt text-5xl text-cyan-600 dark:text-cyan-400"></i>
             </div>
-            
+
             <h1 class="text-3xl font-bold text-content-primary mb-3 tracking-tight">
                 <?php echo $lang['cnpj_page_title']; ?>
             </h1>
-            
+
             <p class="text-content-secondary text-lg leading-relaxed max-w-xs mx-auto">
-               <?php echo $lang['cnpj_page_text']; ?>
+                <?php echo $lang['cnpj_page_text']; ?>
             </p>
         </div>
 
@@ -64,7 +78,7 @@ $error = $error ?? null;
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fas fa-building text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
                         </div>
-                        
+
                         <input type="text" id="cnpj" name="cnpj" placeholder="<?php echo $lang['cnpj_input_ph']; ?>" required maxlength="18"
                             class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-4 text-content-primary placeholder-content-secondary/50 font-mono tracking-wide focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 shadow-sm">
                     </div>
@@ -79,7 +93,7 @@ $error = $error ?? null;
             <div class="mt-10 text-center">
                 <a href="<?php echo BASE_URL; ?>/dashboard"
                     class="group inline-flex items-center text-content-secondary hover:text-content-primary transition-colors font-medium">
-                    <i class="fas fa-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform text-cyan-500"></i> 
+                    <i class="fas fa-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform text-cyan-500"></i>
                     <?php echo $lang['cnpj_btn_back']; ?>
                 </a>
             </div>
@@ -93,4 +107,5 @@ $error = $error ?? null;
     <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
 
 </body>
+
 </html>
