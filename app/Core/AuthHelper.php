@@ -27,13 +27,13 @@ class AuthHelper
             session_start();
         }
 
-        // 1. Verifica se está logado
+        //Verifica se está logado
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . BASE_DIR_URL . '/login');
             exit;
         }
 
-        // 2. SEGURANÇA EXTRA: Verifica se o navegador mudou (Session Hijacking)
+        // SEGURANÇA EXTRA: Verifica se o navegador mudou (Session Hijacking)
         // Se não tiver salvo o navegador na sessão ainda, salva agora (primeiro acesso)
         if (!isset($_SESSION['user_agent'])) {
             $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -93,8 +93,6 @@ class AuthHelper
                         $_SESSION['user_name'] = $user['name'];
                         $_SESSION['user_role'] = $user['role'];
                         $_SESSION['user_avatar'] = $user['avatar_path'];
-
-                        // Opcional: Atualizar a data de expiração no banco para manter logado
                     }
                 }
             }

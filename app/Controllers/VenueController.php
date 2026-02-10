@@ -11,9 +11,7 @@ use App\Models\VenueImage;
 
 class VenueController
 {
-    /**
-     * Exibe a lista (tabela) de TODAS as quadras para o admin.
-     */
+    //Exibe a lista (tabela) de TODAS as quadras para o admin
     public function index()
     {
 
@@ -53,7 +51,7 @@ class VenueController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
-            // 1. Cria o endereço
+            //Cria o endereço
             $addressData = [
                 'cep' => $_POST['cep'],
                 'street' => $_POST['street'],
@@ -71,7 +69,7 @@ class VenueController
                 exit;
             }
 
-            // 2. Cria a quadra
+            //Cria a quadra
             $venueData = [
                 'user_id' => $_SESSION['user_id'],
                 'address_id' => $addressId,
@@ -92,7 +90,7 @@ class VenueController
                 exit;
             }
 
-            // 3. Processa e salva as imagens
+            //Processa e salva as imagens
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $this->handleImageUploads($venueId);
             }
@@ -113,15 +111,15 @@ class VenueController
         AuthHelper::check();
         $venue = Venue::findById($id);
 
-        $isAdmin = AuthHelper::isAdmin(); // Verifica se é admin
+        $isAdmin = AuthHelper::isAdmin(); //Verifica se é admin
 
-        // Validação de segurança:
+        //Validação de segurança
         if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !$isAdmin)) {
             header('Location: ' . BASE_URL . '/dashboard?error=not_found');
             exit;
         }
 
-        // Define o prefixo da rota com base no 'role' do usuário
+        //Define o prefixo da rota com base no 'role' do usuário
         $routePrefix = $isAdmin ? '/admin' : '/dashboard';
 
         $data = [
@@ -151,7 +149,7 @@ class VenueController
                 exit;
             }
 
-            // 1. Atualiza o endereço
+            //Atualiza o endereço
             $addressData = [
                 'cep' => $_POST['cep'],
                 'street' => $_POST['street'],
@@ -163,7 +161,7 @@ class VenueController
             ];
             Address::update((int)$_POST['address_id'], $addressData);
 
-            // 2. Atualiza a quadra
+            //Atualiza a quadra
             $venueData = [
                 'name' => $_POST['name'],
                 'average_price_per_hour' => $_POST['average_price_per_hour'],
@@ -177,7 +175,7 @@ class VenueController
             ];
             Venue::update($id, $venueData);
 
-            // Lógica de Imagem 
+            //Logica de Imagem 
             if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
                 $uploadDir = BASE_PATH . "/uploads/venues/" . $id . "/";
                 foreach ($_POST['delete_images'] as $imageId) {
@@ -195,7 +193,7 @@ class VenueController
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $this->handleImageUploads($id);
             }
-            // Pega o prefixo de rota que o formulário enviou
+            //Pega o prefixo de rota que o formulário enviou
             $redirectUrl = $this->getRedirectUrl();
             header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
             exit;
@@ -210,11 +208,11 @@ class VenueController
     public function delete(int $id)
     {
         AuthHelper::check();
-        // Validação de segurança
+        //Validação de segurança
         $venue = Venue::findById($id);
 
-        // Redireciona se a quadra não existe OU
-        // se o usuário NÃO for o dono E também NÃO for admin
+        //Redireciona se a quadra não existe OU
+        //se o usuário NÃO for o dono E também NÃO for admin
         if (!$venue || ($venue['user_id'] != $_SESSION['user_id'] && !AuthHelper::isAdmin())) {
             header('Location: ' . BASE_URL . '/dashboard?error=unauthorized');
             exit;
@@ -237,7 +235,7 @@ class VenueController
     {
         $referer = $_SERVER['HTTP_REFERER'] ?? '';
 
-        // 1. Tenta pelo Referer (de onde o usuário veio)
+        //Tenta pelo Referer (de onde o usuário veio)
         if (str_contains($referer, '/admin/')) {
             return '/admin/quadras';
         }
@@ -246,7 +244,7 @@ class VenueController
             return '/dashboard';
         }
 
-        // 2. Se o Referer falhar (estiver vazio), usa o "role" como fallback
+        //Se o Referer falhar (estiver vazio), usa o "role" como fallback
         if (AuthHelper::isAdmin()) {
             return '/admin/quadras';
         } else {

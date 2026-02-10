@@ -15,11 +15,11 @@ class GameApiController extends BaseApiController
 
     public function createGame()
     {
-        // 1. Autentica a requisição (verifica o token JWT)
+        //Verifica o token JWT
         $this->authenticateRequest();
-        $creatorId = $this->userId; // Pega o ID do usuário logado do token
+        $creatorId = $this->userId; //Pega o ID do usuário logado do token
 
-        // 2. Pega e valida os dados de entrada (idealmente do corpo JSON)
+        //Valida os dados de entrada (idealmente do corpo JSON)
         $input = json_decode(file_get_contents('php://input'), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             $this->sendError('Corpo da requisição JSON inválido.', 'INVALID_JSON', 400);
@@ -30,19 +30,19 @@ class GameApiController extends BaseApiController
         $startTimeStr = $input['start_time'] ?? null; // Ex: "2025-10-28 20:00:00"
         $duration = filter_var($input['duration_minutes'] ?? 60, FILTER_VALIDATE_INT, ['options' => ['default' => 60]]);
 
-        // Validações básicas
+        //Validações básicas
         if (!$venueId || !$sportId || !$startTimeStr) {
             $this->sendError('Campos obrigatórios ausentes: venue_id, sport_id, start_time.', 'MISSING_FIELDS', 400);
         }
 
-        // Valida o formato da data/hora e se é no futuro
+        //Valida o formato da data/hora e se é no futuro
         $startTime = DateTime::createFromFormat('Y-m-d H:i:s', $startTimeStr);
         $now = new DateTime();
         if ($startTime === false || $startTime < $now) {
             $this->sendError('Formato de start_time inválido (use YYYY-MM-DD HH:MM:SS) ou data no passado.', 'INVALID_START_TIME', 400);
         }
 
-        // Valida se venue e sport existem
+        //Valida se venue e sport existem
         if (!Venue::findById($venueId)) {
             $this->sendError('Quadra (venue) não encontrada.', 'VENUE_NOT_FOUND', 404);
         }
@@ -50,7 +50,7 @@ class GameApiController extends BaseApiController
             $this->sendError('Esporte não encontrado.', 'SPORT_NOT_FOUND', 404);
         }
 
-        // 3. Prepara os dados para o Model
+        //Prepara os dados para o Model
         $gameData = [
             'venue_id' => $venueId,
             'sport_id' => $sportId,
@@ -59,7 +59,7 @@ class GameApiController extends BaseApiController
             'duration_minutes' => $duration
         ];
 
-        // 4. Tenta criar a partida usando o Model
+        //Tenta criar a partida usando o Model
         try {
             $matchId = Game::create($gameData);
             if ($matchId) {

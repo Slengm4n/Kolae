@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Core\Router;
 use App\Controllers\HomeController;
 use App\Controllers\AuthController;
@@ -12,6 +13,7 @@ use App\Controllers\VenueApiController;
 use App\Controllers\SportApiController;
 use App\Controllers\GameApiController;
 use App\Core\AuthHelper;
+
 
 
 
@@ -40,6 +42,11 @@ $cookieParams = [
 session_set_cookie_params($cookieParams);
 session_start();
 
+if (!isset($_SESSION['idioma'])) {
+    // Tenta pegar do navegador ou define padrão
+    $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2);
+    $_SESSION['idioma'] = ($browserLang === 'pt') ? 'pt-br' : 'en-us';
+}
 
 // --- Constantes Globais ---
 define('BASE_PATH', __DIR__);

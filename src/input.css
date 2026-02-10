@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+    :root {
+        /* 1. Fundo da página: Um cinza azulado muuuito suave (Slate-50) */
+        /* Isso faz o branco do cartão "saltar" aos olhos */
+        --surface-base: #f8fafc;
+
+        /* 2. Inputs: Um cinza um pouquinho mais visível (Slate-100) */
+        --surface-secondary: #f1f5f9;
+
+        /* 3. O Cartão Flutuante: BRANCO PURO */
+        --surface-elevated: #ffffff;
+
+        --content-primary: #0f172a; /* Slate-900 (Quase preto) */
+        --content-secondary: #64748b; /* Slate-500 (Cinza elegante) */
+    }
+
+    :root.dark {
+        --surface-base: #161b22; /* Azul profundo (Slate-900) */
+        --surface-secondary: #0d1117; /* Inputs um pouco mais claros (Slate-800) */
+        --surface-elevated: #1e2939; /* Cartão igual ou levemente mais claro */
+
+        --content-primary: #f8fafc;
+        --content-secondary: #94a3b8;
+    }
+}
+
+@theme {
+    /* Mapeamento das variáveis para classes utilitárias */
+    --color-surface-base: var(--surface-base);
+    --color-surface-secondary: var(--surface-secondary);
+    --color-surface-elevated: var(--surface-elevated);
+
+    --color-content-primary: var(--content-primary);
+    --color-content-secondary: var(--content-secondary);
+
+    /* Ciano vibrante */
+    --color-cyan-300: #67e8f9;
+    --color-cyan-400: #22d3ee;
+    --color-cyan-500: #06b6d4;
+    --color-cyan-600: #0891b2;
+}

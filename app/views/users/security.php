@@ -1,5 +1,12 @@
+<?php
+$lang = require BASE_PATH . '/includes/i18n.php';
+// Recupera dados da sessão para o header (caso não venha do $data)
+$userName = $_SESSION['user_name'] ?? 'Usuário';
+$userAvatar = $_SESSION['user_avatar'] ?? null;
+$userId = $_SESSION['user_id'] ?? 0;
+?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="<?php echo $_SESSION['idioma']; ?>" class="transition-colors duration-500">
 
 <head>
     <meta charset="UTF-8">
@@ -11,94 +18,76 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
-    <noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    </noscript>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
+    
+    <?php include 'app/views/partials/theme_script.php'; ?>
 
     <style>
-        html {
-            /* Força a barra de rolagem a estar sempre visível.
-               Isso evita que o layout "pule" quando se navega entre páginas curtas e longas,
-               e evita o problema do "espaço comido" (faixa vazia) causado pelo scrollbar-gutter. */
-            overflow-y: scroll;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        .animate-up {
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        .delay-100 {
-            animation-delay: 100ms;
-        }
-
+        html { overflow-y: scroll; }
+        body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        
+        .animate-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .delay-100 { animation-delay: 100ms; }
+        
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Animação da Barra de Força */
         #password-strength-bar {
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease;
         }
     </style>
 </head>
 
-<body class="bg-[#0D1117] text-gray-200">
+<body class="bg-surface-base text-content-primary transition-colors duration-500">
 
-    <header class="bg-[#161B22]/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-30 py-4 transition-all">
+    <header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-30 py-4 transition-all">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
-                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto group-hover:opacity-80 transition-opacity">
+                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto filter dark:filter-none invert dark:invert-0 opacity-90 group-hover:opacity-100 transition-opacity">
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-medium text-gray-400 hover:text-white transition-colors">Meu Painel</a>
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                    <?php echo $lang['global_home_panel'] ?></a>
             </nav>
 
             <div class="relative">
-                <button id="user-menu-button" class="flex items-center gap-3 p-2 px-3 border border-gray-700 rounded-full cursor-pointer transition-all hover:bg-gray-700/50 hover:border-gray-600">
-                    <?php if (!empty($_SESSION['user_avatar'])): ?>
-                        <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
-                            class="w-8 h-8 rounded-full object-cover border border-gray-600"
-                            alt="Avatar"
-                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-
+                <button id="user-menu-button" class="flex items-center gap-3 p-2 px-3 border border-content-secondary/20 rounded-full cursor-pointer transition-all hover:bg-surface-secondary">
+                    <?php if (!empty($userAvatar)): ?>
+                        <img src="<?php echo BASE_URL . '/uploads/avatars/' . $userId . '/' . $userAvatar; ?>"
+                            class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
+                            alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
-                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                            <?php echo strtoupper(substr($userName, 0, 1)); ?>
                         </div>
                     <?php else: ?>
                         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                            <?php echo strtoupper(substr($userName, 0, 1)); ?>
                         </div>
                     <?php endif; ?>
-
-                    <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                    <i class="fas fa-chevron-down text-xs text-content-secondary"></i>
                 </button>
 
-                <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-[#161B22] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
-                    <div class="p-4 border-b border-gray-800">
-                        <p class="font-semibold text-white truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuário'); ?></p>
+                <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
+                    <div class="p-4 border-b border-content-secondary/10">
+                        <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($userName); ?></p>
                     </div>
                     <ul class="py-2 text-sm">
-                        <li><a href="<?php echo BASE_URL; ?>/dashboard" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-800 transition-colors"><i class="fas fa-home w-4 text-center text-gray-400"></i> Voltar para Home</a></li>
-                        <li class="border-t border-gray-800 my-2"></li>
-                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> Sair</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/dashboard" class="flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-home w-4 text-center"></i><?php echo $lang['global_back'] ?></a></li>
+                        
+                        <li>
+                            <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
+                                <i class="fas fa-adjust w-4 text-center"></i>
+                                <span class="dark:hidden">Modo Escuro</span>
+                                <span class="hidden dark:inline">Modo Claro</span>
+                            </button>
+                        </li>
+
+                        <li class="border-t border-content-secondary/10 my-2"></li>
+                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-500 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> <?php echo $lang['global_menu_exit'] ?></a></li>
                     </ul>
                 </div>
             </div>
@@ -110,19 +99,19 @@
         <div class="flex flex-col md:flex-row items-start gap-8">
 
             <aside class="w-full md:w-64 flex-shrink-0 animate-up">
-                <h1 class="text-2xl font-bold text-white mb-6 px-2">Configurações</h1>
-                <nav class="bg-[#161B22] p-2 rounded-2xl border border-gray-800 shadow-lg">
+                <h1 class="text-2xl font-bold text-content-primary mb-6 px-2"><?php echo $lang['global_menu_config'] ?></h1>
+                <nav class="bg-surface-elevated p-2 rounded-2xl border border-content-secondary/10 shadow-lg">
                     <ul class="space-y-1">
                         <li>
-                            <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl transition-all group">
-                                <i class="fas fa-user-edit w-5 text-center group-hover:text-cyan-400 transition-colors"></i>
-                                <span>Editar Perfil</span>
+                            <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-secondary hover:text-content-primary rounded-xl transition-all group">
+                                <i class="fas fa-user-edit w-5 text-center group-hover:text-cyan-500 transition-colors"></i>
+                                <span><?php echo $lang['config_custom_profile'] ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 rounded-xl border-l-4 border-cyan-400 transition-all">
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 rounded-xl border-l-4 border-cyan-500 transition-all">
                                 <i class="fas fa-shield-alt w-5 text-center"></i>
-                                <span>Segurança</span>
+                                <span><?php echo $lang['config_security'] ?></span>
                             </a>
                         </li>
                     </ul>
@@ -130,44 +119,35 @@
             </aside>
 
             <section class="flex-1 w-full animate-up delay-100">
-                <div class="bg-[#161B22] p-6 md:p-10 rounded-2xl border border-gray-800 shadow-xl relative overflow-hidden">
+                <div class="bg-surface-elevated p-6 md:p-10 rounded-2xl border border-content-secondary/10 shadow-xl relative overflow-hidden">
 
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
 
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-4 mb-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-content-secondary/10 pb-4 mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-white">Alterar Senha</h2>
-                            <p class="text-sm text-gray-400">Mantenha sua conta segura atualizando sua senha periodicamente.</p>
+                            <h2 class="text-2xl font-bold text-content-primary"><?php echo $lang['security_change_password_title'] ?></h2>
+                            <p class="text-sm text-content-secondary"><?php echo $lang['security_change_password_text'] ?></p>
                         </div>
                     </div>
 
                     <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
-                        <div class="p-4 mb-6 rounded-xl bg-green-500/10 border border-green-500/20 text-green-300 flex items-center animate-up">
+                        <div class="p-4 mb-6 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-300 flex items-center animate-up">
                             <i class="fas fa-check-circle mr-3 text-xl"></i>
-                            <span>Senha alterada com sucesso!</span>
+                            <span><?php echo $lang['security_change_password_text'] ?></span>
                         </div>
                     <?php endif; ?>
 
                     <?php if (isset($_GET['error'])): ?>
-                        <div class="p-4 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 flex items-center animate-up">
+                        <div class="p-4 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-300 flex items-center animate-up">
                             <i class="fas fa-times-circle mr-3 text-xl"></i>
                             <span>
                                 <?php
                                 switch ($_GET['error']) {
-                                    case 'current_mismatch':
-                                        echo 'A senha atual informada está incorreta.';
-                                        break;
-                                    case 'new_mismatch':
-                                        echo 'A nova senha e a confirmação não coincidem.';
-                                        break;
-                                    case 'weak_password':
-                                        echo 'A nova senha é muito fraca.';
-                                        break;
-                                    case 'update_failed':
-                                        echo 'Erro ao salvar. Tente novamente.';
-                                        break;
-                                    default:
-                                        echo 'Ocorreu um erro desconhecido.';
+                                    case 'current_mismatch': echo $lang['security_wrong_password_error']; break;
+                                    case 'new_mismatch': echo $lang['password_mismatch']; break;
+                                    case 'weak_password': echo $lang['security_strength_password_error']; break;
+                                    case 'update_failed': echo $lang['security_save_password_error']; break;
+                                    default: echo $lang['unknown_error'];
                                 }
                                 ?>
                             </span>
@@ -177,45 +157,48 @@
                     <form action="<?php echo BASE_URL; ?>/dashboard/perfil/seguranca/atualizar" method="POST" class="max-w-lg space-y-6">
 
                         <div>
-                            <label for="current_password" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Senha Atual</label>
+                            <label for="current_password" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['security_present_password'] ?></label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fas fa-lock"></i></div>
-                                <input type="password" name="current_password" required class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                <input type="password" name="current_password" required 
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
                             </div>
                         </div>
 
-                        <hr class="border-gray-800">
+                        <hr class="border-content-secondary/10">
 
                         <div>
-                            <label for="new_password" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Nova Senha</label>
+                            <label for="new_password" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['security_new_password'] ?></label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fas fa-key"></i></div>
-                                <input type="password" name="new_password" id="new_password" required class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                <input type="password" name="new_password" id="new_password" required 
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
                             </div>
 
                             <div class="mt-3">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="text-xs text-gray-500">Força da senha</span>
-                                    <span id="password-strength-text" class="text-xs font-bold text-gray-500">Muito Fraca</span>
+                                    <span class="text-xs text-content-secondary"><?php echo $lang['strength_password_title'] ?></span>
+                                    <span id="password-strength-text" class="text-xs font-bold text-content-secondary"><?php echo $lang['strength_password_weak'] ?></span>
                                 </div>
-                                <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                                <div class="w-full bg-surface-secondary border border-content-secondary/10 rounded-full h-1.5 overflow-hidden">
                                     <div id="password-strength-bar" class="h-full w-0 bg-red-500"></div>
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label for="confirm_password" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Confirmar Nova Senha</label>
+                            <label for="confirm_password" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['security_new_password_confirm'] ?></label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fas fa-check-double"></i></div>
-                                <input type="password" name="confirm_password" required class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                <input type="password" name="confirm_password" required 
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
                             </div>
                         </div>
 
                         <div class="pt-4 flex items-center justify-end gap-4">
-                            <a href="<?php echo BASE_URL; ?>/dashboard/" class="text-gray-400 hover:text-white text-sm font-semibold px-4 py-2 transition-colors">Cancelar</a>
-                            <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition-all transform hover:-translate-y-0.5">
-                                Atualizar Senha
+                            <a href="<?php echo BASE_URL; ?>/dashboard/" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors"><?php echo $lang['global_cancel'] ?></a>
+                            <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition-all transform hover:-translate-y-0.5">
+                                <?php echo $lang['security_update_password_btn'] ?>
                             </button>
                         </div>
 
@@ -228,9 +211,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Menu Dropdown (Padrão)
+            // Menu Dropdown e Toggle Theme
             const userBtn = document.getElementById('user-menu-button');
             const userDropdown = document.getElementById('profile-dropdown');
+            const themeToggleBtn = document.getElementById('theme-toggle');
+
             if (userBtn && userDropdown) {
                 userBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -241,6 +226,19 @@
                 window.addEventListener('click', (e) => {
                     if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
                         userDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                    }
+                });
+            }
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.theme = 'light';
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.theme = 'dark';
                     }
                 });
             }
@@ -261,35 +259,36 @@
                     if (/[^A-Za-z0-9]/.test(password)) score++;
 
                     let barColor = 'bg-red-500';
-                    let text = 'Muito Fraca';
+                    let text = '<?php echo $lang['strength_password_title'] ?>';
                     let width = '20%';
 
                     if (password.length === 0) {
                         width = '0%';
-                        text = '';
+                        text = '<?php echo $lang['strength_password_veryweak'] ?>';
                     } else if (score < 3) {
                         barColor = 'bg-red-500';
-                        text = 'Fraca';
+                        text = '<?php echo $lang['strength_password_weak'] ?>';
                         width = '30%';
                     } else if (score < 4) {
                         barColor = 'bg-yellow-500';
-                        text = 'Razoável';
+                        text = '<?php echo $lang['strength_password_reasonable'] ?>';
                         width = '60%';
                     } else if (score < 5) {
                         barColor = 'bg-blue-500';
-                        text = 'Forte';
+                        text = '<?php echo $lang['strength_password_strong'] ?>';
                         width = '80%';
                     } else {
                         barColor = 'bg-green-500';
-                        text = 'Muito Forte';
+                        text = '<?php echo $lang['strength_password_verystrong'] ?>';
                         width = '100%';
                     }
 
                     strengthBar.style.width = width;
                     strengthBar.className = `h-full rounded-full ${barColor}`;
                     strengthText.textContent = text;
-
-                    // Cor do texto muda conforme a força
+                    
+                    // Mantive a cor do texto do medidor como text-content-secondary ou cor da força, 
+                    // para garantir que apareça bem no light mode.
                     strengthText.className = `text-xs font-bold ${barColor.replace('bg-', 'text-')}`;
                 });
             }
@@ -297,5 +296,4 @@
     </script>
 
 </body>
-
 </html>

@@ -1,29 +1,15 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /kolae/
 
-    # ---- ADICIONE ESTAS LINHAS ----
-    # Permite que o cabeçalho Authorization seja passado para o PHP
+    # Passa o cabeçalho Authorization
     RewriteCond %{HTTP:Authorization} ^(.*)
     RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
-    # ---- FIM DAS LINHAS ADICIONADAS ----
 
-    # --- Bloco de Regra para LOCALHOST ---
-    # Se o Host for "localhost"
-    RewriteCond %{HTTP_HOST} ^localhost$
-    # E o arquivo ou pasta não existir...
+    # Se o arquivo ou pasta física existir, acessa direto
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    # ...então reescreve para o index.php (nesta pasta) 
-    # e passa a URL como parâmetro.
-    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
 
-    # --- Bloco de Regra para PRODUÇÃO (ex: InfinityFree) ---
-    # Se o Host NÃO for "localhost"
-    RewriteCond %{HTTP_HOST} !^localhost$
-    # E o arquivo ou pasta não existir...
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    # ...então reescreve para o /index.php (na raiz do servidor)
-    # e passa a URL como parâmetro.
-    RewriteRule ^(.*)$ /index.php?url=$1 [L,QSA]
+    # Manda tudo para o index.php
+    RewriteRule ^ index.php [L]
 </IfModule>

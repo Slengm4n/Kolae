@@ -2,5 +2,4 @@ config.php
 /vendor
 /uploads
 /node_modules
-src
-/tailwindcss.exe
+

@@ -8,7 +8,7 @@ use App\Models\Sport;
 
 class SportController
 {
-    /*** Exibe a lista de todos os esportes.*/
+    //Exibe a lista de todos os esportes
     public function index()
     {
         AuthHelper::checkAdmin();
@@ -21,7 +21,7 @@ class SportController
         ViewHelper::render('sports/index', $data);
     }
 
-    /*** Exibe o formulário para criar um novo esporte.*/
+    //Exibe o formulário para criar um novo esporte
     public function create()
     {
         AuthHelper::checkAdmin();
@@ -30,7 +30,7 @@ class SportController
         ViewHelper::render('sports/create', $data);
     }
 
-    /*** Salva um novo esporte no banco de dados.*/
+    //Salva um novo esporte no banco de dados
     public function store()
     {
         AuthHelper::checkAdmin();
@@ -74,7 +74,7 @@ class SportController
         ViewHelper::render('sports/edit', $data);
     }
 
-    /*** Atualiza um esporte existente no banco de dados.*/
+    //Atualiza um esporte existente no banco de dados
     public function update()
     {
         AuthHelper::checkAdmin();

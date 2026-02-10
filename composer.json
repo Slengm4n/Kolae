@@ -1,6 +1,6 @@
 {
     "name": "joao_slengman/kolae",
-    "version": "1.2.0",
+    "version": "1.2.3",
     "description": "Projeto Integrador.",
     "type": "project",
     "autoload": {
@@ -11,6 +11,7 @@
     "require": {
         "php": ">=8.2",
         "phpmailer/phpmailer": "^6.9",
-        "firebase/php-jwt": "^6.10"
+        "firebase/php-jwt": "^6.10",
+        "robmorgan/phinx": "^0.16.10"
     }
 }
