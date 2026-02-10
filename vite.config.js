@@ -1,27 +1,18 @@
 import { defineConfig } from 'vite';
-import path from 'path';
+import laravel from 'laravel-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-    base: './',
-    root: './',
-
-    build: {
-        outDir: 'assets',
-        emptyOutDir: false,
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+        tailwindcss(),
+    ],
+    server: {
         watch: {
-            exclude: ['assets/**', 'node_modules/**'],
-        },
-        rollupOptions: {
-            input: path.resolve(__dirname, 'src/js/main.js'),
-            output: {
-                entryFileNames: 'js/bundle.js',
-                assetFileNames: (assetInfo) => {
-                    if (assetInfo.name.endsWith('.css')) {
-                        return 'css/style.css';
-                    }
-                    return '[name][extname]';
-                },
-            },
+            ignored: ['**/storage/framework/views/**'],
         },
     },
 });
