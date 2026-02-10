@@ -16,7 +16,6 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
 
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
-
     <?php include 'app/views/partials/theme_script.php'; ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +24,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
+        
         .animate-up {
             animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }

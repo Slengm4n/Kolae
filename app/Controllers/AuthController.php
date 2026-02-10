@@ -12,17 +12,13 @@ use PHPMailer\PHPMailer\SMTP;
 
 class AuthController
 {
-    /**
-     * Exibe o formulário de login.
-     */
+    //Exibe o formulário de login
     public function index()
     {
         ViewHelper::render('auth/login');
     }
 
-    /**
-     * Processa a tentativa de login.
-     */
+    //Processa login do usuairo
     public function authenticate()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,13 +31,13 @@ class AuthController
                 // Troca o ID da sessão para um novo e deleta o antigo.
                 // Isso impede que alguém use um cookie antigo roubado.
                 session_regenerate_id(true);
-                // 1. Inicia a sessão
+                //Inicia a sessão
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
                 $_SESSION['user_role'] = $user['role'];
                 $_SESSION['user_avatar'] = $user['avatar_path'];
 
-                // 2. Lógica "Lembrar de mim"
+                //"Lembrar de mim"
                 if (isset($_POST['remember-me'])) {
                     $selector = bin2hex(random_bytes(16));
                     $validator = bin2hex(random_bytes(32));
@@ -60,15 +56,15 @@ class AuthController
                             time() + (30 * 24 * 60 * 60),
                             '/',
                             '',
-                            false, // Mude para true em produção com HTTPS
-                            true   // HttpOnly
+                            false, //Mudar para true em produção com HTTPS
+                            true // HttpOnly
                         );
                     } catch (\Exception $e) {
                         error_log("Erro ao criar token remember me: " . $e->getMessage());
                     }
                 }
 
-                // 3. Redireciona
+                //Redireciona
                 $redirect_to = ($user['role'] === 'admin') ? '/admin' : '/dashboard';
                 header('Location: ' . BASE_URL . $redirect_to);
                 exit;
@@ -79,23 +75,18 @@ class AuthController
         }
     }
 
-    /**
-     * Exibe o formulário de registro.
-     */
+    //Exibe o formulário de registro
     public function register()
     {
         ViewHelper::render('auth/register');
     }
 
-    /**
-     * Processa o registro de um novo usuário.
-     */
+    //Processa o registro de um novo usuário
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            // CORREÇÃO PRINCIPAL AQUI:
-            // Verifica se 'password' é igual a 'password_confirmation' (que alteramos no HTML)
+            //Verifica se 'password' é igual a 'password_confirmation'
             if ($_POST['password'] !== $_POST['password_confirmation']) {
                 header('Location: ' . BASE_URL . '/register?error=password_mismatch');
                 exit;
@@ -129,17 +120,13 @@ class AuthController
         }
     }
 
-    /**
-     * Exibe o formulário "Esqueci minha senha".
-     */
+    //Exibe o formulário "Esqueci minha senha"
     public function showForgotPasswordForm()
     {
         ViewHelper::render('auth/forgot-password');
     }
 
-    /**
-     * Processa a solicitação de redefinição de senha e envia o e-mail.
-     */
+    //Processa a solicitação de redefinição de senha e envia o e-mail
     public function handleForgotPassword()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -164,6 +151,8 @@ class AuthController
                 PasswordReset::createToken($email, $token, $expires_at);
 
                 $mail = new PHPMailer(true);
+                $mail->SMTPDebug = 2;
+                $mail->Debugoutput = 'html';
                 $mail->isSMTP();
                 $mail->Host       = SMTP_HOST;
                 $mail->SMTPAuth   = true;
@@ -209,9 +198,7 @@ class AuthController
         ViewHelper::render('auth/reset-password', ['token' => $token]);
     }
 
-    /**
-     * Processa a submissão da nova senha.
-     */
+    //Processa a submissão da nova senha
     public function handleResetPassword()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -221,7 +208,7 @@ class AuthController
 
         $token = $_POST['token'] ?? '';
         $password = $_POST['password'] ?? '';
-        $password_confirmation = $_POST['password_confirmation'] ?? ''; // Confirmação aqui também
+        $password_confirmation = $_POST['password_confirmation'] ?? '';
 
         $resetRequest = PasswordReset::findValidToken($token);
         if (!$resetRequest) {
@@ -247,9 +234,7 @@ class AuthController
         }
     }
 
-    /**
-     * Processa o logout do usuário.
-     */
+    //Processa o logout do usuário
     public function logout()
     {
         if (isset($_COOKIE['remember_me'])) {
@@ -291,6 +276,7 @@ class AuthController
         exit;
     }
 
+    //Função para verificar maioridade
     private function isOver18($birthdate): bool
     {
         if (empty($birthdate)) return false;

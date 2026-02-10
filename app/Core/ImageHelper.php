@@ -64,7 +64,7 @@ class ImageHelper
         $mime = $imageInfo['mime'];
         switch ($mime) {
             case 'image/jpeg':
-                $image = \imagecreatefromjpeg($sourcePath);
+                $image = \imagecreatefromjpeg($sourcePath); 
                 break;
             case 'image/png':
                 $image = \imagecreatefrompng($sourcePath);
