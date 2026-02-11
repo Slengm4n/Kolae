@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'birthdate',
+        'role',
+        'status',
+        'cnpj',
+        'avatar_path',
+        'force_password_change',
     ];
 
     /**
@@ -43,6 +49,13 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birthdate' => 'date',
+            'force_password_change' => 'boolean',
         ];
+    }
+
+    public function venue()
+    {
+        return $this->hasMany(Venue::class);
     }
 }
