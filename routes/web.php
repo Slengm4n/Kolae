@@ -2,14 +2,29 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
+    if(auth()->user()->role === 'admin'){
+        return redirect()->route('admin.dashboard');
+    }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+//Rotas Admin (Protegida)
+Route::middleware(['auth' , 'admin'])->prefix('admin')->name('admin.')->group(function(){
+    //Rota padrao dashboard admin
+    Route::get('/dashboard',[AdminController::class, 'dashboard'])->name('dashboard');
+    //Rota gerencimento de usuarios
+    Route::get('/users', [AdminController::class, 'index' ])->name('users.index');
+    //Rota gerenciamento de quadras
+    Route::get('/venues' , [AdminController::class,'venues'])->name('venues.index');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

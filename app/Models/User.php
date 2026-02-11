@@ -54,6 +54,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
     public function venue()
     {
         return $this->hasMany(Venue::class);
