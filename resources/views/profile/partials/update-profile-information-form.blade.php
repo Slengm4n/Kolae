@@ -48,10 +48,16 @@
 
         </div>
         <div>
+            <x-input-label for="cnpj" :value="__('CNPJ (Obrigatório para donos de quadra)')" />
+            <x-text-input id="cnpj" name="cnpj" type="text" class="mt-1 block w-full" :value="old('cnpj', $user->cnpj)" autocomplete="cnpj" placeholder="00.000.000/0000-00" />
+            <x-input-error class="mt-2" :messages="$errors->get('cnpj')" />
+        </div>
+        <div>
             <x-input-label for="birthdate" :value="__('Birthdate')" />
             <x-text-input id="birthdate" name="birthdate" type="date" class="mt-1 block w-full" :value="old('birthdate', $user->birthdate?->format('Y-m-d'))" autocomplete="birthdate" />
             <x-input-error class="mt-2" :messages="$errors->get('birthdate')" />
         </div>
+
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>

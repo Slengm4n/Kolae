@@ -4,26 +4,27 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VenueController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    if(auth()->user()->role === 'admin'){
+    if (auth()->user()->role === 'admin') {
         return redirect()->route('admin.dashboard');
     }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 //Rotas Admin (Protegida)
-Route::middleware(['auth' , 'admin'])->prefix('admin')->name('admin.')->group(function(){
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     //Rota padrao dashboard admin
-    Route::get('/dashboard',[AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     //Rota gerencimento de usuarios
-    Route::get('/users', [AdminController::class, 'index' ])->name('users.index');
+    Route::get('/users', [AdminController::class, 'index'])->name('users.index');
     //Rota gerenciamento de quadras
-    Route::get('/venues' , [AdminController::class,'venues'])->name('venues.index');
+    Route::get('/venues', [AdminController::class, 'venues'])->name('venues.index');
 });
 
 Route::middleware('auth')->group(function () {
@@ -32,4 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('venues', VenueController::class);
+});
+
+require __DIR__ . '/auth.php';

@@ -26,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'birthdate' => ['string'],
+            'cnpj' => ['nullable', 'string', 'max:20', Rule::unique(User::class)->ignore($this->user()->id)],
         ];
     }
 }

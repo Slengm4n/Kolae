@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Venue;
-use App\Models\Adress;
+use App\Models\Address;
 use App\Models\VenueImage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 
 class VenueController extends Controller
@@ -33,16 +34,16 @@ class VenueController extends Controller
         return view('venues.create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
         $this->checkCnpjStatus();
 
-        $validate = $request->$validate([
-            //Adress
+        $validate = $request->validate([
+            //Address
             'cep' => 'required|string|max:9',
             'street' => 'required|string|max:255',
             'number' => 'required|string|max:10',
-            'neighbrhood' => 'required|string|max:255',
+            'neighborhood' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|size:2',
             'complement' => 'nullable|string|max:255',
@@ -59,16 +60,38 @@ class VenueController extends Controller
             // Imagens
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048' // Máx 2MB por foto
         ]);
+        //Intregacao Geolocalizacao
+        $lat = null;
+        $lng = null;
+
+        $addressString = "{$request->street}, {$request->number}, {$request->neighborhood}, {$request->city}, {$request->state}, Brazil";
+
+        try{
+            $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json',[
+                'address' => $addressString,
+                'key' => env('GOOGLE_MAPS_API_KEY'),
+             ]);
+
+             if ($response->successful() && !empty($response['results'])) {
+                $location = $response['results'][0]['geometry']['location'];
+                $lat = $location['lat'];
+                $lng = $location['lng'];
+            }
+        }catch(\Exception $e){
+            //Se a API falhar na quebra, apenas salva sem lat e lng
+        }
 
         //Criar Endereco
-        $adress = Adress::create($request->only([
-            'cep',
-            'street',
-            'number',
-            'neighborhood',
-            'city',
-            'state',
-            'complement'
+        $address = Address::create($request->only([
+            'cep' => $request->cep,
+            'street' => $request->street,
+            'number' => $request->number,
+            'neighborhood' => $request->neighborhood,
+            'city' => $request->city,
+            'state' => $request->state,
+            'complement' => $request->complement,
+            'latitude' => $lat,
+            'longitude' => $lng,
         ]));
 
         //Criar quadra
@@ -118,6 +141,11 @@ class VenueController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'cep' => 'required|string|max:9',
+            'street' => 'required|string|max:255',
+            'number' => 'required|string|max:10',
+            'neighborhood' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|size:2',
             'average_price_per_hour' => 'nullable|numeric',
             'court_capacity' => 'nullable|integer',
             'floor_type' => 'nullable|string',
@@ -181,7 +209,7 @@ class VenueController extends Controller
 
     //Verifica seguraca
 
-    private fucntion authorizeAction(Venue $venue)
+    private function authorizeAction(Venue $venue)
     {
         $user = Auth::user();
         if ($venue->user_id !== $user->id && $user->role !== 'admin'){
