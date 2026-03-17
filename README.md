@@ -1,82 +1,98 @@
-# Kolae
+# Kolae 🏅
 
-[![Versão](https://img.shields.io/badge/version-v1.2.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.2.0)
+![Versão](https://img.shields.io/badge/version-v2.0-blue)
+![PHP](https://img.shields.io/badge/php-%3E%3D%208.1-777bb4)
+![Licença](https://img.shields.io/badge/license-MIT-green)
 
-## 🎯 Sobre o Projeto
+O **Kolae** é uma plataforma web desenvolvida para conectar atletas e entusiastas do desporto. O objetivo é facilitar a procura por parceiros de treino, equipas, locais para praticar desporto (quadras, campos) e eventos desportivos na sua região.
 
-Kolae é uma plataforma web desenvolvida para conectar atletas e entusiastas do esporte. O objetivo é facilitar a busca por parceiros de treino, equipes, locais para praticar esportes (quadras, campos) e eventos esportivos na sua região.
+![Screenshot do Dashboard](https://i.postimg.cc/GmV2qBBF/print-dashboard.png)
 
-Esta plataforma visa criar uma comunidade engajada onde os usuários podem encontrar facilmente o que precisam para praticar seus esportes favoritos.
+---
 
-![Screenshot do Dashboard do Kolae](https://i.postimg.cc/GmV2qBBF/print-dashboard.png)
+## ✨ Funcionalidades Principais (v2.0)
 
-**Status Atual:** Versão `v1.0.0` lançada! Funcionalidades básicas de usuário e gerenciamento de locais implementadas.
+### 👤 Para Utilizadores
+* **Autenticação Completa:** Registo, Login e Recuperação de Palavra-passe.
+* **Perfil do Utilizador:** Gestão de informações básicas, foto de perfil e e-mail.
+* **Segurança:** Alteração de palavra-passe e gestão de sessões.
+* **Painel do Utilizador:** Dashboard central para acesso rápido a todas as funções.
 
-## ✨ Funcionalidades Principais (v1.1.0)
+### 🏟️ Para Gestores de Locais
+* **Validação de CNPJ:** Obrigatória para utilizadores que desejam gerir recintos desportivos.
+* **Gestão de Quadras:** Cadastro, edição e listagem de locais com suporte a geolocalização.
+* **Galeria de Imagens:** Upload e gestão de fotos para cada local.
 
-- **Autenticação:** Cadastro e Login de usuários.
-- **Perfil de Usuário:** Visualização e edição de informações básicas (nome, foto de perfil).
-- **Validação de CPF:** Necessária para funcionalidades de gerenciamento.
-- **Dashboard do Usuário:** Painel central para acesso às funcionalidades.
-- **Gerenciamento de Locais (Quadras):**
-  - Cadastro de novas quadras/locais esportivos (com endereço e detalhes).
-  - Upload de imagens para os locais.
-  - Listagem e Edição dos locais cadastrados pelo usuário.
-- **Painel Administrativo Básico:**
-  - Gerenciamento de usuários.
-  - Criação de novos usuários.
-  - Edição e Exclusão de usuários.
-  - Criação e edição de modalidades esportivas.
-  - Mapa com localização e descriação de quadras cadastradas.
-- **Deploy Automatizado:** Integração contínua com GitHub Actions para deploy no InfinityFree.
+### 🛠️ Painel Administrativo
+* **Gestão de Utilizadores:** Criar, editar e eliminar utilizadores do sistema.
+* **Controlo de Modalidades:** Gestão das modalidades desportivas disponíveis na plataforma.
+* **Mapa de Recintos:** Visualização geográfica de todas as quadras cadastradas.
+
+---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Backend:** PHP (sem framework específico, estrutura MVC customizada)
-- **Frontend:** HTML, Tailwind CSS, JavaScript (para interações como dropdowns, preview de imagem, etc.)
-- **Banco de Dados:** MySQL / MariaDB
-- **Gerenciador de Dependências:** Composer
-- **Hospedagem:** InfinityFree
-- **CI/CD:** GitHub Actions (Deploy via FTP)
+O projeto utiliza uma arquitetura **MVC (Model-View-Controller) customizada**, focada em performance e organização.
 
-## 🚀 Como Rodar Localmente (Desenvolvimento)
+* **Backend:** PHP 8.1+.
+* **Frontend:** HTML5, Tailwind CSS, ViteJS e Vanilla JavaScript.
+* **Base de Dados:** MySQL / MariaDB.
+* **Gestão de Dependências:** Composer (PHP) e NPM (Assets).
+* **Migrações:** Phinx para controlo de versão da base de dados.
+* **CI/CD:** Deploy automatizado para InfinityFree via GitHub Actions.
+
+---
+
+## 🚀 Como Rodar Localmente
+
+### Pré-requisitos
+* Servidor local (XAMPP, WAMP, Laragon) com PHP 8.1+.
+* Composer e Node.js instalados.
+* MySQL/MariaDB configurado.
+
+### Instalação
 
 1.  **Clone o repositório:**
-
-```bash
-    git clone [https://github.com/Slengm4n/colae.git](https://github.com/Slengm4n/colae.git)
-
-    cd colae
-```
-
-2.  **Instale as dependências do Composer:**
-
-```bash
-    composer install
-```
-
-3.  **Instale as dependências do Composer:**
-
-- Certifique-se de ter um ambiente local (XAMPP, WAMP, etc.) com Apache, MySQL/MariaDB e PHP (versão 8.1+).
-
-  - **Crie um banco de dados vazio** no seu MySQL/MariaDB (ex: via phpMyAdmin) com o nome que desejar (ex: `kolae_local`).
-  - **Importe a estrutura do banco:** Use o phpMyAdmin (selecione o banco criado > aba Importar > escolha o arquivo `database/kolae.sql`) OU execute o seguinte comando no terminal (substitua `usuario`, `senha`, `kolae_local` pelos seus dados):
-
     ```bash
-    mysql -u usuario -p -h localhost kolae_local < database/kolae.sql
+    git clone [https://github.com/Slengm4n/Kolae.git](https://github.com/Slengm4n/Kolae.git)
+    cd Kolae
     ```
 
-    _(Será pedida a senha do MySQL)_
+2.  **Instale as dependências:**
+    ```bash
+    composer install
+    npm install
+    ```
 
-  - Copie `config.example.php` para `config.php` e preencha com as credenciais do **seu banco de dados local** (nome do banco `colae_local`, usuário, senha).
-  - Configure `BASE_URL` e `BASE_DIR_URL` no `index.php` para seu ambiente local (ex: `http://localhost/colae` e `/colae`).
+3.  **Configuração da Base de Dados:**
+    * Crie uma base de dados (ex: `kolae_local`).
+    * Copie o ficheiro de exemplo e configure os seus dados:
+      ```bash
+      cp config.example.php config.php
+      ```
+    * Execute as migrações para criar as tabelas:
+      ```bash
+      vendor/bin/phinx migrate
+      ```
 
-4.  **Acesse o projeto:** Abra seu navegador e acesse `http://localhost/colae` (ou o caminho configurado).
+4.  **Compilação de Assets:**
+    ```bash
+    npm run dev
+    ```
+
+5.  **Aceda ao projeto:**
+    Abra o seu navegador em `http://localhost/Kolae` (ou o caminho configurado no seu Apache).
+
+---
 
 ## ☁️ Deploy
 
-O deploy para o ambiente de produção (InfinityFree) é feito automaticamente via **GitHub Actions** sempre que um `push` é realizado na branch `main`. O workflow copia os arquivos via FTP.
+O deploy é feito automaticamente para o ambiente de produção sempre que é realizado um `push` na branch `main`. O processo envolve:
+1. Verificação de sintaxe PHP.
+2. Sincronização de ficheiros via FTP com o servidor remoto.
+
+---
 
 ## 📄 Licença
 
-[MIT](https://choosealicense.com/licenses/mit/)
+Este projeto está licenciado sob a licença **MIT**.
