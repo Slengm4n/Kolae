@@ -16,4 +16,9 @@ class Sport extends Model
             'description',
             'icon_path'
             ];
+
+            public function games()
+            {
+                return $this->hasMany(Game::class, 'sport_id');
+            }
 }

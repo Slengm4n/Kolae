@@ -20,11 +20,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'cnpj',
         'password',
         'birthdate',
         'role',
         'status',
-        'cnpj',
         'avatar_path',
         'force_password_change',
     ];
@@ -54,13 +54,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function hasRole(string $role): bool
+    public function isOwner(): bool
     {
-        return $this->role === $role;
+        return $this->role === $owner;
     }
 
     public function venue()
     {
         return $this->hasMany(Venue::class);
+    }
+
+    public function createdGames()
+    {
+        return $this->hasMany(Game::class, 'creator_user_id');
     }
 }

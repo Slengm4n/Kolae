@@ -6,22 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;  
 class Address extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
-      'cep',
-      'street',
-      'number',
-      'neighborhood',
-      'complement',
-      'city',
-      'state',
-      'latitude',
-      'longitude',  
-    ];
-
-    public function venue()
+    protected $table = 'addresses';
+    protected $fillable = ['cep', 'id_street', 'numbe', 'complement', 'latitude', 'longitude'];
+    
+    public function street()
     {
-        return $this->hasOne(Venue::class);
+        return $this->belongsToo(Street::class, 'id_street');
     }
 }
