@@ -7,8 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
 
 Route::get('/dashboard', function () {
     if (auth()->user()->role === 'admin') {
@@ -37,5 +37,21 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('venues', VenueController::class);
 });
+
+// Troca de idioma
+Route::get('/lang/{locale}', function (string $locale) {
+    $allowed = ['pt-br', 'en-us', 'es-es', 'hi-in', 'zh-cn', 'it-it', 'ja-jp'];
+    if (in_array($locale, $allowed)) {
+        session(['idioma' => $locale]);
+        app()->setLocale($locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
+// Newsletter
+Route::post('/newsletter', function (\Illuminate\Http\Request $request) {
+    $request->validate(['email' => 'required|email']);
+    return redirect()->back()->with('success', 'Inscrição realizada!');
+})->name('newsletter.subscribe');
 
 require __DIR__ . '/auth.php';
