@@ -20,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Controllers\\VenueController' => $baseDir . '/app/Http/Controllers/VenueController.php',
     'App\\Http\\Middleware\\IsAdmin' => $baseDir . '/app/Http/Middleware/IsAdmin.php',
+    'App\\Http\\Middleware\\SetLocale' => $baseDir . '/app/Http/Middleware/SetLocale.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\ProfileUpdateRequest' => $baseDir . '/app/Http/Requests/ProfileUpdateRequest.php',
     'App\\Models\\Address' => $baseDir . '/app/Models/Address.php',

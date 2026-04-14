@@ -14,7 +14,7 @@ return [
     'global_menu_login' => 'Entrar',
     'global_and' => 'e',
     'global_menu_help' => 'Ajuda',
-    'global_menu_config' => 'Configurações',
+    'global_menu_config' => 'Con\\\afigurações',
     'global_cancel' => 'Cancelar',
     'global_back' => 'Voltar',
     'global_error' => 'Erro',

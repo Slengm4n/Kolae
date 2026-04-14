@@ -65,7 +65,7 @@
                 <li>
                     <a href="#sobre-nos"
                        class="font-semibold text-white hover:text-cyan-400 transition-colors drop-shadow-md">
-                        {{ __('global_menu_about') }}
+                        {{ __('messages.global_menu_about') }}
                     </a>
                 </li>
 
@@ -73,7 +73,7 @@
                 <li>
                     <a href="{{ route('dashboard') }}"
                        class="font-bold text-cyan-400 hover:text-cyan-300 transition-colors border border-cyan-400 px-4 py-2 rounded-full backdrop-blur-sm">
-                        {{ __('global_home_panel') }}
+                        {{ __('messages.global_home_panel') }}
                     </a>
                 </li>
                 @endauth
@@ -157,7 +157,7 @@
                             <a href="#sobre-nos"
                                class="flex items-center gap-4 px-5 py-3 text-sm hover:bg-surface-secondary transition-colors">
                                 <i class="fas fa-info-circle w-5 text-center text-content-secondary"></i>
-                                {{ __('global_menu_about') }}
+                                {{ __('messages.global_menu_about') }}
                             </a>
                         </li>
                         <li class="border-t border-gray-700/50 my-2 md:hidden"></li>
@@ -165,21 +165,21 @@
                         @auth
                             <li>
                                 <div class="px-5 py-2 text-xs text-content-secondary uppercase font-bold">
-                                    {{ __('global_account') }}
+                                    {{ __('messages.global_account') }}
                                 </div>
                             </li>
                             <li>
                                 <a href="{{ route('dashboard') }}"
                                    class="flex items-center gap-4 px-5 py-3 text-sm hover:bg-surface-secondary transition-colors">
                                     <i class="fas fa-columns w-5 text-center text-cyan-400"></i>
-                                    {{ __('global_home_panel') }}
+                                    {{ __('messages.global_home_panel') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('profile.edit') }}"
                                    class="flex items-center gap-4 px-5 py-3 text-sm hover:bg-surface-secondary transition-colors">
                                     <i class="fas fa-user-cog w-5 text-center text-content-secondary"></i>
-                                    {{ __('global_menu_profile') }}
+                                    {{ __('messages.global_menu_profile') }}
                                 </a>
                             </li>
                             <li class="border-t border-gray-700/50 my-2"></li>
@@ -188,7 +188,7 @@
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                    class="flex items-center gap-4 px-5 py-3 text-sm text-red-400 hover:bg-surface-secondary transition-colors">
                                     <i class="fas fa-sign-out-alt w-5 text-center"></i>
-                                    {{ __('global_menu_exit') }}
+                                    {{ __(key: 'messsages.global_menu_exit') }}
                                 </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                                     @csrf
@@ -199,14 +199,14 @@
                                 <a href="{{ route('login') }}"
                                    class="flex items-center gap-4 px-5 py-3 text-sm hover:bg-surface-secondary transition-colors">
                                     <i class="fas fa-sign-in-alt w-5 text-center text-content-secondary"></i>
-                                    {{ __('global_menu_login') }}
+                                    {{ __('messages.global_menu_login') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('register') }}"
                                    class="flex items-center gap-4 px-5 py-3 text-sm font-bold text-cyan-400 hover:bg-surface-secondary transition-colors">
                                     <i class="fas fa-user-plus w-5 text-center"></i>
-                                    {{ __('global_menu_register') }}
+                                    {{ __('messages.global_menu_register') }}
                                 </a>
                             </li>
                         @endauth
@@ -232,12 +232,12 @@
 
         <div class="container mx-auto px-4 relative z-10 text-white">
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold max-w-lg leading-tight mx-auto md:mx-0">
-                {{ __('global_slogan_headline') }}
+                {{ __('messages.global_slogan_headline') }}
             </h1>
             <div class="flex flex-wrap gap-4 mt-8 justify-center md:justify-start">
                 <a href="{{ route('login') }}"
                    class="py-3 px-8 rounded-full font-semibold transition-all duration-300 bg-white text-black border-2 border-white hover:bg-transparent hover:text-white">
-                    {{ __('home_start_free') }}
+                    {{ __('messages.home_start_free') }}
                 </a>
             </div>
         </div>
@@ -247,10 +247,10 @@
     <section class="bg-surface-secondary py-16 md:py-24 overflow-hidden transition-colors duration-500">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl md:text-4xl font-bold max-w-2xl mx-auto text-content-primary">
-                {{ __('home_connect_message') }}
+                {{ __('messages.home_connect_message') }}
             </h2>
             <p class="max-w-3xl mx-auto mt-4 text-content-secondary">
-                {{ __('home_search_message') }}
+                {{ __('messages.home_search_message') }}
             </p>
         </div>
 
@@ -285,19 +285,19 @@
                      loading="lazy">
             </div>
             <div class="text-center lg:text-left">
-                <h2 class="text-3xl md:text-4xl font-bold">{{ __('global_title_about') }}</h2>
-                <p class="mt-4 text-content-secondary">{{ __('global_text_about') }}</p>
+                <h2 class="text-3xl md:text-4xl font-bold">{{ __('messages.global_title_about') }}</h2>
+                <p class="mt-4 text-content-secondary">{{ __('messages.global_text_about') }}</p>
 
                 <div class="mt-8 flex flex-col sm:flex-row gap-8 justify-center lg:justify-start">
                     <div>
                         <i class="fas fa-users text-cyan-400 text-3xl mb-3"></i>
-                        <h3 class="text-lg font-bold">{{ __('home_title_community') }}</h3>
-                        <p class="text-sm text-content-secondary">{{ __('home_text_community') }}</p>
+                        <h3 class="text-lg font-bold">{{ __('messages.home_title_community') }}</h3>
+                        <p class="text-sm text-content-secondary">{{ __('messages.home_text_community') }}</p>
                     </div>
                     <div>
                         <i class="fas fa-map-marker-alt text-cyan-400 text-3xl mb-3"></i>
-                        <h3 class="text-lg font-bold">{{ __('home_title_location') }}</h3>
-                        <p class="text-sm text-content-secondary">{{ __('home_text_location') }}</p>
+                        <h3 class="text-lg font-bold">{{ __('messages.home_title_location') }}</h3>
+                        <p class="text-sm text-content-secondary">{{ __('messages.home_text_location') }}</p>
                     </div>
                 </div>
             </div>
@@ -307,8 +307,8 @@
     {{-- Apoiadores --}}
     <section class="bg-surface-secondary py-16 md:py-24 transition-colors duration-500">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-content-primary">{{ __('home_title_supporters') }}</h2>
-            <p class="max-w-3xl mx-auto mt-4 text-content-secondary">{{ __('home_text_supporters') }}</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-content-primary">{{ __('messages.home_title_supporters') }}</h2>
+            <p class="max-w-3xl mx-auto mt-4 text-content-secondary">{{ __('messages.home_text_supporters') }}</p>
         </div>
 
         @php
@@ -348,7 +348,7 @@
                  alt="Logo Kolae"
                  class="h-10 mx-auto md:mx-0 filter dark:filter-none invert dark:invert-0"
                  loading="lazy">
-            <p class="text-sm text-content-secondary mt-4">{{ __('home_footer_activity') }}</p>
+            <p class="text-sm text-content-secondary mt-4">{{ __('messages.home_footer_activity') }}</p>
             <div class="flex space-x-4 mt-6 justify-center md:justify-start text-content-primary">
                 <a href="#" class="text-xl hover:text-cyan-400 transition-colors" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="text-xl hover:text-cyan-400 transition-colors" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -357,7 +357,7 @@
         </div>
 
         <div class="mb-8 text-center md:text-left">
-            <h3 class="text-lg font-semibold mb-4 text-content-primary">{{ __('global_contact_kolae') }}</h3>
+            <h3 class="text-lg font-semibold mb-4 text-content-primary">{{ __('messages.global_contact_kolae') }}</h3>
             <p class="text-sm text-content-secondary">
                 <a href="mailto:kolae.gg@gmail.com" class="hover:text-cyan-400 transition-colors">kolae.gg@gmail.com</a>
             </p>
@@ -365,7 +365,7 @@
         </div>
 
         <div class="mb-8 text-center md:text-left">
-            <h3 class="text-lg font-semibold mb-4 text-content-primary">{{ __('home_footer_register') }}</h3>
+            <h3 class="text-lg font-semibold mb-4 text-content-primary">{{ __('messages.home_footer_register') }}</h3>
             <p class="text-sm text-content-secondary">
                 Cadastre-se para ficar por dentro dos próximos eventos e atualizações.
             </p>
@@ -387,7 +387,7 @@
     </div>
 
     <div class="mt-8 md:mt-12 py-6 border-t border-gray-700/30 text-center">
-        <p class="text-sm text-content-secondary">&copy; {{ __('global_Copyright_message') }}</p>
+        <p class="text-sm text-content-secondary">&copy; {{ __('messages.global_Copyright_message') }}</p>
     </div>
 </footer>
 
