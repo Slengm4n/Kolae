@@ -6,7 +6,7 @@ return [
     'global_text_about' => '我们相信运动有能力将人们聚集在一起，建立社区并改变生活。',
     'global_button_language' => '选择语言',
     'global_contact_kolae' => '联系我们',
-    'global_Copyright_message' => '2025 Kolae. 保留所有权利。',
+    'global_Copyright_message' => '2026 Kolae. 保留所有权利。',
     'global_home_panel' => '我的面板',
     'global_menu_profile' => '个人资料',
     'global_menu_exit' => '退出',

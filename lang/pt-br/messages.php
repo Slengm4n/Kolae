@@ -6,7 +6,7 @@ return [
     'global_text_about' => 'Acreditamos que o esporte tem o poder de unir pessoas, criar comunidades e transformar vidas. A Kolae nasceu do desejo de facilitar essa conexão, oferecendo uma plataforma onde atletas de todos os níveis podem encontrar parceiros de treino, equipes e eventos na sua região.',
     'global_button_language' => 'Selecione a linguagem',
     'global_contact_kolae' => 'Contato',
-    'global_Copyright_message' => '2025 Kolae. Todos os direitos reservados',
+    'global_Copyright_message' => '2026 Kolae. Todos os direitos reservados',
     'global_home_panel' => 'Meu Painel',
     'global_menu_profile' => 'Perfil',
     'global_menu_exit' => 'Sair',

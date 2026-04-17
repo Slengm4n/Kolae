@@ -16,7 +16,7 @@ return new class extends Migration
     $table->string('name');
     $table->string('email')->unique();
     $table->date('birthdate')->nullable();
-    $table->string('cnpj')->unique();
+    $table->string('cnpj')->nullable();
     $table->string('password'); // Laravel usa 'password' por padrão
     $table->enum('role', ['admin', 'owner', 'player'])->default('player');
     $table->enum('status', ['active', 'inactive', 'banned'])->default('active');

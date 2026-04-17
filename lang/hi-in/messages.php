@@ -6,7 +6,7 @@ return [
     'global_text_about' => 'हम मानते हैं कि खेल में लोगों को एक साथ लाने, समुदायों का निर्माण करने और जीवन को बदलने की शक्ति है।',
     'global_button_language' => 'भाषा चुनें',
     'global_contact_kolae' => 'संपर्क करें',
-    'global_Copyright_message' => '2025 Kolae. सर्वाधिकार सुरक्षित।',
+    'global_Copyright_message' => '2026 Kolae. सर्वाधिकार सुरक्षित।',
     'global_home_panel' => 'मेरा पैनल',
     'global_menu_profile' => 'प्रोफ़ाइल',
     'global_menu_exit' => 'बाहर निकलें',

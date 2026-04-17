@@ -6,7 +6,7 @@ return [
     'global_text_about' => 'Crediamo che lo sport abbia il potere di unire le persone, creare comunità e trasformare vite. Kolae è nata dal desiderio di facilitare questa connessione.',
     'global_button_language' => 'Seleziona la lingua',
     'global_contact_kolae' => 'Contatti',
-    'global_Copyright_message' => '2025 Kolae. Tutti i diritti riservati',
+    'global_Copyright_message' => '2026 Kolae. Tutti i diritti riservati',
     'global_home_panel' => 'Il Mio Pannello',
     'global_menu_profile' => 'Profilo',
     'global_menu_exit' => 'Esci',

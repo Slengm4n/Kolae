@@ -6,7 +6,7 @@ return [
     'global_text_about' => 'We believe that sport has the power to bring people together, build communities, and transform lives. Kolae was born out of a desire to facilitate this connection by offering a platform where athletes of all levels can find training partners, teams, and events in their area.',
     'global_button_language' => 'Select language',
     'global_contact_kolae' => 'Contact',
-    'global_Copyright_message' => '2025 Kolae. All rights reserved.',
+    'global_Copyright_message' => '2026 Kolae. All rights reserved.',
     'global_home_panel' => 'My Panel',
     'global_menu_profile' => 'Profile',
     'global_menu_exit' => 'Exit',
