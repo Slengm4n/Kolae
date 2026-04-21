@@ -77,3 +77,78 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLang();
             localStorage.setItem('theme', 'light');
         }
     });
+
+    (() => {
+        'use strict';
+
+        // TRAVA DE SEGURANÇA: Se não estivermos na página de registro, o código para aqui e não dá erro nas outras telas.
+        if (typeof window.KolaeRegisterData === 'undefined') {
+            return;
+        }
+
+        /* Toggle senha */
+        document.querySelectorAll('.btn-eye').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById(btn.dataset.toggle);
+                if (!input) return;
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                btn.querySelector('i').className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+            });
+        });
+
+        /* Força de senha */
+        const pwInput = document.getElementById('password');
+        const bar1 = document.getElementById('pw-bar-1');
+        const bar2 = document.getElementById('pw-bar-2');
+        const bar3 = document.getElementById('pw-bar-3');
+        const pwLabel = document.getElementById('pw-label');
+
+        // USANDO AS TRADUÇÕES QUE VIERAM DO BLADE:
+        const levels = [
+            { label: window.KolaeRegisterData.translations.weak, color: '#ef4444', bars: 1 },
+            { label: window.KolaeRegisterData.translations.medium, color: '#f59e0b', bars: 2 },
+            { label: window.KolaeRegisterData.translations.strong, color: '#22c55e', bars: 3 },
+        ];
+
+        function scorePassword(pw) {
+            let score = 0;
+            if (pw.length >= 8) score++;
+            if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+            if (/[^A-Za-z0-9]/.test(pw) || /\d/.test(pw)) score++;
+            return Math.min(score, 3);
+        }
+
+        function resetBars() {
+            [bar1, bar2, bar3].forEach(b => b.style.background = '');
+            pwLabel.textContent = '';
+        }
+
+        if (pwInput) { // Mais uma verificação de segurança
+            pwInput.addEventListener('input', () => {
+                const val = pwInput.value;
+                if (!val) { resetBars(); return; }
+
+                const score = scorePassword(val);
+                const lvl = levels[Math.max(0, score - 1)];
+
+                [bar1, bar2, bar3].forEach((b, i) => {
+                    b.style.background = i < lvl.bars ? lvl.color : '';
+                });
+
+                pwLabel.textContent = lvl.label;
+                pwLabel.style.color = lvl.color;
+            });
+        }
+
+        /* Spinner Submit */
+        const form = document.getElementById('register-form');
+        const btn = document.getElementById('register-btn');
+
+        if (form && btn) {
+            form.addEventListener('submit', () => {
+                btn.classList.add('loading');
+                btn.disabled = true;
+            });
+        }
+    })();
