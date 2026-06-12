@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae - Gerir Esportes</title>
+    <title>Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -138,8 +138,7 @@
                     <?php foreach ($sports as $sport) : ?>
                         <div class="card-sport group relative bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 text-center flex flex-col items-center justify-center aspect-square transition-all duration-300 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
 
-                            <i class="fas <?php echo htmlspecialchars($sport['icon'] ?? 'fa-question-circle'); ?> text-4xl md:text-5xl text-content-secondary transition-colors duration-300 group-hover:text-cyan-500 group-hover:scale-110 transform"></i>
-
+                          <i class="fas <?php echo htmlspecialchars($sport['icon_path'] ?? 'fa-question-circle'); ?> text-4xl md:text-5xl text-content-secondary transition-colors duration-300 group-hover:text-cyan-500 group-hover:scale-110 transform"></i>
                             <h3 class="mt-4 font-bold text-sm md:text-lg text-content-primary"><?php echo htmlspecialchars($sport['name']); ?></h3>
 
                             <div class="absolute top-2 right-2 md:top-3 md:right-3 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 flex space-x-1 md:space-x-2">
