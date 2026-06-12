@@ -53,8 +53,8 @@ class Sport
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Cria um novo esportes no banco de dados.
+  /**
+     * Cria um novo esporte no banco de dados.
      * @param array $data
      * @return bool
      */
@@ -62,19 +62,34 @@ class Sport
     {
         $pdo = Database::getConnection();
         $data['status'] = 'active';
-        $query = "INSERT INTO sports (name, icon, status) VALUES (:name, :icon, :status)";
+        
+        // Verificação de segurança: se o Controller ainda estiver enviando a chave 'icon',
+        // nós a renomeamos para 'icon_path' antes de executar no banco.
+        if (isset($data['icon'])) {
+            $data['icon_path'] = $data['icon'];
+            unset($data['icon']);
+        }
+
+        // Atualizado de 'icon' para 'icon_path'
+        $query = "INSERT INTO sports (name, icon_path, status) VALUES (:name, :icon_path, :status)";
         $stmt = $pdo->prepare($query);
         return $stmt->execute($data);
     }
 
-    /**
-     * Atualiza um esportes existente.
+   /**
+     * Atualiza um esporte existente.
      * @param int $id
      * @param array $data
      * @return bool
      */
     public static function update(int $id, array $data): bool
     {
+        // Renomeia 'icon' para 'icon_path' caso o Controller ainda envie o nome antigo
+        if (isset($data['icon'])) {
+            $data['icon_path'] = $data['icon'];
+            unset($data['icon']);
+        }
+
         if (empty($data)) {
             return true;
         }
@@ -92,7 +107,7 @@ class Sport
         $data['id'] = $id;
         return $stmt->execute($data);
     }
-
+    
     /**
      * Realiza um "soft delete" de um esportes.
      * @param int $id

@@ -12,13 +12,13 @@ use PHPMailer\PHPMailer\SMTP;
 
 class AuthController
 {
-    //Exibe o formulário de login
+    // Exibe o formulário de login
     public function index()
     {
         ViewHelper::render('auth/login');
     }
 
-    //Processa login do usuairo
+    // Processa login do usuário
     public function authenticate()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,44 +27,44 @@ class AuthController
 
             $user = User::findByEmail($email);
 
-            if ($user && password_verify($password, $user['password_hash'])) {
-                // Troca o ID da sessão para um novo e deleta o antigo.
-                // Isso impede que alguém use um cookie antigo roubado.
+            // Ajustado de 'password_hash' para 'password' conforme o novo SQL
+            if ($user && password_verify($password, $user['password'])) {
+                
+                // Impede fixação de sessão usando cookie antigo
                 session_regenerate_id(true);
-                //Inicia a sessão
+                
+                // Inicia a sessão
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
                 $_SESSION['user_role'] = $user['role'];
                 $_SESSION['user_avatar'] = $user['avatar_path'];
 
-                //"Lembrar de mim"
+                // "Lembrar de mim" usando a nova coluna 'remember_token' da tabela 'users'
                 if (isset($_POST['remember-me'])) {
-                    $selector = bin2hex(random_bytes(16));
-                    $validator = bin2hex(random_bytes(32));
-                    $expiry = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 dias
-                    $hashedValidator = hash('sha256', $validator);
+                    $rememberToken = bin2hex(random_bytes(32)); // Gera um token seguro de 64 caracteres
 
                     try {
                         $conn = \App\Core\Database::getConnection();
-                        $sql = "INSERT INTO user_tokens (user_id, selector, hashed_validator, expiry) VALUES (?, ?, ?, ?)";
+                        // Atualiza o token diretamente na linha do usuário
+                        $sql = "UPDATE users SET remember_token = ? WHERE id = ?";
                         $stmt = $conn->prepare($sql);
-                        $stmt->execute([$user['id'], $selector, $hashedValidator, $expiry]);
+                        $stmt->execute([$rememberToken, $user['id']]);
 
                         setcookie(
                             'remember_me',
-                            $selector . ':' . $validator,
-                            time() + (30 * 24 * 60 * 60),
+                            $rememberToken,
+                            time() + (30 * 24 * 60 * 60), // 30 dias
                             '/',
                             '',
-                            false, //Mudar para true em produção com HTTPS
-                            true // HttpOnly
+                            false, // Mudar para true em produção com HTTPS
+                            true   // HttpOnly
                         );
                     } catch (\Exception $e) {
-                        error_log("Erro ao criar token remember me: " . $e->getMessage());
+                        error_log("Erro ao salvar remember_token: " . $e->getMessage());
                     }
                 }
 
-                //Redireciona
+                // Redireciona dependendo do nível de acesso
                 $redirect_to = ($user['role'] === 'admin') ? '/admin' : '/dashboard';
                 header('Location: ' . BASE_URL . $redirect_to);
                 exit;
@@ -75,18 +75,18 @@ class AuthController
         }
     }
 
-    //Exibe o formulário de registro
+    // Exibe o formulário de registro
     public function register()
     {
         ViewHelper::render('auth/register');
     }
 
-    //Processa o registro de um novo usuário
+    // Processa o registro de um novo usuário
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            //Verifica se 'password' é igual a 'password_confirmation'
+            // Verifica se 'password' é igual a 'password_confirmation'
             if ($_POST['password'] !== $_POST['password_confirmation']) {
                 header('Location: ' . BASE_URL . '/register?error=password_mismatch');
                 exit;
@@ -102,12 +102,14 @@ class AuthController
                 exit;
             }
 
+            // DADOS DO USUÁRIO ADAPTADOS:
+            // Campo 'password' corrigido e 'role' alterado para 'player' (atendendo ao ENUM do banco)
             $userData = [
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
                 'birthdate' => $_POST['birthdate'],
-                'password_hash' => password_hash($_POST['password'], PASSWORD_DEFAULT),
-                'role' => 'user'
+                'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                'role' => 'player' 
             ];
 
             if (User::create($userData)) {
@@ -120,13 +122,13 @@ class AuthController
         }
     }
 
-    //Exibe o formulário "Esqueci minha senha"
+    // Exibe o formulário "Esqueci minha senha"
     public function showForgotPasswordForm()
     {
         ViewHelper::render('auth/forgot-password');
     }
 
-    //Processa a solicitação de redefinição de senha e envia o e-mail
+    // Processa a solicitação de redefinição de senha e envia o e-mail
     public function handleForgotPassword()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -145,10 +147,10 @@ class AuthController
         if ($user) {
             try {
                 $token = bin2hex(random_bytes(32));
-                $expires_at = (new DateTime('+1 hour'))->format('Y-m-d H:i:s');
 
+                // Removido o parâmetro $expires_at pois a tabela 'password_reset_tokens' só possui 'created_at'
                 PasswordReset::deleteTokensForEmail($email);
-                PasswordReset::createToken($email, $token, $expires_at);
+                PasswordReset::createToken($email, $token);
 
                 $mail = new PHPMailer(true);
                 $mail->SMTPDebug = 2;
@@ -198,7 +200,7 @@ class AuthController
         ViewHelper::render('auth/reset-password', ['token' => $token]);
     }
 
-    //Processa a submissão da nova senha
+    // Processa a submissão da nova senha
     public function handleResetPassword()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -234,23 +236,19 @@ class AuthController
         }
     }
 
-    //Processa o logout do usuário
+    // Processa o logout do usuário
     public function logout()
     {
+        // Limpa o remember_token do banco antes de destruir o cookie
         if (isset($_COOKIE['remember_me'])) {
-            $parts = explode(':', $_COOKIE['remember_me']);
-
-            if (count($parts) === 2) {
-                list($selector,) = $parts;
-                try {
-                    // Usa namespace completo para evitar erros
-                    $conn = \App\Core\Database::getConnection();
-                    $sql = "DELETE FROM user_tokens WHERE selector = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->execute([$selector]);
-                } catch (\Exception $e) {
-                    error_log("Erro ao limpar token de logout: " . $e->getMessage());
-                }
+            $token = $_COOKIE['remember_me'];
+            try {
+                $conn = \App\Core\Database::getConnection();
+                $sql = "UPDATE users SET remember_token = NULL WHERE remember_token = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([$token]);
+            } catch (\Exception $e) {
+                error_log("Erro ao limpar token de logout: " . $e->getMessage());
             }
             setcookie('remember_me', '', time() - 3600, '/');
             unset($_COOKIE['remember_me']);
@@ -276,7 +274,7 @@ class AuthController
         exit;
     }
 
-    //Função para verificar maioridade
+    // Função para verificar maioridade
     private function isOver18($birthdate): bool
     {
         if (empty($birthdate)) return false;

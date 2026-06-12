@@ -8,11 +8,8 @@ use App\Core\ViewHelper;
 use App\Models\User;
 use App\Models\Venue;
 
-
 class UserController
 {
-
-
     public function dashboard()
     {
         AuthHelper::check();
@@ -22,7 +19,6 @@ class UserController
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuario',
             'userVenues' => Venue::findByUserId($userId),
-
             'showCnpjModal' => empty($user['cnpj'])
         ];
 
@@ -39,8 +35,6 @@ class UserController
         ViewHelper::render('users/profile', $data);
     }
 
-
-
     public function updateProfile()
     {
         AuthHelper::check();
@@ -51,7 +45,6 @@ class UserController
 
         $userId = $_SESSION['user_id'];
         $newAvatarFileName = null; // Variável para guardar o nome do novo arquivo
-
 
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
 
@@ -67,7 +60,6 @@ class UserController
                 exit;
             }
         }
-
 
         $updateData = [
             'name' => htmlspecialchars(trim($_POST['name'] ?? ''))
@@ -118,14 +110,13 @@ class UserController
             $newPassword = $_POST['new_password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
-
             $user = User::findById($userId);
             if (!$user) {
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?error=update_failed');
                 exit;
             }
 
-            if (!password_verify($currentPassword, $user['password_hash'])) {
+            if (!password_verify($currentPassword, $user['password'])) {
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?error=current_mismatch');
                 exit;
             }
@@ -140,12 +131,9 @@ class UserController
                 exit;
             }
 
-
-            // Se todas as validações passaram, hash a nova senha
             $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            // Tenta atualizar no banco de dados
-            if (User::update($userId, ['password_hash' => $newPasswordHash])) {
+            if (User::update($userId, ['password' => $newPasswordHash])) {
                 // Sucesso! Redireciona com status=success
                 header('Location: ' . BASE_URL . '/dashboard/perfil/seguranca?status=success');
             } else {
@@ -174,12 +162,10 @@ class UserController
             $userId = $_SESSION['user_id'];
 
             if (!$this->validateCnpj($cnpj)) {
-                // Se o CNPJ for inválido, redireciona de volta com um erro para o popup.
                 header('Location: ' . BASE_URL . '/dashboard?error=cnpj_invalid');
                 exit;
             }
             if (User::isCnpjInUse($cnpj, $userId)) {
-                // Se o CNPJ já estiver em uso, redireciona com outro erro.
                 header('Location: ' . BASE_URL . '/dashboard?error=cnpj_in_use');
                 exit;
             }
@@ -188,11 +174,9 @@ class UserController
                 exit;
             }
         }
-        // Se ocorrer um erro geral, redireciona.
         header('Location: ' . BASE_URL . '/dashboard?error=generic');
         exit;
     }
-
 
     // --- MÉTODOS DA ÁREA DO ADMINISTRADOR ---
 
@@ -217,12 +201,13 @@ class UserController
         AuthHelper::checkAdmin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $randomPassword = bin2hex(random_bytes(4));
+            
             $data = [
                 'name'      => trim($_POST['name']),
                 'email'     => trim($_POST['email']),
                 'birthdate' => $_POST['birthdate'],
-                'role'      => in_array($_POST['role'], ['user', 'admin']) ? $_POST['role'] : 'user',
-                'password_hash' => password_hash($randomPassword, PASSWORD_DEFAULT)
+                'role'      => in_array($_POST['role'], ['admin', 'owner', 'player']) ? $_POST['role'] : 'player',
+                'password'  => password_hash($randomPassword, PASSWORD_DEFAULT)
             ];
             if (User::create($data)) {
                 $_SESSION['flash_message'] = ['type' => 'success_with_password', 'password' => $randomPassword];
@@ -255,11 +240,14 @@ class UserController
         AuthHelper::checkAdmin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $id = (int)$_POST['id'];
+            
+            $role = in_array($_POST['role'], ['admin', 'owner', 'player']) ? $_POST['role'] : 'player';
+
             $data = [
                 'name'      => trim($_POST['name']),
                 'email'     => trim($_POST['email']),
                 'birthdate' => $_POST['birthdate'],
-                'role'      => $_POST['role']
+                'role'      => $role
             ];
             if (User::update($id, $data)) {
                 header('Location: ' . BASE_URL . '/admin/usuarios?status=updated');
