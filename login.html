@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kolae - Login (HTML)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #0D1117; 
+        }
+        
+        /* REMOVEMOS A CLASSE .form-input DAQUI.
+           O estilo foi movido para dentro dos inputs usando classes do Tailwind.
+        */
+        
+        /* Animações */
+        body {
+            animation: pageFadeIn 0.4s ease-out both;
+        }
+        @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fadeInUp { animation: fadeInUp 0.5s ease-out both; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="bg-[#0D1117] text-white">
+
+    <div class="flex min-h-screen">
+        
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12">
+            <div class="w-full max-w-md animate-fadeInUp">
+                
+                <a href="#">
+                    <img src="./assets/img/kolae_branca.png" alt="Logo Kolae" class="h-10 mb-10">
+                </a>
+                
+                <h2 class="text-4xl font-bold text-white mb-2">Acesse sua conta.</h2>
+                <p class="text-gray-400 mb-8">
+                    Não tem uma conta? 
+                    <a href="#" class="font-medium text-blue-500 hover:text-blue-400">Cadastre-se</a>
+                </p>
+
+                <div class="bg-red-500/20 border-red-500 text-red-300 border px-4 py-3 rounded-lg text-center mb-6 text-sm" role="alert">
+                    E-mail ou senha incorretos. Tente novamente.
+                </div>
+                
+                <form id="login-form" action="#" method="POST" class="space-y-6">
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                            <input id="email" name="email" type="email" autocomplete="email" required 
+                                   placeholder="seuemail@exemplo.com"
+                                   class="w-full bg-[#161B22] border border-[#30363D] text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-3 pl-12 pr-4 placeholder:text-gray-600">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="password" class="block text-sm font-medium text-gray-300">Senha</label>
+                            <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-400">Esqueceu a senha?</a>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input id="password" name="password" type="password" autocomplete="current-password" required 
+                                   placeholder="Sua senha"
+                                   class="w-full bg-[#161B22] border border-[#30363D] text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-3 pl-12 pr-12 placeholder:text-gray-600">
+                            
+                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer">
+                                <i class="fas fa-eye text-gray-400" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button id="login-button" type="submit" 
+                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500 transition-colors">
+                            Entrar
+                        </button>
+                    </div>
+                </form>
+                </div>
+        </div>
+        
+        <div class="hidden lg:flex w-1/2 bg-cover bg-center relative" 
+             style="background-image: url('https://images.unsplash.com/photo-1519681393784-de3ab961e493?auto=format&fit=crop&w=1260');">
+            <div class="absolute inset-0 bg-black/50"></div>
+            <a href="#" class="absolute bottom-10 right-10 z-10">
+                 <img src="./assets/img/kolae_branca.png" alt="Logo Icon" class="h-12 w-auto opacity-75">
+            </a>
+        </div>
+        
+    </div>
+
+    <script>
+        // SCRIPT (Loading do Botão)
+        const loginForm = document.getElementById('login-form');
+        const loginButton = document.getElementById('login-button');
+
+        if (loginForm && loginButton) {
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                loginButton.disabled = true;
+                loginButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>Aguarde...`;
+                
+                setTimeout(() => {
+                   loginButton.disabled = false;
+                   loginButton.innerHTML = 'Entrar';
+                }, 2000);
+            });
+        }
+
+        // SCRIPT (Ver/Ocultar Senha)
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                
+                if (type === 'password') {
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                } else {
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
