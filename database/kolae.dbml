@@ -1,0 +1,217 @@
+// Kolae — modelo do banco (fonte da verdade do desenho)
+// Editar em https://dbdiagram.io colando este arquivo; depois salvar de volta aqui.
+// Toda mudança aqui precisa de um patch em database/patches/ para chegar à produção.
+//
+// Convenções:
+// - "enum" lógico = varchar + note com os valores aceitos (o código valida).
+// - updated_at usa ON UPDATE CURRENT_TIMESTAMP (o DBML não expressa isso; está nas notes).
+
+Project kolae {
+  database_type: 'MySQL'
+  Note: 'MariaDB 11.4 (produção InfinityFree) / 10.4 (XAMPP local). InnoDB, utf8mb4_unicode_ci.'
+}
+
+// ==========================================================
+// Endereço (hierarquia normalizada)
+// ==========================================================
+
+Table countries {
+  id int [pk, increment]
+  name varchar(255) [not null, unique]
+}
+
+Table states {
+  id int [pk, increment]
+  country_id int [not null]
+  name varchar(255) [not null, note: 'Sigla da UF, ex: SP']
+
+  indexes {
+    (country_id, name) [unique, name: 'uq_states_country_name']
+  }
+}
+
+Table cities {
+  id int [pk, increment]
+  state_id int [not null]
+  name varchar(255) [not null]
+
+  indexes {
+    (state_id, name) [unique, name: 'uq_cities_state_name']
+  }
+}
+
+Table neighborhoods {
+  id int [pk, increment]
+  city_id int [not null]
+  name varchar(255) [not null]
+
+  indexes {
+    (city_id, name) [unique, name: 'uq_neighborhoods_city_name']
+  }
+}
+
+Table streets {
+  id int [pk, increment]
+  neighborhood_id int [not null]
+  name varchar(255) [not null]
+
+  indexes {
+    (neighborhood_id, name) [unique, name: 'uq_streets_neighborhood_name']
+  }
+}
+
+Table addresses {
+  id int [pk, increment]
+  street_id int [not null]
+  cep varchar(9)
+  number varchar(50)
+  complement varchar(255)
+  latitude decimal(10,8)
+  longitude decimal(11,8)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+}
+
+// ==========================================================
+// Usuários e autenticação
+// ==========================================================
+
+Table users {
+  id int [pk, increment]
+  name varchar(255) [not null]
+  email varchar(255) [not null, unique]
+  cnpj varchar(255) [unique, note: 'Criptografado (AES-256-CBC, IV fixo => determinístico, por isso o UNIQUE funciona)']
+  birthdate date
+  password varchar(255) [not null, note: 'Hash bcrypt (password_hash do PHP)']
+  role varchar(20) [not null, default: 'player', note: 'admin | owner | player']
+  status varchar(20) [not null, default: 'active', note: 'active | inactive | suspended']
+  avatar_path varchar(255)
+  force_password_change tinyint(1) [default: 0, note: 'Não é lido pelo código hoje']
+  email_verified_at timestamp
+  remember_token varchar(100) [note: 'LEGADO: substituído por user_tokens. Remover na S5 quando o login parar de gravar aqui.']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+  deleted_at timestamp
+}
+
+Table user_tokens {
+  id int [pk, increment]
+  user_id int [not null]
+  selector varchar(32) [not null, unique, note: 'Parte pública do cookie remember_me (selector:validator)']
+  hashed_validator varchar(64) [not null, note: 'sha256 do validator']
+  expiry datetime [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+
+  Note: '"Lembrar de mim". Lida por AuthHelper::checkRememberMe.'
+}
+
+Table password_reset_tokens {
+  email varchar(255) [pk]
+  token varchar(255) [not null, unique]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'Obrigatório: PasswordReset::findValidToken filtra pela última hora']
+}
+
+Table sessions {
+  id varchar(255) [pk]
+  user_id int
+  ip_address varchar(45)
+  user_agent mediumtext
+  payload longtext
+  last_activity int
+
+  Note: 'Não usada (o PHP usa sessão nativa). Reservada para o Kolae 2.0 (Laravel).'
+}
+
+// ==========================================================
+// Quadras e esportes
+// ==========================================================
+
+Table venues {
+  id int [pk, increment]
+  user_id int [not null]
+  address_id int [not null]
+  name varchar(255) [not null]
+  average_price_per_hour decimal(10,2)
+  court_capacity int
+  has_leisure_area tinyint(1) [default: 0]
+  leisure_area_capacity int
+  floor_type varchar(20) [note: 'synthetic | court | sand | clay | grass | wood']
+  has_lighting tinyint(1) [default: 0]
+  is_covered tinyint(1) [default: 0]
+  status varchar(20) [not null, default: 'available', note: 'available | unavailable | maintenance']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+  deleted_at timestamp
+}
+
+Table venues_images {
+  id int [pk, increment]
+  venue_id int [not null]
+  file_path varchar(255) [not null, note: 'Nome do arquivo em uploads/venues/{venue_id}/']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+}
+
+Table sports {
+  id int [pk, increment]
+  name varchar(255) [not null]
+  status varchar(20) [not null, default: 'active', note: 'active | inactive']
+  description mediumtext
+  icon_path varchar(255) [note: 'Classe do Font Awesome, ex: fa-futbol']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+}
+
+// ==========================================================
+// Partidas
+// ==========================================================
+
+Table matches {
+  id int [pk, increment]
+  venue_id int [not null]
+  sport_id int [not null]
+  creator_user_id int [not null]
+  status varchar(20) [not null, default: 'scheduled', note: 'scheduled | full | in_progress | finished | cancelled']
+  max_players int [note: 'NULL = sem limite. Quando lotar, status vira full']
+  start_time datetime [not null]
+  end_time datetime [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+  deleted_at timestamp
+}
+
+Table match_participants {
+  id int [pk, increment]
+  match_id int [not null]
+  user_id int [not null]
+  status varchar(20) [not null, default: 'confirmed', note: 'confirmed | pending | cancelled']
+  joined_at timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (match_id, user_id) [unique, name: 'uq_match_user']
+  }
+}
+
+// ==========================================================
+// Relacionamentos
+// ==========================================================
+
+Ref: states.country_id > countries.id
+Ref: cities.state_id > states.id
+Ref: neighborhoods.city_id > cities.id
+Ref: streets.neighborhood_id > neighborhoods.id
+Ref: addresses.street_id > streets.id
+
+Ref: user_tokens.user_id > users.id [delete: cascade]
+Ref: password_reset_tokens.email > users.email [delete: cascade, update: cascade]
+Ref: sessions.user_id > users.id [delete: cascade]
+
+Ref: venues.user_id > users.id
+Ref: venues.address_id > addresses.id
+Ref: venues_images.venue_id > venues.id [delete: cascade]
+
+Ref: matches.venue_id > venues.id
+Ref: matches.sport_id > sports.id
+Ref: matches.creator_user_id > users.id
+Ref: match_participants.match_id > matches.id [delete: cascade]
+Ref: match_participants.user_id > users.id [delete: cascade]
