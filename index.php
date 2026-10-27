@@ -82,6 +82,11 @@ require_once BASE_PATH . '/vendor/autoload.php';
 // --- Configurações Personalizadas ---
 require_once BASE_PATH . '/config.php';
 
+// --- API: qualquer erro do PHP sai como JSON (contrato em docs/api.md) ---
+if (\App\Core\ApiResponse::isApiRequest()) {
+    \App\Core\ApiResponse::registerErrorHandlers();
+}
+
 
 // --- INÍCIO GLOBAL DE CORS ---
 /**

@@ -110,7 +110,31 @@ class Router
             }
         }
 
+        // Na API, distingue "rota existe com outro método" (405) de "rota não existe" (404)
+        if (ApiResponse::isApiRequest() && $this->pathExistsForOtherMethod($method, $uri)) {
+            ApiResponse::error("Método {$method} não permitido para esta rota.", 'METHOD_NOT_ALLOWED', 405);
+        }
+
         $this->sendNotFound();
+    }
+
+    /**
+     * Verifica se a URI está registrada para algum método diferente do atual.
+     */
+    private function pathExistsForOtherMethod(string $method, string $uri): bool
+    {
+        foreach ($this->routes as $routeMethod => $routes) {
+            if ($routeMethod === $method) {
+                continue;
+            }
+            foreach (array_keys($routes) as $routePath) {
+                $pattern = '#^' . preg_replace('/\\{([a-zA-Z0-9_]+)\\}/', '[^/]+', $routePath) . '$#';
+                if (preg_match($pattern, $uri)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -140,6 +164,11 @@ class Router
      */
     private function sendNotFound(string $message = "Página não encontrada")
     {
+        // O app espera JSON, nunca a página HTML de 404
+        if (ApiResponse::isApiRequest()) {
+            ApiResponse::error('Rota não encontrada.', 'NOT_FOUND', 404);
+        }
+
         http_response_code(404);
         ViewHelper::render('errors/404');
     }

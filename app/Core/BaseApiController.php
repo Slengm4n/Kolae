@@ -36,21 +36,28 @@ abstract class BaseApiController
 
     protected function sendSuccess($data = null, $statusCode = 200)
     {
-        http_response_code($statusCode);
-        echo json_encode(['success' => true, 'data' => $data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT); // Melhora a legibilidade e lida com acentos
-        exit;
+        ApiResponse::success($data, $statusCode);
     }
 
-    protected function sendError($message, $errorCode = null, $statusCode = 400)
+    /**
+     * @param array|null $fields Erros por campo (validação), ex: ['email' => 'Obrigatório.']
+     */
+    protected function sendError($message, $errorCode = 'ERROR', $statusCode = 400, ?array $fields = null)
     {
-        http_response_code($statusCode);
-        $errorPayload = ['message' => $message];
-        if ($errorCode) {
-            $errorPayload['code'] = $errorCode;
-        }
         // Não logar o erro aqui, logar onde ele acontece (no try-catch)
-        echo json_encode(['success' => false, 'error' => $errorPayload], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        exit;
+        ApiResponse::error($message, $errorCode ?? 'ERROR', $statusCode, $fields);
+    }
+
+    /**
+     * Lê o corpo da requisição como JSON. Responde 400 se não for um objeto JSON válido.
+     */
+    protected function getJsonInput(): array
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!is_array($input)) {
+            $this->sendError('Corpo da requisição deve ser um JSON válido.', 'INVALID_JSON_BODY', 400);
+        }
+        return $input;
     }
 
     /**
