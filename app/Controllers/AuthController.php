@@ -153,8 +153,7 @@ class AuthController
                 PasswordReset::createToken($email, $token);
 
                 $mail = new PHPMailer(true);
-                $mail->SMTPDebug = 2;
-                $mail->Debugoutput = 'html';
+                $mail->SMTPDebug = 0; // Nunca expor o diálogo SMTP (credenciais) na resposta
                 $mail->isSMTP();
                 $mail->Host       = SMTP_HOST;
                 $mail->SMTPAuth   = true;

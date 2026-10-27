@@ -4,6 +4,46 @@ namespace App\Core;
 
 class ImageHelper
 {
+    // MIME real => extensão gerada pelo servidor. Nunca usamos a extensão enviada pelo cliente.
+    private const ALLOWED_TYPES = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/gif'  => 'gif',
+    ];
+
+    private const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+    /**
+     * Valida um arquivo temporário de upload pelo conteúdo (não pelo nome nem pelo
+     * Content-Type do cliente) e devolve a extensão segura correspondente.
+     * @param string $tmpPath Caminho em $_FILES[...]['tmp_name'].
+     * @param int $size Tamanho em bytes ($_FILES[...]['size']).
+     * @return string|false A extensão ('jpg', 'png', 'gif') ou false se o arquivo for inválido.
+     */
+    public static function validateUpload($tmpPath, $size)
+    {
+        if (!is_uploaded_file($tmpPath) || $size <= 0 || $size > self::MAX_SIZE) {
+            return false;
+        }
+
+        // getimagesize lê o cabeçalho da imagem e falha para scripts/arquivos que não são imagem
+        $imageInfo = @\getimagesize($tmpPath);
+        if ($imageInfo === false || !isset(self::ALLOWED_TYPES[$imageInfo['mime']])) {
+            return false;
+        }
+
+        // Confere também com o fileinfo (magic bytes), quando a extensão estiver disponível
+        if (function_exists('finfo_open') && ($finfo = finfo_open(FILEINFO_MIME_TYPE))) {
+            $mime = finfo_file($finfo, $tmpPath);
+            finfo_close($finfo);
+            if ($mime !== $imageInfo['mime']) {
+                return false;
+            }
+        }
+
+        return self::ALLOWED_TYPES[$imageInfo['mime']];
+    }
+
     /**
      * Processa um ficheiro de upload: valida, move e otimiza a imagem.
      * @param array $file O array do ficheiro de $_FILES (ex: $_FILES['avatar']).
@@ -13,15 +53,9 @@ class ImageHelper
      */
     public static function processAndSave($file, $destinationDir, $userId = null)
     {
-        // --- Validações básicas ---
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!in_array($file['type'], $allowedTypes)) {
-            // Log de erro: tipo de ficheiro não permitido
-            return false;
-        }
-
-        if ($file['size'] > 10 * 1024 * 1024) { // 10MB
-            // Log de erro: ficheiro muito grande
+        // --- Validação pelo conteúdo real do arquivo ---
+        $fileExtension = self::validateUpload($file['tmp_name'], $file['size']);
+        if ($fileExtension === false) {
             return false;
         }
 
@@ -36,7 +70,6 @@ class ImageHelper
         }
 
         // --- Gera um Nome de Ficheiro Único ---
-        $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $newFileName = uniqid('avatar_', true) . '.' . $fileExtension;
         $destinationPath = $destinationDir . $newFileName;
         $tempPath = $file['tmp_name'];
@@ -47,6 +80,8 @@ class ImageHelper
             if (self::optimize($destinationPath, $destinationPath)) {
                 return $newFileName; // Retorna apenas o nome do ficheiro para guardar no banco de dados
             }
+            // Não deixa para trás um arquivo que falhou na otimização
+            @unlink($destinationPath);
         }
 
         return false; // Retorna false se algo falhar

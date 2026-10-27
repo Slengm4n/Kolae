@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\AuthHelper;
+use App\Core\ImageHelper;
 use App\Core\ViewHelper;
 use App\Models\Venue;
 use App\Models\User;
@@ -159,7 +160,8 @@ class VenueController
                 'city' => $_POST['city'],
                 'state' => $_POST['state']
             ];
-            Address::update((int)$_POST['address_id'], $addressData);
+            // Usa o endereço vinculado à quadra no banco, nunca o address_id vindo do POST
+            Address::update((int)$venue['address_id'], $addressData);
 
             //Atualiza a quadra
             $venueData = [
@@ -180,8 +182,9 @@ class VenueController
                 $uploadDir = BASE_PATH . "/uploads/venues/" . $id . "/";
                 foreach ($_POST['delete_images'] as $imageId) {
                     $image = VenueImage::findById((int)$imageId);
-                    if ($image) {
-                        $fileName = $image['file_path'];
+                    // Só apaga imagens que pertencem a esta quadra
+                    if ($image && (int)$image['venue_id'] === $id) {
+                        $fileName = basename($image['file_path']);
                         $filePath = $uploadDir . $fileName;
                         if (file_exists($filePath)) {
                             unlink($filePath);
@@ -278,15 +281,24 @@ class VenueController
     {
         $uploadDir = BASE_PATH . "/uploads/venues/" . $venueId . "/";
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+            mkdir($uploadDir, 0755, true);
+        }
+
+        if (!is_array($_FILES['images']['name'])) {
+            return;
         }
 
         $imageCount = count($_FILES['images']['name']);
         for ($i = 0; $i < $imageCount; $i++) {
             if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
                 $tmpName = $_FILES['images']['tmp_name'][$i];
-                $originalName = $_FILES['images']['name'][$i];
-                $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+                // Valida pelo conteúdo real e gera a extensão no servidor (ignora o nome original)
+                $fileExtension = ImageHelper::validateUpload($tmpName, $_FILES['images']['size'][$i]);
+                if ($fileExtension === false) {
+                    continue;
+                }
+
                 $newFileName = uniqid('venue_', true) . '.' . $fileExtension;
                 $destinationPath = $uploadDir . $newFileName;
 
