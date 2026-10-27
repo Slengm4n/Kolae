@@ -27,30 +27,33 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - `index.php`: front controller, sessão, rotas (web e `/api/v1`)  
 - `app/Core`: Router, Database (PDO singleton), AuthHelper, BaseApiController (JWT), ViewHelper, ImageHelper  
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP \+ Tailwind), `lang/` (i18n)  
-- Banco: usar `database/Kolae_db_new.sql`; as migrations Phinx estão fora de sincronia (não confiar nelas)  
+- Banco: desenho em `database/kolae.dbml` (dbdiagram, fonte da verdade); estrutura pronta em `database/schema.sql`. Mudança de banco = editar o DBML + criar `database/patches/NNN_*.sql` (idempotente, testado no local) e aplicar na produção pelo phpMyAdmin. As migrations Phinx estão abandonadas (não usar).  
+- Ambiente local: XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na porta 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10/2026 + patches 001/002). `config.php` local não versionado. `Database.php` ignora `DB_PORT`.  
 - Deploy: push na `main` → GitHub Actions → FTP para InfinityFree. Cuidado: `main` vai direto para produção.
 - Uploads: `uploads/` é ignorado no git, exceto `uploads/.htaccess` (bloqueia scripts e só libera jpg/png/gif). Todo upload de imagem passa por `ImageHelper::validateUpload()`, que valida o conteúdo real e devolve a extensão segura.
-- Não há PHP instalado na máquina do João: mudanças não são testadas localmente com `php -l`; revisar com cuidado e testar no ambiente dele.
+- PHP: o XAMPP roda PHP 8.2 (o que serve o site); no PATH há PHP 8.4 do Laravel Herd, que serve para `php -l` e `composer`. Não usar o Herd para servir o site (vira modo produção).
 
 ## Status (atualizado em 27/10/2026)
 
-- Branch `fix/hotfixes-criticos-s1` (commit `854a230`, já no GitHub): corrige os itens 1–3 abaixo. Também corrigiu o upload de avatar (`ImageHelper::processAndSave` confiava no `$file['type']` do cliente e na extensão original). Ainda não está em produção.
+- Hotfix S1 (itens 1–3 + upload de avatar) **em produção** desde 27/10/2026 (PR #30, `fix/hotfixes-criticos-s1` → `main`).
+- Branches empilhadas, ainda não mergeadas: `fix/banco-divergencias` (DER/patches/floor_type, publicada) → `fix/editar-quadra` (item 6). Um PR só das duas para `main`, com o patch 002 no deploy.
 - Pendente na S1:
-  - Decidir o fluxo do hotfix: PR direto para `main` (único jeito de chegar à produção) e depois sincronizar `develop`, que está atrás da `main`.
-  - Corrigir o item 6, que provavelmente quebra editar/atualizar quadra e impede testar o item 3.
+  - Sincronizar `develop`, que está atrás da `main`.
   - Conferir por FTP se já existem arquivos não-imagem em `uploads/` na produção (o `.htaccess` impede a execução, mas não os apaga).
   - Itens 4 (login da API) e padrão JSON.
+  - Banco: aplicar `database/patches/001` na produção (pode ir antes de qualquer deploy) e o `002` junto com o deploy do código de `Venue::FLOOR_TYPES`.
 
 ## Problemas conhecidos (prioridade)
 
-1. ~~CRÍTICO: `VenueController::handleImageUploads` não valida o arquivo (permite .php).~~ Corrigido na branch `fix/hotfixes-criticos-s1`.  
-2. ~~CRÍTICO: `SMTPDebug = 2` em `AuthController::handleForgotPassword`.~~ Corrigido na mesma branch.  
-3. ~~CRÍTICO: IDOR em `VenueController::update` (`delete_images[]` e `address_id` do POST).~~ Corrigido na mesma branch; agora usa o `address_id` da quadra no banco e só apaga imagens com `venue_id` da própria quadra.  
+1. ~~CRÍTICO: `VenueController::handleImageUploads` não valida o arquivo (permite .php).~~ Corrigido (em produção).  
+2. ~~CRÍTICO: `SMTPDebug = 2` em `AuthController::handleForgotPassword`.~~ Corrigido (em produção).  
+3. ~~CRÍTICO: IDOR em `VenueController::update` (`delete_images[]` e `address_id` do POST).~~ Corrigido (em produção); usa o `address_id` da quadra no banco e só apaga imagens com `venue_id` da própria quadra. Testado ponta a ponta no local em 27/10.  
 4. API: `AuthApiController` usa `$user['password_hash']`, a coluna é `password`.  
 5. API: `Game::create` insere `duration_minutes`, a tabela `matches` tem `end_time`.  
-6. `Venue::findById` lê `a.street`, mas o schema normaliza ruas em `streets/neighborhoods/cities/states`.  
-7. Sem CSRF; `json_encode` em `<script>` sem `JSON_HEX_TAG` (admin/map.php, venues/edit.php).  
-8. "Lembrar de mim": login grava `users.remember_token`, `AuthHelper::checkRememberMe` lê `user_tokens` (selector:validator).
+6. ~~`Venue::findById` lê `a.street`, mas o schema normaliza ruas.~~ Corrigido em `fix/editar-quadra` (também passou a carregar as fotos na edição e a manter lat/lng quando a geocodificação falha).  
+7. Sem CSRF; `json_encode` em `<script>` sem `JSON_HEX_TAG` em admin/map.php (venues/edit.php já corrigido em `fix/editar-quadra`).  
+8. "Lembrar de mim": login grava `users.remember_token`, `AuthHelper::checkRememberMe` lê `user_tokens` (selector:validator). A tabela `user_tokens` é criada pelo patch 001; falta o login passar a gravar nela (S5) e depois remover `users.remember_token`.
+9. Valores padronizados (ver `kolae.dbml`): `venues.status` = available/unavailable/maintenance; `venues.floor_type` = chaves de `Venue::FLOOR_TYPES`; `matches.status` default `scheduled`. A API devolve as chaves de piso; o app traduz.
 
 ## Convenções
 

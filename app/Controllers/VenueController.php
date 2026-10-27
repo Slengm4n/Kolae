@@ -79,7 +79,7 @@ class VenueController
                 'court_capacity' => $_POST['court_capacity'],
                 'has_leisure_area' => $_POST['has_leisure_area'] ?? 0,
                 'leisure_area_capacity' => $_POST['leisure_area_capacity'] ?? null,
-                'floor_type' => $_POST['floor_type'],
+                'floor_type' => $this->sanitizeFloorType($_POST['floor_type'] ?? null),
                 'has_lighting' => $_POST['has_lighting'] ?? 0,
                 'is_covered' => $_POST['is_covered'] ?? 0
             ];
@@ -119,6 +119,9 @@ class VenueController
             header('Location: ' . BASE_URL . '/dashboard?error=not_found');
             exit;
         }
+
+        // A view lista as fotos atuais (para exibir e marcar para exclusão)
+        $venue['images'] = VenueImage::findByVenueId($id);
 
         //Define o prefixo da rota com base no 'role' do usuário
         $routePrefix = $isAdmin ? '/admin' : '/dashboard';
@@ -170,10 +173,11 @@ class VenueController
                 'court_capacity' => $_POST['court_capacity'],
                 'has_leisure_area' => $_POST['has_leisure_area'] ?? 0,
                 'leisure_area_capacity' => $_POST['leisure_area_capacity'] ?? null,
-                'floor_type' => $_POST['floor_type'],
+                'floor_type' => $this->sanitizeFloorType($_POST['floor_type'] ?? null),
                 'has_lighting' => $_POST['has_lighting'] ?? 0,
                 'is_covered' => $_POST['is_covered'] ?? 0,
-                'status' => $_POST['status'] ?? 'available'
+                // Mantém o status atual se o formulário não enviar um válido (antes reativava quadras inativas)
+                'status' => in_array($_POST['status'] ?? null, Venue::STATUSES, true) ? $_POST['status'] : $venue['status']
             ];
             Venue::update($id, $venueData);
 
@@ -272,6 +276,14 @@ class VenueController
             header('Location: ' . BASE_URL . '/dashboard?error=cnpj_required');
             exit;
         }
+    }
+
+    /**
+     * Aceita só as chaves de piso conhecidas (Venue::FLOOR_TYPES); qualquer outra vira null.
+     */
+    private function sanitizeFloorType(?string $floorType): ?string
+    {
+        return array_key_exists((string)$floorType, Venue::FLOOR_TYPES) ? $floorType : null;
     }
 
     /**

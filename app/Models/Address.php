@@ -83,19 +83,21 @@ class Address
                 throw new \Exception("Falha ao resolver a hierarquia de endereço.");
             }
 
-            // 2. Recalcula coordenadas pois o endereço pode ter mudado
+            // 2. Recalcula coordenadas pois o endereço pode ter mudado.
+            // Se a geocodificação falhar (sem chave, cota, endereço não encontrado), mantém as atuais
+            // via COALESCE, senão a quadra some do mapa.
             $coords = self::getCoordinates($data);
             $latitude = $coords['lat'] ?? null;
             $longitude = $coords['lng'] ?? null;
 
             // 3. Atualiza a tabela addresses
-            $query = "UPDATE addresses SET 
+            $query = "UPDATE addresses SET
                         street_id = :street_id,
-                        cep = :cep, 
-                        number = :number, 
-                        complement = :complement, 
-                        latitude = :latitude,
-                        longitude = :longitude
+                        cep = :cep,
+                        number = :number,
+                        complement = :complement,
+                        latitude = COALESCE(:latitude, latitude),
+                        longitude = COALESCE(:longitude, longitude)
                       WHERE id = :id";
 
             $stmt = $pdo->prepare($query);
