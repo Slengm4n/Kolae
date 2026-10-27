@@ -30,10 +30,13 @@ if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on') {
     $isSecure = true;
 }
 
+// Host sem a porta (ex: "localhost:8080" -> "localhost"); cookie não aceita porta no domínio
+$hostName = explode(':', $_SERVER['HTTP_HOST'])[0];
+
 $cookieParams = [
     'lifetime' => 86400,
     'path' => '/',
-    'domain' => $_SERVER['HTTP_HOST'],
+    'domain' => $hostName,
     'secure' => $isSecure, // Usa a detecção inteligente
     'httponly' => true,
     'samesite' => 'Lax'
@@ -60,9 +63,9 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https"
 // Detecta o host (o domínio, ex: "localhost" ou "colae.42web.io")
 $host = $_SERVER['HTTP_HOST'];
 
-if ($host == 'localhost') {
-    // --- AMBIENTE LOCAL (SEU PC) ---
-    define('BASE_URL', 'http://localhost/kolae');
+if ($hostName == 'localhost') {
+    // --- AMBIENTE LOCAL (SEU PC) --- (qualquer porta: XAMPP na 80 ou 8080)
+    define('BASE_URL', 'http://' . $host . '/kolae');
     define('BASE_DIR_URL', '/kolae');
 } else {
     // --- AMBIENTE DE PRODUÇÃO ---
