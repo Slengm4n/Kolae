@@ -13,8 +13,8 @@
 define('DB_HOST', ''); // Ou o host do seu DB de produção se for diferente
 
 /** @var string Porta do banco de dados (MySQL/MariaDB padrão é 3306) */
-// Lembre-se que no seu XAMPP local mudamos para 3307!
-define('DB_PORT', ''); // Use '3307' no seu config.php local
+// Atenção: Database.php ainda não usa esta constante; o MySQL precisa estar na porta padrão 3306.
+define('DB_PORT', '3306');
 
 /** @var string Nome do banco de dados */
 define('DB_NAME', ''); // Ou o nome do seu DB de produção

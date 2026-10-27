@@ -1,26 +1,25 @@
 {
   "name": "kolae",
-  "version": "1.2.3",
+  "version": "1.4.0",
+  "private": true,
   "type": "module",
-  "description": "[![Versão](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/Slengm4n/colae/releases/tag/v1.1.0)",
-  "main": "index.js",
+  "description": "Assets (Tailwind + Vite) do Kolae, plataforma que conecta atletas a quadras e partidas.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "watch": "vite build --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "vite build --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Slengm4n/kolae.git"
+    "url": "git+https://github.com/Slengm4n/Kolae.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Slengm4n/kolae/issues"
+    "url": "https://github.com/Slengm4n/Kolae/issues"
   },
-  "homepage": "https://github.com/Slengm4n/kolae#readme",
+  "homepage": "https://github.com/Slengm4n/Kolae#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.22",
     "esbuild": "^0.27.0",

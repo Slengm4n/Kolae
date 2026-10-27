@@ -29,7 +29,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - `index.php`: front controller, sessão, rotas (web e `/api/v1`)  
 - `app/Core`: Router, Database (PDO singleton), AuthHelper, BaseApiController (JWT), ApiResponse (saída única da API: envelope JSON, 404/405 e erros do PHP em JSON), ViewHelper, ImageHelper  
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP \+ Tailwind), `lang/` (i18n)  
-- Banco: desenho em `database/kolae.dbml` (dbdiagram, fonte da verdade); estrutura pronta em `database/schema.sql`. Mudança de banco = editar o DBML + criar `database/patches/NNN_*.sql` (idempotente, testado no local) e aplicar na produção pelo phpMyAdmin. As migrations Phinx estão abandonadas (não usar).  
+- Banco: desenho em `database/kolae.dbml` (dbdiagram, fonte da verdade); estrutura pronta em `database/schema.sql`. Mudança de banco = editar o DBML + criar `database/patches/NNN_*.sql` (idempotente, testado no local) e aplicar na produção pelo phpMyAdmin. O Phinx foi removido do projeto (v1.4.0).  
+- Dependências: `vendor/` não é versionado (o deploy roda `composer install`). O `composer.json` fixa a plataforma em PHP 8.2, a versão do servidor; manter assim mesmo usando o PHP 8.4 do Herd.  
 - Ambiente local: XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na porta 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10/2026 + patches 001/002). `config.php` local não versionado. `Database.php` ignora `DB_PORT`.  
 - Deploy: push na `main` → GitHub Actions → FTP para InfinityFree (`https://kolae.gamer.gd`). Cuidado: `main` vai direto para produção.
 - Git no terminal do Claude não tem credenciais do GitHub: `push`/apagar branch remota quem faz é o João (VS Code).
@@ -38,9 +39,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 
 ## Status (atualizado em 27/10/2026, fim do dia)
 
-- **S1 concluída** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`). Patches 001 e 002 aplicados na produção.
+- **S1 concluída** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`), IP de rede local + `docs/setup.md` (PR #32). Patches 001 e 002 aplicados na produção. `uploads/` da produção conferida por FTP em 27/10: só imagens.
 - Pendente:
-  - Conferir por FTP se existem arquivos não-imagem em `uploads/` na produção (o `.htaccess` impede a execução, mas não os apaga).
   - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
 - Próximo: S2 (register, /me, avatar, forgot-password). Descrever cada endpoint em `docs/api.md` antes de implementar.
 
@@ -63,5 +63,6 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - PHP 8.2, PSR-4 `App\\` → `app/`. SQL sempre com prepared statements.  
 - Escapar toda saída nas views com `htmlspecialchars`.  
 - Respostas da API: `{ "success": true, "data": ... }` / `{ "success": false, "error": { "message", "code", "fields" } }`.  
-- Branch por tarefa (`feat/...`, `fix/...`, `docs/...`), PR para `main` (deploy), revisão do outro membro. A `develop` é só espelho: depois de cada merge, `git push origin main:develop`.  
+- Branch por tarefa (`feat/...`, `fix/...`, `docs/...`, `chore/...`), PR para `main` (deploy), revisão do outro membro. A `develop` é só espelho: depois de cada merge, `git push origin main:develop`.  
+- Versões: SemVer, tags `vX.Y.Z`. Uma minor por sprint (S1 = v1.4.0, S2 = v1.5.0, ...), patch para hotfix, v2.0.0 reservada para o Laravel. Durante a sprint, registrar mudanças em `## [Não lançado]` do `CHANGELOG.md`. No fechamento: mover para a nova versão, atualizar `version` do `package.json` (e a raiz do `package-lock.json`), criar a tag no commit da `main` e a release no GitHub com o texto do CHANGELOG. O `composer.json` não tem `version`. Tags antigas irregulares (`1.2.0`, `v1.3`) ficam como estão; não reescrever.  
 - Responder e comentar em português.
