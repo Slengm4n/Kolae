@@ -29,12 +29,23 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP \+ Tailwind), `lang/` (i18n)  
 - Banco: usar `database/Kolae_db_new.sql`; as migrations Phinx estão fora de sincronia (não confiar nelas)  
 - Deploy: push na `main` → GitHub Actions → FTP para InfinityFree. Cuidado: `main` vai direto para produção.
+- Uploads: `uploads/` é ignorado no git, exceto `uploads/.htaccess` (bloqueia scripts e só libera jpg/png/gif). Todo upload de imagem passa por `ImageHelper::validateUpload()`, que valida o conteúdo real e devolve a extensão segura.
+- Não há PHP instalado na máquina do João: mudanças não são testadas localmente com `php -l`; revisar com cuidado e testar no ambiente dele.
+
+## Status (atualizado em 27/10/2026)
+
+- Branch `fix/hotfixes-criticos-s1` (commit `854a230`, já no GitHub): corrige os itens 1–3 abaixo. Também corrigiu o upload de avatar (`ImageHelper::processAndSave` confiava no `$file['type']` do cliente e na extensão original). Ainda não está em produção.
+- Pendente na S1:
+  - Decidir o fluxo do hotfix: PR direto para `main` (único jeito de chegar à produção) e depois sincronizar `develop`, que está atrás da `main`.
+  - Corrigir o item 6, que provavelmente quebra editar/atualizar quadra e impede testar o item 3.
+  - Conferir por FTP se já existem arquivos não-imagem em `uploads/` na produção (o `.htaccess` impede a execução, mas não os apaga).
+  - Itens 4 (login da API) e padrão JSON.
 
 ## Problemas conhecidos (prioridade)
 
-1. CRÍTICO: `VenueController::handleImageUploads` não valida o arquivo (permite .php). Validar MIME real, gerar extensão, `.htaccess` em `uploads/` bloqueando PHP.  
-2. CRÍTICO: `SMTPDebug = 2` em `AuthController::handleForgotPassword` → 0\.  
-3. CRÍTICO: IDOR em `VenueController::update`: `delete_images[]` e `address_id` vindos do POST sem checar dono.  
+1. ~~CRÍTICO: `VenueController::handleImageUploads` não valida o arquivo (permite .php).~~ Corrigido na branch `fix/hotfixes-criticos-s1`.  
+2. ~~CRÍTICO: `SMTPDebug = 2` em `AuthController::handleForgotPassword`.~~ Corrigido na mesma branch.  
+3. ~~CRÍTICO: IDOR em `VenueController::update` (`delete_images[]` e `address_id` do POST).~~ Corrigido na mesma branch; agora usa o `address_id` da quadra no banco e só apaga imagens com `venue_id` da própria quadra.  
 4. API: `AuthApiController` usa `$user['password_hash']`, a coluna é `password`.  
 5. API: `Game::create` insere `duration_minutes`, a tabela `matches` tem `end_time`.  
 6. `Venue::findById` lê `a.street`, mas o schema normaliza ruas em `streets/neighborhoods/cities/states`.  
