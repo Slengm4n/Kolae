@@ -6,10 +6,11 @@ Fonte da verdade da API consumida pelo app mobile. **Endpoint novo ou mudança d
 
 | Ambiente | URL |
 | :---- | :---- |
-| Produção | `https://<domínio do site>/api/v1` |
-| Local (XAMPP) | `http://localhost:8080/kolae/api/v1` |
+| Produção | `https://kolae.gamer.gd/api/v1`. **Não funciona para o app**: o InfinityFree devolve um desafio JavaScript em vez do JSON para clientes que não são navegador. |
+| Local (XAMPP), no próprio PC | `http://localhost:8080/kolae/api/v1` |
+| Local, a partir do celular | `http://<IP do notebook>:8080/kolae/api/v1` (ex: `http://192.168.0.172:8080/kolae/api/v1`) |
 
-No emulador Android, `localhost` é o próprio emulador: use o IP da máquina na rede (ex: `http://192.168.0.10:8080/kolae/api/v1`).
+Até a migração de hospedagem, o app usa o backend local. Passo a passo e problemas comuns em `docs/setup.md`.
 
 ## Formato das respostas
 
