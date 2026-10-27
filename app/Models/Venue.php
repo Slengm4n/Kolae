@@ -12,6 +12,22 @@ use PDO;
 class Venue
 {
     /**
+     * Tipos de piso aceitos (chave gravada no banco => rótulo exibido).
+     * Fonte da verdade: database/kolae.dbml (venues.floor_type).
+     */
+    public const FLOOR_TYPES = [
+        'synthetic' => 'Grama Sintética',
+        'court'     => 'Cimento / Poliesportivo',
+        'sand'      => 'Areia',
+        'clay'      => 'Saibro',
+        'grass'     => 'Grama Natural',
+        'wood'      => 'Madeira / Taco',
+    ];
+
+    /** Status aceitos (venues.status). */
+    public const STATUSES = ['available', 'unavailable', 'maintenance'];
+
+    /**
      * Conta o total de quadras disponíveis.
      * @return int
      */

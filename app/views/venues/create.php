@@ -168,11 +168,10 @@ $routePrefix = '/dashboard';
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" data-input-name="floor_type">
                     <?php
-                    $pisos = ['Grama Sintética', 'Cimento / Poliesportivo', 'Areia', 'Saibro', 'Grama Natural', 'Madeira / Taco'];
-                    foreach ($pisos as $piso):
+                    foreach (\App\Models\Venue::FLOOR_TYPES as $pisoValue => $piso):
                     ?>
-                        <div class="option-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 cursor-pointer hover:border-cyan-500 group flex items-center justify-between" data-value="<?php echo strtolower($piso); ?>">
-                            <span class="font-semibold text-lg text-content-primary group-hover:text-cyan-600 dark:group-hover:text-cyan-400"><?php echo $piso; ?></span>
+                        <div class="option-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 cursor-pointer hover:border-cyan-500 group flex items-center justify-between" data-value="<?php echo htmlspecialchars($pisoValue); ?>">
+                            <span class="font-semibold text-lg text-content-primary group-hover:text-cyan-600 dark:group-hover:text-cyan-400"><?php echo htmlspecialchars($piso); ?></span>
                             <div class="w-5 h-5 rounded-full border-2 border-content-secondary/30 group-hover:border-cyan-500 flex items-center justify-center">
                                 <div class="w-2.5 h-2.5 rounded-full bg-cyan-500 opacity-0 transition-opacity check-dot"></div>
                             </div>

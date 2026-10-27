@@ -153,14 +153,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                         <h2 class="text-xl font-bold text-content-primary mb-4 flex items-center gap-3"><i class="fas fa-layer-group text-purple-500"></i><?php echo $lang['edit_venue_floor_title'] ?></h2>
                         <div class="grid grid-cols-2 gap-3">
                             <?php
-                            $floors = [
-                                'synthetic' => 'Grama Sintética',
-                                'court' => 'Quadra/Cimento', 
-                                'sand' => 'Areia', 
-                                'grass' => 'Grama Natural', 
-                                'wood' => 'Madeira/Taco'
-                            ];
-                            foreach ($floors as $val => $label):
+                            foreach (\App\Models\Venue::FLOOR_TYPES as $val => $label):
                             ?>
                                 <div class="option-card border border-content-secondary/20 bg-surface-base p-3 rounded-xl text-center" data-value="<?php echo $val; ?>">
                                     <span class="text-sm font-medium text-content-secondary group-hover:text-content-primary"><?php echo $label; ?></span>
