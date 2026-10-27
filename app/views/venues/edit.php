@@ -337,7 +337,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 });
             }
 
-            const venueData = <?php echo json_encode($venue ?? null); ?>;
+            const venueData = <?php echo json_encode($venue ?? null, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
             if (!venueData) return;
 
             // 1. Lógica de Piso

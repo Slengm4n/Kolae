@@ -120,6 +120,9 @@ class VenueController
             exit;
         }
 
+        // A view lista as fotos atuais (para exibir e marcar para exclusão)
+        $venue['images'] = VenueImage::findByVenueId($id);
+
         //Define o prefixo da rota com base no 'role' do usuário
         $routePrefix = $isAdmin ? '/admin' : '/dashboard';
 

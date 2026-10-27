@@ -154,9 +154,19 @@ class Venue
     public static function findById(int $id)
     {
         $pdo = Database::getConnection();
-        $query = "SELECT v.*, a.street, a.city, a.state, a.cep, a.number, a.neighborhood, a.complement
+        // LEFT JOIN na hierarquia: uma quadra com endereço incompleto ainda abre para edição
+        $query = "SELECT v.*,
+                         a.cep, a.number, a.complement, a.latitude, a.longitude,
+                         s.name AS street,
+                         n.name AS neighborhood,
+                         c.name AS city,
+                         st.name AS state
                   FROM venues v
                   JOIN addresses a ON v.address_id = a.id
+                  LEFT JOIN streets s ON a.street_id = s.id
+                  LEFT JOIN neighborhoods n ON s.neighborhood_id = n.id
+                  LEFT JOIN cities c ON n.city_id = c.id
+                  LEFT JOIN states st ON c.state_id = st.id
                   WHERE v.id = :id";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
