@@ -63,7 +63,12 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https"
 // Detecta o host (o domínio, ex: "localhost" ou "colae.42web.io")
 $host = $_SERVER['HTTP_HOST'];
 
-if ($hostName == 'localhost') {
+// Local = "localhost" ou IP de rede privada/loopback (ex: 192.168.0.10, 127.0.0.1).
+// O IP é o que o app no celular usa para falar com o XAMPP na mesma rede Wi-Fi (docs/setup.md).
+$isLocalIp = filter_var($hostName, FILTER_VALIDATE_IP) !== false
+    && filter_var($hostName, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+
+if ($hostName == 'localhost' || $isLocalIp) {
     // --- AMBIENTE LOCAL (SEU PC) --- (qualquer porta: XAMPP na 80 ou 8080)
     define('BASE_URL', 'http://' . $host . '/kolae');
     define('BASE_DIR_URL', '/kolae');

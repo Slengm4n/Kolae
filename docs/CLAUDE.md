@@ -6,6 +6,8 @@ Plataforma web (PHP puro, MVC próprio) que conecta atletas a quadras e partidas
 
 Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` para o app mobile consumir. O Kolae 2.0 em Laravel \+ Sanctum só começa depois da entrega. Não migrar para Laravel agora.
 
+**Limitação de hospedagem:** o InfinityFree responde a clientes que não são navegador com um desafio JavaScript (`/aes.js`) em vez do JSON, então o app **não consegue usar a API da produção** (confirmado em 27/10/2026). Decisão atual (opção C): o app usa o backend rodando no notebook do João (XAMPP) na mesma rede Wi-Fi; ver `docs/setup.md`. Migração para uma hospedagem que aceite API prevista para novembro. O site no navegador funciona normalmente.
+
 - Plano completo: [https\://claude.ai/artifact/JSdR7eYfrkZFTk5qcVAv4R](https://claude.ai/artifact/JSdR7eYfrkZFTk5qcVAv4R)  
 - Contrato da API: `docs/api.md` (fonte da verdade; endpoint novo entra lá antes do código)  
 - Setup local: `docs/setup.md`  
@@ -25,40 +27,41 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 ## Estrutura
 
 - `index.php`: front controller, sessão, rotas (web e `/api/v1`)  
-- `app/Core`: Router, Database (PDO singleton), AuthHelper, BaseApiController (JWT), ViewHelper, ImageHelper  
+- `app/Core`: Router, Database (PDO singleton), AuthHelper, BaseApiController (JWT), ApiResponse (saída única da API: envelope JSON, 404/405 e erros do PHP em JSON), ViewHelper, ImageHelper  
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP \+ Tailwind), `lang/` (i18n)  
 - Banco: desenho em `database/kolae.dbml` (dbdiagram, fonte da verdade); estrutura pronta em `database/schema.sql`. Mudança de banco = editar o DBML + criar `database/patches/NNN_*.sql` (idempotente, testado no local) e aplicar na produção pelo phpMyAdmin. As migrations Phinx estão abandonadas (não usar).  
 - Ambiente local: XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na porta 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10/2026 + patches 001/002). `config.php` local não versionado. `Database.php` ignora `DB_PORT`.  
-- Deploy: push na `main` → GitHub Actions → FTP para InfinityFree. Cuidado: `main` vai direto para produção.
+- Deploy: push na `main` → GitHub Actions → FTP para InfinityFree (`https://kolae.gamer.gd`). Cuidado: `main` vai direto para produção.
+- Git no terminal do Claude não tem credenciais do GitHub: `push`/apagar branch remota quem faz é o João (VS Code).
 - Uploads: `uploads/` é ignorado no git, exceto `uploads/.htaccess` (bloqueia scripts e só libera jpg/png/gif). Todo upload de imagem passa por `ImageHelper::validateUpload()`, que valida o conteúdo real e devolve a extensão segura.
 - PHP: o XAMPP roda PHP 8.2 (o que serve o site); no PATH há PHP 8.4 do Laravel Herd, que serve para `php -l` e `composer`. Não usar o Herd para servir o site (vira modo produção).
 
-## Status (atualizado em 27/10/2026)
+## Status (atualizado em 27/10/2026, fim do dia)
 
-- Hotfix S1 (itens 1–3 + upload de avatar) **em produção** desde 27/10/2026 (PR #30, `fix/hotfixes-criticos-s1` → `main`).
-- Branches empilhadas, ainda não mergeadas: `fix/banco-divergencias` (DER/patches/floor_type, publicada) → `fix/editar-quadra` (item 6). Um PR só das duas para `main`, com o patch 002 no deploy.
-- Pendente na S1:
-  - Sincronizar `develop`, que está atrás da `main`.
-  - Conferir por FTP se já existem arquivos não-imagem em `uploads/` na produção (o `.htaccess` impede a execução, mas não os apaga).
-  - Itens 4 (login da API) e padrão JSON.
-  - Banco: aplicar `database/patches/001` na produção (pode ir antes de qualquer deploy) e o `002` junto com o deploy do código de `Venue::FLOOR_TYPES`.
+- **S1 concluída** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`). Patches 001 e 002 aplicados na produção.
+- Pendente:
+  - Conferir por FTP se existem arquivos não-imagem em `uploads/` na produção (o `.htaccess` impede a execução, mas não os apaga).
+  - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
+- Próximo: S2 (register, /me, avatar, forgot-password). Descrever cada endpoint em `docs/api.md` antes de implementar.
 
 ## Problemas conhecidos (prioridade)
 
 1. ~~CRÍTICO: `VenueController::handleImageUploads` não valida o arquivo (permite .php).~~ Corrigido (em produção).  
 2. ~~CRÍTICO: `SMTPDebug = 2` em `AuthController::handleForgotPassword`.~~ Corrigido (em produção).  
 3. ~~CRÍTICO: IDOR em `VenueController::update` (`delete_images[]` e `address_id` do POST).~~ Corrigido (em produção); usa o `address_id` da quadra no banco e só apaga imagens com `venue_id` da própria quadra. Testado ponta a ponta no local em 27/10.  
-4. API: `AuthApiController` usa `$user['password_hash']`, a coluna é `password`.  
-5. API: `Game::create` insere `duration_minutes`, a tabela `matches` tem `end_time`.  
-6. ~~`Venue::findById` lê `a.street`, mas o schema normaliza ruas.~~ Corrigido em `fix/editar-quadra` (também passou a carregar as fotos na edição e a manter lat/lng quando a geocodificação falha).  
-7. Sem CSRF; `json_encode` em `<script>` sem `JSON_HEX_TAG` em admin/map.php (venues/edit.php já corrigido em `fix/editar-quadra`).  
+4. ~~API: `AuthApiController` usa `$user['password_hash']`, a coluna é `password`.~~ Corrigido (em produção); login devolve token + usuário.  
+5. API: `Game::create` insere `duration_minutes`, a tabela `matches` tem `end_time`. Fica para a S4.  
+6. ~~`Venue::findById` lê `a.street`, mas o schema normaliza ruas.~~ Corrigido (em produção; também carrega as fotos na edição e mantém lat/lng quando a geocodificação falha).  
+7. Sem CSRF; `json_encode` em `<script>` sem `JSON_HEX_TAG` em admin/map.php (venues/edit.php já corrigido).  
 8. "Lembrar de mim": login grava `users.remember_token`, `AuthHelper::checkRememberMe` lê `user_tokens` (selector:validator). A tabela `user_tokens` é criada pelo patch 001; falta o login passar a gravar nela (S5) e depois remover `users.remember_token`.
 9. Valores padronizados (ver `kolae.dbml`): `venues.status` = available/unavailable/maintenance; `venues.floor_type` = chaves de `Venue::FLOOR_TYPES`; `matches.status` default `scheduled`. A API devolve as chaves de piso; o app traduz.
+10. Fuso das datas: a produção parece devolver UTC e o local, horário de Brasília. Padronizar antes da S4 (partidas dependem de horário).
+11. `GET /api/v1/venues` não filtra por `status` (mostra quadras indisponíveis). Resolver na S3 junto com os filtros.
 
 ## Convenções
 
 - PHP 8.2, PSR-4 `App\\` → `app/`. SQL sempre com prepared statements.  
 - Escapar toda saída nas views com `htmlspecialchars`.  
 - Respostas da API: `{ "success": true, "data": ... }` / `{ "success": false, "error": { "message", "code", "fields" } }`.  
-- Branch por tarefa (`feat/...`, `fix/...`), PR para `develop`, revisão do outro membro.  
+- Branch por tarefa (`feat/...`, `fix/...`, `docs/...`), PR para `main` (deploy), revisão do outro membro. A `develop` é só espelho: depois de cada merge, `git push origin main:develop`.  
 - Responder e comentar em português.
