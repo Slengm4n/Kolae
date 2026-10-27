@@ -38,9 +38,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 
 ## Status (atualizado em 27/10/2026, fim do dia)
 
-- **S1 concluída** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`). Patches 001 e 002 aplicados na produção.
+- **S1 concluída** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`), IP de rede local + `docs/setup.md` (PR #32). Patches 001 e 002 aplicados na produção. `uploads/` da produção conferida por FTP em 27/10: só imagens.
 - Pendente:
-  - Conferir por FTP se existem arquivos não-imagem em `uploads/` na produção (o `.htaccess` impede a execução, mas não os apaga).
   - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
 - Próximo: S2 (register, /me, avatar, forgot-password). Descrever cada endpoint em `docs/api.md` antes de implementar.
 
