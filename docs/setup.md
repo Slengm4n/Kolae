@@ -24,19 +24,30 @@ Como rodar o backend (site + `/api/v1`) no Windows com XAMPP e como o app mobile
 
    O projeto precisa ficar em `/kolae`: o `index.php` e o `.htaccess` esperam esse caminho no ambiente local.
 
-3. **Dependências PHP**, na pasta do projeto:
+3. **Extensões do PHP**: no painel do XAMPP, Apache → Config → `PHP (php.ini)`, tirar o `;` do começo destas linhas e reiniciar o Apache:
+
+   ```ini
+   extension=gd
+   extension=zip
+   ```
+
+   A `gd` é usada para redimensionar a foto de perfil (sem ela o upload de avatar falha) e a `zip` para o Composer extrair os pacotes. As outras que o projeto usa (`pdo_mysql`, `openssl`, `mbstring`, `fileinfo`, `curl`) já vêm ligadas no XAMPP. Para conferir: `C:\xampp\php\php.exe -m`.
+
+4. **Dependências PHP**, na pasta do projeto:
 
    ```powershell
    composer install
    ```
 
-4. **Banco**: no painel do XAMPP, ligar o MySQL. No phpMyAdmin (`http://localhost/phpmyadmin` ou `:8080`, conforme a porta do Apache):
+   Sem o Composer instalado, dá para usar o PHP do próprio XAMPP: baixar o `composer.phar` de [getcomposer.org/download](https://getcomposer.org/download/) e rodar `C:\xampp\php\php.exe composer.phar install`.
+
+5. **Banco**: no painel do XAMPP, ligar o MySQL. No phpMyAdmin (`http://localhost/phpmyadmin` ou `:8080`, conforme a porta do Apache):
    - criar o banco `kolae_db` com collation `utf8mb4_unicode_ci`;
    - importar `database/schema.sql` (só a estrutura, sem dados).
 
    Para ter dados de verdade (quadras, esportes), peça ao João um export da produção e importe no lugar do `schema.sql`. Com o banco vazio, crie sua conta pelo próprio site em `/register`.
 
-5. **`config.php`**: copiar `config.example.php` para `config.php` (este arquivo não vai para o git) e preencher:
+6. **`config.php`**: copiar `config.example.php` para `config.php` (este arquivo não vai para o git) e preencher:
 
    | Constante | Valor local |
    | :---- | :---- |
@@ -48,16 +59,24 @@ Como rodar o backend (site + `/api/v1`) no Windows com XAMPP e como o app mobile
    | `ENCRYPTION_IV` | 32 caracteres **hexadecimais** (ex: `php -r "echo bin2hex(random_bytes(16));"`) |
    | `JWT_SECRET` | string longa aleatória (ex: `php -r "echo bin2hex(random_bytes(32));"`) |
    | `GOOGLE_MAPS_API_KEY` | opcional; sem ela o mapa e a geocodificação não funcionam |
+   | `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | servidor e conta de e-mail do "esqueci a senha" (ex: `smtp.gmail.com`, o e-mail e uma senha de app) |
+   | `SMTP_SECURE` / `SMTP_PORT` | `tls` / `587` (ou `ssl` / `465`) |
+   | `SMTP_FROM_EMAIL` / `SMTP_FROM_NAME` | remetente dos e-mails (normalmente o mesmo de `SMTP_USER`) / `Kolae` |
 
    Para ler os CNPJs de um export da produção, `ENCRYPTION_KEY` e `ENCRYPTION_IV` precisam ser os mesmos da produção.
 
-6. **Abrir** `http://localhost/kolae` (Apache na porta 80) ou `http://localhost:8080/kolae` (porta 8080). Qualquer porta funciona.
+   **E-mail (SMTP):** as constantes `SMTP_*` precisam existir no `config.php`, mesmo vazias; se faltar alguma, o "esqueci a senha" para com erro fatal. Com `SMTP_HOST` vazio o site funciona, mas o e-mail de recuperação não é enviado (o erro vai para o log do PHP). Para testar o reset de senha de verdade, use uma conta de e-mail com SMTP liberado. No Gmail: ativar a verificação em duas etapas, gerar uma "senha de app" em [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) e usá-la em `SMTP_PASS` (a senha normal da conta não funciona). Nunca commitar essas credenciais: o `config.php` fica fora do git.
+
+7. **Abrir** `http://localhost/kolae` (Apache na porta 80) ou `http://localhost:8080/kolae` (porta 8080). Qualquer porta funciona.
 
 ### Problemas comuns
 
 - **MySQL "shutdown unexpectedly" logo depois de ligar.** Rodar `C:\xampp\mysql\bin\mysqld.exe --console` para ver o erro real. Se aparecer `Failed to initialize multi master structures`, mover os arquivos `multi-master.info`, `master-*.info`, `relay-log*.info` e `mysql-relay-bin*` de `C:\xampp\mysql\data` para outra pasta e ligar de novo. Costuma acontecer quando o PC é desligado com o MySQL ligado: pare o MySQL no painel antes de desligar.
 - **Todas as páginas dão 404.** O projeto não está em `/kolae` (rever o passo 2) ou o `mod_rewrite` está desligado no Apache.
 - **Erro fatal sobre `vendor/...`.** Rodar `composer install` de novo.
+- **`Undefined constant "SMTP_HOST"` (ou outra `SMTP_*`) no "esqueci a senha".** O `config.php` foi criado antes de o bloco de e-mail existir no `config.example.php`: copiar as constantes `SMTP_*` do exemplo (passo 6).
+- **Upload da foto de perfil sempre falha.** A extensão `gd` está desligada (passo 3).
+- **Composer reclama de `zip` ou demora baixando "from source".** A extensão `zip` está desligada (passo 3).
 
 ## 2. App mobile apontando para o notebook
 

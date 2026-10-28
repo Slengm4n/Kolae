@@ -12,6 +12,10 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+### Documentação
+- `config.example.php` passa a trazer o bloco de e-mail (`SMTP_*`) usado pelo "esqueci a senha". Antes, quem montava o ambiente pelo exemplo ficava sem essas constantes e a recuperação de senha parava com erro fatal.
+- `docs/setup.md`: passo para ligar as extensões `gd` e `zip` do PHP, como instalar as dependências sem o Composer global, como configurar o SMTP (inclusive senha de app do Gmail) e novos problemas comuns.
+
 ## [1.4.0] - 2026-10-27
 
 Sprint 1: correções críticas de segurança, banco alinhado ao código e API pronta para o app mobile.
