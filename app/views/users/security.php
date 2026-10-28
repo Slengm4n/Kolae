@@ -16,7 +16,7 @@ $userId = $_SESSION['user_id'] ?? 0;
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
@@ -50,7 +50,7 @@ $userId = $_SESSION['user_id'] ?? 0;
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
                     <?php echo $lang['global_home_panel'] ?></a>
             </nav>
 
@@ -60,11 +60,11 @@ $userId = $_SESSION['user_id'] ?? 0;
                         <img src="<?php echo BASE_URL . '/uploads/avatars/' . $userId . '/' . $userAvatar; ?>"
                             class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
                             alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
                             <?php echo strtoupper(substr($userName, 0, 1)); ?>
                         </div>
                     <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
                             <?php echo strtoupper(substr($userName, 0, 1)); ?>
                         </div>
                     <?php endif; ?>
@@ -104,12 +104,12 @@ $userId = $_SESSION['user_id'] ?? 0;
                     <ul class="space-y-1">
                         <li>
                             <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-secondary hover:text-content-primary rounded-xl transition-all group">
-                                <i class="fas fa-user-edit w-5 text-center group-hover:text-cyan-500 transition-colors"></i>
+                                <i class="fas fa-user-edit w-5 text-center group-hover:text-brand-500 transition-colors"></i>
                                 <span><?php echo $lang['config_custom_profile'] ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 rounded-xl border-l-4 border-cyan-500 transition-all">
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl border-l-4 border-brand-500 transition-all">
                                 <i class="fas fa-shield-alt w-5 text-center"></i>
                                 <span><?php echo $lang['config_security'] ?></span>
                             </a>
@@ -121,7 +121,7 @@ $userId = $_SESSION['user_id'] ?? 0;
             <section class="flex-1 w-full animate-up delay-100">
                 <div class="bg-surface-elevated p-6 md:p-10 rounded-2xl border border-content-secondary/10 shadow-xl relative overflow-hidden">
 
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-brand-700"></div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-content-secondary/10 pb-4 mb-6">
                         <div>
@@ -161,7 +161,7 @@ $userId = $_SESSION['user_id'] ?? 0;
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fas fa-lock"></i></div>
                                 <input type="password" name="current_password" required 
-                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                             </div>
                         </div>
 
@@ -172,7 +172,7 @@ $userId = $_SESSION['user_id'] ?? 0;
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fas fa-key"></i></div>
                                 <input type="password" name="new_password" id="new_password" required 
-                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                             </div>
 
                             <div class="mt-3">
@@ -191,13 +191,13 @@ $userId = $_SESSION['user_id'] ?? 0;
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fas fa-check-double"></i></div>
                                 <input type="password" name="confirm_password" required 
-                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                             </div>
                         </div>
 
                         <div class="pt-4 flex items-center justify-end gap-4">
                             <a href="<?php echo BASE_URL; ?>/dashboard/" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors"><?php echo $lang['global_cancel'] ?></a>
-                            <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition-all transform hover:-translate-y-0.5">
+                            <button type="submit" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all transform hover:-translate-y-0.5">
                                 <?php echo $lang['security_update_password_btn'] ?>
                             </button>
                         </div>

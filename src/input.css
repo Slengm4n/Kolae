@@ -25,6 +25,14 @@
         --content-primary: #f8fafc;
         --content-secondary: #94a3b8;
     }
+
+    /* Títulos na fonte da marca (a mesma do app); o texto corrido continua em Poppins */
+    h1,
+    h2,
+    h3,
+    .font-display {
+        font-family: var(--font-display);
+    }
 }
 
 @theme {
@@ -36,9 +44,68 @@
     --color-content-primary: var(--content-primary);
     --color-content-secondary: var(--content-secondary);
 
-    /* Ciano vibrante */
-    --color-cyan-300: #67e8f9;
-    --color-cyan-400: #22d3ee;
-    --color-cyan-500: #06b6d4;
-    --color-cyan-600: #0891b2;
+    /* Azul da marca, igual ao app (Kolae Mobile). 500 = #0084FF (botões, títulos grandes);
+       600 = #0069CC (texto pequeno e links sobre fundo claro, por contraste). */
+    --color-brand-50: #e5f2ff;
+    --color-brand-100: #cce6ff;
+    --color-brand-200: #99ceff;
+    --color-brand-300: #66b5ff;
+    --color-brand-400: #339dff;
+    --color-brand-500: #0084ff;
+    --color-brand-600: #0069cc;
+    --color-brand-700: #004f99;
+    --color-brand-800: #0b3a66;
+    --color-brand-900: #062440;
+
+    /* Cores de status da quadra, iguais às do app (sempre com texto junto, nunca só a cor) */
+    --color-status-available: #0084ff;
+    --color-status-in-use: #d96500;
+    --color-status-closed: #8a8a8a;
+
+    --font-display: 'Kanit', 'Poppins', sans-serif;
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer components {
+    /* Selo de status da quadra (Disponível / Em uso / Fechada), como no app */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.7rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1.25rem;
+        border: 1px solid transparent;
+    }
+    .status-badge::before {
+        content: '';
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 9999px;
+        background: currentColor;
+    }
+    .status-badge--available {
+        background: #e5f2ff;
+        color: #0b3a66;
+    }
+    .status-badge--available::before {
+        background: #0084ff;
+    }
+    .status-badge--in-use {
+        background: #fff1e5;
+        color: #6b2f00;
+    }
+    .status-badge--in-use::before {
+        background: #d96500;
+    }
+    .status-badge--closed {
+        background: #f1f2f4;
+        color: #4a4a4a;
+        border-color: #8a8a8a;
+    }
+    .status-badge--closed::before {
+        background: #8a8a8a;
+    }
 }

@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
@@ -50,7 +50,7 @@
 
             <div class="p-8 text-center border-b border-content-secondary/10">
                 <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-cyan-500"></i>
+                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
                 </div>
                 <h2 class="text-lg font-bold text-content-primary tracking-wide">
                     <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
@@ -60,14 +60,14 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-home w-5 text-center group-hover:text-cyan-500"></i>
+                    <i class="fas fa-home w-5 text-center group-hover:text-brand-500"></i>
                     <span>Início</span>
                 </a>
                 <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-users w-5 text-center group-hover:text-cyan-500"></i>
+                    <i class="fas fa-users w-5 text-center group-hover:text-brand-500"></i>
                     <span>Usuários</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-l-4 border-cyan-500 rounded-r-lg transition-all shadow-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all shadow-sm">
                     <i class="fas fa-running w-5 text-center"></i>
                     <span>Esportes</span>
                 </a>
@@ -113,13 +113,13 @@
                     <h1 class="text-3xl font-bold mb-1 text-content-primary">Gerir Esportes</h1>
                     <p class="text-content-secondary text-sm">Adicione ou edite modalidades disponíveis.</p>
                 </div>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5">
+                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
                     <i class="fas fa-plus mr-2"></i> Novo Esporte
                 </a>
             </div>
 
             <div class="md:hidden mb-6 animate-up delay-100">
-                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-2.5 px-4 rounded-lg flex justify-center items-center shadow-md text-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-2.5 px-4 rounded-lg flex justify-center items-center shadow-md text-sm">
                     <i class="fas fa-plus mr-2"></i> Novo Esporte
                 </a>
             </div>
@@ -127,22 +127,22 @@
             <div class="mb-6 animate-up delay-100">
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-content-secondary text-sm group-focus-within:text-cyan-500 transition-colors"></i>
+                        <i class="fas fa-search text-content-secondary text-sm group-focus-within:text-brand-500 transition-colors"></i>
                     </div>
-                    <input type="text" placeholder="Pesquisar esporte..." class="block w-full pl-9 pr-4 py-2.5 border border-content-secondary/20 rounded-xl bg-surface-elevated text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-sm transition-all">
+                    <input type="text" placeholder="Pesquisar esporte..." class="block w-full pl-9 pr-4 py-2.5 border border-content-secondary/20 rounded-xl bg-surface-elevated text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-sm transition-all">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 stagger-grid">
                 <?php if (!empty($sports)) : ?>
                     <?php foreach ($sports as $sport) : ?>
-                        <div class="card-sport group relative bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 text-center flex flex-col items-center justify-center aspect-square transition-all duration-300 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
+                        <div class="card-sport group relative bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 text-center flex flex-col items-center justify-center aspect-square transition-all duration-300 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/10 hover:-translate-y-1">
 
-                          <i class="fas <?php echo htmlspecialchars($sport['icon_path'] ?? 'fa-question-circle'); ?> text-4xl md:text-5xl text-content-secondary transition-colors duration-300 group-hover:text-cyan-500 group-hover:scale-110 transform"></i>
+                          <i class="fas <?php echo htmlspecialchars($sport['icon_path'] ?? 'fa-question-circle'); ?> text-4xl md:text-5xl text-content-secondary transition-colors duration-300 group-hover:text-brand-500 group-hover:scale-110 transform"></i>
                             <h3 class="mt-4 font-bold text-sm md:text-lg text-content-primary"><?php echo htmlspecialchars($sport['name']); ?></h3>
 
                             <div class="absolute top-2 right-2 md:top-3 md:right-3 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 flex space-x-1 md:space-x-2">
-                                <a href="<?php echo BASE_URL; ?>/admin/esportes/editar/<?php echo $sport['id']; ?>" class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-surface-base rounded-full text-content-secondary border border-content-secondary/10 hover:bg-cyan-500 hover:text-white hover:border-cyan-500 transition-colors shadow-sm" title="Editar">
+                                <a href="<?php echo BASE_URL; ?>/admin/esportes/editar/<?php echo $sport['id']; ?>" class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-surface-base rounded-full text-content-secondary border border-content-secondary/10 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-colors shadow-sm" title="Editar">
                                     <i class="fas fa-pencil-alt text-xs"></i>
                                 </a>
 

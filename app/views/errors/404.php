@@ -1,7 +1,7 @@
  <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 <div class="flex flex-col items-center justify-center min-h-screen bg-[#0D1117] text-gray-200 p-8">
     <div class="text-center">
-        <h1 class="text-9xl font-extrabold text-cyan-500 mb-4 tracking-widest">404</h1>
+        <h1 class="text-9xl font-extrabold text-brand-500 mb-4 tracking-widest">404</h1>
         
         <p class="text-4xl font-semibold mb-6">Oops! <?php echo htmlspecialchars($message ?? 'Página não encontrada.'); ?></p>
         

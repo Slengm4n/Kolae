@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
@@ -38,7 +38,7 @@
 
             <div class="p-8 text-center border-b border-content-secondary/10">
                 <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-cyan-500"></i>
+                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
                 </div>
                 <h2 class="text-lg font-bold text-content-primary tracking-wide">
                     <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
@@ -48,9 +48,9 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-home w-5 text-center group-hover:text-cyan-500"></i><span>Início</span>
+                    <i class="fas fa-home w-5 text-center group-hover:text-brand-500"></i><span>Início</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-l-4 border-cyan-500 rounded-r-lg transition-all shadow-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all shadow-sm">
                     <i class="fas fa-users w-5 text-center"></i><span>Usuários</span>
                 </a>
                 <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
@@ -97,7 +97,7 @@
                     <div class="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 px-4 py-3 rounded-xl text-center text-sm flex flex-col items-center">
                         <i class="fas fa-times-circle text-2xl mb-2"></i>
                         <span class="font-medium">Usuário não encontrado.</span>
-                        <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="mt-3 text-content-primary underline hover:text-cyan-500">Voltar para lista</a>
+                        <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="mt-3 text-content-primary underline hover:text-brand-500">Voltar para lista</a>
                     </div>
                 <?php else: ?>
 
@@ -114,7 +114,7 @@
                                         <i class="fas fa-user text-content-secondary text-sm"></i>
                                     </div>
                                     <input id="name" name="name" type="text" value="<?php echo htmlspecialchars($userData['name']); ?>" required
-                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                                 </div>
                             </div>
 
@@ -125,7 +125,7 @@
                                         <i class="fas fa-envelope text-content-secondary text-sm"></i>
                                     </div>
                                     <input id="email" name="email" type="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required
-                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                                 </div>
                             </div>
 
@@ -136,7 +136,7 @@
                                         <i class="fas fa-calendar text-content-secondary text-sm"></i>
                                     </div>
                                     <input id="birthdate" name="birthdate" type="date" value="<?php echo htmlspecialchars($userData['birthdate']); ?>" required
-                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-content-primary focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-2.5 md:py-3 text-sm text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                                 </div>
                             </div>
 
@@ -147,7 +147,7 @@
                                         <i class="fas fa-shield-alt text-content-secondary text-sm"></i>
                                     </div>
                                     <select id="role" name="role" required
-                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-8 py-2.5 md:py-3 text-sm text-content-primary focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 appearance-none transition-all cursor-pointer">
+                                        class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-8 py-2.5 md:py-3 text-sm text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 appearance-none transition-all cursor-pointer">
                                         <?php // Valores reais de users.role; "owner" = responsável por quadra (quem tem CNPJ) ?>
                                         <option value="player" class="bg-surface-elevated text-content-primary py-2" <?php if ($userData['role'] === 'player') echo 'selected'; ?>>
                                             Usuário Padrão
@@ -173,7 +173,7 @@
                                 Cancelar
                             </a>
                             <button type="submit"
-                                class="flex-1 md:flex-none text-center bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 text-sm">
+                                class="flex-1 md:flex-none text-center bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5 text-sm">
                                 Salvar
                             </button>
                         </div>

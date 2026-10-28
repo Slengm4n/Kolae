@@ -15,7 +15,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
     
@@ -31,19 +31,19 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
         }
         .option-card:hover, .checkbox-card:hover {
             transform: translateY(-2px);
-            border-color: #06b6d4; /* cyan-500 */
+            border-color: #0084FF; /* brand-500 */
         }
         .option-card.selected, .checkbox-card.selected {
-            border-color: #06b6d4;
-            background-color: rgba(6, 182, 212, 0.05);
-            box-shadow: 0 4px 10px rgba(6, 182, 212, 0.1);
+            border-color: #0084FF;
+            background-color: rgba(0, 132, 255, 0.05);
+            box-shadow: 0 4px 10px rgba(0, 132, 255, 0.1);
         }
-        .checkbox-card.selected i { color: #06b6d4; }
+        .checkbox-card.selected i { color: #0084FF; }
 
         /* Upload */
         #drop-area.highlight {
-            border-color: #06b6d4;
-            background-color: rgba(6, 182, 212, 0.05);
+            border-color: #0084FF;
+            background-color: rgba(0, 132, 255, 0.05);
             transform: scale(1.01);
         }
 
@@ -67,7 +67,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
                     <?php echo $lang['global_home_panel'] ?></a>
             </nav>
 
@@ -77,11 +77,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                         <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
                             class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
                             alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
                             <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
                         </div>
                     <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
                             <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
                         </div>
                     <?php endif; ?>
@@ -91,7 +91,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                 <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
                     <div class="p-4 border-b border-content-secondary/10">
                         <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuário'); ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-600 dark:text-cyan-400 hover:underline"><?php echo $lang['dashboard_view_profile']; ?></a>
+                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-brand-600 dark:text-brand-400 hover:underline"><?php echo $lang['dashboard_view_profile']; ?></a>
                     </div>
                     <ul class="py-2 text-sm text-content-secondary">
                         <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-cog w-4 text-center"></i> <?php echo $lang['global_menu_config']; ?></a></li>
@@ -119,7 +119,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                 <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
                 <h2 class="text-2xl font-bold text-content-primary"><?php echo $lang['global_error'] ?></h2>
                 <p class="text-content-secondary mt-2"><?php echo $lang['edit_venue_not_found'] ?></p>
-                <a href="<?php echo BASE_URL . $backUrl; ?>" class="mt-4 inline-block text-cyan-600 dark:text-cyan-400 hover:underline"><?php echo $lang['global_back'] ?></a>
+                <a href="<?php echo BASE_URL . $backUrl; ?>" class="mt-4 inline-block text-brand-600 dark:text-brand-400 hover:underline"><?php echo $lang['global_back'] ?></a>
             </div>
         <?php else: ?>
 
@@ -131,19 +131,19 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                 <input type="hidden" id="leisure_area_capacity_input" name="leisure_area_capacity" value="<?php echo htmlspecialchars($venue['leisure_area_capacity']); ?>">
 
                 <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg">
-                    <h2 class="text-xl font-bold text-content-primary mb-6 flex items-center gap-3"><i class="fas fa-info-circle text-cyan-500"></i><?php echo $lang['edit_venue_info_title'] ?></h2>
+                    <h2 class="text-xl font-bold text-content-primary mb-6 flex items-center gap-3"><i class="fas fa-info-circle text-brand-500"></i><?php echo $lang['edit_venue_info_title'] ?></h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['venue_name'] ?></label>
                             <input type="text" name="name" required value="<?php echo htmlspecialchars($venue['name']); ?>" 
-                                class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none transition-all">
+                                class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['edit_venue_price'] ?></label>
                             <div class="relative">
                                 <span class="absolute left-4 top-3 text-content-secondary">R$</span>
                                 <input type="number" step="0.01" name="average_price_per_hour" value="<?php echo htmlspecialchars($venue['average_price_per_hour']); ?>" 
-                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-content-primary focus:border-cyan-500 outline-none transition-all">
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
                             </div>
                         </div>
                     </div>
@@ -169,9 +169,9 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                         <div class="flex items-center justify-between bg-surface-base p-4 rounded-xl border border-content-secondary/10">
                             <span class="font-semibold text-content-primary"><?php echo $lang['edit_venue_capacity'] ?></span>
                             <div class="counter-input flex items-center gap-4" data-input-name="court_capacity" data-min-value="2" data-target-input="court_capacity_input">
-                                <button type="button" class="minus w-10 h-10 rounded-full border border-content-secondary/30 text-content-secondary hover:text-cyan-500 hover:border-cyan-500 flex items-center justify-center text-xl transition-colors">-</button>
+                                <button type="button" class="minus w-10 h-10 rounded-full border border-content-secondary/30 text-content-secondary hover:text-brand-500 hover:border-brand-500 flex items-center justify-center text-xl transition-colors">-</button>
                                 <span class="counter-value text-2xl font-bold w-8 text-center text-content-primary"><?php echo $venue['court_capacity']; ?></span>
-                                <button type="button" class="plus w-10 h-10 rounded-full border border-content-secondary/30 text-content-secondary hover:text-cyan-500 hover:border-cyan-500 flex items-center justify-center text-xl transition-colors">+</button>
+                                <button type="button" class="plus w-10 h-10 rounded-full border border-content-secondary/30 text-content-secondary hover:text-brand-500 hover:border-brand-500 flex items-center justify-center text-xl transition-colors">+</button>
                             </div>
                         </div>
                     </div>
@@ -201,9 +201,9 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                         <div class="flex items-center justify-between bg-surface-base p-4 rounded-xl border border-content-secondary/10 max-w-md mx-auto">
                             <span class="text-sm font-semibold text-content-primary"><?php echo $lang['edit_venue_capacity_leisure'] ?></span>
                             <div class="counter-input flex items-center gap-4" data-input-name="leisure_area_capacity" data-min-value="0" data-target-input="leisure_area_capacity_input">
-                                <button type="button" class="minus w-8 h-8 rounded-full border border-content-secondary/30 text-content-secondary hover:text-cyan-500 hover:border-cyan-500 transition-colors">-</button>
+                                <button type="button" class="minus w-8 h-8 rounded-full border border-content-secondary/30 text-content-secondary hover:text-brand-500 hover:border-brand-500 transition-colors">-</button>
                                 <span class="counter-value text-xl font-bold text-content-primary"><?php echo $venue['leisure_area_capacity']; ?></span>
-                                <button type="button" class="plus w-8 h-8 rounded-full border border-content-secondary/30 text-content-secondary hover:text-cyan-500 hover:border-cyan-500 transition-colors">+</button>
+                                <button type="button" class="plus w-8 h-8 rounded-full border border-content-secondary/30 text-content-secondary hover:text-brand-500 hover:border-brand-500 transition-colors">+</button>
                             </div>
                         </div>
                     </div>
@@ -216,30 +216,30 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                             <label class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['edit_venue_location_cep'] ?></label>
                             <div class="relative">
                                 <input type="text" id="cep" name="cep" required value="<?php echo htmlspecialchars($venue['cep']); ?>" 
-                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-content-primary focus:border-cyan-500 outline-none transition-all">
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
                                 <i class="fas fa-search absolute left-3.5 top-3.5 text-content-secondary"></i>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="md:col-span-2"><input type="text" id="street" name="street" value="<?php echo htmlspecialchars($venue['street']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none" placeholder="Rua"></div>
-                            <div><input type="text" id="number" name="number" value="<?php echo htmlspecialchars($venue['number']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none" placeholder="Nº"></div>
+                            <div class="md:col-span-2"><input type="text" id="street" name="street" value="<?php echo htmlspecialchars($venue['street']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none" placeholder="Rua"></div>
+                            <div><input type="text" id="number" name="number" value="<?php echo htmlspecialchars($venue['number']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none" placeholder="Nº"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div><input type="text" id="neighborhood" name="neighborhood" value="<?php echo htmlspecialchars($venue['neighborhood']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none" placeholder="Bairro"></div>
-                            <div><input type="text" id="city" name="city" value="<?php echo htmlspecialchars($venue['city']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none" placeholder="Cidade"></div>
-                            <div><input type="text" id="state" name="state" value="<?php echo htmlspecialchars($venue['state']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none" placeholder="UF"></div>
+                            <div><input type="text" id="neighborhood" name="neighborhood" value="<?php echo htmlspecialchars($venue['neighborhood']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none" placeholder="Bairro"></div>
+                            <div><input type="text" id="city" name="city" value="<?php echo htmlspecialchars($venue['city']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none" placeholder="Cidade"></div>
+                            <div><input type="text" id="state" name="state" value="<?php echo htmlspecialchars($venue['state']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none" placeholder="UF"></div>
                         </div>
-                        <div><input type="text" id="complement" name="complement" value="<?php echo htmlspecialchars($venue['complement']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-cyan-500 outline-none" placeholder="Complemento"></div>
+                        <div><input type="text" id="complement" name="complement" value="<?php echo htmlspecialchars($venue['complement']); ?>" class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none" placeholder="Complemento"></div>
                     </div>
                 </div>
 
                 <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg">
                     <h2 class="text-xl font-bold text-content-primary mb-6 flex items-center gap-3"><i class="fas fa-camera text-blue-500"></i><?php echo $lang['edit_venue_photo'] ?></h2>
 
-                    <div id="drop-area" class="border-2 border-dashed border-content-secondary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-cyan-500 hover:bg-cyan-500/5 transition-all group">
+                    <div id="drop-area" class="border-2 border-dashed border-content-secondary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-500/5 transition-all group">
                         <label for="images" class="cursor-pointer w-full h-full block">
                             <div class="w-16 h-16 bg-surface-base rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-cloud-upload-alt text-3xl text-content-secondary group-hover:text-cyan-500"></i>
+                                <i class="fas fa-cloud-upload-alt text-3xl text-content-secondary group-hover:text-brand-500"></i>
                             </div>
                             <p class="font-bold text-content-primary"><?php echo $lang['edit_venue_photo_text_1'] ?></p>
                             <p class="text-sm text-content-secondary"><?php echo $lang['edit_venue_photo_text_2'] ?></p>
@@ -262,7 +262,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                     <a href="<?php echo BASE_URL . $backUrl; ?>" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors">
                         <?php echo $lang['global_cancel'] ?>
                     </a>
-                    <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5"><?php echo $lang['profile_btn_save'] ?></button>
+                    <button type="submit" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5"><?php echo $lang['profile_btn_save'] ?></button>
                 </div>
             </form>
 
@@ -281,7 +281,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
     </main>
 
     <div class="fixed bottom-0 left-0 w-full p-4 bg-surface-elevated/90 backdrop-blur-md border-t border-content-secondary/10 flex justify-center z-40 md:hidden">
-        <button type="submit" form="venue-form" class="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-6 rounded-xl shadow-xl transition-transform active:scale-95"><?php echo $lang['profile_btn_save'] ?></button>
+        <button type="submit" form="venue-form" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl shadow-xl transition-transform active:scale-95"><?php echo $lang['profile_btn_save'] ?></button>
     </div>
 
     <div id="delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
@@ -367,7 +367,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                 const updateVisual = () => {
                     card.classList.toggle('selected', checkbox.checked);
                     const icon = card.querySelector('i');
-                    icon.classList.toggle('text-cyan-500', checkbox.checked); // Ajustado para cyan-500
+                    icon.classList.toggle('text-brand-500', checkbox.checked); // Ajustado para brand-500
                     icon.classList.toggle('text-content-secondary', !checkbox.checked);
 
                     if (checkbox.name === 'has_leisure_area') {

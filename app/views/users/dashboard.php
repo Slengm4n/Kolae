@@ -20,7 +20,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
@@ -64,7 +64,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
                     <?php echo $lang['global_home_panel']; ?>
                 </a>
             </nav>
@@ -75,11 +75,11 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
                             class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
                             alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
                             <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
                         </div>
                     <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
                             <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
                         </div>
                     <?php endif; ?>
@@ -89,7 +89,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                 <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50 overflow-hidden">
                     <div class="p-4 border-b border-content-secondary/10 bg-surface-secondary/30">
                         <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($userName); ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-cyan-600 dark:text-cyan-400 hover:underline">
+                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-brand-600 dark:text-brand-400 hover:underline">
                             <?php echo $lang['dashboard_view_profile']; ?>
                         </a>
                     </div>
@@ -143,7 +143,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
         <section class="mb-12 animate-up delay-100">
             <h1 class="text-3xl md:text-4xl font-bold text-content-primary mb-2">
-                <?php echo $lang['dashboard_user_greetings']; ?> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600"><?php echo explode(' ', htmlspecialchars($userName))[0]; ?>!</span>
+                <?php echo $lang['dashboard_user_greetings']; ?> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-brand-700"><?php echo explode(' ', htmlspecialchars($userName))[0]; ?>!</span>
             </h1>
             <p class="text-content-secondary"><?php echo $lang['dashboard_user_activity']; ?></p>
         </section>
@@ -152,15 +152,15 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             <h2 class="text-xl font-semibold text-content-primary mb-6 flex items-center gap-2"><i class="fas fa-bolt text-yellow-500"></i> <?php echo $lang['dashboard_user_actions']; ?></h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="group bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/5 transition-all duration-300 hover:-translate-y-1 flex items-center gap-5">
-                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="group bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all duration-300 hover:-translate-y-1 flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white transition-colors">
                         <i class="fas fa-plus text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg text-content-primary group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors"><?php echo $lang['dashboard_user_location_title']; ?></h3>
+                        <h3 class="font-bold text-lg text-content-primary group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"><?php echo $lang['dashboard_user_location_title']; ?></h3>
                         <p class="text-sm text-content-secondary"><?php echo $lang['dashboard_user_location_text']; ?></p>
                     </div>
-                    <i class="fas fa-arrow-right ml-auto text-content-secondary group-hover:text-cyan-500 group-hover:translate-x-1 transition-all"></i>
+                    <i class="fas fa-arrow-right ml-auto text-content-secondary group-hover:text-brand-500 group-hover:translate-x-1 transition-all"></i>
                 </a>
 
                 <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="group bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300 hover:-translate-y-1 flex items-center gap-5">
@@ -178,7 +178,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
         <section class="animate-up delay-300">
             <div class="flex justify-between items-end mb-6">
-                <h2 class="text-2xl font-bold text-content-primary flex items-center gap-2"><i class="fas fa-map-marked-alt text-cyan-500"></i> <?php echo $lang['dashboard_user_venues_title']; ?></h2>
+                <h2 class="text-2xl font-bold text-content-primary flex items-center gap-2"><i class="fas fa-map-marked-alt text-brand-500"></i> <?php echo $lang['dashboard_user_venues_title']; ?></h2>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -201,7 +201,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                                 </div>
                             </div>
                             <div class="p-5">
-                                <h3 class="font-bold text-lg text-content-primary truncate group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors"><?php echo htmlspecialchars($venue['name']); ?></h3>
+                                <h3 class="font-bold text-lg text-content-primary truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($venue['name']); ?></h3>
                                 <div class="flex items-center gap-2 mt-2 text-content-secondary text-sm">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span class="truncate"><?php echo htmlspecialchars($venue['street'] . ', ' . $venue['number']); ?></span>
@@ -210,13 +210,13 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         </a>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="col-span-full py-16 bg-surface-secondary/30 border-2 border-dashed border-content-secondary/20 rounded-3xl text-center flex flex-col items-center justify-center group hover:border-cyan-500/50 transition-colors">
+                    <div class="col-span-full py-16 bg-surface-secondary/30 border-2 border-dashed border-content-secondary/20 rounded-3xl text-center flex flex-col items-center justify-center group hover:border-brand-500/50 transition-colors">
                         <div class="w-20 h-20 bg-surface-elevated rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                            <i class="fas fa-store-slash text-4xl text-content-secondary group-hover:text-cyan-500 transition-colors"></i>
+                            <i class="fas fa-store-slash text-4xl text-content-secondary group-hover:text-brand-500 transition-colors"></i>
                         </div>
                         <h3 class="text-xl font-bold text-content-primary"><?php echo $lang['dashboard_venue_register_title']; ?></h3>
                         <p class="text-content-secondary mt-2 mb-6 max-w-sm"><?php echo $lang['dashboard_venue_register_subtitle']; ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition-all hover:-translate-y-0.5">
+                        <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all hover:-translate-y-0.5">
                             <i class="fas fa-plus mr-2"></i> <?php echo $lang['dashboard_venue_register_btn']; ?>
                         </a>
                     </div>
