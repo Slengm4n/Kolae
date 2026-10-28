@@ -41,13 +41,16 @@ Piso com as chaves da API; `icon_path` (Font Awesome) convertido para MaterialCo
 - API: `AuthApiController` (login, register, forgot-password), `MeApiController` (`/me`, avatar, senha), `VenueApiController`, `SportApiController`, `GameApiController` (sai na S4, D02).
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP + Tailwind), `lang/` (7 idiomas; chave nova vai nos 7 arquivos).
 - `uploads/` fora do git, exceto `uploads/.htaccess` (bloqueia scripts).
+- **Visual** (desde a branch `feat/home-redesign`): identidade do app. Cores em `src/input.css`: `brand-*` (500 = `#0084FF` em botões e títulos grandes; 600 = `#0069CC` em texto pequeno e links sobre fundo claro), `status-badge status-badge--available|in-use|closed` para os selos de status, Kanit automática em `h1`–`h3`. Não usar `cyan-*`. Peças públicas reutilizáveis em `app/views/partials/` (`head.php`, `public_header.php`, `public_footer.php`); a home já usa, login e cadastro ainda têm o `<head>` próprio.
+- **CSS/JS compilados:** `npm install` uma vez e `npm run build` a cada mudança de classes ou em `src/`; o resultado (`assets/css/style.css`, `assets/js/bundle.js`) entra no commit. No Tailwind v4, as utilitárias perdem para o CSS do Font Awesome: `hidden`, `block` etc. **não funcionam direto num `<i class="fas ...">`**; envolva o ícone num `<span>` e aplique a classe nele.
 
 ## Ambiente
 
 - **Local:** XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10 + patches 001–003). PHP 8.2 no XAMPP (com GD); PHP 8.4 do Laravel Herd no PATH só para `php -l` e `composer` (não usar o Herd para servir o site). `config.php` fora do git, com `SMTP_*`.
 - **Produção:** InfinityFree, `https://kolae.gamer.gd`. Push na `main` → GitHub Actions → FTP. **A `main` publica direto.**
 - **App:** usa o backend do notebook pela rede Wi-Fi (D13): `http://<IP>:8080/kolae/api/v1`.
-- **Git:** o push funciona deste terminal (credenciais do Windows), mas push, apagar branch remota e sincronizar a `develop` só com pedido do João. Sem `gh`: PR pelo navegador. Mensagens de commit em arquivo UTF-8 **sem BOM** (o `Set-Content` do PowerShell 5 grava BOM).
+- **Git:** o push funciona deste terminal (credenciais do Windows), mas push, apagar branch remota e sincronizar a `develop` só com pedido do João. Sem `gh`: PR pelo navegador. Mensagens de commit em arquivo UTF-8 **sem BOM**. **Nunca** gravar arquivos do projeto com `Set-Content`/`Out-File` do PowerShell 5: eles colocam BOM, e um BOM num `.php` gera saída antes do `<?php` (quebra cabeçalhos e sessão). Usar o Edit/Write ou `[IO.File]::WriteAllText` com `UTF8Encoding($false)`.
+- **Telas:** conferir mudanças visuais com capturas de página inteira (Edge + `puppeteer-core`, desktop e celular, claro e escuro), checando também erros de JavaScript e conteúdo vazando para o lado no celular.
 - **MySQL local:** ligar uma vez só no painel do XAMPP e parar antes de desligar o PC. Encerramento forçado corrompe os arquivos de replicação (`multi-master.info`, `relay-log*`); se não subir, rodar `mysqld --console` para ver o erro e mover esses arquivos para `C:\xampp\mysql\data_replicacao_backup`.
 
 ## Problemas conhecidos em aberto
