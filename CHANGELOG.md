@@ -12,6 +12,15 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+### Adicionado
+- Banco (patch `database/patches/004_horario_whatsapp_agenda.sql`): horário de funcionamento das quadras (`venue_hours`), esportes de cada quadra (`venue_sports`), WhatsApp do dono (`users.whatsapp`) e partidas no modelo novo, agendadas pelo dono (`matches` com esporte opcional e `renter_name`).
+
+### Removido
+- Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
+
+### Documentação
+- Contrato da S3 em `docs/api.md` (proposta): `GET /venues` com filtros, paginação e status; `GET /venues/{id}` com fotos, endereço, horário e dono; `GET /venues/{id}/schedule`.
+
 ## [1.5.0] - 2026-10-28
 
 Sprint 2 (adiantada): API de contas para o app no padrão do Laravel, papel `owner` por CNPJ, fuso de Brasília e correções no painel. Inclui também o prazo novo da entrega (28/11) e o modelo de status da quadra aprovado.

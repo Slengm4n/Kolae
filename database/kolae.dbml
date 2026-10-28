@@ -81,6 +81,7 @@ Table users {
   name varchar(255) [not null]
   email varchar(255) [not null, unique]
   cnpj varchar(255) [unique, note: 'Criptografado (AES-256-CBC, IV fixo => determinístico, por isso o UNIQUE funciona)']
+  whatsapp varchar(20) [note: 'Só dígitos, com DDI e DDD: 5511999999999. Obrigatório para owner cadastrar ou editar quadra (D24). Patch 004']
   birthdate date
   password varchar(255) [not null, note: 'Hash bcrypt (password_hash do PHP)']
   role varchar(20) [not null, default: 'player', note: 'admin | owner | player. owner = quem cadastrou CNPJ (patch 003)']
@@ -162,33 +163,52 @@ Table sports {
   updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
 }
 
+Table venue_sports {
+  venue_id int [not null]
+  sport_id int [not null]
+
+  indexes {
+    (venue_id, sport_id) [pk]
+  }
+
+  Note: 'Esportes que cada quadra atende (D29, patch 004). Filtro sport_id da API.'
+}
+
+Table venue_hours {
+  id int [pk, increment]
+  venue_id int [not null]
+  weekday tinyint [not null, note: '0 = domingo ... 6 = sábado (igual ao date("w") do PHP). CHECK 0..6']
+  opens_at time [not null]
+  closes_at time [not null, note: 'Depois de opens_at, no mesmo dia (D22). CHECK closes_at > opens_at']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+
+  indexes {
+    (venue_id, weekday) [unique, name: 'uq_venue_hours_day']
+  }
+
+  Note: 'Horário de funcionamento: um intervalo por dia (D21). Dia sem linha = fechada. Quadra sem nenhuma linha = sem horário, status closed (D23). Patch 004.'
+}
+
 // ==========================================================
-// Partidas
+// Partidas (agendadas pelo dono no site, D02)
 // ==========================================================
 
 Table matches {
   id int [pk, increment]
   venue_id int [not null]
-  sport_id int [not null]
-  creator_user_id int [not null]
-  status varchar(20) [not null, default: 'scheduled', note: 'scheduled | full | in_progress | finished | cancelled']
-  max_players int [note: 'NULL = sem limite. Quando lotar, status vira full']
-  start_time datetime [not null]
-  end_time datetime [not null]
+  sport_id int [note: 'Opcional (D25)']
+  creator_user_id int [not null, note: 'Quem agendou: o dono ou um admin']
+  renter_name varchar(100) [note: 'Para quem foi alugado. Só aparece no site, nunca na API']
+  status varchar(20) [not null, default: 'scheduled', note: 'scheduled | cancelled. Em andamento e terminada são calculados pelo horário']
+  start_time datetime [not null, note: 'Horário de Brasília. Dentro do funcionamento do dia, sem sobrepor outra partida (D27, validado no site)']
+  end_time datetime [not null, note: 'Depois de start_time, no mesmo dia']
   created_at timestamp [default: `CURRENT_TIMESTAMP`]
   updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
   deleted_at timestamp
-}
-
-Table match_participants {
-  id int [pk, increment]
-  match_id int [not null]
-  user_id int [not null]
-  status varchar(20) [not null, default: 'confirmed', note: 'confirmed | pending | cancelled']
-  joined_at timestamp [default: `CURRENT_TIMESTAMP`]
 
   indexes {
-    (match_id, user_id) [unique, name: 'uq_match_user']
+    (venue_id, start_time) [name: 'idx_matches_venue_start']
   }
 }
 
@@ -209,9 +229,10 @@ Ref: sessions.user_id > users.id [delete: cascade]
 Ref: venues.user_id > users.id
 Ref: venues.address_id > addresses.id
 Ref: venues_images.venue_id > venues.id [delete: cascade]
+Ref: venue_sports.venue_id > venues.id [delete: cascade]
+Ref: venue_sports.sport_id > sports.id [delete: cascade]
+Ref: venue_hours.venue_id > venues.id [delete: cascade]
 
 Ref: matches.venue_id > venues.id
-Ref: matches.sport_id > sports.id
+Ref: matches.sport_id > sports.id [delete: set null]
 Ref: matches.creator_user_id > users.id
-Ref: match_participants.match_id > matches.id [delete: cascade]
-Ref: match_participants.user_id > users.id [delete: cascade]
