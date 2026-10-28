@@ -23,13 +23,14 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 
 - **S1 concluída**, lançada como **v1.4.0**.
 - **S2 do backend concluída e em produção**, adiantada (PRs #34–#40): formato Laravel, cadastro, esqueci a senha, perfil (só nome), avatar, troca de senha, `owner` por CNPJ, fuso de Brasília, seletor de papel do admin corrigido. Vira a **v1.5.0** em 08/11.
-- **Agora:** revisão do `docs/modelo-status.md` com o Rafael; depois, contrato da S3 em `docs/api.md`.
+- **Redesign da home + identidade do app no site inteiro + animações:** na branch `feat/home-redesign` (no GitHub, **sem PR ainda**). Antes do PR: verificar as telas logadas (painel, admin, criar e editar quadra, com teste de clique no cadastro de quadra, cujo JS procura cartões pela classe de cor). Página de antes e depois: https://claude.ai/artifact/XCBNXHDsiwAcfwrjpn4cFF
+- **Em paralelo:** revisão do `docs/modelo-status.md` com o Rafael; depois, contrato da S3 em `docs/api.md`.
 - **Maior risco de prazo:** as telas do dono no site (horário de funcionamento e agenda) e o cálculo de status, na S4.
 
 ### Pendências fora do código
 - Trocar a senha do MySQL da produção e, logo em seguida, o `DB_PASS` do `config.php` da produção pelo FTP (senão o site cai). Bloqueado: o phpMyAdmin do InfinityFree (`php-myadmin.net`) está apontando para `127.0.0.1` no DNS público desde 28/10; é falha deles. Patches de banco na produção dependem dele.
 - Escolher a hospedagem nova (D13), em novembro.
-- Branches antigas no GitHub já mergeadas: `fix/admin-roles`, `feat/s2-api`, `feat/s2-contrato-api`, `docs/changelog-e-status`.
+- Branches em 28/10: `main`, `develop` (espelho, sincronizada), `feat/home-redesign` (em andamento) e `v2.0-laravel` (parada até a entrega). As demais já foram mergeadas e apagadas.
 
 ### Do lado do app (Rafael), combinado em 28/10
 Piso com as chaves da API; `icon_path` (Font Awesome) convertido para MaterialCommunityIcons; mock separado por área (auth real, quadras no mock até a S3); senha mínima 8; validação local dos 18 anos; deslogar só nos erros `AUTH_*` (D10); data de nascimento só leitura; liberar HTTP no APK.
@@ -50,6 +51,7 @@ Piso com as chaves da API; `icon_path` (Font Awesome) convertido para MaterialCo
 - **Produção:** InfinityFree, `https://kolae.gamer.gd`. Push na `main` → GitHub Actions → FTP. **A `main` publica direto.**
 - **App:** usa o backend do notebook pela rede Wi-Fi (D13): `http://<IP>:8080/kolae/api/v1`.
 - **Git:** o push funciona deste terminal (credenciais do Windows), mas push, apagar branch remota e sincronizar a `develop` só com pedido do João. Sem `gh`: PR pelo navegador. Mensagens de commit em arquivo UTF-8 **sem BOM**. **Nunca** gravar arquivos do projeto com `Set-Content`/`Out-File` do PowerShell 5: eles colocam BOM, e um BOM num `.php` gera saída antes do `<?php` (quebra cabeçalhos e sessão). Usar o Edit/Write ou `[IO.File]::WriteAllText` com `UTF8Encoding($false)`.
+- **Animações:** neste PC as animações do Windows estão desligadas (`MinAnimate = 0`), então o navegador informa "reduzir movimento" e a home aparece parada, de propósito. Para ver as animações: ligar em Configurações → Acessibilidade → Efeitos visuais, ou abrir pelo celular. Nos testes automatizados, emular `prefers-reduced-motion: no-preference` (o Edge invisível herda a configuração do Windows).
 - **Telas:** conferir mudanças visuais com capturas de página inteira (Edge + `puppeteer-core`, desktop e celular, claro e escuro), checando também erros de JavaScript e conteúdo vazando para o lado no celular.
 - **MySQL local:** ligar uma vez só no painel do XAMPP e parar antes de desligar o PC. Encerramento forçado corrompe os arquivos de replicação (`multi-master.info`, `relay-log*`); se não subir, rodar `mysqld --console` para ver o erro e mover esses arquivos para `C:\xampp\mysql\data_replicacao_backup`.
 
