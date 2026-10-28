@@ -16,7 +16,13 @@ class SportApiController extends BaseApiController
     public function getActiveSports()
     {
         try {
-            $sports = Sport::getAll();
+            // Só os campos do contrato (docs/api.md), sem status nem datas internas
+            $sports = array_map(fn($s) => [
+                'id' => (int)$s['id'],
+                'name' => $s['name'],
+                'description' => $s['description'],
+                'icon_path' => $s['icon_path']
+            ], Sport::getAll());
             $this->sendSuccess($sports);
         } catch (\Exception $e) {
             error_log("Erro ao buscar sports para API: " . $e->getMessage());
