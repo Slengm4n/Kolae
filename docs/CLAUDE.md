@@ -1,6 +1,6 @@
 # Kolae — contexto para o Claude
 
-Plataforma web (PHP puro, MVC próprio) que conecta atletas a quadras particulares. Projeto Integrador FATEC Ferraz de Vasconcelos, entrega em **05/12/2026** (congelamento de funcionalidades em 29/11).
+Plataforma web (PHP puro, MVC próprio) que conecta atletas a quadras particulares. Projeto Integrador FATEC Ferraz de Vasconcelos, entrega em **28/11/2026** (congelamento de funcionalidades em **21/11**; antecipada pela D28).
 
 - **João:** backend PHP, `/api/v1` e o site (este repositório).
 - **Rafael:** app mobile React Native + Expo (`Thesatiru/kolae-mobile`), que consome a API.
@@ -13,7 +13,7 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 
 - **`docs/decisoes.md`**: todas as decisões com data e motivo (D01...). Não contrariar uma decisão sem combinar e registrar uma nova.
 - **`docs/api.md`**: contrato da API. Endpoint novo ou mudança de formato entra lá **antes** do código, e o Rafael revisa.
-- **`docs/modelo-status.md`**: proposta de status da quadra, horário de funcionamento e agenda (S3/S4), **aguardando revisão**.
+- **`docs/modelo-status.md`**: modelo **aprovado** de status da quadra, horário de funcionamento e agenda (D21–D27), base do contrato da S3 e das telas da S4.
 - **`docs/setup.md`**: ambiente local e conexão do app ao notebook.
 - **`database/kolae.dbml`**: banco como ele é hoje. Mudança = DBML + `database/patches/NNN_*.sql`.
 - **`CHANGELOG.md`**: mudanças em `[Não lançado]` até o fim da sprint.
@@ -22,14 +22,15 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 ## Situação em 28/10/2026
 
 - **S1 concluída**, lançada como **v1.4.0**.
-- **S2 do backend concluída e em produção**, adiantada (PRs #34–#40): formato Laravel, cadastro, esqueci a senha, perfil (só nome), avatar, troca de senha, `owner` por CNPJ, fuso de Brasília, seletor de papel do admin corrigido. Vira a **v1.5.0** em 08/11.
-- **Agora:** revisão do `docs/modelo-status.md` com o Rafael; depois, contrato da S3 em `docs/api.md`.
-- **Maior risco de prazo:** as telas do dono no site (horário de funcionamento e agenda) e o cálculo de status, na S4.
+- **S2 do backend concluída e em produção**, adiantada (PRs #34–#40): formato Laravel, cadastro, esqueci a senha, perfil (só nome), avatar, troca de senha, `owner` por CNPJ, fuso de Brasília, seletor de papel do admin corrigido. Vira a **v1.5.0** ao abrir a S3 (D28).
+- **Prazo novo (D28):** entrega em 28/11, congelamento em 21/11. S3 = 29/10–08/11, S4 = 09–15/11, S5 = 16–21/11, S6 = 22–28/11. Troca de e-mail com código saiu do escopo.
+- **Modelo de status aprovado** (D21–D27). **Agora:** contrato da S3 em `docs/api.md` (`/venues` com status e `owner`, `/venues/{id}`, `/schedule`), revisado pelo Rafael; depois DBML + patch 004 e os endpoints.
+- **Maior risco de prazo:** as telas do dono no site (horário de funcionamento e agenda) na S4. Por isso o cálculo de status e o `/schedule` vêm na S3.
 
 ### Pendências fora do código
-- Trocar a senha do MySQL da produção e, logo em seguida, o `DB_PASS` do `config.php` da produção pelo FTP (senão o site cai). Bloqueado: o phpMyAdmin do InfinityFree (`php-myadmin.net`) está apontando para `127.0.0.1` no DNS público desde 28/10; é falha deles. Patches de banco na produção dependem dele.
-- Escolher a hospedagem nova (D13), em novembro.
-- Branches antigas no GitHub já mergeadas: `fix/admin-roles`, `feat/s2-api`, `feat/s2-contrato-api`, `docs/changelog-e-status`.
+- Trocar a senha do MySQL da produção e, logo em seguida, o `DB_PASS` do `config.php` da produção pelo FTP (senão o site cai). O phpMyAdmin do InfinityFree voltou em 28/10 (o patch 003 já foi aplicado por ele).
+- Escolher a hospedagem nova (D13) na primeira semana de novembro: decide onde a apresentação roda.
+- Atualizar a cópia do plano no Google Drive ("Kolae 2.0 — Plano da equipe") com o prazo novo: precisa do conector Google Docs autorizado.
 
 ### Do lado do app (Rafael), combinado em 28/10
 Piso com as chaves da API; `icon_path` (Font Awesome) convertido para MaterialCommunityIcons; mock separado por área (auth real, quadras no mock até a S3); senha mínima 8; validação local dos 18 anos; deslogar só nos erros `AUTH_*` (D10); data de nascimento só leitura; liberar HTTP no APK.
