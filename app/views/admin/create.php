@@ -138,7 +138,8 @@
                                 </div>
                                 <select id="role" name="role" required
                                     class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-8 py-2.5 md:py-3 text-sm text-content-primary focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 appearance-none transition-all cursor-pointer">
-                                    <option value="user" class="bg-surface-elevated text-content-primary py-2" selected>Usuário Padrão</option>
+                                    <option value="player" class="bg-surface-elevated text-content-primary py-2" selected>Usuário Padrão</option>
+                                    <option value="owner" class="bg-surface-elevated text-content-primary py-2">Responsável por Quadra</option>
                                     <option value="admin" class="bg-surface-elevated text-content-primary py-2">Administrador</option>
                                 </select>
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

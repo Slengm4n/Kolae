@@ -148,8 +148,12 @@
                                     </div>
                                     <select id="role" name="role" required
                                         class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-8 py-2.5 md:py-3 text-sm text-content-primary focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 appearance-none transition-all cursor-pointer">
-                                        <option value="user" class="bg-surface-elevated text-content-primary py-2" <?php if ($userData['role'] === 'user') echo 'selected'; ?>>
+                                        <?php // Valores reais de users.role; "owner" = responsável por quadra (quem tem CNPJ) ?>
+                                        <option value="player" class="bg-surface-elevated text-content-primary py-2" <?php if ($userData['role'] === 'player') echo 'selected'; ?>>
                                             Usuário Padrão
+                                        </option>
+                                        <option value="owner" class="bg-surface-elevated text-content-primary py-2" <?php if ($userData['role'] === 'owner') echo 'selected'; ?>>
+                                            Responsável por Quadra
                                         </option>
                                         <option value="admin" class="bg-surface-elevated text-content-primary py-2" <?php if ($userData['role'] === 'admin') echo 'selected'; ?>>
                                             Administrador
