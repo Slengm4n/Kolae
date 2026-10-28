@@ -134,3 +134,10 @@ Respostas às perguntas do `docs/modelo-status.md`, que passa a valer como model
 - **Versões (D18):** v1.5.0 = S2, lançada ao abrir a S3; v1.6.0 = S3 (08/11); v1.7.0 = S4 (15/11); v1.8.0 = S5 (21/11); v1.9.0 = versão da entrega (28/11).
 - **Por quê:** o prazo encurtou uma semana; o backend do status vem para a S3 para a S4 ficar só com as telas, que são o maior risco.
 - **Pendente:** escolher a hospedagem (D13) na primeira semana de novembro, porque ela decide onde a apresentação roda.
+
+## Contrato da S3
+
+### D29 · Esportes de cada quadra (`venue_sports`) · **proposta (28/10/2026), confirmar na revisão do contrato da S3**
+- **O quê:** tabela `venue_sports` (quadra × esporte) no patch 004. Na S4, o formulário de quadra do site ganha caixas de seleção dos esportes. A API devolve `sports` em cada quadra e aceita o filtro `sport_id`.
+- **Por quê:** o banco não liga quadra a esporte, mas o filtro por esporte é o mais natural no app (e já estava planejado para a S3). Custo baixo: uma tabela e uma lista de caixas num formulário que já existe.
+- **Se não for aceita:** `sports` e `sport_id` saem do contrato em `docs/api.md`.
