@@ -95,6 +95,7 @@ return[
 
 
     'password_mismatch' => 'パスワードが一致しません。再試行してください。',
+    'reset_password_mismatch' => 'パスワードが一致しません。再試行してください。',
     'reset_invalid' => 'リセットリンクが無効か、期限切れです。',
     'reset_unknown_error' => 'パスワードの更新中にエラーが発生しました。再試行してください。',
 

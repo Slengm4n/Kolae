@@ -57,6 +57,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 9. Valores padronizados (ver `kolae.dbml`): `venues.status` = available/unavailable/maintenance; `venues.floor_type` = chaves de `Venue::FLOOR_TYPES`; `matches.status` default `scheduled`. A API devolve as chaves de piso; o app traduz.
 10. Fuso das datas: a produção parece devolver UTC e o local, horário de Brasília. Padronizar antes da S4 (partidas dependem de horário).
 11. `GET /api/v1/venues` não filtra por `status` (mostra quadras indisponíveis). Resolver na S3 junto com os filtros.
+12. Tradução (`lang/*.php`, 7 idiomas): toda chave nova entra nos 7 arquivos. Ficou para depois da entrega (decidido em 28/10/2026): traduzir o painel de admin (`admin/*`, `sports/*`, `venues/index.php`, `errors/403` e `404` estão com texto fixo em português) e limpar ~43 chaves sem uso.
+13. Edição de quadra no mobile não tem botão "Cancelar" (só o "Salvar" fixo embaixo). Polimento para a S6, se sobrar tempo.
 
 ## Convenções
 
