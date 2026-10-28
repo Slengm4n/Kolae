@@ -3,15 +3,12 @@
 namespace App\Controllers;
 
 use App\Core\BaseApiController;
+use App\Core\Mailer;
 use App\Models\User;
-use Firebase\JWT\JWT;
 use Exception;
 
 class AuthApiController extends BaseApiController
 {
-    /** Validade do token JWT (8 horas). */
-    private const TOKEN_TTL_SECONDS = 60 * 60 * 8;
-
     /**
      * POST /api/v1/auth/login
      * Body: { "email": "...", "password": "..." }
@@ -24,51 +21,26 @@ class AuthApiController extends BaseApiController
         $email = trim((string)($input['email'] ?? ''));
         $password = (string)($input['password'] ?? '');
 
-        //Validação dos campos (erros por campo em error.fields)
-        $fields = [];
+        $errors = [];
         if ($email === '') {
-            $fields['email'] = 'O e-mail é obrigatório.';
+            $errors['email'] = 'O e-mail é obrigatório.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $fields['email'] = 'Formato de e-mail inválido.';
+            $errors['email'] = 'Formato de e-mail inválido.';
         }
         if ($password === '') {
-            $fields['password'] = 'A senha é obrigatória.';
+            $errors['password'] = 'A senha é obrigatória.';
         }
-        if ($fields) {
-            $this->sendError('Verifique os campos informados.', 'VALIDATION_ERROR', 422, $fields);
-        }
+        $this->failIfInvalid($errors);
 
         try {
             //Busca o usuário pelo email (findByEmail só retorna usuários ativos)
             $user = User::findByEmail($email);
 
-            // A coluna é "password" (hash bcrypt); antes lia "password_hash" e nenhum login funcionava
             if (!$user || !password_verify($password, $user['password'])) {
                 $this->sendError('E-mail ou senha incorretos.', 'INVALID_CREDENTIALS', 401);
             }
 
-            if (!defined('JWT_SECRET') || JWT_SECRET === '') {
-                throw new Exception('Chave secreta JWT não está configurada no servidor.');
-            }
-
-            $issuedAt = time();
-            $expiresAt = $issuedAt + self::TOKEN_TTL_SECONDS;
-
-            $payload = [
-                'iat' => $issuedAt,
-                'exp' => $expiresAt,
-                'user_id' => (int)$user['id'],
-                'role' => $user['role']
-            ];
-
-            $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
-
-            $this->sendSuccess([
-                'token' => $jwt,
-                'token_type' => 'Bearer',
-                'expires_at' => date(DATE_ATOM, $expiresAt),
-                'user' => self::publicUser($user)
-            ]);
+            $this->sendSuccess($this->tokenResponse($user));
         } catch (Exception $e) {
             //Captura erros gerais (ex: falha na conexão com DB, erro ao gerar JWT)
             error_log("Erro no login da API: " . $e->getMessage());
@@ -77,18 +49,103 @@ class AuthApiController extends BaseApiController
     }
 
     /**
-     * Dados do usuário que podem ir para o app (nunca senha, tokens ou CNPJ).
+     * POST /api/v1/auth/register
+     * Body: { name, email, birthdate, password, password_confirmation }
+     * Cria a conta como "player" e já devolve o token (mesmo formato do login).
      */
-    private static function publicUser(array $user): array
+    public function register()
     {
-        return [
-            'id' => (int)$user['id'],
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'role' => $user['role'],
-            'avatar_url' => !empty($user['avatar_path'])
-                ? BASE_URL . '/uploads/avatars/' . $user['id'] . '/' . $user['avatar_path']
-                : null
-        ];
+        $input = $this->getJsonInput();
+
+        $name = trim((string)($input['name'] ?? ''));
+        $email = trim((string)($input['email'] ?? ''));
+        $birthdate = trim((string)($input['birthdate'] ?? ''));
+        $password = (string)($input['password'] ?? '');
+        $confirmation = (string)($input['password_confirmation'] ?? '');
+
+        $errors = [];
+        if ($name === '') {
+            $errors['name'] = 'O nome é obrigatório.';
+        } elseif (mb_strlen($name) > 255) {
+            $errors['name'] = 'O nome pode ter no máximo 255 caracteres.';
+        }
+
+        if ($email === '') {
+            $errors['email'] = 'O e-mail é obrigatório.';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 255) {
+            $errors['email'] = 'Formato de e-mail inválido.';
+        } elseif (User::emailExists($email)) {
+            $errors['email'] = 'Este e-mail já está cadastrado.';
+        }
+
+        if ($birthdate === '') {
+            $errors['birthdate'] = 'A data de nascimento é obrigatória.';
+        } elseif (!User::isValidAdultBirthdate($birthdate)) {
+            $errors['birthdate'] = 'Informe uma data válida (AAAA-MM-DD). É preciso ter ' . User::MIN_AGE . ' anos ou mais.';
+        }
+
+        $errors += self::validateNewPassword($password, $confirmation);
+        $this->failIfInvalid($errors);
+
+        try {
+            $userId = User::create([
+                'name' => $name,
+                'email' => $email,
+                'birthdate' => $birthdate,
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'role' => 'player'
+            ]);
+            if (!$userId) {
+                throw new Exception('User::create retornou false.');
+            }
+
+            $this->sendSuccess($this->tokenResponse(User::findById($userId)), 201);
+        } catch (Exception $e) {
+            error_log("Erro no cadastro pela API: " . $e->getMessage());
+            $this->sendError('Não foi possível criar a conta.', 'REGISTER_FAILED', 500);
+        }
+    }
+
+    /**
+     * POST /api/v1/auth/forgot-password
+     * Body: { "email": "..." }
+     * Sempre responde igual, exista ou não a conta (não revela quem tem cadastro).
+     */
+    public function forgotPassword()
+    {
+        $input = $this->getJsonInput();
+        $email = trim((string)($input['email'] ?? ''));
+
+        if ($email === '') {
+            $this->failIfInvalid(['email' => 'O e-mail é obrigatório.']);
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->failIfInvalid(['email' => 'Formato de e-mail inválido.']);
+        }
+
+        $user = User::findByEmail($email);
+        if ($user) {
+            // Falha de envio vai para o log; a resposta continua a mesma
+            Mailer::sendPasswordReset($email, $user['name']);
+        }
+
+        $this->sendSuccess(null);
+    }
+
+    /**
+     * Regras de senha nova (cadastro e troca de senha). Retorna os erros por campo.
+     */
+    public static function validateNewPassword(string $password, string $confirmation): array
+    {
+        if ($password === '') {
+            return ['password' => 'A senha é obrigatória.'];
+        }
+        if (mb_strlen($password) < User::PASSWORD_MIN_LENGTH) {
+            return ['password' => 'A senha precisa ter pelo menos ' . User::PASSWORD_MIN_LENGTH . ' caracteres.'];
+        }
+        if ($password !== $confirmation) {
+            return ['password_confirmation' => 'As senhas não conferem.'];
+        }
+        return [];
     }
 }

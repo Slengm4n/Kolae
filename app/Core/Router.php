@@ -32,6 +32,26 @@ class Router
     }
 
     /**
+     * Adiciona uma rota para o método PUT (usado pela API).
+     * @param string $path
+     * @param mixed $handler
+     */
+    public function put(string $path, $handler)
+    {
+        $this->addRoute('PUT', $path, $handler);
+    }
+
+    /**
+     * Adiciona uma rota para o método PATCH (usado pela API).
+     * @param string $path
+     * @param mixed $handler
+     */
+    public function patch(string $path, $handler)
+    {
+        $this->addRoute('PATCH', $path, $handler);
+    }
+
+    /**
      * Adiciona uma rota ao array de rotas, considerando o prefixo do grupo.
      * @param string $method
      * @param string $path

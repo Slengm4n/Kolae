@@ -169,7 +169,15 @@ class UserController
                 header('Location: ' . BASE_URL . '/dashboard?error=cnpj_in_use');
                 exit;
             }
-            if (User::update($userId, ['cnpj' => $cnpj])) {
+            // Quem cadastra CNPJ passa a ser responsável por quadra (owner); admin continua admin
+            $update = ['cnpj' => $cnpj];
+            if (($_SESSION['user_role'] ?? '') === 'player') {
+                $update['role'] = 'owner';
+            }
+            if (User::update($userId, $update)) {
+                if (isset($update['role'])) {
+                    $_SESSION['user_role'] = 'owner';
+                }
                 header('Location: ' . BASE_URL . '/dashboard?status=cnpj_success');
                 exit;
             }

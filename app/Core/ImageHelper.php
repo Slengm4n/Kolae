@@ -89,12 +89,18 @@ class ImageHelper
 
     /**
      * Otimiza uma imagem (redimensiona e comprime).
-     * Requer a extensão GD do PHP.
+     * Requer a extensão GD do PHP; sem ela, mantém a imagem como veio (já validada
+     * pelo conteúdo em validateUpload) em vez de quebrar o upload.
      */
     public static function optimize($sourcePath, $destinationPath, $quality = 80, $maxWidth = 800)
     {
         $imageInfo = \getimagesize($sourcePath);
         if ($imageInfo === false) return false;
+
+        if (!\extension_loaded('gd')) {
+            error_log('ImageHelper: extensão GD desligada; imagem salva sem otimização. Ligue "extension=gd" no php.ini.');
+            return $sourcePath === $destinationPath || \copy($sourcePath, $destinationPath);
+        }
 
         $mime = $imageInfo['mime'];
         switch ($mime) {

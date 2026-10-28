@@ -5,47 +5,57 @@ namespace App\Core;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
-use Firebase\JWT\SignatureInvalidException;
 use App\Models\User;
 
 abstract class BaseApiController
 {
+    /** Validade do token JWT (contrato: 30 dias, sem renovação). */
+    protected const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 30;
 
     protected $userId = null;
     protected $userRole = null;
+    /** @var array|null Usuário do token, carregado por authenticateRequest() */
+    protected $user = null;
 
     public function __construct()
     {
         header('Content-Type: application/json; charset=utf-8');
-        // Especifica UTF-8
-        // Configuração CORS (Cross-Origin Resource Sharing) - Ajuste para produção!
-        // '*' permite qualquer origem (bom para teste local), mas inseguro em produção.
-        // Troque '*' pela URL exata do seu protótipo em produção (ex: 'https://prototipo.seusite.com')
+        // CORS: o app mobile não precisa, mas permite testar a API pelo navegador
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
         header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With');
-        header('Access-Control-Allow-Credentials: true'); // Se precisar de cookies/sessão (JWT não precisa)
         header('Access-Control-Max-Age: 86400');    // Cache de preflight OPTIONS por 1 dia
 
         // Resposta automática para requisições OPTIONS (preflight CORS)
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-            http_response_code(200);
+            http_response_code(204);
             exit;
         }
     }
 
-    protected function sendSuccess($data = null, $statusCode = 200)
+    protected function sendSuccess($data = null, $statusCode = 200, ?array $meta = null)
     {
-        ApiResponse::success($data, $statusCode);
+        ApiResponse::success($data, $statusCode, $meta);
     }
 
     /**
-     * @param array|null $fields Erros por campo (validação), ex: ['email' => 'Obrigatório.']
+     * @param array|null $errors Erros por campo (validação), ex: ['email' => 'Obrigatório.']
      */
-    protected function sendError($message, $errorCode = 'ERROR', $statusCode = 400, ?array $fields = null)
+    protected function sendError($message, $errorCode = 'ERROR', $statusCode = 400, ?array $errors = null)
     {
         // Não logar o erro aqui, logar onde ele acontece (no try-catch)
-        ApiResponse::error($message, $errorCode ?? 'ERROR', $statusCode, $fields);
+        ApiResponse::error($message, $errorCode ?? 'ERROR', $statusCode, $errors);
+    }
+
+    /**
+     * Responde 422 com os erros por campo, se houver algum.
+     * @param array $errors ['campo' => 'mensagem', ...]
+     */
+    protected function failIfInvalid(array $errors): void
+    {
+        if ($errors) {
+            $this->sendError('Verifique os campos informados.', 'VALIDATION_ERROR', 422, $errors);
+        }
     }
 
     /**
@@ -61,8 +71,35 @@ abstract class BaseApiController
     }
 
     /**
+     * Gera o token JWT de um usuário e monta a resposta de login/cadastro.
+     */
+    protected function tokenResponse(array $user): array
+    {
+        if (!defined('JWT_SECRET') || JWT_SECRET === '') {
+            throw new \RuntimeException('Chave secreta JWT não está configurada no servidor.');
+        }
+
+        $issuedAt = time();
+        $expiresAt = $issuedAt + self::TOKEN_TTL_SECONDS;
+
+        $jwt = JWT::encode([
+            'iat' => $issuedAt,
+            'exp' => $expiresAt,
+            'user_id' => (int)$user['id'],
+            'role' => $user['role']
+        ], JWT_SECRET, 'HS256');
+
+        return [
+            'token' => $jwt,
+            'token_type' => 'Bearer',
+            'expires_at' => ApiFormat::fromTimestamp($expiresAt),
+            'user' => ApiFormat::user($user)
+        ];
+    }
+
+    /**
      * Verifica o token JWT enviado no cabeçalho Authorization.
-     * Popula $this->userId e $this->userRole se o token for válido.
+     * Popula $this->user, $this->userId e $this->userRole se o token for válido.
      * Envia erro 401 e termina a execução se for inválido.
      */
     protected function authenticateRequest()
@@ -73,42 +110,31 @@ abstract class BaseApiController
             $this->sendError('Token de autorização ausente.', 'AUTH_MISSING_TOKEN', 401);
         }
 
-        if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+        if (!preg_match('/^Bearer\s+(\S+)$/', trim($authHeader), $matches)) {
             $this->sendError('Formato de token inválido. Use: Bearer <token>', 'AUTH_INVALID_FORMAT', 401);
         }
 
-        $jwt = $matches[1];
-        if (!$jwt) {
-            $this->sendError('Token não encontrado no cabeçalho.', 'AUTH_MISSING_TOKEN', 401);
-        }
-
         try {
-            if (!defined('JWT_SECRET')) {
-                throw new \Exception('Chave JWT não configurada no servidor.'); // Erro de configuração
+            if (!defined('JWT_SECRET') || JWT_SECRET === '') {
+                throw new \RuntimeException('Chave JWT não configurada no servidor.'); // Erro de configuração
             }
-            $secretKey = JWT_SECRET;
-            $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
-
-            // Token válido!
-            $this->userId = $decoded->user_id ?? null;
-            $this->userRole = $decoded->role ?? null;
-
-            if (!$this->userId) {
-                throw new \Exception('Payload do token inválido (sem user_id).');
-            }
-
-            // Opcional: Revalidar se o usuário ainda existe e está ativo
-            $user = User::findById($this->userId);
-            if (!$user || $user['status'] !== 'active') {
-                $this->sendError('Usuário associado ao token é inválido ou inativo.', 'AUTH_INVALID_USER', 401);
-            }
+            $decoded = JWT::decode($matches[1], new Key(JWT_SECRET, 'HS256'));
         } catch (ExpiredException $e) {
-            $this->sendError('Token expirado. Faça login novamente.', 'AUTH_TOKEN_EXPIRED', 401);
-        } catch (SignatureInvalidException $e) {
-            $this->sendError('Assinatura de token inválida.', 'AUTH_SIGNATURE_INVALID', 401);
-        } catch (\Exception $e) { // Captura outros erros do JWT ou a falta de JWT_SECRET
-            error_log("Erro na autenticação JWT: " . $e->getMessage()); // Loga o erro real
-            $this->sendError('Token inválido ou erro interno.', 'AUTH_INVALID_TOKEN', 401);
+            $this->sendError('Sessão expirada. Faça login novamente.', 'AUTH_TOKEN_EXPIRED', 401);
+        } catch (\Throwable $e) { // Assinatura inválida, token malformado ou falta de JWT_SECRET
+            error_log("Erro na autenticação JWT: " . $e->getMessage());
+            $this->sendError('Token inválido. Faça login novamente.', 'AUTH_INVALID_TOKEN', 401);
         }
+
+        $userId = (int)($decoded->user_id ?? 0);
+        // Revalida se o usuário ainda existe e está ativo (o token pode ser anterior a uma desativação)
+        $user = $userId ? User::findById($userId) : null;
+        if (!$user || $user['status'] !== 'active') {
+            $this->sendError('Usuário associado ao token é inválido ou inativo.', 'AUTH_INVALID_USER', 401);
+        }
+
+        $this->user = $user;
+        $this->userId = (int)$user['id'];
+        $this->userRole = $user['role'];
     }
 }

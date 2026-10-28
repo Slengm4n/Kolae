@@ -5,10 +5,11 @@ namespace App\Core;
 /**
  * Class ApiResponse
  * Ponto único de saída da /api/v1. Todo retorno da API (sucesso, erro, 404,
- * exceção não tratada) passa por aqui para seguir o contrato de docs/api.md:
+ * exceção não tratada) passa por aqui para seguir o contrato de docs/api.md,
+ * no padrão do Laravel (para o Kolae 2.0 herdar sem mudar o app):
  *
- *   { "success": true,  "data": ... }
- *   { "success": false, "error": { "message": "...", "code": "...", "fields": { ... } } }
+ *   { "data": ..., "meta": { ... } }                                  (meta só em listas paginadas)
+ *   { "message": "...", "code": "...", "errors": { "campo": ["..."] } } (errors só em validação)
  */
 class ApiResponse
 {
@@ -23,24 +24,34 @@ class ApiResponse
         return strpos($path, '/api/') !== false;
     }
 
-    public static function success($data = null, int $statusCode = 200): void
+    /**
+     * @param mixed      $data       Conteúdo da resposta (null quando não há conteúdo)
+     * @param int        $statusCode Status HTTP
+     * @param array|null $meta       Paginação: ['current_page', 'last_page', 'per_page', 'total']
+     */
+    public static function success($data = null, int $statusCode = 200, ?array $meta = null): void
     {
-        self::send(['success' => true, 'data' => $data], $statusCode);
+        $payload = ['data' => $data];
+        if ($meta !== null) {
+            $payload['meta'] = $meta;
+        }
+        self::send($payload, $statusCode);
     }
 
     /**
      * @param string     $message    Mensagem legível (pode ser exibida no app)
      * @param string     $code       Código estável em MAIÚSCULAS, para o app tratar (ex: INVALID_CREDENTIALS)
      * @param int        $statusCode Status HTTP
-     * @param array|null $fields     Erros por campo, ex: ['email' => 'Obrigatório.']
+     * @param array|null $errors     Erros por campo. Aceita ['email' => 'msg'] ou ['email' => ['msg', ...]];
+     *                               sempre sai como lista, como no Laravel.
      */
-    public static function error(string $message, string $code = 'ERROR', int $statusCode = 400, ?array $fields = null): void
+    public static function error(string $message, string $code = 'ERROR', int $statusCode = 400, ?array $errors = null): void
     {
-        $error = ['message' => $message, 'code' => $code];
-        if (!empty($fields)) {
-            $error['fields'] = $fields;
+        $payload = ['message' => $message, 'code' => $code];
+        if (!empty($errors)) {
+            $payload['errors'] = array_map(fn($msgs) => array_values((array)$msgs), $errors);
         }
-        self::send(['success' => false, 'error' => $error], $statusCode);
+        self::send($payload, $statusCode);
     }
 
     /**

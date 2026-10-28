@@ -12,13 +12,27 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+### Adicionado
+- API da Sprint 2 para o app: cadastro (`POST /auth/register`, já devolve o token), esqueci a senha (`POST /auth/forgot-password`), perfil (`GET` e `PATCH /me`, que edita só o nome: a data de nascimento não é editável, como no site), foto de perfil (`POST /me/avatar`) e troca de senha (`PUT /me/password`).
+- Quem cadastra CNPJ no site passa a ser `owner` (responsável por quadra). O patch `database/patches/003_owner_por_cnpj.sql` converte quem já tinha CNPJ.
+
+### Alterado
+- **A API muda de formato** (padrão do Laravel): sucesso `{ "data": ... }` e erro `{ "message", "code", "errors": { "campo": ["..."] } }`. Datas em ISO 8601 com fuso. Detalhes em `docs/api.md`.
+- O token de login passa a valer 30 dias (antes, 8 horas).
+- `GET /api/v1/sports` devolve só `id`, `name`, `description` e `icon_path`.
+- O e-mail de recuperação de senha é montado num lugar só (`App\Core\Mailer`), usado pelo site e pela API.
+- A conexão com o banco usa `utf8mb4` e mostra uma mensagem genérica (sem detalhes do servidor) quando o banco está fora do ar.
+
 ### Corrigido
+- Datas com fuso diferente entre a produção (UTC) e o ambiente local (Brasília): a sessão do MySQL passa a usar o horário de Brasília, o mesmo do PHP.
+- Upload de imagem quebrava com erro fatal e deixava o arquivo para trás quando a extensão GD do PHP estava desligada; agora salva a imagem (já validada) sem otimizar.
 - Painel de admin: ao editar ou criar uma quadra, "Cancelar" e o link "Painel" levavam para o painel do usuário (`/dashboard`). Agora voltam para a lista de quadras do admin. O destino passou a ser decidido pela rota atual, e não pelo Referer do navegador.
 - A tela de criar quadra ignorava o painel de origem e sempre enviava o formulário pela rota do usuário.
 - As mensagens de "quadra cadastrada" e "dados da quadra atualizados" não apareciam na lista do admin (o código de status enviado não era o esperado).
 - Traduções faltando: a mensagem de "senhas não conferem" ficava vazia na redefinição de senha em português, italiano e japonês, e no cadastro e na troca de senha em inglês, espanhol, hindi e chinês. O título de erro da edição de quadra também faltava nesses quatro idiomas.
 
 ### Documentação
+- `docs/api.md`: contrato da Sprint 2 (cadastro, esqueci a senha, perfil, avatar e troca de senha) e novo formato das respostas no padrão do Laravel (`{ data }` / `{ message, code, errors }`), com datas ISO 8601, dinheiro em centavos e coordenadas numéricas. Plano das S3 a S5 atualizado para o novo modelo: partidas agendadas pelo dono no site e status da quadra calculado pela API.
 - `config.example.php` passa a trazer o bloco de e-mail (`SMTP_*`) usado pelo "esqueci a senha". Antes, quem montava o ambiente pelo exemplo ficava sem essas constantes e a recuperação de senha parava com erro fatal.
 - `docs/setup.md`: passo para ligar as extensões `gd` e `zip` do PHP, como instalar as dependências sem o Composer global, como configurar o SMTP (inclusive senha de app do Gmail) e novos problemas comuns.
 
