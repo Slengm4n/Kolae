@@ -9,6 +9,7 @@ import { initLogin } from './pages/login.js';
 import { initRegister } from './pages/register.js';
 import { initCnpjMask } from './pages/cnpj.js';
 import { initLanguageSwitcher } from './modules/language_switcher.js';
+import { initHomeMotion } from './pages/home_motion.js';
 // 3. Executa quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
     initTheme(); // Roda em todas as páginas
@@ -18,4 +19,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initRegister(); // Só vai ativar se estiver na página de registro
     initCnpjMask(); // Só vai ativar se estiver na página com campo CNPJ
     initLanguageSwitcher(); // Roda em todas as páginas
+    initHomeMotion(); // Só vai ativar se estiver na Home (cabeçalho, seções ao rolar, prévia do app)
 });

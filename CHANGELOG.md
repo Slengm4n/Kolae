@@ -18,6 +18,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ### Alterado
 - **Nova home**, com a identidade do app: abertura com prévia ilustrada do app e os selos de status, "Como funciona" em 3 passos, os status das quadras, quadras reais cadastradas (foto, bairro, piso, preço), chamada para responsáveis por quadra, "Sobre nós" e parceiros. Botões "Entrar" e "Cadastre-se" visíveis no topo; tudo nos 7 idiomas.
+- **Animações na home**: abertura em sequência, prévia do app com o selo alternando entre "Disponível" e "Em uso" e pinos pulsando, seções que surgem ao rolar, cabeçalho fixo que ganha fundo ao rolar e detalhes ao passar o mouse. Respeitam a opção "reduzir movimento" do sistema e, sem JavaScript, a página aparece completa e parada.
 - **Identidade visual do app em todo o site**: azul `#0084FF` (paleta `brand` no `src/input.css`) no lugar do ciano, títulos na fonte Kanit e as cores de status do app (`status-badge`).
 - Cabeçalho, rodapé e `<head>` das páginas públicas viraram peças reutilizáveis em `app/views/partials/`.
 - **A API muda de formato** (padrão do Laravel): sucesso `{ "data": ... }` e erro `{ "message", "code", "errors": { "campo": ["..."] } }`. Datas em ISO 8601 com fuso. Detalhes em `docs/api.md`.

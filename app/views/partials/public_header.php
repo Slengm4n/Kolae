@@ -24,7 +24,8 @@ $languages = [
 ];
 $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-white/90 bg-white/10 border border-white/15 backdrop-blur-md hover:bg-white/20 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300';
 ?>
-<header class="absolute inset-x-0 top-0 z-40">
+<?php // Fixo no topo; ganha fundo escuro ao rolar (src/js/pages/home_motion.js) ?>
+<header data-site-header class="fixed inset-x-0 top-0 z-40 transition-[background-color,box-shadow,backdrop-filter] duration-300">
     <div class="container mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
 
         <a href="<?php echo BASE_URL; ?>/" aria-label="Kolae" class="shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded-lg">
