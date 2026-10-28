@@ -6,7 +6,7 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 
 > **Estado:**
 > - **S2 (v1.5.0):** revisado e aprovado pelo João e pelo Rafael em 28/10/2026, implementado e em produção.
-> - **S3 (v1.6.0, até 08/11):** **proposta de 28/10/2026, aguardando revisão do Rafael.** Escrita a partir do `docs/modelo-status.md` (D21–D27). Até ser implementada, `GET /venues` continua no formato legado e o app usa o mock **com os campos daqui**.
+> - **S3 (v1.6.0, até 08/11):** revisado pelo Rafael em 28/10/2026; ajustes da revisão já aplicados (D29–D33). Escrito a partir do `docs/modelo-status.md` (D21–D27). Até ser implementado, `GET /venues` continua no formato legado e o app usa o mock **com os campos daqui**.
 
 ## Base URL
 
@@ -217,7 +217,7 @@ Público. Envia o e-mail com o link de redefinição. O link abre a página de n
 
 ---
 
-## Endpoints da S3 (v1.6.0) — proposta, aguardando revisão do Rafael
+## Endpoints da S3 (v1.6.0)
 
 Todos **públicos** (não precisam de token): o mapa e o detalhe da quadra abrem sem login.
 
@@ -246,6 +246,7 @@ Calculado pela API a cada requisição, no horário de Brasília. **O app nunca 
   "floor_type": "synthetic",
   "is_covered": true,
   "has_lighting": true,
+  "has_leisure_area": true,
   "court_capacity": 14,
   "cover_image_url": "https://.../uploads/venues/12/venue_abc.jpg",
   "sports": [
@@ -261,11 +262,12 @@ Calculado pela API a cada requisição, no horário de Brasília. **O app nunca 
 
 | Campo | Observação |
 | :---- | :---- |
-| `price_per_hour_cents` | Preço médio por hora, em centavos. `null` se o dono não informou |
+| `price_per_hour_cents` | Preço médio por hora, em centavos. **`0` = grátis; `null` = o dono não informou** (mostrar "Preço não informado") (D31) |
 | `floor_type` | `synthetic`, `court`, `sand`, `clay`, `grass` ou `wood` (D15); o app traduz |
+| `has_leisure_area` | Tem área de lazer (D32) |
 | `court_capacity` | Pessoas na quadra; `null` se não informado |
 | `cover_image_url` | Primeira foto da quadra; `null` se não há foto |
-| `sports` | Esportes que a quadra atende (lista, pode ser vazia). Ver a D29 no fim desta seção |
+| `sports` | Esportes que a quadra atende (lista, pode ser vazia até o dono marcar) (D29) |
 | `latitude`, `longitude` | `null` quando o endereço não foi geolocalizado: a quadra aparece na lista, mas não no mapa |
 | `distance_km` | Distância em km (uma casa decimal) até `lat`/`lng` enviados; `null` quando a busca não manda posição |
 
@@ -280,13 +282,14 @@ Lista paginada das quadras (as excluídas pelo dono não aparecem; as fechadas a
 | `q` | `arena` | Busca no nome da quadra, no bairro e na cidade (sem diferenciar maiúsculas) |
 | `sport_id` | `1` | Só quadras que atendem esse esporte |
 | `status` | `available` | `available`, `in_use` ou `closed` |
-| `max_price_cents` | `15000` | Preço por hora até esse valor. Quadras sem preço ficam de fora quando este filtro é usado |
+| `max_price_cents` | `15000` | Preço por hora até esse valor, **incluindo as grátis** (`0`). `max_price_cents=0` = só as grátis. Quadras com preço não informado (`null`) ficam de fora quando este filtro é usado |
 | `is_covered` | `true` | `true` ou `false` |
 | `has_lighting` | `true` | `true` ou `false` |
+| `has_leisure_area` | `true` | `true` ou `false` (D32) |
 | `floor_type` | `synthetic` | Uma das chaves de `floor_type` |
 | `lat`, `lng` | `-23.54`, `-46.37` | Posição de quem busca. Os dois juntos. Preenche `distance_km` |
 | `radius_km` | `10` | Só quadras até essa distância. Exige `lat`/`lng`. De `1` a `50` |
-| `sort` | `distance` | `name` (padrão), `price` (mais barata primeiro; sem preço vão para o fim) ou `distance` (exige `lat`/`lng`; sem coordenadas vão para o fim) |
+| `sort` | `distance` | `name` (padrão), `price` (mais barata primeiro, grátis no começo; sem preço informado vão para o fim) ou `distance` (exige `lat`/`lng`; sem coordenadas vão para o fim). Não há ordenação por avaliação (D33) |
 | `page` | `2` | Página, a partir de `1` |
 | `per_page` | `20` | Itens por página, de `1` a `100` (padrão `20`). Para o mapa, usar `100` com `radius_km` |
 
@@ -315,7 +318,7 @@ Detalhe de uma quadra: tudo do resumo, mais:
     "status": "in_use",
     "status_until": "2026-11-03T21:00:00-03:00",
     "...": "demais campos do resumo (sem distance_km)",
-    "has_leisure_area": true,
+    "description": "Quadra society com grama sintética nova, vestiário e estacionamento.",
     "leisure_area_capacity": 30,
     "images": [
       "https://.../uploads/venues/12/venue_abc.jpg",
@@ -347,6 +350,9 @@ Detalhe de uma quadra: tudo do resumo, mais:
 
 | Campo | Observação |
 | :---- | :---- |
+| `distance_km` | Não vem no detalhe: o app calcula com a posição da pessoa e as coordenadas da quadra (D33) |
+| `description` | Texto livre do dono para a seção "Sobre a quadra", até 1000 caracteres. `null` se não preenchido: esconder a seção (D30) |
+| `leisure_area_capacity` | Pessoas na área de lazer; `null` se não informado ou sem área de lazer |
 | `images` | Todas as fotos, a capa primeiro. Lista vazia se não há foto |
 | `address.full` | Endereço pronto para exibir ou para abrir no app de mapas |
 | `opening_hours` | Só os dias em que abre. `weekday`: `0` = domingo ... `6` = sábado. Lista vazia = horário não cadastrado (D23): mostrar "Horário não informado" |
@@ -383,9 +389,15 @@ Agenda de um dia: o horário de funcionamento dividido em faixas livres e ocupad
 
 **Erros**: `404 NOT_FOUND` (quadra), `422 VALIDATION_ERROR` (`errors.date`: data inválida ou fora do formato `YYYY-MM-DD`).
 
-### D29 · Esportes de cada quadra (proposta, confirmar na revisão)
+### Decisões da revisão (28/10/2026)
 
-Hoje o banco **não liga quadra a esporte**, então não há de onde tirar `sports` nem o filtro `sport_id`. Proposta: tabela `venue_sports` (quadra × esporte) no patch 004 e, na S4, uma lista de caixas de seleção de esportes no formulário de quadra do site. Até o dono marcar, `sports` vem vazio e a quadra não aparece no filtro `sport_id`. Se a proposta não for aceita, `sports` e `sport_id` saem do contrato.
+| Decisão | Resumo |
+| :---- | :---- |
+| D29 | Esportes por quadra (`venue_sports`), aprovado. Até o dono marcar, `sports` vem vazio e a quadra não aparece no filtro `sport_id`: **os dados de demonstração precisam ter os esportes marcados** |
+| D30 | `description` opcional da quadra, para a seção "Sobre a quadra" |
+| D31 | Preço `0` = grátis, `null` = não informado; `max_price_cents` inclui as grátis |
+| D32 | `has_leisure_area` no resumo e como filtro |
+| D33 | Resolvido no app, sem mudar o contrato: a seção "Mais avaliadas" vira "Disponíveis agora" (`status=available`), e a distância no detalhe é calculada pelo app |
 
 ---
 
