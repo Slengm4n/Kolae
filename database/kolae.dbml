@@ -83,7 +83,7 @@ Table users {
   cnpj varchar(255) [unique, note: 'Criptografado (AES-256-CBC, IV fixo => determinístico, por isso o UNIQUE funciona)']
   birthdate date
   password varchar(255) [not null, note: 'Hash bcrypt (password_hash do PHP)']
-  role varchar(20) [not null, default: 'player', note: 'admin | owner | player']
+  role varchar(20) [not null, default: 'player', note: 'admin | owner | player. owner = quem cadastrou CNPJ (patch 003)']
   status varchar(20) [not null, default: 'active', note: 'active | inactive | suspended']
   avatar_path varchar(255)
   force_password_change tinyint(1) [default: 0, note: 'Não é lido pelo código hoje']
