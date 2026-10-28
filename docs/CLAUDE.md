@@ -48,6 +48,34 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - S2 em andamento: contrato da S2 escrito em `docs/api.md` (branch `feat/s2-contrato-api`), esperando revisão do Rafael. Pontos "a confirmar" no contrato: token de 30 dias, senha mínima de 8 caracteres (site também), `birthdate` editável pelo app.
 - Risco de prazo: o novo modelo traz telas novas no site para o dono (horário de funcionamento, agendar partidas, WhatsApp) na S3/S4, e o status depende de resolver o fuso das datas (item 10).
 
+## Alinhamento com o app (CLAUDE.md do Rafael, 28/10/2026)
+
+Comparação entre o contrato que o app espera e o `docs/api.md`. Revisar junto com o Rafael antes de implementar a S2.
+
+**Igual ao app**
+- Formato Laravel: `{ data }` no sucesso e `{ message, errors: { campo: [...] } }` no erro, com status 401/403/422 corretos.
+- Datas ISO 8601 com fuso, dinheiro em centavos, imagens como URL completa, `Authorization: Bearer`.
+- Rotas e corpos da S2: `POST /auth/login`, `POST /auth/register` (devolve `{ token, user }`), `POST /auth/forgot-password` (mesma resposta exista ou não o e-mail), `GET /me`, `PATCH /me` (`name`, `birthdate`), `POST /me/avatar` (multipart `avatar`), `PUT /me/password`.
+- Objeto `user`: `id, name, email, birthdate, role, avatar_url, created_at`; `role` = `admin` | `owner` | `player`.
+- Modelo do produto: status `available` / `in_use` / `closed` calculado pela API, `status_until`, `owner_whatsapp`, agenda do dia em `/venues/{id}/schedule`, filtros e paginação em `/venues`, avaliações e favoritos só como vitrine.
+
+**Diferente do app (o app precisa ajustar ou só saber)**
+- Erros trazem também `code` (ex: `VALIDATION_ERROR`, `AUTH_TOKEN_EXPIRED`), um extra que o app pode usar ou ignorar.
+- Login e cadastro devolvem também `token_type` e `expires_at`, além de `token` e `user`.
+- Paginação segue o Laravel: `{ data: [...], meta: { current_page, last_page, per_page, total } }`.
+- Sem conteúdo, a resposta é `{ "data": null }` (o app esperava "vazio").
+- Troca de e-mail com código (`POST /me/email` e `/me/email/confirm`) foi para a **S5**: na S2 do app, essa tela fica no mock.
+- `GET /venues` continua no formato antigo até a **S3** (na S2 só muda o envelope); `/venues/{id}` chega na S3 e `/venues/{id}/schedule` na S4.
+- `POST /games` sai da API (partidas só pelo site).
+- Avatar: JPG, PNG ou GIF de até 10 MB.
+
+**A confirmar com o Rafael**
+- Token de 30 dias, sem renovação (hoje são 8 horas).
+- Senha mínima de 8 caracteres (o site passaria a exigir também).
+- `birthdate` editável pelo app (no site não é).
+- WhatsApp do dono: o banco não tem telefone. Entra uma coluna nova e um campo no site na S3.
+- O primeiro APK de teste (S2 do app) usa a API local em `http://`: liberar tráfego HTTP no build.
+
 ## Problemas conhecidos (prioridade)
 
 1. ~~CRÍTICO: `VenueController::handleImageUploads` não valida o arquivo (permite .php).~~ Corrigido (em produção).  
