@@ -17,6 +17,7 @@ return[
     'global_menu_config' => 'Configuración',
     'global_cancel' => 'Cancelar',
     'global_back' => 'Volver',
+    'global_error' => 'Error',
     'global_account' => 'Cuenta',
 
     'global_email' => 'Correo electrónico',
@@ -82,6 +83,7 @@ return[
     'reset_password_btn' => 'Guardar contraseña',
 
     'reset_password_mismatch' => 'Las contraseñas no coinciden. Inténtalo de nuevo.',
+    'password_mismatch' => 'Las contraseñas no coinciden. Inténtalo de nuevo.',
     'reset_invalid' => 'El enlace de restablecimiento es inválido o ha expirado.',
     'reset_unknown_error' => 'Hubo un error al actualizar tu contraseña. Inténtalo de nuevo.',
 
