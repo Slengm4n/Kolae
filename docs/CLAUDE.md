@@ -6,6 +6,8 @@ Plataforma web (PHP puro, MVC próprio) que conecta atletas a quadras e partidas
 
 Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` para o app mobile consumir. O Kolae 2.0 em Laravel \+ Sanctum só começa depois da entrega. Não migrar para Laravel agora.
 
+**Modelo do produto (decidido em 28/10/2026 com o Rafael, do app):** a pessoa não cria nem entra em partida pelo app. O dono da quadra (`owner`) agenda as partidas **no site**, para quem alugou o horário. O app mostra o status da quadra (`available`, `in_use`, `closed`), sempre **calculado pela API**, a agenda do dia e um botão "Falar com o dono" (WhatsApp). Isso substitui o plano antigo de `match_participants` e entrar/sair de partida. Avaliações e favoritos são só vitrine no app. O app é React Native + Expo (Rafael) e segue o contrato de `docs/api.md`.
+
 **Limitação de hospedagem:** o InfinityFree responde a clientes que não são navegador com um desafio JavaScript (`/aes.js`) em vez do JSON, então o app **não consegue usar a API da produção** (confirmado em 27/10/2026). Decisão atual (opção C): o app usa o backend rodando no notebook do João (XAMPP) na mesma rede Wi-Fi; ver `docs/setup.md`. Migração para uma hospedagem que aceite API prevista para novembro. O site no navegador funciona normalmente.
 
 - Plano completo: [https\://claude.ai/artifact/JSdR7eYfrkZFTk5qcVAv4R](https://claude.ai/artifact/JSdR7eYfrkZFTk5qcVAv4R)  
@@ -18,10 +20,10 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 | Semana | Backend (João) | Pronto quando |
 | :---- | :---- | :---- |
 | S1 26/10–01/11 | 3 hotfixes críticos, consertar login da API, padrão JSON | Hotfix em produção |
-| S2 02/11–08/11 | register, /me, avatar, forgot-password | Login ponta a ponta no celular |
-| S3 09/11–15/11 | /venues com filtros, /venues/{id}, /sports | Quadra do site aparece no app |
-| S4 16/11–22/11 | match\_participants, /games, entrar/sair | Partida completa pelo app |
-| S5 23/11–29/11 | CSRF, XSS, rate limit, "lembrar de mim" | Congelamento de features 29/11 |
+| S2 02/11–08/11 | Formato Laravel na API; register, forgot-password, GET/PATCH /me, avatar, PUT /me/password; CNPJ → `owner` | Login ponta a ponta no celular |
+| S3 09/11–15/11 | /venues com filtros, paginação, status e WhatsApp do dono; /venues/{id}; /sports | Quadra do site aparece no app |
+| S4 16/11–22/11 | Horário de funcionamento e partidas agendadas pelo dono **no site**; status calculado; /venues/{id}/schedule | Status muda sozinho no app |
+| S5 23/11–29/11 | CSRF, XSS, rate limit, "lembrar de mim", troca de e-mail com código | Congelamento de features 29/11 |
 | S6 30/11–05/12 | Só bugs, dados de demo | Entrega 05/12 |
 
 ## Estrutura
@@ -43,7 +45,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - Depois da v1.4.0 (em `[Não lançado]` no CHANGELOG, vão para a v1.5.0): chaves de tradução faltando (PR #34), admin volta para o painel de admin ao editar/criar quadra (PR #35), bloco SMTP no `config.example.php` e extensões do PHP no setup (PR #36).
 - Pendente:
   - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
-- Próximo: S2 (register, /me, avatar, forgot-password). Descrever cada endpoint em `docs/api.md` antes de implementar.
+- S2 em andamento: contrato da S2 escrito em `docs/api.md` (branch `feat/s2-contrato-api`), esperando revisão do Rafael. Pontos "a confirmar" no contrato: token de 30 dias, senha mínima de 8 caracteres (site também), `birthdate` editável pelo app.
+- Risco de prazo: o novo modelo traz telas novas no site para o dono (horário de funcionamento, agendar partidas, WhatsApp) na S3/S4, e o status depende de resolver o fuso das datas (item 10).
 
 ## Problemas conhecidos (prioridade)
 
@@ -51,7 +54,7 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 2. ~~CRÍTICO: `SMTPDebug = 2` em `AuthController::handleForgotPassword`.~~ Corrigido (em produção).  
 3. ~~CRÍTICO: IDOR em `VenueController::update` (`delete_images[]` e `address_id` do POST).~~ Corrigido (em produção); usa o `address_id` da quadra no banco e só apaga imagens com `venue_id` da própria quadra. Testado ponta a ponta no local em 27/10.  
 4. ~~API: `AuthApiController` usa `$user['password_hash']`, a coluna é `password`.~~ Corrigido (em produção); login devolve token + usuário.  
-5. API: `Game::create` insere `duration_minutes`, a tabela `matches` tem `end_time`. Fica para a S4.  
+5. API: `Game::create` insere `duration_minutes`, a tabela `matches` tem `end_time`. O `POST /api/v1/games` sai com o novo modelo (partidas só pelo site); a tabela `matches` é revista na S4.  
 6. ~~`Venue::findById` lê `a.street`, mas o schema normaliza ruas.~~ Corrigido (em produção; também carrega as fotos na edição e mantém lat/lng quando a geocodificação falha).  
 7. Sem CSRF; `json_encode` em `<script>` sem `JSON_HEX_TAG` em admin/map.php (venues/edit.php já corrigido).  
 8. "Lembrar de mim": login grava `users.remember_token`, `AuthHelper::checkRememberMe` lê `user_tokens` (selector:validator). A tabela `user_tokens` é criada pelo patch 001; falta o login passar a gravar nela (S5) e depois remover `users.remember_token`.
@@ -65,7 +68,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 
 - PHP 8.2, PSR-4 `App\\` → `app/`. SQL sempre com prepared statements.  
 - Escapar toda saída nas views com `htmlspecialchars`.  
-- Respostas da API: `{ "success": true, "data": ... }` / `{ "success": false, "error": { "message", "code", "fields" } }`.  
+- Respostas da API (a partir da v1.5.0, padrão Laravel): sucesso `{ "data": ... }`; erro `{ "message", "code", "errors": { "campo": ["..."] } }` (`errors` só no 422). Datas ISO 8601 com fuso, dinheiro em centavos (`_cents`), coordenadas numéricas, booleanos `true/false`. Detalhes em `docs/api.md`.  
+- `role`: `owner` = quem cadastrou CNPJ no site (decidido em 28/10); cadastro pelo app ou site começa como `player`.  
 - Branch por tarefa (`feat/...`, `fix/...`, `docs/...`, `chore/...`), PR para `main` (deploy), revisão do outro membro. A `develop` é só espelho: depois de cada merge, `git push origin main:develop`.  
 - Versões: SemVer, tags `vX.Y.Z`. Uma minor por sprint (S1 = v1.4.0, S2 = v1.5.0, ...), patch para hotfix, v2.0.0 reservada para o Laravel. Durante a sprint, registrar mudanças em `## [Não lançado]` do `CHANGELOG.md`. No fechamento: mover para a nova versão, atualizar `version` do `package.json` (e a raiz do `package-lock.json`), criar a tag no commit da `main` e a release no GitHub com o texto do CHANGELOG. O `composer.json` não tem `version`. Tags antigas irregulares (`1.2.0`, `v1.3`) ficam como estão; não reescrever.  
 - Responder e comentar em português.
