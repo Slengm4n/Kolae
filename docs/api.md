@@ -245,6 +245,8 @@ Público. **Formato legado até a S3**: a v1.5.0 só troca o envelope (`{ "data"
 | S4 | `GET /venues/{id}/schedule?date=` (agenda do dia); status calculado a partir do horário de funcionamento e das partidas agendadas pelo dono |
 | S5 | Troca de e-mail com código (`POST /me/email`, `POST /me/email/confirm`) |
 
+A regra completa do status, o horário de funcionamento e a agenda estão propostos em [`modelo-status.md`](modelo-status.md) (em revisão); o contrato da S3/S4 será escrito aqui a partir dele.
+
 Status da quadra (S3/S4), calculado pela API e nunca pelo app: `available` (aberta e sem partida agora), `in_use` (partida neste horário), `closed` (fora do horário ou fechada pelo dono). `status_until` diz quando o status atual muda.
 
 Dono da quadra (S3, combinado em 28/10): um objeto `owner` no lugar do antigo `owner_whatsapp` solto, para a tela de informações da quadra. O `whatsapp` exige uma coluna nova em `users` e um campo no site.
