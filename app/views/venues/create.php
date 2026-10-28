@@ -4,8 +4,9 @@ $lang = require BASE_PATH . '/includes/i18n.php';
 $userName = $_SESSION['user_name'] ?? 'Usuário';
 $userAvatar = $_SESSION['user_avatar'] ?? null;
 $userId = $_SESSION['user_id'] ?? 0;
-// Prefixo para rotas
-$routePrefix = '/dashboard';
+// Prefixo das rotas e painel de volta (definidos no VenueController: /admin ou /dashboard)
+$routePrefix = $data['routePrefix'] ?? '/dashboard';
+$backUrl = $data['backUrl'] ?? '/dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $_SESSION['idioma']; ?>" class="transition-colors duration-500">
@@ -112,7 +113,7 @@ $routePrefix = '/dashboard';
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
                     <?php echo $lang['global_home_panel'] ?></a>
             </nav>
 
@@ -141,7 +142,7 @@ $routePrefix = '/dashboard';
                             <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($userName); ?></p>
                         </div>
                         <ul class="py-2 text-sm">
-                            <li><a href="<?php echo BASE_URL; ?>/dashboard" class="flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-home w-4 text-center"></i><?php echo $lang['global_back'] ?></a></li>
+                            <li><a href="<?php echo BASE_URL . $backUrl; ?>" class="flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-home w-4 text-center"></i><?php echo $lang['global_back'] ?></a></li>
 
                             <li>
                                 <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
