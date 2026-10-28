@@ -17,6 +17,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Quem cadastra CNPJ no site passa a ser `owner` (responsável por quadra). O patch `database/patches/003_owner_por_cnpj.sql` converte quem já tinha CNPJ.
 
 ### Alterado
+- **Nova home**, com a identidade do app: abertura com prévia ilustrada do app e os selos de status, "Como funciona" em 3 passos, os status das quadras, quadras reais cadastradas (foto, bairro, piso, preço), chamada para responsáveis por quadra, "Sobre nós" e parceiros. Botões "Entrar" e "Cadastre-se" visíveis no topo; tudo nos 7 idiomas.
+- **Identidade visual do app em todo o site**: azul `#0084FF` (paleta `brand` no `src/input.css`) no lugar do ciano, títulos na fonte Kanit e as cores de status do app (`status-badge`).
+- Cabeçalho, rodapé e `<head>` das páginas públicas viraram peças reutilizáveis em `app/views/partials/`.
 - **A API muda de formato** (padrão do Laravel): sucesso `{ "data": ... }` e erro `{ "message", "code", "errors": { "campo": ["..."] } }`. Datas em ISO 8601 com fuso. Detalhes em `docs/api.md`.
 - O token de login passa a valer 30 dias (antes, 8 horas).
 - `GET /api/v1/sports` devolve só `id`, `name`, `description` e `icon_path`.
@@ -24,6 +27,11 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - A conexão com o banco usa `utf8mb4` e mostra uma mensagem genérica (sem detalhes do servidor) quando o banco está fora do ar.
 
 ### Corrigido
+- O seletor de idioma não funcionava pelo módulo JavaScript (esperava um evento que já tinha passado); a home dependia de uma cópia do código no HTML.
+- O botão de tema mostrava os ícones de lua e sol ao mesmo tempo.
+- O título da home vazava para fora da tela no celular.
+- `npm run build` nunca terminava (o `vite.config.js` estava em modo de vigiar arquivos).
+- Rodapé da home: ano fixo em 2025, newsletter que não enviava nada, links de redes sociais vazios e logo de parceiro quebrado (imagem externa).
 - Painel de admin: o seletor de papel do usuário só tinha "user" (valor que não existe no banco) e "admin", então salvar a edição de um responsável por quadra o rebaixava para `player`. Agora oferece `player`, `owner` e `admin`, na criação e na edição.
 - Datas com fuso diferente entre a produção (UTC) e o ambiente local (Brasília): a sessão do MySQL passa a usar o horário de Brasília, o mesmo do PHP.
 - Upload de imagem quebrava com erro fatal e deixava o arquivo para trás quando a extensão GD do PHP estava desligada; agora salva a imagem (já validada) sem otimizar.
