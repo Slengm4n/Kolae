@@ -53,6 +53,22 @@ define('GOOGLE_MAPS_API_KEY', '');
 define('JWT_SECRET', 'SUA_CHAVE_SECRETA_SUPER_LONGA_E_ALEATORIA_AQUI');
 
 
+// --- CONFIGURAÇÕES DE E-MAIL (SMTP) --- //
+/**
+ * Servidor de e-mail usado pelo "esqueci a senha" (PHPMailer).
+ * Todas as constantes são obrigatórias: se alguma faltar, o PHP 8 para com erro fatal.
+ * Sem um servidor configurado (SMTP_HOST vazio), o envio falha e o erro vai só para o log.
+ * Ex. Gmail: host 'smtp.gmail.com', porta 587, 'tls' e uma "senha de app" em SMTP_PASS.
+ */
+define('SMTP_HOST', '');
+define('SMTP_USER', '');
+define('SMTP_PASS', '');
+define('SMTP_SECURE', 'tls'); // 'tls' (STARTTLS, porta 587) ou 'ssl' (porta 465)
+define('SMTP_PORT', 587);
+define('SMTP_FROM_EMAIL', ''); // Remetente; normalmente o mesmo e-mail de SMTP_USER
+define('SMTP_FROM_NAME', 'Kolae');
+
+
 // --- CONFIGURAÇÕES REGIONAIS --- //
 /**
  * Define o fuso horário padrão para funções de data e hora da aplicação.
