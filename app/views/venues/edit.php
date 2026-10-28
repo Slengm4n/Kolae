@@ -2,6 +2,7 @@
 $lang = require BASE_PATH . '/includes/i18n.php';
 $venue = $data['venue'] ?? null;
 $prefix = $data['routePrefix'] ?? '/dashboard';
+$backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (admin ou usuário)
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $_SESSION['idioma']; ?>" class="transition-colors duration-500">
@@ -66,7 +67,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
                     <?php echo $lang['global_home_panel'] ?></a>
             </nav>
 
@@ -118,7 +119,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
                 <h2 class="text-2xl font-bold text-content-primary"><?php echo $lang['global_error'] ?></h2>
                 <p class="text-content-secondary mt-2"><?php echo $lang['edit_venue_not_found'] ?></p>
-                <a href="<?php echo BASE_URL . $prefix; ?>" class="mt-4 inline-block text-cyan-600 dark:text-cyan-400 hover:underline"><?php echo $lang['global_back'] ?></a>
+                <a href="<?php echo BASE_URL . $backUrl; ?>" class="mt-4 inline-block text-cyan-600 dark:text-cyan-400 hover:underline"><?php echo $lang['global_back'] ?></a>
             </div>
         <?php else: ?>
 
@@ -258,7 +259,7 @@ $prefix = $data['routePrefix'] ?? '/dashboard';
                 </div>
 
                 <div class="hidden md:flex justify-end mt-8">
-                    <a href="<?php echo BASE_URL; ?>/dashboard" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors">
+                    <a href="<?php echo BASE_URL . $backUrl; ?>" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors">
                         <?php echo $lang['global_cancel'] ?>
                     </a>
                     <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5"><?php echo $lang['profile_btn_save'] ?></button>

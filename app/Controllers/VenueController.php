@@ -36,8 +36,11 @@ class VenueController
     public function create()
     {
         $this->checkCnpjStatus(); // Admin também precisa de CNPJ para criar
-        $routePrefix = AuthHelper::isAdmin() ? '/admin' : '/dashboard';
-        $data = ['userName' => $_SESSION['user_name'] ?? 'Usuário', 'routePrefix' => $routePrefix];
+        $data = [
+            'userName' => $_SESSION['user_name'] ?? 'Usuário',
+            'routePrefix' => $this->getRoutePrefix(),
+            'backUrl' => $this->getRedirectUrl()
+        ];
         ViewHelper::render('venues/create', $data);
     }
 
@@ -66,7 +69,7 @@ class VenueController
 
             if (!$addressId) {
                 // Tratar erro
-                header('Location: ' . BASE_URL . '/dashboard/quadras/criar?status=address_error');
+                header('Location: ' . BASE_URL . $this->getRoutePrefix() . '/quadras/criar?status=address_error');
                 exit;
             }
 
@@ -87,7 +90,7 @@ class VenueController
 
             if (!$venueId) {
                 // Tratar erro
-                header('Location: ' . BASE_URL . '/dashboard/quadras/criar?status=venue_error');
+                header('Location: ' . BASE_URL . $this->getRoutePrefix() . '/quadras/criar?status=venue_error');
                 exit;
             }
 
@@ -97,7 +100,7 @@ class VenueController
             }
 
             $redirectUrl = $this->getRedirectUrl();
-            header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
+            header('Location: ' . BASE_URL . $redirectUrl . '?status=created');
             exit;
         }
     }
@@ -123,13 +126,11 @@ class VenueController
         // A view lista as fotos atuais (para exibir e marcar para exclusão)
         $venue['images'] = VenueImage::findByVenueId($id);
 
-        //Define o prefixo da rota com base no 'role' do usuário
-        $routePrefix = $isAdmin ? '/admin' : '/dashboard';
-
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
             'venue' => $venue,
-            'routePrefix' => $routePrefix // <-- Passa o prefixo para a view
+            'routePrefix' => $this->getRoutePrefix(), // Rotas do formulário (/admin ou /dashboard)
+            'backUrl' => $this->getRedirectUrl()      // Destino do "Cancelar" e do "Painel"
         ];
         ViewHelper::render('venues/edit', $data);
     }
@@ -200,9 +201,8 @@ class VenueController
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $this->handleImageUploads($id);
             }
-            //Pega o prefixo de rota que o formulário enviou
             $redirectUrl = $this->getRedirectUrl();
-            header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
+            header('Location: ' . BASE_URL . $redirectUrl . '?status=updated');
             exit;
         }
     }
@@ -226,7 +226,6 @@ class VenueController
         }
 
         $redirectUrl = $this->getRedirectUrl();
-        header('Location: ' . BASE_URL . $redirectUrl . '?status=venue_created');
 
         if (Venue::delete($id)) {
             header("Location: " . BASE_URL . $redirectUrl . "?status=deleted");
@@ -238,25 +237,28 @@ class VenueController
 
 
     // --- MÉTODOS PRIVADOS DE AJUDA ---
+    /**
+     * Prefixo das rotas de quadra conforme o painel em que a pessoa está.
+     * Decide pela rota atual (não pelo Referer, que o navegador pode omitir):
+     * admin em /admin/... continua no painel de admin; o resto usa /dashboard.
+     */
+    private function getRoutePrefix(): string
+    {
+        $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
+
+        if (AuthHelper::isAdmin() && str_contains($path, '/admin/')) {
+            return '/admin';
+        }
+
+        return '/dashboard';
+    }
+
+    /**
+     * Página de volta do painel atual (lista de quadras do admin ou dashboard do usuário).
+     */
     private function getRedirectUrl(): string
     {
-        $referer = $_SERVER['HTTP_REFERER'] ?? '';
-
-        //Tenta pelo Referer (de onde o usuário veio)
-        if (str_contains($referer, '/admin/')) {
-            return '/admin/quadras';
-        }
-
-        if (str_contains($referer, '/dashboard/')) {
-            return '/dashboard';
-        }
-
-        //Se o Referer falhar (estiver vazio), usa o "role" como fallback
-        if (AuthHelper::isAdmin()) {
-            return '/admin/quadras';
-        } else {
-            return '/dashboard';
-        }
+        return $this->getRoutePrefix() === '/admin' ? '/admin/quadras' : '/dashboard';
     }
 
     /**

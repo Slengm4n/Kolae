@@ -12,6 +12,11 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+### Corrigido
+- Painel de admin: ao editar ou criar uma quadra, "Cancelar" e o link "Painel" levavam para o painel do usuário (`/dashboard`). Agora voltam para a lista de quadras do admin. O destino passou a ser decidido pela rota atual, e não pelo Referer do navegador.
+- A tela de criar quadra ignorava o painel de origem e sempre enviava o formulário pela rota do usuário.
+- As mensagens de "quadra cadastrada" e "dados da quadra atualizados" não apareciam na lista do admin (o código de status enviado não era o esperado).
+
 ## [1.4.0] - 2026-10-27
 
 Sprint 1: correções críticas de segurança, banco alinhado ao código e API pronta para o app mobile.
