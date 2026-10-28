@@ -17,6 +17,7 @@ return[
     'global_menu_config' => 'Settings',
     'global_cancel' => 'Cancel',
     'global_back' => 'Back',
+    'global_error' => 'Error',
     'global_account' => 'Account',
 
 
@@ -86,6 +87,7 @@ return[
     'reset_password_btn' => 'Save new password',
 
     'reset_password_mismatch' => 'Passwords do not match. Try again.',
+    'password_mismatch' => 'Passwords do not match. Try again.',
     'reset_invalid' => 'The reset link is invalid or has expired.',
     'reset_unknown_error' => 'There was an error updating your password. Please try again.',
 
@@ -192,7 +194,7 @@ return[
     'venue_floor_answer_3' => 'Sand',
     'venue_floor_answer_4' => 'Clay',
     'venue_floor_answer_5' => 'Natural Grass',
-    'venue_floor_answer_6_en' => 'parquet',
+    'venue_floor_answer_6' => 'Parquet',
 
     'venue_max_capacity' => 'What is your court capacity?',
     'venue_max_capacity_desc' => 'Refers to the number of players on the field at the same time.',

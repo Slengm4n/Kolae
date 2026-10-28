@@ -79,6 +79,7 @@ return[
     'reset_password_btn' => 'Salva nuova password',
 
     'password_mismatch' => 'Le password non corrispondono. Riprova.',
+    'reset_password_mismatch' => 'Le password non corrispondono. Riprova.',
     'reset_invalid' => 'Il link di reimpostazione non è valido o è scaduto.',
     'reset_unknown_error' => 'Si è verificato un errore durante l\'aggiornamento della password. Riprova.',
 

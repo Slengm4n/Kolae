@@ -17,6 +17,7 @@ return[
     'global_menu_config' => 'सेटिंग्स',
     'global_cancel' => 'रद्द करें',
     'global_back' => 'वापस',
+    'global_error' => 'त्रुटि',
     'global_account' => 'खाता',
 
 
@@ -83,6 +84,7 @@ return[
     'reset_password_btn' => 'नया पासवर्ड सहेजें',
 
     'reset_password_mismatch' => 'पासवर्ड मेल नहीं खाते। फिर से प्रयास करें।',
+    'password_mismatch' => 'पासवर्ड मेल नहीं खाते। फिर से प्रयास करें।',
     'reset_invalid' => 'रीसेट लिंक अमान्य है या समाप्त हो गया है।',
     'reset_unknown_error' => 'आपका पासवर्ड अपडेट करते समय कोई त्रुटि हुई। कृपया पुन: प्रयास करें।',
 
