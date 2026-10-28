@@ -31,15 +31,16 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP \+ Tailwind), `lang/` (i18n)  
 - Banco: desenho em `database/kolae.dbml` (dbdiagram, fonte da verdade); estrutura pronta em `database/schema.sql`. Mudança de banco = editar o DBML + criar `database/patches/NNN_*.sql` (idempotente, testado no local) e aplicar na produção pelo phpMyAdmin. O Phinx foi removido do projeto (v1.4.0).  
 - Dependências: `vendor/` não é versionado (o deploy roda `composer install`). O `composer.json` fixa a plataforma em PHP 8.2, a versão do servidor; manter assim mesmo usando o PHP 8.4 do Herd.  
-- Ambiente local: XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na porta 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10/2026 + patches 001/002). `config.php` local não versionado. `Database.php` ignora `DB_PORT`.  
+- Ambiente local: XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na porta 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10/2026 + patches 001/002). `config.php` local não versionado (tem o bloco `SMTP_*` com o host do Gmail; e-mail e senha de app ficam por conta do João). `Database.php` ignora `DB_PORT`.  
 - Deploy: push na `main` → GitHub Actions → FTP para InfinityFree (`https://kolae.gamer.gd`). Cuidado: `main` vai direto para produção.
-- Git no terminal do Claude não tem credenciais do GitHub: `push`/apagar branch remota quem faz é o João (VS Code).
+- Git: o terminal do Claude usa as credenciais salvas no Windows (desde 27/10 o `push` funciona daqui). Ainda assim, push, apagar branch remota e sincronizar a `develop` só com pedido do João. O `gh` (GitHub CLI) não está instalado: PR é aberto pelo navegador.
 - Uploads: `uploads/` é ignorado no git, exceto `uploads/.htaccess` (bloqueia scripts e só libera jpg/png/gif). Todo upload de imagem passa por `ImageHelper::validateUpload()`, que valida o conteúdo real e devolve a extensão segura.
 - PHP: o XAMPP roda PHP 8.2 (o que serve o site); no PATH há PHP 8.4 do Laravel Herd, que serve para `php -l` e `composer`. Não usar o Herd para servir o site (vira modo produção).
 
-## Status (atualizado em 27/10/2026, fim do dia)
+## Status (atualizado em 28/10/2026)
 
-- **S1 concluída** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`), IP de rede local + `docs/setup.md` (PR #32). Patches 001 e 002 aplicados na produção. `uploads/` da produção conferida por FTP em 27/10: só imagens.
+- **S1 concluída e lançada como v1.4.0** (27/10/2026), tudo na `main` e em produção: hotfixes 1–3 (PR #30), banco alinhado ao DER + editar quadra (PR #31), login da API + padrão JSON + `docs/api.md` (PR da `fix/api-login`), IP de rede local + `docs/setup.md` (PR #32), organização do repositório e versionamento (PR #33). Patches 001 e 002 aplicados na produção. `uploads/` da produção conferida por FTP em 27/10: só imagens.
+- Depois da v1.4.0 (em `[Não lançado]` no CHANGELOG, vão para a v1.5.0): chaves de tradução faltando (PR #34), admin volta para o painel de admin ao editar/criar quadra (PR #35), bloco SMTP no `config.example.php` e extensões do PHP no setup (PR #36).
 - Pendente:
   - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
 - Próximo: S2 (register, /me, avatar, forgot-password). Descrever cada endpoint em `docs/api.md` antes de implementar.
