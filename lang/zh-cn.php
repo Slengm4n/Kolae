@@ -17,6 +17,7 @@ return[
     'global_menu_config' => '设置',
     'global_cancel' => '取消',
     'global_back' => '返回',
+    'global_error' => '错误',
     'global_account' => '账户',
 
     'global_email' => '电子邮件',
@@ -81,6 +82,7 @@ return[
     'reset_password_btn' => '保存新密码',
 
     'reset_password_mismatch' => '密码不匹配。请重试。',
+    'password_mismatch' => '密码不匹配。请重试。',
     'reset_invalid' => '重置链接无效或已过期。',
     'reset_unknown_error' => '更新您的密码时出错。请重试。',
 

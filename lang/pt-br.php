@@ -104,6 +104,7 @@ return [
 
     //Erros
     'password_mismatch' => 'As senhas não conferem. Tente novamente.',
+    'reset_password_mismatch' => 'As senhas não conferem. Tente novamente.',
     'reset_invalid' => 'O link de redefinição é inválido ou expirou.',
     'reset_unknown_error' => 'Houve um erro ao atualizar sua senha. Tente novamente.',
     //Fim reset Password

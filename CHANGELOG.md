@@ -12,6 +12,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+### Corrigido
+- Traduções faltando: a mensagem de "senhas não conferem" ficava vazia na redefinição de senha em português, italiano e japonês, e no cadastro e na troca de senha em inglês, espanhol, hindi e chinês. O título de erro da edição de quadra também faltava nesses quatro idiomas.
+
 ## [1.4.0] - 2026-10-27
 
 Sprint 1: correções críticas de segurança, banco alinhado ao código e API pronta para o app mobile.
