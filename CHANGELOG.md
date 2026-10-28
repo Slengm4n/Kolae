@@ -33,6 +33,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Traduções faltando: a mensagem de "senhas não conferem" ficava vazia na redefinição de senha em português, italiano e japonês, e no cadastro e na troca de senha em inglês, espanhol, hindi e chinês. O título de erro da edição de quadra também faltava nesses quatro idiomas.
 
 ### Documentação
+- Documentação reorganizada: `docs/README.md` (índice, cronograma do backend e do app, e como uma mudança anda até a produção), `docs/decisoes.md` (registro das decisões D01–D20, com data e motivo) e `docs/modelo-status.md` (proposta de status da quadra, horário de funcionamento e agenda para as S3/S4). O `docs/CLAUDE.md` ficou só com o contexto e aponta para esses documentos.
 - `docs/api.md`: contrato da Sprint 2 (cadastro, esqueci a senha, perfil, avatar e troca de senha) e novo formato das respostas no padrão do Laravel (`{ data }` / `{ message, code, errors }`), com datas ISO 8601, dinheiro em centavos e coordenadas numéricas. Plano das S3 a S5 atualizado para o novo modelo: partidas agendadas pelo dono no site e status da quadra calculado pela API.
 - `config.example.php` passa a trazer o bloco de e-mail (`SMTP_*`) usado pelo "esqueci a senha". Antes, quem montava o ambiente pelo exemplo ficava sem essas constantes e a recuperação de senha parava com erro fatal.
 - `docs/setup.md`: passo para ligar as extensões `gd` e `zip` do PHP, como instalar as dependências sem o Composer global, como configurar o SMTP (inclusive senha de app do Gmail) e novos problemas comuns.

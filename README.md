@@ -60,6 +60,8 @@ O projeto utiliza uma arquitetura **MVC (Model-View-Controller) customizada**, f
 
 ## 🚀 Como Rodar Localmente
 
+Toda a documentação do projeto (decisões, contrato da API, modelo de dados, cronograma) está indexada em **[docs/README.md](docs/README.md)**.
+
 O passo a passo completo (XAMPP, banco, `config.php`, problemas comuns e como conectar o app mobile) está em **[docs/setup.md](docs/setup.md)**. Resumo:
 
 ### Pré-requisitos
