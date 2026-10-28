@@ -12,6 +12,10 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+## [1.5.0] - 2026-10-28
+
+Sprint 2 (adiantada): API de contas para o app no padrão do Laravel, papel `owner` por CNPJ, fuso de Brasília e correções no painel. Inclui também o prazo novo da entrega (28/11) e o modelo de status da quadra aprovado.
+
 ### Adicionado
 - API da Sprint 2 para o app: cadastro (`POST /auth/register`, já devolve o token), esqueci a senha (`POST /auth/forgot-password`), perfil (`GET` e `PATCH /me`, que edita só o nome: a data de nascimento não é editável, como no site), foto de perfil (`POST /me/avatar`) e troca de senha (`PUT /me/password`).
 - Quem cadastra CNPJ no site passa a ser `owner` (responsável por quadra). O patch `database/patches/003_owner_por_cnpj.sql` converte quem já tinha CNPJ.
@@ -122,7 +126,8 @@ Sprint 1: correções críticas de segurança, banco alinhado ao código e API p
 
 - Lançamento inicial.
 
-[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...HEAD
+[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Slengm4n/Kolae/compare/v1.3...v1.4.0
 [1.3.0]: https://github.com/Slengm4n/Kolae/compare/v1.2.2...v1.3
 [1.2.2]: https://github.com/Slengm4n/Kolae/compare/v1.2.1...v1.2.2
