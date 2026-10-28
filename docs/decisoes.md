@@ -27,7 +27,7 @@ Cada decisão tem: **o quê**, **por quê** e **onde isso aparece** (código ou 
 
 ### D05 · `owner` = quem cadastrou CNPJ (28/10/2026)
 - **O quê:** cadastrar CNPJ no site troca o papel de `player` para `owner`. Admin continua admin. Todo cadastro novo começa como `player`.
-- **Onde:** `UserController::storeCnpj`, `database/patches/003_owner_por_cnpj.sql`. Na produção, o patch 003 foi feito pelo painel de admin em 28/10 (phpMyAdmin do InfinityFree fora do ar).
+- **Onde:** `UserController::storeCnpj`, `database/patches/003_owner_por_cnpj.sql`. Na produção, os papéis foram ajustados pelo painel de admin em 28/10, com o phpMyAdmin do InfinityFree fora do ar. O patch 003 foi aplicado pelo phpMyAdmin no mesmo dia, quando ele voltou.
 
 ## API
 
@@ -50,7 +50,7 @@ Cada decisão tem: **o quê**, **por quê** e **onde isso aparece** (código ou 
 ### D10 · O app só desloga em erro de token (28/10/2026)
 - **O quê:** desloga em `AUTH_MISSING_TOKEN`, `AUTH_INVALID_FORMAT`, `AUTH_TOKEN_EXPIRED`, `AUTH_INVALID_TOKEN` e `AUTH_INVALID_USER`. Nunca em `INVALID_CREDENTIALS` (senha errada no login).
 
-### D11 · Troca de e-mail com código fica para a S5 (28/10/2026)
+### D11 · Troca de e-mail com código fica para a S5 (28/10/2026) · **substituída pela D28**
 - **Por quê:** libera a S2 para o essencial; até lá a tela fica no mock do app.
 
 ### D12 · Dono da quadra como objeto `owner` (28/10/2026)
@@ -83,9 +83,54 @@ Cada decisão tem: **o quê**, **por quê** e **onde isso aparece** (código ou 
 
 ### D18 · Versões: uma minor por sprint (27/10/2026)
 - SemVer com tags `vX.Y.Z`: S1 = v1.4.0, S2 = v1.5.0, e assim por diante; patch para correção urgente; v2.0.0 reservada para o Laravel. Mudanças vão para `[Não lançado]` no `CHANGELOG.md` e viram versão no fim da sprint.
+- Datas das versões a partir da S2: ver a D28.
 
 ### D19 · Tradução do painel de admin fica para depois da entrega (28/10/2026)
 - **O quê:** `admin/*`, `sports/*`, `venues/index.php` e as páginas de erro 403/404 continuam com texto fixo em português. Toda chave nova das telas públicas entra nos 7 idiomas.
 
 ### D20 · "Cancelar" na edição de quadra pelo celular fica para a S6 (28/10/2026)
 - Polimento, se sobrar tempo.
+
+## Status, horário de funcionamento e agenda
+
+Respostas às perguntas do `docs/modelo-status.md`, que passa a valer como modelo aprovado. Base: D02 e D03.
+
+### D21 · Um intervalo de funcionamento por dia (28/10/2026)
+- **O quê:** cada dia da semana tem no máximo um "abre / fecha" (`venue_hours` com `(venue_id, weekday)` único). Sem pausa de almoço.
+- **Por quê:** cabe no prazo; mais de um intervalo por dia complica a tela e o cálculo do status.
+
+### D22 · Funcionamento não passa da meia-noite (28/10/2026)
+- **O quê:** `closes_at` precisa ser depois de `opens_at`, no mesmo dia (no máximo 23:59).
+- **Por quê:** virar o dia exige tratar dois dias de uma vez no status e na agenda; fica para depois da entrega.
+
+### D23 · Quadra sem horário cadastrado aparece como `closed` (28/10/2026)
+- **O quê:** quadra sem nenhuma linha em `venue_hours` continua no mapa como `closed`, e o site mostra um aviso para o dono cadastrar o horário.
+- **Por quê:** sumir do mapa esconderia quadras na demonstração.
+
+### D24 · WhatsApp obrigatório para o dono cadastrar ou editar quadra (28/10/2026)
+- **O quê:** `users.whatsapp` (só dígitos, com DDI e DDD). O site exige o WhatsApp de quem tem papel `owner` ao cadastrar ou editar quadra; o admin não é obrigado. Na API vai em `owner.whatsapp` (D12) e pode vir `null` (donos antigos, quadras do admin): **o app esconde o botão "Falar com o dono" quando vier vazio**.
+- **Por quê:** o contato com o dono é o fluxo principal do app (D02).
+
+### D25 · Esporte da partida é opcional (28/10/2026)
+- **O quê:** `matches.sport_id` aceita `NULL`. O dono pode não saber o esporte de quem alugou.
+
+### D26 · `match_participants` é apagada (28/10/2026)
+- **O quê:** o patch 004 remove a tabela e a coluna `matches.max_players`.
+- **Por quê:** estão vazias e são do modelo antigo (entrar/sair de partida, substituído pela D02). O histórico do Git guarda o desenho, se um dia precisar.
+
+### D27 · Partidas só dentro do horário de funcionamento (28/10/2026)
+- **O quê:** o site recusa partida que comece antes da abertura ou termine depois do fechamento do dia, ou que se sobreponha a outra partida da quadra. Se o dono mudar o horário depois e alguma partida futura ficar de fora, o site **avisa** quais são, sem bloquear a mudança (nesse período o status calculado já é `closed`).
+- **Por quê:** deixa o status coerente com a agenda.
+
+## Prazo
+
+### D28 · Entrega antecipada para 28/11/2026 (28/10/2026)
+- **O quê:** a entrega na FATEC passou de 05/12 para **28/11/2026**, com **congelamento de funcionalidades em 21/11**. Novo cronograma em `docs/README.md`:
+  - **S3 · 29/10–08/11** (antecipada, porque a S2 do backend terminou antes): contrato, patch 004, `/venues` com status e `owner`, `/venues/{id}`, `/schedule`.
+  - **S4 · 09/11–15/11:** telas do dono no site (horário, agenda, WhatsApp).
+  - **S5 · 16/11–21/11:** segurança essencial (CSRF, XSS no `admin/map.php`, limite de tentativas no login) e "lembrar de mim".
+  - **S6 · 22/11–28/11:** só correções, dados de demonstração e ensaio.
+- **Corte:** a troca de e-mail com código (D11) sai do escopo da entrega; a tela fica só no mock do app, como vitrine (D04).
+- **Versões (D18):** v1.5.0 = S2, lançada ao abrir a S3; v1.6.0 = S3 (08/11); v1.7.0 = S4 (15/11); v1.8.0 = S5 (21/11); v1.9.0 = versão da entrega (28/11).
+- **Por quê:** o prazo encurtou uma semana; o backend do status vem para a S3 para a S4 ficar só com as telas, que são o maior risco.
+- **Pendente:** escolher a hospedagem (D13) na primeira semana de novembro, porque ela decide onde a apresentação roda.

@@ -1,6 +1,6 @@
 {
   "name": "kolae",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "Assets (Tailwind + Vite) do Kolae, plataforma que conecta atletas a quadras e partidas.",

@@ -12,6 +12,10 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+## [1.5.0] - 2026-10-28
+
+Sprint 2 (adiantada): API de contas para o app no padrão do Laravel, papel `owner` por CNPJ, fuso de Brasília e correções no painel. Inclui também o prazo novo da entrega (28/11) e o modelo de status da quadra aprovado.
+
 ### Adicionado
 - API da Sprint 2 para o app: cadastro (`POST /auth/register`, já devolve o token), esqueci a senha (`POST /auth/forgot-password`), perfil (`GET` e `PATCH /me`, que edita só o nome: a data de nascimento não é editável, como no site), foto de perfil (`POST /me/avatar`) e troca de senha (`PUT /me/password`).
 - Quem cadastra CNPJ no site passa a ser `owner` (responsável por quadra). O patch `database/patches/003_owner_por_cnpj.sql` converte quem já tinha CNPJ.
@@ -34,6 +38,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ### Documentação
 - Documentação reorganizada: `docs/README.md` (índice, cronograma do backend e do app, e como uma mudança anda até a produção), `docs/decisoes.md` (registro das decisões D01–D20, com data e motivo) e `docs/modelo-status.md` (proposta de status da quadra, horário de funcionamento e agenda para as S3/S4). O `docs/CLAUDE.md` ficou só com o contexto e aponta para esses documentos.
+- Prazo da entrega antecipado para 28/11 (congelamento em 21/11), com o cronograma refeito em `docs/README.md` e a troca de e-mail com código fora do escopo (D28). Modelo de status da quadra, horário de funcionamento e agenda aprovado: `docs/modelo-status.md` com as respostas da revisão e as decisões D21–D27.
 - `docs/api.md`: contrato da Sprint 2 (cadastro, esqueci a senha, perfil, avatar e troca de senha) e novo formato das respostas no padrão do Laravel (`{ data }` / `{ message, code, errors }`), com datas ISO 8601, dinheiro em centavos e coordenadas numéricas. Plano das S3 a S5 atualizado para o novo modelo: partidas agendadas pelo dono no site e status da quadra calculado pela API.
 - `config.example.php` passa a trazer o bloco de e-mail (`SMTP_*`) usado pelo "esqueci a senha". Antes, quem montava o ambiente pelo exemplo ficava sem essas constantes e a recuperação de senha parava com erro fatal.
 - `docs/setup.md`: passo para ligar as extensões `gd` e `zip` do PHP, como instalar as dependências sem o Composer global, como configurar o SMTP (inclusive senha de app do Gmail) e novos problemas comuns.
@@ -121,7 +126,8 @@ Sprint 1: correções críticas de segurança, banco alinhado ao código e API p
 
 - Lançamento inicial.
 
-[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...HEAD
+[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Slengm4n/Kolae/compare/v1.3...v1.4.0
 [1.3.0]: https://github.com/Slengm4n/Kolae/compare/v1.2.2...v1.3
 [1.2.2]: https://github.com/Slengm4n/Kolae/compare/v1.2.1...v1.2.2
