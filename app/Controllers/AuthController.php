@@ -2,13 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Core\Mailer;
 use App\Core\ViewHelper;
 use App\Models\User;
 use DateTime;
 use Exception;
 use App\Models\PasswordReset;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 
 class AuthController
 {
@@ -144,42 +143,9 @@ class AuthController
 
         $user = User::findByEmail($email);
 
+        // Mesma resposta exista ou não a conta (não revela quem tem cadastro)
         if ($user) {
-            try {
-                $token = bin2hex(random_bytes(32));
-
-                // Removido o parâmetro $expires_at pois a tabela 'password_reset_tokens' só possui 'created_at'
-                PasswordReset::deleteTokensForEmail($email);
-                PasswordReset::createToken($email, $token);
-
-                $mail = new PHPMailer(true);
-                $mail->SMTPDebug = 0; // Nunca expor o diálogo SMTP (credenciais) na resposta
-                $mail->isSMTP();
-                $mail->Host       = SMTP_HOST;
-                $mail->SMTPAuth   = true;
-                $mail->Username   = SMTP_USER;
-                $mail->Password   = SMTP_PASS;
-                $mail->SMTPSecure = SMTP_SECURE;
-                $mail->Port       = SMTP_PORT;
-                $mail->CharSet    = 'UTF-8';
-
-                $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
-                $mail->addAddress($email, $user['name']);
-
-                $mail->isHTML(true);
-                $mail->Subject = 'Recuperação de Senha - Kolae';
-                $reset_link = BASE_URL . '/reset-password?token=' . $token;
-
-                $mail->Body = "Olá " . htmlspecialchars($user['name']) . ",<br><br>"
-                    . "Recebemos uma solicitação para redefinir sua senha no Kolae.<br>"
-                    . "Clique no link abaixo para criar uma nova senha:<br><br>"
-                    . "<a href='$reset_link' style='color: #06b6d4; text-decoration: none; font-weight: bold;'>Redefinir Minha Senha</a><br><br>"
-                    . "Este link expira em 1 hora.";
-
-                $mail->send();
-            } catch (Exception $e) {
-                error_log("PHPMailer Error: " . $mail->ErrorInfo);
-            }
+            Mailer::sendPasswordReset($email, $user['name']);
         }
 
         header('Location: ' . BASE_URL . '/forgot-password?status=sent');

@@ -9,6 +9,7 @@ use App\Controllers\VenueController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
 use App\Controllers\AuthApiController;
+use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
 use App\Controllers\SportApiController;
 use App\Controllers\GameApiController;
@@ -193,10 +194,18 @@ $router->group('/admin', function ($router) {
     });
 });
 
-// --- ROTAS DA API V1 ---
+// --- ROTAS DA API V1 (contrato em docs/api.md) ---
 $router->group('/api/v1', function ($router) {
-    // Autenticação
+    // Autenticação (públicas)
     $router->post('/auth/login', [AuthApiController::class, 'login']);
+    $router->post('/auth/register', [AuthApiController::class, 'register']);
+    $router->post('/auth/forgot-password', [AuthApiController::class, 'forgotPassword']);
+
+    // Pessoa logada (exigem token)
+    $router->get('/me', [MeApiController::class, 'show']);
+    $router->patch('/me', [MeApiController::class, 'update']);
+    $router->post('/me/avatar', [MeApiController::class, 'avatar']);
+    $router->put('/me/password', [MeApiController::class, 'password']);
 
     // Quadras (Venues)
     $router->get('/venues', [VenueApiController::class, 'getActiveVenuesForMap']);

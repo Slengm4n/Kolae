@@ -7,6 +7,12 @@ use PDO;
 
 class User
 {
+    /** Tamanho mínimo de senha (API; ver docs/api.md). */
+    public const PASSWORD_MIN_LENGTH = 8;
+
+    /** Idade mínima para ter conta (mesma regra do cadastro no site). */
+    public const MIN_AGE = 18;
+
     public static function countAll(): int
     {
         $pdo = Database::getConnection();
@@ -59,16 +65,43 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function create(array $data): bool
+    /**
+     * Verifica se o e-mail já está cadastrado, inclusive em contas inativas
+     * (o findByEmail só enxerga contas ativas, e o e-mail é UNIQUE no banco).
+     */
+    public static function emailExists(string $email, ?int $excludeUserId = null): bool
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("SELECT 1 FROM users WHERE email = :email AND id != :exclude LIMIT 1");
+        $stmt->execute([':email' => $email, ':exclude' => $excludeUserId ?? 0]);
+        return (bool)$stmt->fetchColumn();
+    }
+
+    /**
+     * Data no formato YYYY-MM-DD, válida e com idade mínima de MIN_AGE anos.
+     */
+    public static function isValidAdultBirthdate(?string $date): bool
+    {
+        $d = \DateTimeImmutable::createFromFormat('!Y-m-d', (string)$date);
+        if (!$d || $d->format('Y-m-d') !== $date) {
+            return false;
+        }
+        return $d <= new \DateTimeImmutable('-' . self::MIN_AGE . ' years');
+    }
+
+    /**
+     * Cria o usuário. Retorna o ID criado ou false.
+     */
+    public static function create(array $data)
     {
         $pdo = Database::getConnection();
         $data['status'] = 'active';
         $data['force_password_change'] = 1;
 
-        $stmt = $pdo->prepare("INSERT INTO users (name, email, birthdate, password, role, status, force_password_change) 
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, birthdate, password, role, status, force_password_change)
                                VALUES (:name, :email, :birthdate, :password, :role, :status, :force_password_change)");
 
-        return $stmt->execute($data);
+        return $stmt->execute($data) ? (int)$pdo->lastInsertId() : false;
     }
 
     public static function update(int $id, array $data): bool
