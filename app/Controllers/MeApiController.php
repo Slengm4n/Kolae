@@ -24,7 +24,8 @@ class MeApiController extends BaseApiController
 
     /**
      * PATCH /api/v1/me
-     * Body: { "name"?: "...", "birthdate"?: "YYYY-MM-DD" }. Só os campos enviados mudam.
+     * Body: { "name": "..." }. A data de nascimento não é editável (decidido em 28/10,
+     * igual ao site): impede contornar a regra dos 18 anos depois do cadastro.
      */
     public function update()
     {
@@ -45,13 +46,9 @@ class MeApiController extends BaseApiController
             }
         }
 
+        // Recusa em vez de ignorar, para o app não achar que a data foi salva
         if (array_key_exists('birthdate', $input)) {
-            $birthdate = trim((string)$input['birthdate']);
-            if (!User::isValidAdultBirthdate($birthdate)) {
-                $errors['birthdate'] = 'Informe uma data válida (AAAA-MM-DD). É preciso ter ' . User::MIN_AGE . ' anos ou mais.';
-            } else {
-                $data['birthdate'] = $birthdate;
-            }
+            $errors['birthdate'] = 'A data de nascimento não pode ser alterada.';
         }
 
         $this->failIfInvalid($errors);

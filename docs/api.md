@@ -4,7 +4,7 @@ Fonte da verdade da API consumida pelo app mobile. **Endpoint novo ou mudança d
 
 O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contrato sem mudanças no app. Mudança que quebra o app vira `/api/v2`.
 
-> **Estado:** o formato, os tipos e os endpoints da S2 estão implementados e testados no ambiente local (branch `feat/s2-api`) e vão para a produção na **v1.5.0**. A produção ainda responde no formato antigo (`{ "success", "data" }` / `{ "success", "error": { "message", "code", "fields" } }`). Os pontos marcados com **(a confirmar)** já estão implementados com o valor proposto e esperam o OK dos dois; mudar o valor é simples.
+> **Estado:** contrato da S2 revisado e aprovado pelo João e pelo Rafael em 28/10/2026. O formato, os tipos e os endpoints da S2 estão implementados e testados no ambiente local (branch `feat/s2-api`) e vão para a produção na **v1.5.0**. Até lá, a produção ainda responde no formato antigo (`{ "success", "data" }` / `{ "success", "error": { "message", "code", "fields" } }`).
 
 ## Base URL
 
@@ -41,6 +41,8 @@ Toda resposta é JSON (`Content-Type: application/json; charset=utf-8`), inclusi
 
 - Mostrar a primeira mensagem de `errors.<campo>` embaixo do campo; sem `errors`, mostrar `message`.
 - Para decidir o fluxo (ex: token expirado → login), olhar o status HTTP e o `code`, nunca o texto.
+- **Quando deslogar:** só nos erros de token (`AUTH_MISSING_TOKEN`, `AUTH_INVALID_FORMAT`, `AUTH_TOKEN_EXPIRED`, `AUTH_INVALID_TOKEN`, `AUTH_INVALID_USER`). O `401 INVALID_CREDENTIALS` também é 401, mas só significa e-mail ou senha errados na tela de login.
+- As mensagens saem em português. O app já envia `Accept-Language`; responder no idioma do app é uma melhoria futura (sem data).
 
 ### Códigos de erro
 
@@ -68,7 +70,7 @@ Endpoints marcados como **protegidos** exigem o token devolvido pelo login ou ca
 Authorization: Bearer <token>
 ```
 
-O token é um JWT (HS256) e vale **30 dias** **(a confirmar; hoje são 8 horas)**. Não existe renovação: ao receber `401 AUTH_TOKEN_EXPIRED`, apagar o token e levar para o login.
+O token é um JWT (HS256) e vale **30 dias**. Não existe renovação: ao receber `401 AUTH_TOKEN_EXPIRED`, apagar o token e levar para o login.
 
 ## Tipos
 
@@ -150,7 +152,7 @@ Público. Cria a conta (sempre com `role: player`) e já devolve o token, sem pr
 | `name` | obrigatório, até 255 caracteres |
 | `email` | obrigatório, e-mail válido, ainda não cadastrado |
 | `birthdate` | obrigatório, `YYYY-MM-DD`, pessoa com **18 anos ou mais** (mesma regra do site) |
-| `password` | obrigatório, **mínimo 8 caracteres** **(a confirmar; o site hoje não exige mínimo e passaria a exigir também)** |
+| `password` | obrigatório, **mínimo 8 caracteres** (o site ainda não exige mínimo; vai passar a exigir) |
 | `password_confirmation` | igual a `password` |
 
 **201**: mesmo `data` do login (`token`, `token_type`, `expires_at`, `user`).
@@ -175,14 +177,15 @@ Público. Envia o e-mail com o link de redefinição. O link abre a página de n
 
 ### `PATCH /me`
 
-**Protegido.** Edita os dados do perfil. Só os campos enviados mudam.
+**Protegido.** Edita o nome.
 
-**Body**: `{ "name": "João Pedro", "birthdate": "2005-12-20" }` (os dois opcionais)
+**Body**: `{ "name": "João Pedro" }`
 
 | Campo | Regras |
 | :---- | :---- |
 | `name` | até 255 caracteres, não vazio |
-| `birthdate` | `YYYY-MM-DD`, 18 anos ou mais **(a confirmar: no site a data de nascimento não é editável)** |
+
+**A data de nascimento não é editável**, nem no app nem no site: assim ninguém contorna a regra dos 18 anos depois do cadastro. Na tela de dados pessoais, ela aparece só para leitura. Se `birthdate` vier no body, a resposta é `422` com `errors.birthdate` (para o app não achar que salvou).
 
 **200**: `user` atualizado. **Erros**: `422 VALIDATION_ERROR`.
 
@@ -238,11 +241,22 @@ Público. **Formato legado até a S3**: a v1.5.0 só troca o envelope (`{ "data"
 
 | Quando | O quê |
 | :---- | :---- |
-| S3 | `GET /venues` com busca, filtros (`q`, `sport_id`, `status`, `max_price_cents`, `is_covered`, `has_lighting`, `floor_type`, `lat`/`lng`/`radius_km`, `sort`), paginação e os campos `status`, `status_until` e `owner_whatsapp`; `GET /venues/{id}` |
+| S3 | `GET /venues` com busca, filtros (`q`, `sport_id`, `status`, `max_price_cents`, `is_covered`, `has_lighting`, `floor_type`, `lat`/`lng`/`radius_km`, `sort`), paginação e os campos `status` e `status_until`; `GET /venues/{id}` com o endereço em texto e o objeto `owner` (abaixo) |
 | S4 | `GET /venues/{id}/schedule?date=` (agenda do dia); status calculado a partir do horário de funcionamento e das partidas agendadas pelo dono |
 | S5 | Troca de e-mail com código (`POST /me/email`, `POST /me/email/confirm`) |
 
 Status da quadra (S3/S4), calculado pela API e nunca pelo app: `available` (aberta e sem partida agora), `in_use` (partida neste horário), `closed` (fora do horário ou fechada pelo dono). `status_until` diz quando o status atual muda.
+
+Dono da quadra (S3, combinado em 28/10): um objeto `owner` no lugar do antigo `owner_whatsapp` solto, para a tela de informações da quadra. O `whatsapp` exige uma coluna nova em `users` e um campo no site.
+
+```json
+"owner": {
+  "name": "Rafael",
+  "avatar_url": "https://.../uploads/avatars/2/avatar_abc.jpg",
+  "member_since": "2026-05-22T14:57:07-03:00",
+  "whatsapp": "5511999999999"
+}
+```
 
 Avaliações e favoritos não existem no backend; no app ficam como vitrine.
 

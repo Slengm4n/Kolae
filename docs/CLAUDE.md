@@ -46,21 +46,21 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - Depois da v1.4.0 (em `[Não lançado]` no CHANGELOG, vão para a v1.5.0): chaves de tradução faltando (PR #34), admin volta para o painel de admin ao editar/criar quadra (PR #35), bloco SMTP no `config.example.php` e extensões do PHP no setup (PR #36).
 - Pendente:
   - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
-- S2 em andamento: contrato em `docs/api.md` (branch `feat/s2-contrato-api`, PR esperando revisão do Rafael). Implementação na branch `feat/s2-api` (empilhada sobre a do contrato): formato Laravel, register, forgot-password, GET/PATCH /me, avatar, PUT /me/password, CNPJ → owner (patch 003), fuso corrigido. 33 testes de ponta a ponta passando no local em 28/10. Pontos "a confirmar" já implementados com o valor proposto: token de 30 dias (`BaseApiController::TOKEN_TTL_SECONDS`), senha mínima de 8 (`User::PASSWORD_MIN_LENGTH`; o site ainda não exige), `birthdate` editável pelo app.
+- S2 do backend pronta na branch `feat/s2-api` (contrato aprovado pelo Rafael em 28/10 + implementação, num PR só para a `main`; o PR da `feat/s2-contrato-api` pode ser fechado sem merge): formato Laravel, register, forgot-password, GET/PATCH /me (só nome), avatar, PUT /me/password, CNPJ → owner (patch 003), fuso corrigido. Testes de ponta a ponta passando no local. Token de 30 dias em `BaseApiController::TOKEN_TTL_SECONDS`, senha mínima em `User::PASSWORD_MIN_LENGTH`.
 - Deploy da v1.5.0: aplicar o patch 003 na produção (antes ou junto) e avisar o Rafael, porque o formato da API muda.
 - XAMPP do João está com a extensão GD desligada (`extension=gd` no `php.ini`, ver `docs/setup.md`): uploads funcionam, mas sem otimizar a imagem.
 - Risco de prazo: o novo modelo traz telas novas no site para o dono (horário de funcionamento, agendar partidas, WhatsApp) na S3/S4, e o status depende de resolver o fuso das datas (item 10).
 
 ## Alinhamento com o app (CLAUDE.md do Rafael, 28/10/2026)
 
-Comparação entre o contrato que o app espera e o `docs/api.md`. Revisar junto com o Rafael antes de implementar a S2.
+Comparação entre o contrato que o app espera e o `docs/api.md`. **Revisado pelo Rafael em 28/10/2026**: contrato da S2 aprovado; os ajustes do lado do app (piso com as chaves da API, conversão `icon_path` Font Awesome → MaterialCommunityIcons, mock separado por área, senha mínima 8, validação local dos 18 anos, deslogar só nos erros de token, tipos novos, PATCH /me e avatar) ficam com ele.
 
 **Igual ao app**
 - Formato Laravel: `{ data }` no sucesso e `{ message, errors: { campo: [...] } }` no erro, com status 401/403/422 corretos.
 - Datas ISO 8601 com fuso, dinheiro em centavos, imagens como URL completa, `Authorization: Bearer`.
-- Rotas e corpos da S2: `POST /auth/login`, `POST /auth/register` (devolve `{ token, user }`), `POST /auth/forgot-password` (mesma resposta exista ou não o e-mail), `GET /me`, `PATCH /me` (`name`, `birthdate`), `POST /me/avatar` (multipart `avatar`), `PUT /me/password`.
+- Rotas e corpos da S2: `POST /auth/login`, `POST /auth/register` (devolve `{ token, user }`), `POST /auth/forgot-password` (mesma resposta exista ou não o e-mail), `GET /me`, `PATCH /me` (só `name`), `POST /me/avatar` (multipart `avatar`), `PUT /me/password`.
 - Objeto `user`: `id, name, email, birthdate, role, avatar_url, created_at`; `role` = `admin` | `owner` | `player`.
-- Modelo do produto: status `available` / `in_use` / `closed` calculado pela API, `status_until`, `owner_whatsapp`, agenda do dia em `/venues/{id}/schedule`, filtros e paginação em `/venues`, avaliações e favoritos só como vitrine.
+- Modelo do produto: status `available` / `in_use` / `closed` calculado pela API, `status_until`, agenda do dia em `/venues/{id}/schedule`, filtros e paginação em `/venues`, avaliações e favoritos só como vitrine.
 
 **Diferente do app (o app precisa ajustar ou só saber)**
 - Erros trazem também `code` (ex: `VALIDATION_ERROR`, `AUTH_TOKEN_EXPIRED`), um extra que o app pode usar ou ignorar.
@@ -72,12 +72,17 @@ Comparação entre o contrato que o app espera e o `docs/api.md`. Revisar junto 
 - `POST /games` sai da API (partidas só pelo site).
 - Avatar: JPG, PNG ou GIF de até 10 MB.
 
-**A confirmar com o Rafael**
-- Token de 30 dias, sem renovação (hoje são 8 horas).
-- Senha mínima de 8 caracteres (o site passaria a exigir também).
-- `birthdate` editável pelo app (no site não é).
-- WhatsApp do dono: o banco não tem telefone. Entra uma coluna nova e um campo no site na S3.
+**Decidido em 28/10/2026 (João e Rafael)**
+- Token de 30 dias, sem renovação.
+- Senha mínima de 8 caracteres. Na API já vale; **o site ainda aceita qualquer tamanho** (cadastro, redefinir e trocar senha): alinhar, com as mensagens nos 7 idiomas.
+- `birthdate` **não é editável** pelo app nem pelo site; `PATCH /me` com `birthdate` responde 422.
+- Deslogar só nos erros de token (`AUTH_*`); `INVALID_CREDENTIALS` é só senha errada no login.
 - O primeiro APK de teste (S2 do app) usa a API local em `http://`: liberar tráfego HTTP no build.
+
+**Para o contrato da S3 (antes de implementar)**
+- `GET /venues/{id}` com o endereço em texto e um objeto `owner: { name, avatar_url, member_since, whatsapp }` no lugar de `owner_whatsapp` solto.
+- WhatsApp do dono: coluna nova em `users` (patch) e campo no site.
+- Futuro, sem data: mensagens de erro da API no idioma do `Accept-Language` (o app já envia).
 
 ## Problemas conhecidos (prioridade)
 

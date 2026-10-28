@@ -13,7 +13,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
-- API da Sprint 2 para o app: cadastro (`POST /auth/register`, já devolve o token), esqueci a senha (`POST /auth/forgot-password`), perfil (`GET` e `PATCH /me`), foto de perfil (`POST /me/avatar`) e troca de senha (`PUT /me/password`).
+- API da Sprint 2 para o app: cadastro (`POST /auth/register`, já devolve o token), esqueci a senha (`POST /auth/forgot-password`), perfil (`GET` e `PATCH /me`, que edita só o nome: a data de nascimento não é editável, como no site), foto de perfil (`POST /me/avatar`) e troca de senha (`PUT /me/password`).
 - Quem cadastra CNPJ no site passa a ser `owner` (responsável por quadra). O patch `database/patches/003_owner_por_cnpj.sql` converte quem já tinha CNPJ.
 
 ### Alterado
