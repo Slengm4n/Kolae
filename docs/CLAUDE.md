@@ -29,7 +29,8 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 ## Estrutura
 
 - `index.php`: front controller, sessão, rotas (web e `/api/v1`)  
-- `app/Core`: Router, Database (PDO singleton), AuthHelper, BaseApiController (JWT), ApiResponse (saída única da API: envelope JSON, 404/405 e erros do PHP em JSON), ViewHelper, ImageHelper  
+- `app/Core`: Router (GET/POST/PUT/PATCH), Database (PDO singleton; sessão do MySQL em `-03:00`), AuthHelper, BaseApiController (JWT, `tokenResponse`, `failIfInvalid`, `getJsonInput`), ApiResponse (saída única da API: `{ data }` / `{ message, code, errors }`, 404/405 e erros do PHP em JSON), ApiFormat (datas ISO 8601 e objeto `user` da API), Mailer (e-mail de redefinição de senha, usado pelo site e pela API), ViewHelper, ImageHelper  
+- API: `AuthApiController` (login, register, forgot-password), `MeApiController` (`/me`, avatar, senha), `VenueApiController`, `SportApiController`, `GameApiController` (sai na S4)  
 - `app/Controllers`, `app/Models` (métodos estáticos com PDO), `app/views` (PHP \+ Tailwind), `lang/` (i18n)  
 - Banco: desenho em `database/kolae.dbml` (dbdiagram, fonte da verdade); estrutura pronta em `database/schema.sql`. Mudança de banco = editar o DBML + criar `database/patches/NNN_*.sql` (idempotente, testado no local) e aplicar na produção pelo phpMyAdmin. O Phinx foi removido do projeto (v1.4.0).  
 - Dependências: `vendor/` não é versionado (o deploy roda `composer install`). O `composer.json` fixa a plataforma em PHP 8.2, a versão do servidor; manter assim mesmo usando o PHP 8.4 do Herd.  
@@ -45,7 +46,9 @@ Plano A: manter o PHP atual, aplicar hotfixes e consertar/ampliar a `/api/v1` pa
 - Depois da v1.4.0 (em `[Não lançado]` no CHANGELOG, vão para a v1.5.0): chaves de tradução faltando (PR #34), admin volta para o painel de admin ao editar/criar quadra (PR #35), bloco SMTP no `config.example.php` e extensões do PHP no setup (PR #36).
 - Pendente:
   - Avisar o colega do app: login pronto, contrato em `docs/api.md`, usar a API local (opção C).
-- S2 em andamento: contrato da S2 escrito em `docs/api.md` (branch `feat/s2-contrato-api`), esperando revisão do Rafael. Pontos "a confirmar" no contrato: token de 30 dias, senha mínima de 8 caracteres (site também), `birthdate` editável pelo app.
+- S2 em andamento: contrato em `docs/api.md` (branch `feat/s2-contrato-api`, PR esperando revisão do Rafael). Implementação na branch `feat/s2-api` (empilhada sobre a do contrato): formato Laravel, register, forgot-password, GET/PATCH /me, avatar, PUT /me/password, CNPJ → owner (patch 003), fuso corrigido. 33 testes de ponta a ponta passando no local em 28/10. Pontos "a confirmar" já implementados com o valor proposto: token de 30 dias (`BaseApiController::TOKEN_TTL_SECONDS`), senha mínima de 8 (`User::PASSWORD_MIN_LENGTH`; o site ainda não exige), `birthdate` editável pelo app.
+- Deploy da v1.5.0: aplicar o patch 003 na produção (antes ou junto) e avisar o Rafael, porque o formato da API muda.
+- XAMPP do João está com a extensão GD desligada (`extension=gd` no `php.ini`, ver `docs/setup.md`): uploads funcionam, mas sem otimizar a imagem.
 - Risco de prazo: o novo modelo traz telas novas no site para o dono (horário de funcionamento, agendar partidas, WhatsApp) na S3/S4, e o status depende de resolver o fuso das datas (item 10).
 
 ## Alinhamento com o app (CLAUDE.md do Rafael, 28/10/2026)
@@ -87,7 +90,7 @@ Comparação entre o contrato que o app espera e o `docs/api.md`. Revisar junto 
 7. Sem CSRF; `json_encode` em `<script>` sem `JSON_HEX_TAG` em admin/map.php (venues/edit.php já corrigido).  
 8. "Lembrar de mim": login grava `users.remember_token`, `AuthHelper::checkRememberMe` lê `user_tokens` (selector:validator). A tabela `user_tokens` é criada pelo patch 001; falta o login passar a gravar nela (S5) e depois remover `users.remember_token`.
 9. Valores padronizados (ver `kolae.dbml`): `venues.status` = available/unavailable/maintenance; `venues.floor_type` = chaves de `Venue::FLOOR_TYPES`; `matches.status` default `scheduled`. A API devolve as chaves de piso; o app traduz.
-10. Fuso das datas: a produção parece devolver UTC e o local, horário de Brasília. Padronizar antes da S4 (partidas dependem de horário).
+10. ~~Fuso das datas: a produção parece devolver UTC e o local, horário de Brasília.~~ Corrigido em `feat/s2-api`: o `Database` fixa a sessão do MySQL em `-03:00` (offset fixo; o InfinityFree pode não ter tabelas de fuso). Depois do deploy, as datas exibidas no site da produção passam a sair no horário de Brasília (3 horas a menos que antes).
 11. `GET /api/v1/venues` não filtra por `status` (mostra quadras indisponíveis). Resolver na S3 junto com os filtros.
 12. Tradução (`lang/*.php`, 7 idiomas): toda chave nova entra nos 7 arquivos. Ficou para depois da entrega (decidido em 28/10/2026): traduzir o painel de admin (`admin/*`, `sports/*`, `venues/index.php`, `errors/403` e `404` estão com texto fixo em português) e limpar ~43 chaves sem uso.
 13. Edição de quadra no mobile não tem botão "Cancelar" (só o "Salvar" fixo embaixo). Polimento para a S6, se sobrar tempo.

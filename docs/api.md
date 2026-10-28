@@ -4,7 +4,7 @@ Fonte da verdade da API consumida pelo app mobile. **Endpoint novo ou mudança d
 
 O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contrato sem mudanças no app. Mudança que quebra o app vira `/api/v2`.
 
-> **Estado:** o formato e os tipos abaixo valem a partir da **v1.5.0** (S2). Até lá, o backend ainda responde no formato antigo (`{ "success", "data" }` / `{ "success", "error": { "message", "code", "fields" } }`). Os pontos marcados com **(a confirmar)** esperam o OK dos dois.
+> **Estado:** o formato, os tipos e os endpoints da S2 estão implementados e testados no ambiente local (branch `feat/s2-api`) e vão para a produção na **v1.5.0**. A produção ainda responde no formato antigo (`{ "success", "data" }` / `{ "success", "error": { "message", "code", "fields" } }`). Os pontos marcados com **(a confirmar)** já estão implementados com o valor proposto e esperam o OK dos dois; mudar o valor é simples.
 
 ## Base URL
 
@@ -57,7 +57,8 @@ Toda resposta é JSON (`Content-Type: application/json; charset=utf-8`), inclusi
 | 405 | `METHOD_NOT_ALLOWED` | Rota existe, mas com outro método |
 | 413 | `FILE_TOO_LARGE` | Upload acima do limite |
 | 422 | `VALIDATION_ERROR` | Campos inválidos; ver `errors` |
-| 500 | `INTERNAL_ERROR` | Erro inesperado no servidor |
+| 500 | `INTERNAL_ERROR` e outros terminados em `_FAILED` | Erro inesperado no servidor; mostrar `message` e permitir tentar de novo |
+| 503 | `DATABASE_UNAVAILABLE` | Banco fora do ar (ex: XAMPP com MySQL desligado) |
 
 ## Autenticação
 
