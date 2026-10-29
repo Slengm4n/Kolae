@@ -1,8 +1,7 @@
 # Status da quadra, horário de funcionamento e agenda
 
-> **Estado: PROPOSTA (28/10/2026), aguardando revisão do João e do Rafael.**
-> Depois de aprovada, vira: mudanças no `database/kolae.dbml` + patch `004`, contrato da S3/S4 em `docs/api.md` e as telas do dono no site.
-> As perguntas em aberto estão no fim do documento.
+> **Estado: APROVADO pelo João em 28/10/2026** (decisões D21–D27). O Rafael confere o que afeta o app junto com o contrato da S3 em `docs/api.md`.
+> Próximos passos: `database/kolae.dbml` + patch `004` e os endpoints na S3 (até 08/11); as telas do dono no site na S4 (até 15/11). Prazo novo na D28.
 
 Base: decisões D02 (partidas agendadas pelo dono, no site) e D03 (status calculado pela API) em `docs/decisoes.md`.
 
@@ -39,13 +38,14 @@ Table venue_hours {
 Ref: venue_hours.venue_id > venues.id [delete: cascade]
 ```
 
-- Um intervalo por dia (sem pausa de almoço) e sem virar a meia-noite. Ver as perguntas em aberto.
-- Quadra sem nenhuma linha em `venue_hours` = sem horário cadastrado. Proposta: tratar como `closed` e mostrar no site um aviso para o dono cadastrar.
+- Um intervalo por dia, sem pausa de almoço (D21), e sem virar a meia-noite: fecha no máximo às 23:59 (D22).
+- Quadra sem nenhuma linha em `venue_hours` = sem horário cadastrado: aparece como `closed`, continua no mapa, e o site mostra um aviso para o dono cadastrar (D23).
 
 ### 2.2 Dono fecha a quadra: usa o `venues.status` que já existe
 
 - `available`: segue o horário de funcionamento.
-- `unavailable` ou `maintenance`: **sempre `closed`**, com `status_until = null`.
+- `maintenance`: fechada pelo dono, **sempre `closed`**, com `status_until = null`.
+- `unavailable`: quadra **desativada** no site ("Desativar quadra"). Não aparece na API (D34).
 
 Não cria tabela nova. Fechamento com data marcada (ex: "fechada de 10 a 12/11") fica como melhoria futura.
 
@@ -53,21 +53,23 @@ Não cria tabela nova. Fechamento com data marcada (ex: "fechada de 10 a 12/11")
 
 Hoje: `venue_id, sport_id, creator_user_id, status, max_players, start_time, end_time` (+ datas). A tabela está **vazia** na produção, então dá para ajustar sem migrar dados.
 
-| Coluna | Proposta |
+| Coluna | Como fica |
 | :---- | :---- |
 | `creator_user_id` | Quem agendou (o dono ou um admin) |
-| `sport_id` | Passa a ser **opcional** (o dono pode não saber o esporte de quem alugou) |
+| `sport_id` | Passa a ser **opcional** (o dono pode não saber o esporte de quem alugou) (D25) |
 | `renter_name` | **Nova**, texto opcional: para quem foi alugado (ex: "Time do Carlos"). Só aparece no site |
 | `start_time`, `end_time` | Obrigatórios, horário de Brasília. `end_time` depois de `start_time`, no mesmo dia, dentro do horário de funcionamento |
 | `status` | Só `scheduled` ou `cancelled`. "Em andamento" e "terminada" são **calculados pelo horário**, não gravados |
-| `max_players` | **Removida** (era do modelo antigo de participantes) |
+| `max_players` | **Removida** (era do modelo antigo de participantes) (D26) |
 
 - Duas partidas **não podem se sobrepor** na mesma quadra (validado no site ao salvar).
+- Partida só **dentro do horário de funcionamento** do dia (D27): o site recusa ao salvar.
+- Se o dono mudar o horário depois e alguma partida futura ficar de fora, o site **avisa** quais são, sem bloquear a mudança. Nesse período o status calculado já é `closed` (regra da seção 3).
 - Partida cancelada não conta para o status nem para a agenda.
 
 ### 2.4 Remover `match_participants`
 
-Era do modelo antigo (entrar/sair de partida). Está vazia. Proposta: apagar a tabela no patch `004`.
+Era do modelo antigo (entrar/sair de partida). Está vazia. O patch `004` apaga a tabela (D26); o histórico do Git guarda o desenho.
 
 ### 2.5 WhatsApp do dono
 
@@ -75,8 +77,9 @@ Era do modelo antigo (entrar/sair de partida). Está vazia. Proposta: apagar a t
 users.whatsapp varchar(20) [null, note: 'Só dígitos, com DDI e DDD: 5511999999999']
 ```
 
-- Preenchido pelo dono no site (perfil). Obrigatório para cadastrar quadra? Ver perguntas.
+- Preenchido pelo dono no site (perfil). **Obrigatório para quem tem papel `owner` cadastrar ou editar quadra**; o admin não é obrigado (D24).
 - Vai na API dentro de `owner.whatsapp` (D12). O app monta o link `https://wa.me/<número>`.
+- Pode vir `null` (donos que ainda não editaram a quadra, quadras cadastradas pelo admin): **o app esconde o botão "Falar com o dono"**.
 
 ## 3. Regra do status (calculada pela API)
 
@@ -137,12 +140,14 @@ Para o dono (e o admin):
 
 O status depende do relógio. Nos dados de demonstração, cadastrar partidas que começam e terminam **durante a apresentação**, para a banca ver a quadra mudar de "Disponível" para "Em uso" ao vivo. Combinar o horário exato da apresentação antes.
 
-## 7. Perguntas em aberto (responder na revisão)
+## 7. Perguntas respondidas na revisão (28/10/2026)
 
-1. **Um intervalo por dia basta?** Quadra com pausa (ex: 08–12 e 14–22) precisaria de mais de uma linha por dia. Proposta: um intervalo só, para caber no prazo.
-2. **Funcionamento que passa da meia-noite** (ex: 18:00–02:00)? Proposta: não suportar agora; fecha no máximo às 23:59.
-3. **Quadra sem horário cadastrado** aparece como `closed` (proposta) ou some do mapa?
-4. **WhatsApp obrigatório** para o dono cadastrar quadra? Proposta: obrigatório ao cadastrar ou editar quadra; sem ele, o botão "Falar com o dono" não aparece no app.
-5. **Esporte da partida** opcional (proposta) ou obrigatório?
-6. **Apagar `match_participants`** (proposta) ou manter vazia para o futuro?
-7. Partidas sempre dentro do horário de funcionamento (proposta), ou o dono pode agendar fora dele?
+| # | Pergunta | Resposta | Decisão |
+| :-- | :---- | :---- | :---- |
+| 1 | Um intervalo de funcionamento por dia basta? | Sim, cabe no prazo | D21 |
+| 2 | Funcionamento que passa da meia-noite? | Não por agora | D22 |
+| 3 | Quadra sem horário cadastrado? | Aparece como `closed`, com aviso no site para o dono cadastrar. Sumir do mapa esconderia quadras na demonstração | D23 |
+| 4 | WhatsApp obrigatório para cadastrar quadra? | Sim, para o `owner` (o admin não). O app esconde "Falar com o dono" quando o campo vier vazio | D24 |
+| 5 | Esporte da partida opcional? | Sim | D25 |
+| 6 | Apagar `match_participants`? | Sim: vazia e do modelo antigo; o Git guarda o desenho | D26 |
+| 7 | Partidas só dentro do horário de funcionamento? | Sim, deixa o status coerente. Mudança de horário que deixa partidas de fora só gera aviso | D27 |

@@ -13,6 +13,28 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- API da Sprint 3 para o app: `GET /venues/{id}` (fotos, descrição, endereço, horário de funcionamento e dono com WhatsApp) e `GET /venues/{id}/schedule` (faixas livres e ocupadas do dia).
+- Status da quadra calculado pela API (`available`, `in_use`, `closed`) com `status_until`, a partir do horário de funcionamento e das partidas agendadas pelo dono (`App\Core\VenueSchedule`).
+- Banco (patch `database/patches/004_horario_whatsapp_agenda.sql`): horário de funcionamento das quadras (`venue_hours`), esportes de cada quadra (`venue_sports`), WhatsApp do dono (`users.whatsapp`), descrição da quadra (`venues.description`) e partidas no modelo novo, agendadas pelo dono (`matches` com esporte opcional e `renter_name`).
+
+### Alterado
+- **`GET /venues` muda de formato**: lista paginada (`meta`), com busca, filtros (esporte, status, preço, coberta, iluminação, área de lazer, piso, raio), ordenação por nome, preço ou distância, preço em centavos (`0` = grátis) e tipos do contrato. Quadras desativadas no site não aparecem (D34).
+
+### Removido
+- `POST /api/v1/games`: a partida é agendada pelo dono no site (D02).
+- Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
+
+### Corrigido
+- API na produção: números decimais (coordenadas, distância) saíam com dígitos demais (`-23.565065499999999…`) por causa da configuração do PHP do InfinityFree. Agora saem com o menor número de dígitos (`-23.5650655`).
+
+### Documentação
+- Contrato da S3 em `docs/api.md`, revisado pelo Rafael (D29–D33), e D34 (quadra desativada fora da API).
+
+## [1.5.0] - 2026-10-28
+
+Sprint 2 (adiantada): API de contas para o app no padrão do Laravel, papel `owner` por CNPJ, fuso de Brasília e correções no painel. Inclui também o prazo novo da entrega (28/11) e o modelo de status da quadra aprovado.
+
+### Adicionado
 - API da Sprint 2 para o app: cadastro (`POST /auth/register`, já devolve o token), esqueci a senha (`POST /auth/forgot-password`), perfil (`GET` e `PATCH /me`, que edita só o nome: a data de nascimento não é editável, como no site), foto de perfil (`POST /me/avatar`) e troca de senha (`PUT /me/password`).
 - Quem cadastra CNPJ no site passa a ser `owner` (responsável por quadra). O patch `database/patches/003_owner_por_cnpj.sql` converte quem já tinha CNPJ.
 
@@ -43,6 +65,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ### Documentação
 - Documentação reorganizada: `docs/README.md` (índice, cronograma do backend e do app, e como uma mudança anda até a produção), `docs/decisoes.md` (registro das decisões D01–D20, com data e motivo) e `docs/modelo-status.md` (proposta de status da quadra, horário de funcionamento e agenda para as S3/S4). O `docs/CLAUDE.md` ficou só com o contexto e aponta para esses documentos.
+- Prazo da entrega antecipado para 28/11 (congelamento em 21/11), com o cronograma refeito em `docs/README.md` e a troca de e-mail com código fora do escopo (D28). Modelo de status da quadra, horário de funcionamento e agenda aprovado: `docs/modelo-status.md` com as respostas da revisão e as decisões D21–D27.
 - `docs/api.md`: contrato da Sprint 2 (cadastro, esqueci a senha, perfil, avatar e troca de senha) e novo formato das respostas no padrão do Laravel (`{ data }` / `{ message, code, errors }`), com datas ISO 8601, dinheiro em centavos e coordenadas numéricas. Plano das S3 a S5 atualizado para o novo modelo: partidas agendadas pelo dono no site e status da quadra calculado pela API.
 - `config.example.php` passa a trazer o bloco de e-mail (`SMTP_*`) usado pelo "esqueci a senha". Antes, quem montava o ambiente pelo exemplo ficava sem essas constantes e a recuperação de senha parava com erro fatal.
 - `docs/setup.md`: passo para ligar as extensões `gd` e `zip` do PHP, como instalar as dependências sem o Composer global, como configurar o SMTP (inclusive senha de app do Gmail) e novos problemas comuns.
@@ -130,7 +153,8 @@ Sprint 1: correções críticas de segurança, banco alinhado ao código e API p
 
 - Lançamento inicial.
 
-[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...HEAD
+[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Slengm4n/Kolae/compare/v1.3...v1.4.0
 [1.3.0]: https://github.com/Slengm4n/Kolae/compare/v1.2.2...v1.3
 [1.2.2]: https://github.com/Slengm4n/Kolae/compare/v1.2.1...v1.2.2

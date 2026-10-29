@@ -12,7 +12,6 @@ use App\Controllers\AuthApiController;
 use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
 use App\Controllers\SportApiController;
-use App\Controllers\GameApiController;
 use App\Core\AuthHelper;
 
 
@@ -207,15 +206,13 @@ $router->group('/api/v1', function ($router) {
     $router->post('/me/avatar', [MeApiController::class, 'avatar']);
     $router->put('/me/password', [MeApiController::class, 'password']);
 
-    // Quadras (Venues)
-    $router->get('/venues', [VenueApiController::class, 'getActiveVenuesForMap']);
-
+    // Quadras (públicas): lista, detalhe e agenda do dia
+    $router->get('/venues', [VenueApiController::class, 'index']);
+    $router->get('/venues/{id}', [VenueApiController::class, 'show']);
+    $router->get('/venues/{id}/schedule', [VenueApiController::class, 'schedule']);
 
     // Esportes
     $router->get('/sports', [SportApiController::class, 'getActiveSports']);
-
-    // Partidas (Matches) - Requer autenticação
-    $router->post('/games', [GameApiController::class, 'createGame']);
 });
 
 
