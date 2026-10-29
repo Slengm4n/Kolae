@@ -159,3 +159,8 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 ### D33 · Avaliação e distância no detalhe resolvidas no app (28/10/2026)
 - **O quê:** a seção "Mais avaliadas" da home do app vira "Disponíveis agora" (`GET /venues?status=available`), porque avaliação é vitrine (D04) e não há como ordenar por ela. A distância no detalhe é calculada pelo app, com a posição da pessoa e as coordenadas da quadra.
 - **Por quê:** distância não é regra de negócio como o status, então calcular no app não contraria a D03. Nenhuma mudança no contrato.
+
+### D34 · `unavailable` = quadra desativada, `maintenance` = fechada pelo dono (28/10/2026)
+- **O quê:** no site, "Desativar quadra" grava `venues.status = 'unavailable'` (nunca preencheu `deleted_at`) e promete ao dono que a quadra "ficará invisível". Então `unavailable` fica **fora da API** (não aparece na lista; detalhe e agenda respondem 404). O fechamento temporário pelo dono passa a ser só `maintenance`, que aparece como `closed` com `status_until = null`.
+- **Por quê:** o site nunca teve outro jeito de fechar uma quadra, então todo `unavailable` na produção veio do "Desativar". Mostrar essas quadras como fechadas contrariaria o que o site diz ao dono. Não precisa migrar dados.
+- **Onde:** `Venue::searchForApi` / `findForApi`, `docs/modelo-status.md` (seção 2.2). Na S4, o seletor de status da edição de quadra oferece "Disponível" e "Em manutenção"; "Desativar" continua sendo o botão.

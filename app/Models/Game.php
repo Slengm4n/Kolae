@@ -4,49 +4,47 @@ namespace App\Models;
 
 use App\Core\Database;
 use PDO;
-use PDOException;
 
+/**
+ * Class Game
+ * Partidas (tabela matches), agendadas pelo dono da quadra no site (D02).
+ * Gravado só scheduled | cancelled; "em andamento" e "terminada" saem do horário.
+ */
 class Game
 {
-
-
-
     /**
-     * Cria uma nova partida no banco de dados.
-     * @param array $data Dados da partida (venue_id, sport_id, creator_user_id, start_time, [duration_minutes])
-     * @return string|false Retorna o ID da nova partida ou false em caso de erro.
+     * Partidas agendadas (não canceladas) de várias quadras que tocam um dia.
+     * @param int[]  $venueIds
+     * @param string $date 'Y-m-d' (horário de Brasília)
+     * @return array [venue_id => [['start_time' => ..., 'end_time' => ...], ...]]
      */
-    public static function create(array $data)
+    public static function findScheduledOn(array $venueIds, string $date): array
     {
-        // Define valores padrão se não forem fornecidos
-        $data['duration_minutes'] = $data['duration_minutes'] ?? 60; // Padrão 60 min
-        $data['status'] = 'scheduled'; // Sempre começa como agendada
-
-        $sql = "INSERT INTO matches (venue_id, sport_id, creator_user_id, start_time, duration_minutes, status)
-                VALUES (:venue_id, :sport_id, :creator_user_id, :start_time, :duration_minutes, :status)";
-
-        try {
-            $pdo = Database::getConnection();
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->bindParam(':venue_id', $data['venue_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':sport_id', $data['sport_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':creator_user_id', $data['creator_user_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':start_time', $data['start_time']);
-            $stmt->bindParam(':duration_minutes', $data['duration_minutes'], PDO::PARAM_INT);
-            $stmt->bindParam(':status', $data['status']);
-
-            if ($stmt->execute()) {
-                return $pdo->lastInsertId();
-            } else {
-                return false;
-            }
-        } catch (PDOException $e) {
-            error_log("Erro ao criar partida: " . $e->getMessage());
-            return false;
+        if (!$venueIds) {
+            return [];
         }
-    }
 
+        $pdo = Database::getConnection();
+        $placeholders = implode(',', array_fill(0, count($venueIds), '?'));
+        $stmt = $pdo->prepare("SELECT venue_id, start_time, end_time
+                               FROM matches
+                               WHERE venue_id IN ($placeholders)
+                                 AND status = 'scheduled'
+                                 AND deleted_at IS NULL
+                                 AND start_time < ? + INTERVAL 1 DAY
+                                 AND end_time > ?
+                               ORDER BY start_time");
+        $stmt->execute([...array_map('intval', $venueIds), $date, $date]);
+
+        $matches = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $matches[(int)$row['venue_id']][] = [
+                'start_time' => $row['start_time'],
+                'end_time' => $row['end_time']
+            ];
+        }
+        return $matches;
+    }
 
     public static function findById(int $id)
     {

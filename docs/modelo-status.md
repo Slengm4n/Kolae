@@ -44,7 +44,8 @@ Ref: venue_hours.venue_id > venues.id [delete: cascade]
 ### 2.2 Dono fecha a quadra: usa o `venues.status` que já existe
 
 - `available`: segue o horário de funcionamento.
-- `unavailable` ou `maintenance`: **sempre `closed`**, com `status_until = null`.
+- `maintenance`: fechada pelo dono, **sempre `closed`**, com `status_until = null`.
+- `unavailable`: quadra **desativada** no site ("Desativar quadra"). Não aparece na API (D34).
 
 Não cria tabela nova. Fechamento com data marcada (ex: "fechada de 10 a 12/11") fica como melhoria futura.
 

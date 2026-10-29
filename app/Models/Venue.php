@@ -175,6 +175,84 @@ class Venue
     }
 
     /**
+     * Colunas e JOINs comuns às consultas da API. LEFT JOIN na hierarquia do endereço
+     * para uma quadra com endereço incompleto continuar aparecendo.
+     * Quadra desativada no site (status 'unavailable', D34) nunca vai para a API.
+     */
+    private const API_SELECT = "SELECT v.id, v.user_id, v.name, v.description, v.average_price_per_hour,
+                                       v.court_capacity, v.has_leisure_area, v.leisure_area_capacity,
+                                       v.floor_type, v.has_lighting, v.is_covered, v.status,
+                                       a.cep, a.number, a.complement, a.latitude, a.longitude,
+                                       s.name AS street, n.name AS neighborhood, c.name AS city, st.name AS state,
+                                       (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.id ASC LIMIT 1) AS image_path
+                                FROM venues v
+                                JOIN addresses a ON v.address_id = a.id
+                                LEFT JOIN streets s ON a.street_id = s.id
+                                LEFT JOIN neighborhoods n ON s.neighborhood_id = n.id
+                                LEFT JOIN cities c ON n.city_id = c.id
+                                LEFT JOIN states st ON c.state_id = st.id
+                                WHERE v.status <> 'unavailable' AND v.deleted_at IS NULL";
+
+    /**
+     * Quadras para GET /api/v1/venues, com os filtros que o banco resolve.
+     * Status e distância são calculados depois, no VenueApiController.
+     * @param array $filters q, sport_id, max_price_cents, is_covered, has_lighting, has_leisure_area, floor_type
+     * @return array Linhas em ordem alfabética
+     */
+    public static function searchForApi(array $filters): array
+    {
+        $sql = self::API_SELECT;
+        $params = [];
+
+        if (isset($filters['q'])) {
+            $sql .= " AND (v.name LIKE :q1 OR n.name LIKE :q2 OR c.name LIKE :q3)";
+            $like = '%' . addcslashes($filters['q'], '%_\\') . '%';
+            $params += [':q1' => $like, ':q2' => $like, ':q3' => $like];
+        }
+        if (isset($filters['sport_id'])) {
+            $sql .= " AND EXISTS (SELECT 1 FROM venue_sports vs WHERE vs.venue_id = v.id AND vs.sport_id = :sport_id)";
+            $params[':sport_id'] = $filters['sport_id'];
+        }
+        if (isset($filters['max_price_cents'])) {
+            // Inclui as grátis (0); as sem preço (NULL) ficam de fora (D31)
+            $sql .= " AND v.average_price_per_hour IS NOT NULL AND v.average_price_per_hour * 100 <= :max_price";
+            $params[':max_price'] = $filters['max_price_cents'];
+        }
+        foreach (['is_covered', 'has_lighting', 'has_leisure_area'] as $flag) {
+            if (isset($filters[$flag])) {
+                $sql .= " AND v.$flag = :$flag";
+                $params[":$flag"] = $filters[$flag] ? 1 : 0;
+            }
+        }
+        if (isset($filters['floor_type'])) {
+            $sql .= " AND v.floor_type = :floor_type";
+            $params[':floor_type'] = $filters['floor_type'];
+        }
+
+        $stmt = Database::getConnection()->prepare($sql . " ORDER BY v.name ASC, v.id ASC");
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Uma quadra para GET /api/v1/venues/{id}, com os dados públicos do dono.
+     * @return array|false
+     */
+    public static function findForApi(int $id)
+    {
+        $sql = str_replace(
+            "FROM venues v",
+            ", u.name AS owner_name, u.avatar_path AS owner_avatar_path, u.created_at AS owner_created_at, u.whatsapp AS owner_whatsapp
+             FROM venues v JOIN users u ON u.id = v.user_id",
+            self::API_SELECT
+        ) . " AND v.id = :id";
+
+        $stmt = Database::getConnection()->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Busca todas as quadras com coordenadas para exibição no mapa.
      * @return array
      */
