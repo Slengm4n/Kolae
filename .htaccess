@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /kolae/
+    # Sem RewriteBase: o mesmo arquivo serve em /kolae (XAMPP) e na raiz do domínio (produção)
 
     # Passa o cabeçalho Authorization
     RewriteCond %{HTTP:Authorization} ^(.*)
