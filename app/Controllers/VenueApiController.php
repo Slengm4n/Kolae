@@ -116,7 +116,7 @@ class VenueApiController extends BaseApiController
         $this->sendSuccess($venue + [
             'description' => self::nullIfBlank($row['description']),
             'leisure_area_capacity' => self::intOrNull($row['leisure_area_capacity']),
-            'images' => array_map(fn($img) => self::imageUrl($id, $img['file_path']), $images),
+            'images' => array_values(array_filter(array_map(fn($img) => self::imageUrl($id, $img['file_path']), $images))),
             'address' => [
                 'street' => $row['street'],
                 'number' => self::nullIfBlank($row['number']),
@@ -130,9 +130,7 @@ class VenueApiController extends BaseApiController
             'opening_hours' => $openingHours,
             'owner' => [
                 'name' => $row['owner_name'],
-                'avatar_url' => !empty($row['owner_avatar_path'])
-                    ? BASE_URL . '/uploads/avatars/' . $row['user_id'] . '/' . $row['owner_avatar_path']
-                    : null,
+                'avatar_url' => ApiFormat::uploadUrl('avatars/' . $row['user_id'], $row['owner_avatar_path']),
                 'member_since' => ApiFormat::datetime($row['owner_created_at']),
                 'whatsapp' => self::nullIfBlank($row['owner_whatsapp'])
             ]
@@ -299,7 +297,7 @@ class VenueApiController extends BaseApiController
             'has_lighting' => (bool)$row['has_lighting'],
             'has_leisure_area' => (bool)$row['has_leisure_area'],
             'court_capacity' => self::intOrNull($row['court_capacity']),
-            'cover_image_url' => !empty($row['image_path']) ? self::imageUrl($id, $row['image_path']) : null,
+            'cover_image_url' => self::imageUrl($id, $row['image_path']),
             'sports' => $sports,
             'neighborhood' => $row['neighborhood'],
             'city' => $row['city'],
@@ -353,9 +351,12 @@ class VenueApiController extends BaseApiController
         return $full !== '' ? $full : null;
     }
 
-    private static function imageUrl(int $venueId, string $fileName): string
+    /**
+     * Foto da quadra, ou null se o arquivo não existe no servidor.
+     */
+    private static function imageUrl(int $venueId, ?string $fileName): ?string
     {
-        return BASE_URL . '/uploads/venues/' . $venueId . '/' . rawurlencode($fileName);
+        return ApiFormat::uploadUrl('venues/' . $venueId, $fileName);
     }
 
     private static function intOrNull($value): ?int
