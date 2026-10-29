@@ -7,7 +7,8 @@ use DateTimeZone;
 
 /**
  * Class VenueSchedule
- * Regra do status da quadra e da agenda do dia (docs/modelo-status.md, seções 3 e 4).
+ * Regra do status da quadra e da agenda do dia (docs/modelo-status.md, seções 3 e 4),
+ * e as validações do horário de funcionamento e das partidas que o dono cadastra no site.
  * Não acessa o banco: recebe o horário de funcionamento e as partidas já carregados,
  * para a regra ficar num lugar só (D03) e poder ser testada isoladamente.
  *
@@ -95,6 +96,121 @@ class VenueSchedule
             'closes_at' => $closes->format('H:i'),
             'slots' => $slots
         ];
+    }
+
+    /**
+     * Confere o horário de funcionamento enviado pelo formulário (D21, D22).
+     * @param array $input [weekday => ['open' => '1', 'opens_at' => 'HH:MM', 'closes_at' => 'HH:MM']]
+     *                     Dia sem 'open' = fechado.
+     * @return array{hours: array, errors: array} hours no formato de $hours (só os dias abertos);
+     *               errors [weekday => 'invalid_time' | 'closes_before_opens']
+     */
+    public static function validateHours(array $input): array
+    {
+        $hours = [];
+        $errors = [];
+        for ($weekday = 0; $weekday <= 6; $weekday++) {
+            $day = $input[$weekday] ?? [];
+            if (!is_array($day) || empty($day['open'])) {
+                continue;
+            }
+
+            $opens = self::parseTime($day['opens_at'] ?? '');
+            $closes = self::parseTime($day['closes_at'] ?? '');
+            if ($opens === null || $closes === null) {
+                $errors[$weekday] = 'invalid_time';
+            } elseif ($closes <= $opens) {
+                // Sem virar a meia-noite (D22): fecha no máximo às 23:59
+                $errors[$weekday] = 'closes_before_opens';
+            } else {
+                $hours[$weekday] = ['opens_at' => $opens . ':00', 'closes_at' => $closes . ':00'];
+            }
+        }
+        return ['hours' => $hours, 'errors' => $errors];
+    }
+
+    /**
+     * Confere uma partida nova antes de gravar (D27, docs/modelo-status.md seção 2.3).
+     * Partida que já começou pode ser cadastrada (ex: aluguel feito na hora); só recusa
+     * a que já terminou.
+     * @param array $matches partidas scheduled do mesmo dia (formato de $matches)
+     * @return string|null null se pode gravar; senão o motivo:
+     *   'end_before_start' | 'different_day' | 'in_past' | 'closed_day' | 'outside_hours' | 'overlap'
+     */
+    public static function validateMatch(array $hours, array $matches, DateTimeImmutable $start, DateTimeImmutable $end, DateTimeImmutable $now): ?string
+    {
+        if ($end <= $start) {
+            return 'end_before_start';
+        }
+        if ($start->format('Y-m-d') !== $end->format('Y-m-d')) {
+            return 'different_day';
+        }
+        if ($end <= $now) {
+            return 'in_past';
+        }
+
+        [$opens, $closes] = self::openingOn($hours, $start);
+        if ($opens === null) {
+            return 'closed_day';
+        }
+        if ($start < $opens || $end > $closes) {
+            return 'outside_hours';
+        }
+
+        // Encostar é permitido (uma termina 19:00, a outra começa 19:00)
+        foreach ($matches as $m) {
+            $mStart = new DateTimeImmutable($m['start_time'], self::timezone());
+            $mEnd = new DateTimeImmutable($m['end_time'], self::timezone());
+            if ($start < $mEnd && $end > $mStart) {
+                return 'overlap';
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Partidas que deixam de caber no horário de funcionamento (ex: depois de o dono mudar
+     * o horário). O site só avisa, sem bloquear (D27).
+     * @param array $matches partidas com 'start_time' e 'end_time' (outras chaves são mantidas)
+     * @return array as partidas de $matches que ficaram de fora, na mesma ordem
+     */
+    public static function matchesOutsideHours(array $hours, array $matches): array
+    {
+        $outside = [];
+        foreach ($matches as $m) {
+            $start = new DateTimeImmutable($m['start_time'], self::timezone());
+            $end = new DateTimeImmutable($m['end_time'], self::timezone());
+            [$opens, $closes] = self::openingOn($hours, $start);
+            if ($opens === null || $start < $opens || $end > $closes) {
+                $outside[] = $m;
+            }
+        }
+        return $outside;
+    }
+
+    /**
+     * Junta data ('Y-m-d') e hora ('HH:MM') do formulário num instante de Brasília.
+     * Retorna null se algum dos dois for inválido (ex: 31/02, 25:00).
+     */
+    public static function at(string $date, string $time): ?DateTimeImmutable
+    {
+        $time = self::parseTime($time);
+        if ($time === null) {
+            return null;
+        }
+        $dt = DateTimeImmutable::createFromFormat('!Y-m-d H:i', "$date $time", self::timezone());
+        return ($dt && $dt->format('Y-m-d H:i') === "$date $time") ? $dt : null;
+    }
+
+    /**
+     * 'HH:MM' ou 'HH:MM:SS' (como vem do banco) → 'HH:MM'; null se inválido.
+     */
+    private static function parseTime($time): ?string
+    {
+        if (!is_string($time) || !preg_match('/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/', $time, $m)) {
+            return null;
+        }
+        return $m[1] . ':' . $m[2];
     }
 
     /**

@@ -40,4 +40,41 @@ class VenueHour
         }
         return $hours;
     }
+
+    /**
+     * Horário de uma quadra.
+     * @return array [weekday => ['opens_at' => 'HH:MM:SS', 'closes_at' => 'HH:MM:SS']]
+     */
+    public static function findByVenueId(int $venueId): array
+    {
+        return self::findByVenueIds([$venueId])[$venueId] ?? [];
+    }
+
+    /**
+     * Troca o horário da semana inteira de uma quadra (o que não vier fica fechado).
+     * @param array $hours já validado por VenueSchedule::validateHours
+     */
+    public static function replaceForVenue(int $venueId, array $hours): bool
+    {
+        $pdo = Database::getConnection();
+        try {
+            $pdo->beginTransaction();
+
+            $stmt = $pdo->prepare("DELETE FROM venue_hours WHERE venue_id = ?");
+            $stmt->execute([$venueId]);
+
+            $stmt = $pdo->prepare("INSERT INTO venue_hours (venue_id, weekday, opens_at, closes_at)
+                                   VALUES (?, ?, ?, ?)");
+            foreach ($hours as $weekday => $day) {
+                $stmt->execute([$venueId, (int)$weekday, $day['opens_at'], $day['closes_at']]);
+            }
+
+            $pdo->commit();
+            return true;
+        } catch (\PDOException $e) {
+            $pdo->rollBack();
+            error_log('Erro ao salvar o horário da quadra ' . $venueId . ': ' . $e->getMessage());
+            return false;
+        }
+    }
 }

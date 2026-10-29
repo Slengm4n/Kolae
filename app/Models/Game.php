@@ -46,6 +46,68 @@ class Game
         return $matches;
     }
 
+    /**
+     * Partidas agendadas de uma quadra com os detalhes que só o site mostra
+     * (para quem foi alugado, esporte), que terminam depois de $from e começam antes de $to.
+     * @param string      $from 'Y-m-d H:i:s'
+     * @param string|null $to   'Y-m-d H:i:s'; null = sem limite (todas as futuras)
+     */
+    public static function findDetailedBetween(int $venueId, string $from, ?string $to = null): array
+    {
+        $pdo = Database::getConnection();
+        $sql = "SELECT m.id, m.start_time, m.end_time, m.renter_name, m.sport_id, s.name AS sport_name
+                FROM matches m
+                LEFT JOIN sports s ON s.id = m.sport_id
+                WHERE m.venue_id = ?
+                  AND m.status = 'scheduled'
+                  AND m.deleted_at IS NULL
+                  AND m.end_time > ?";
+        $params = [$venueId, $from];
+        if ($to !== null) {
+            $sql .= " AND m.start_time < ?";
+            $params[] = $to;
+        }
+        $stmt = $pdo->prepare($sql . " ORDER BY m.start_time");
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Agenda uma partida. Validar antes com VenueSchedule::validateMatch.
+     * @param array $data venue_id, creator_user_id, start_time, end_time ('Y-m-d H:i:s'),
+     *                    sport_id (opcional, D25), renter_name (opcional)
+     * @return int|false id da partida criada
+     */
+    public static function create(array $data)
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("INSERT INTO matches (venue_id, sport_id, creator_user_id, renter_name, status, start_time, end_time)
+                               VALUES (?, ?, ?, ?, 'scheduled', ?, ?)");
+        $renter = trim((string)($data['renter_name'] ?? ''));
+        $ok = $stmt->execute([
+            (int)$data['venue_id'],
+            !empty($data['sport_id']) ? (int)$data['sport_id'] : null,
+            (int)$data['creator_user_id'],
+            $renter !== '' ? mb_substr($renter, 0, 100) : null,
+            $data['start_time'],
+            $data['end_time']
+        ]);
+        return $ok ? (int)$pdo->lastInsertId() : false;
+    }
+
+    /**
+     * Cancela uma partida agendada, só se ela for da quadra informada.
+     * @return bool true se alguma partida foi cancelada
+     */
+    public static function cancel(int $id, int $venueId): bool
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("UPDATE matches SET status = 'cancelled'
+                               WHERE id = ? AND venue_id = ? AND status = 'scheduled' AND deleted_at IS NULL");
+        $stmt->execute([$id, $venueId]);
+        return $stmt->rowCount() > 0;
+    }
+
     public static function findById(int $id)
     {
         $pdo = Database::getConnection();

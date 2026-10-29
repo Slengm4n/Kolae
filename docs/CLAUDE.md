@@ -78,3 +78,5 @@ Corrigidos e em produção: upload sem validação, `SMTPDebug`, IDOR na ediçã
 - API no padrão Laravel (D06): `{ data }` / `{ message, code, errors }`; detalhes em `docs/api.md`.
 - Branch por tarefa e PR para a `main` (D17); versão por sprint (D18).
 - Testar endpoints de ponta a ponta no ambiente local antes do PR (scripts de teste no scratchpad, com usuários `@kolae.test` apagados ao final).
+- Testes no repositório em `tests/` (fora do deploy), scripts PHP simples sem PHPUnit: `venue_schedule_test.php` (sem banco) e `agenda_db_test.php` (banco local + seed). Como rodar: `docs/setup.md`. Regra nova de status, horário ou partida ganha caso de teste lá.
+- A S4 sai em branches pequenas, uma por etapa (D35–D40): `feat/s4-base-agenda` (regras e models, sem tela), depois as abas Horário, Agenda e Dados, o cadastro e o painel. Rota nova só entra junto com a sua tela, porque a `main` publica direto.
