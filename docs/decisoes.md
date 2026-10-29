@@ -164,3 +164,28 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **O quê:** no site, "Desativar quadra" grava `venues.status = 'unavailable'` (nunca preencheu `deleted_at`) e promete ao dono que a quadra "ficará invisível". Então `unavailable` fica **fora da API** (não aparece na lista; detalhe e agenda respondem 404). O fechamento temporário pelo dono passa a ser só `maintenance`, que aparece como `closed` com `status_until = null`.
 - **Por quê:** o site nunca teve outro jeito de fechar uma quadra, então todo `unavailable` na produção veio do "Desativar". Mostrar essas quadras como fechadas contrariaria o que o site diz ao dono. Não precisa migrar dados.
 - **Onde:** `Venue::searchForApi` / `findForApi`, `docs/modelo-status.md` (seção 2.2). Na S4, o seletor de status da edição de quadra oferece "Disponível" e "Em manutenção"; "Desativar" continua sendo o botão.
+
+### D35 · Horário e agenda em abas dentro da quadra (29/10/2026)
+- **O quê:** a página da quadra no painel do dono ganha três abas: **Dados** (o formulário de edição atual), **Horário** (os 7 dias, cada um com "abre / fecha" ou "fechado") e **Agenda**. Cada aba salva sozinha.
+- **Por quê:** o formulário de edição já é longo; separar evita um "Salvar" que mexe em tudo de uma vez e deixa cada parte testável por conta própria.
+- **Onde:** `app/views/venues/` e as rotas `/dashboard/quadras/...` (S4). Vale para o dono e para o admin.
+
+### D36 · Cadastro de quadra: descrição e esportes no passo a passo, horário depois (29/10/2026)
+- **O quê:** o passo a passo de cadastro ganha descrição (D30), esportes (D29) e preço opcional (D31). O horário **não** entra: ao terminar, o dono vai para a aba Horário com o aviso da D23.
+- **Por quê:** o passo a passo já é grande; o horário tem a sua aba (D35) e a quadra sem horário já tem comportamento definido (`closed` + aviso).
+
+### D37 · Agenda dia a dia, com linha do tempo (29/10/2026)
+- **O quê:** a aba Agenda mostra um dia por vez (setas para o dia anterior e o seguinte), uma barra com as faixas livres e ocupadas (a mesma divisão do `GET /venues/{id}/schedule`), a lista das partidas do dia com "Cancelar" e o formulário "Agendar partida" (início, fim, esporte opcional, para quem).
+- **Por quê:** funciona bem no celular e mostra ao dono o mesmo que o app mostra. Calendário semanal ficou de fora pelo prazo.
+
+### D38 · WhatsApp pedido no próprio formulário da quadra (29/10/2026)
+- **O quê:** se o dono (`owner`) ainda não tem WhatsApp, o formulário da quadra (cadastro e edição) mostra o campo, obrigatório, e ao salvar grava em `users.whatsapp`. O perfil também tem o campo, para mudar depois.
+- **Por quê:** cumpre a D24 sem tirar o dono do fluxo.
+
+### D39 · Só partida avulsa (29/10/2026)
+- **O quê:** sem partidas que se repetem ("toda terça por 4 semanas"). Cada partida é agendada uma a uma.
+- **Por quê:** prazo da S4 (até 15/11). Fica como melhoria futura.
+
+### D40 · Status ao vivo nos cards do painel do dono (29/10/2026)
+- **O quê:** os cards das quadras no painel mostram o selo de status (Disponível / Em uso / Fechada), calculado pela mesma regra da API (`VenueSchedule`), e o aviso "sem horário cadastrado" (D23).
+- **Por quê:** o dono vê na hora o que o app está mostrando.

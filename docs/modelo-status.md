@@ -136,6 +136,8 @@ Para o dono (e o admin):
 3. **WhatsApp** no perfil do dono.
 4. **Status da quadra** (disponível, manutenção, indisponível) na edição da quadra, se ainda não estiver visível lá.
 
+Como ficaram as telas (decididas em 29/10, D35–D40): abas **Dados · Horário · Agenda** na quadra; descrição e esportes no passo a passo de cadastro, horário depois; agenda dia a dia com linha do tempo; WhatsApp pedido no próprio formulário da quadra quando faltar; só partida avulsa; selo de status ao vivo nos cards do painel.
+
 ## 6. Para a apresentação (S6)
 
 O status depende do relógio. Nos dados de demonstração, cadastrar partidas que começam e terminam **durante a apresentação**, para a banca ver a quadra mudar de "Disponível" para "Em uso" ao vivo. Combinar o horário exato da apresentação antes.
