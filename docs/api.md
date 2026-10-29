@@ -6,7 +6,7 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 
 > **Estado:**
 > - **S2 (v1.5.0):** revisado e aprovado pelo João e pelo Rafael em 28/10/2026, implementado e em produção.
-> - **S3 (v1.6.0, até 08/11):** revisado pelo Rafael em 28/10/2026; ajustes da revisão já aplicados (D29–D33). Escrito a partir do `docs/modelo-status.md` (D21–D27). Até ser implementado, `GET /venues` continua no formato legado e o app usa o mock **com os campos daqui**.
+> - **S3 (v1.6.0, até 08/11):** revisado pelo Rafael em 28/10/2026 (D29–D33) e **implementado e testado no ambiente local** (branch `feat/s3-patch-004`). Vai para a produção junto com o patch 004. Até lá, a produção responde `GET /venues` no formato legado; no notebook do João já vale o formato daqui.
 
 ## Base URL
 
@@ -273,7 +273,7 @@ Calculado pela API a cada requisição, no horário de Brasília. **O app nunca 
 
 ### `GET /venues`
 
-Lista paginada das quadras (as excluídas pelo dono não aparecem; as fechadas aparecem com `status: closed`).
+Lista paginada das quadras. As desativadas pelo dono no site não aparecem (D34); as fechadas aparecem com `status: closed`.
 
 **Parâmetros** (todos opcionais, na query string):
 
@@ -413,13 +413,13 @@ Público. Lista os esportes ativos, em ordem alfabética. Sem mudança na S3.
 
 - `icon_path`: classe do Font Awesome (ex: `fa-futbol`). No app, mapear para o ícone equivalente.
 
-### `GET /venues` (formato legado)
+### `GET /venues` (formato legado, só na produção até a v1.6.0)
 
-Até a implementação da S3, responde no formato antigo: lista sem paginação, preço como string `"10.00"`, coordenadas como string, booleanos `0/1`. Na v1.6.0 é substituído pelo formato descrito acima (**mudança que quebra quem usa o legado**; o app usa mock até lá, então não há impacto).
+Até o deploy da S3, a produção responde no formato antigo: lista sem paginação, preço como string `"10.00"`, coordenadas como string, booleanos `0/1`. Na v1.6.0 é substituído pelo formato descrito acima (**mudança que quebra quem usa o legado**; o app usa mock até lá, então não há impacto).
 
 ### `POST /games`
 
-**Será removido na v1.6.0.** Pelo modelo de produto (D02), a partida é agendada pelo dono no site; o app não cria nem entra em partidas. Não usar.
+**Removido na v1.6.0** (responde `404 NOT_FOUND`). Pelo modelo de produto (D02), a partida é agendada pelo dono no site; o app não cria nem entra em partidas.
 
 ---
 
