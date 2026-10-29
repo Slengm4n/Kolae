@@ -20,7 +20,7 @@ $userId = $_SESSION['user_id'] ?? 0;
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
     
     <?php include 'app/views/partials/theme_script.php'; ?>
 
@@ -226,7 +226,7 @@ $userId = $_SESSION['user_id'] ?? 0;
         </div>
     </main>
 
-    <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
     <script>
         // O menu do usuário e o botão de tema vêm do bundle.js (initNavbar e initTheme);
         // repetir aqui fazia cada clique ser tratado duas vezes.

@@ -20,7 +20,7 @@ $message = null;
     <?php include 'app/views/partials/theme_script.php'; ?>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
 
     <style>
         .animate-fadeInUp {
@@ -117,7 +117,7 @@ $message = null;
         </div>
     </div>
 
-    <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
 
 </body>
 
