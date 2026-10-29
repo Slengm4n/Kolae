@@ -78,6 +78,17 @@ Como rodar o backend (site + `/api/v1`) no Windows com XAMPP e como o app mobile
 - **Upload da foto de perfil sempre falha.** A extensão `gd` está desligada (passo 3).
 - **Composer reclama de `zip` ou demora baixando "from source".** A extensão `zip` está desligada (passo 3).
 
+### Testes
+
+Rodar da raiz do projeto, com o PHP do XAMPP, antes de abrir um PR:
+
+```
+C:\xampp\php\php.exe tests/venue_schedule_test.php   # regra do status e validações, sem banco
+C:\xampp\php\php.exe tests/agenda_db_test.php        # horário e partidas no banco local
+```
+
+O segundo precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o banco como encontrou. A pasta `tests/` não vai para a produção.
+
 ## 2. App mobile apontando para o notebook
 
 1. O notebook com o XAMPP e o celular (ou o emulador) precisam estar **na mesma rede Wi-Fi**.

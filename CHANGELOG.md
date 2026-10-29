@@ -15,6 +15,8 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ### Adicionado
 - API da Sprint 3 para o app: `GET /venues/{id}` (fotos, descrição, endereço, horário de funcionamento e dono com WhatsApp) e `GET /venues/{id}/schedule` (faixas livres e ocupadas do dia).
 - Status da quadra calculado pela API (`available`, `in_use`, `closed`) com `status_until`, a partir do horário de funcionamento e das partidas agendadas pelo dono (`App\Core\VenueSchedule`).
+- Base das telas do dono (S4), ainda sem tela: validação do horário de funcionamento (D21, D22) e das partidas (sem sobrepor outra, dentro do horário, D27), aviso de partidas que ficam fora depois de mudar o horário, e gravar horário, agendar e cancelar partidas (`VenueHour`, `Game`).
+- Testes automatizados em `tests/` (fora do deploy): regra do status e validações (`venue_schedule_test.php`, sem banco) e os models da agenda no banco local (`agenda_db_test.php`).
 - Banco (patch `database/patches/004_horario_whatsapp_agenda.sql`): horário de funcionamento das quadras (`venue_hours`), esportes de cada quadra (`venue_sports`), WhatsApp do dono (`users.whatsapp`), descrição da quadra (`venues.description`) e partidas no modelo novo, agendadas pelo dono (`matches` com esporte opcional e `renter_name`).
 
 ### Alterado
