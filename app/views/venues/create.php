@@ -556,21 +556,24 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 const updateVisual = () => {
                     const isChecked = checkbox.checked;
 
-                    if (isChecked) {
-                        card.classLi.st.add('border-brand-400', 'bg-brand-500/10');
-                        card.cardSelector('i').classList.add('text-brand-400');
-                    } else {
-                        card.classList.remove('border-brand-400', 'bg-brand-500/10');
-                        card.querySelector('i').classList.remove('text-brand-400');
-                    }
+                    card.classList.toggle('border-brand-400', isChecked);
+                    card.classList.toggle('bg-brand-500/10', isChecked);
+                    card.querySelector('i').classList.toggle('text-brand-400', isChecked);
 
                     formData[checkbox.name] = isChecked ? 1 : 0;
 
-                    if (card.id === 'leisure-area-checkbox-card') {
+                    // Área de lazer: mostra a capacidade só quando marcada; ao desmarcar, zera
+                    if (card.id === 'leisure-area-card') {
                         const leisureContainer = document.getElementById('leisure-capacity-container');
                         if (leisureContainer) {
-                            leisureCounter.querySelector('.counter-valeu').textContent = '0';
-                            formData['leisure_area_capacity'] = 0;
+                            leisureContainer.classList.toggle('hidden', !isChecked);
+                            if (!isChecked) {
+                                const counterValue = leisureContainer.querySelector('.counter-value');
+                                const hiddenInput = leisureContainer.querySelector('input[name="leisure_area_capacity"]');
+                                if (counterValue) counterValue.textContent = '0';
+                                if (hiddenInput) hiddenInput.value = '0';
+                                formData['leisure_area_capacity'] = 0;
+                            }
                         }
                     }
                 }

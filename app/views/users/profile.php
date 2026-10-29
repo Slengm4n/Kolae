@@ -228,40 +228,9 @@ $userId = $_SESSION['user_id'] ?? 0;
 
     <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
     <script>
+        // O menu do usuário e o botão de tema vêm do bundle.js (initNavbar e initTheme);
+        // repetir aqui fazia cada clique ser tratado duas vezes.
         document.addEventListener('DOMContentLoaded', function() {
-            // Menu Dropdown e Toggle Theme
-            const userBtn = document.getElementById('user-menu-button');
-            const userDropdown = document.getElementById('profile-dropdown');
-            const themeToggleBtn = document.getElementById('theme-toggle');
-
-            if (userBtn && userDropdown) {
-                userBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('opacity-0');
-                    userDropdown.classList.toggle('invisible');
-                    userDropdown.classList.toggle('-translate-y-2');
-                });
-                window.addEventListener('click', (e) => {
-                    if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-                        userDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
-                    }
-                });
-            }
-
-            if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.theme = 'light';
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.theme = 'dark';
-                    }
-                });
-            }
-
-
             // Image Preview Logic
             const avatarUpload = document.getElementById('avatar-upload');
             const avatarPreview = document.getElementById('avatar-preview');
@@ -272,21 +241,6 @@ $userId = $_SESSION['user_id'] ?? 0;
                         const reader = new FileReader();
                         reader.onload = (e) => avatarPreview.src = e.target.result;
                         reader.readAsDataURL(file);
-                    }
-                });
-            }
-
-            // --- Lógica do Botão Toggle Theme (Se não estiver no bundle.js) ---
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.theme = 'light';
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.theme = 'dark';
                     }
                 });
             }
