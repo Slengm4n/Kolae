@@ -46,6 +46,17 @@ class UserController
         $userId = $_SESSION['user_id'];
         $newAvatarFileName = null; // Variável para guardar o nome do novo arquivo
 
+        // WhatsApp do dono (D24): só para quem pode ter quadra; vazio apaga o número
+        $whatsapp = null;
+        $canHaveWhatsapp = in_array($_SESSION['user_role'] ?? '', ['owner', 'admin'], true);
+        if ($canHaveWhatsapp && isset($_POST['whatsapp']) && trim($_POST['whatsapp']) !== '') {
+            $whatsapp = User::normalizeWhatsapp($_POST['whatsapp']);
+            if ($whatsapp === null) {
+                header('Location: ' . BASE_URL . '/dashboard/perfil?error=whatsapp_invalid');
+                exit;
+            }
+        }
+
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
 
             // Define o diretório CORRETO
@@ -79,7 +90,12 @@ class UserController
             }
         }
 
-        if (User::update($userId, array_filter($updateData))) {
+        $updateData = array_filter($updateData);
+        if ($canHaveWhatsapp && isset($_POST['whatsapp'])) {
+            $updateData['whatsapp'] = $whatsapp; // fora do array_filter: null apaga o número
+        }
+
+        if (User::update($userId, $updateData)) {
 
             if (isset($updateData['name'])) {
                 $_SESSION['user_name'] = $updateData['name'];
@@ -90,6 +106,8 @@ class UserController
             }
 
             header('Location: ' . BASE_URL . '/dashboard/perfil?status=updated');
+        } else {
+            header('Location: ' . BASE_URL . '/dashboard/perfil?error=update_failed');
         }
         exit;
     }

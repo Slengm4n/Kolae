@@ -13,6 +13,32 @@ class User
     /** Idade mínima para ter conta (mesma regra do cadastro no site). */
     public const MIN_AGE = 18;
 
+    /**
+     * WhatsApp do dono (D24) como o banco guarda: só dígitos, com DDI e DDD (5511999999999).
+     * Aceita o número digitado de qualquer jeito ("(11) 99999-0000", "+55 11 ...").
+     * Sem o 55, assume Brasil. Retorna null se não for um celular/fixo brasileiro válido.
+     */
+    public static function normalizeWhatsapp(string $input): ?string
+    {
+        $digits = preg_replace('/\D/', '', $input);
+        if (strlen($digits) === 10 || strlen($digits) === 11) {
+            $digits = '55' . $digits;
+        }
+        // 55 + DDD (11 a 99) + 8 dígitos (fixo) ou 9 dígitos começando com 9 (celular)
+        return preg_match('/^55[1-9][1-9](9\d{8}|[2-8]\d{7})$/', $digits) ? $digits : null;
+    }
+
+    /**
+     * 5511999990000 → (11) 99999-0000, para mostrar no formulário.
+     */
+    public static function formatWhatsapp(?string $digits): string
+    {
+        if (!$digits || !preg_match('/^55(\d{2})(\d{4,5})(\d{4})$/', $digits, $m)) {
+            return (string)$digits;
+        }
+        return "($m[1]) $m[2]-$m[3]";
+    }
+
     public static function countAll(): int
     {
         $pdo = Database::getConnection();

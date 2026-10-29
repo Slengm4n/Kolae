@@ -184,6 +184,10 @@ return[
 
     'profile_error_upload' => '画像のアップロード中にエラーが発生しました。より小さいファイル (JPG/PNG) を試してください。',
     'profile_error_update' => 'プロフィールの更新中にエラーが発生しました。',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => 'アプリのあなたのコートに「オーナーに連絡」として表示されます。',
+    'profile_whatsapp_missing' => 'WhatsAppがないと、アプリに「オーナーに連絡」ボタンが表示されません。オーナーがコートを登録・編集するには必須です。',
+    'profile_error_whatsapp' => 'WhatsAppが無効です。市外局番と番号を入力してください（例: (11) 91234-5678）。',
     'profile_error_data' => 'ユーザーデータをロードできませんでした。',
 
 

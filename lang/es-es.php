@@ -160,6 +160,10 @@ return[
 
     'profile_error_upload' => 'Error al subir la imagen. Intenta con un archivo más pequeño (JPG/PNG).',
     'profile_error_update' => 'Error al actualizar el perfil.',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => 'Aparece en la app como "Hablar con el dueño" en tus canchas.',
+    'profile_whatsapp_missing' => 'Sin WhatsApp, el botón "Hablar con el dueño" no aparece en la app. Obligatorio para que el dueño registre o edite una cancha.',
+    'profile_error_whatsapp' => 'WhatsApp inválido. Usa código de área y número, por ejemplo (11) 91234-5678.',
     'profile_error_data' => 'No se pudieron cargar los datos del usuario.',
 
     'security_change_password_title' => 'Cambiar Contraseña',

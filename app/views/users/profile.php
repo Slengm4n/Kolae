@@ -127,6 +127,7 @@ $userId = $_SESSION['user_id'] ?? 0;
                             <?php
                             if ($_GET['error'] === 'avatar_upload') echo $lang['profile_error_upload'];
                             elseif ($_GET['error'] === 'update_failed') echo $lang['profile_error_update'];
+                            elseif ($_GET['error'] === 'whatsapp_invalid') echo $lang['profile_error_whatsapp'];
                             else echo $lang['unknown_error'];
                             ?>
                         </span>
@@ -202,6 +203,23 @@ $userId = $_SESSION['user_id'] ?? 0;
                                             </div>
                                         </div>
                                     </div>
+
+                                    <?php if (in_array($_SESSION['user_role'] ?? '', ['owner', 'admin'], true)): ?>
+                                        <?php $hasWhatsapp = !empty($user['whatsapp']); ?>
+                                        <div>
+                                            <label for="whatsapp" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5"><?php echo $lang['profile_whatsapp'] ?></label>
+                                            <div class="relative">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"><i class="fab fa-whatsapp"></i></div>
+                                                <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" maxlength="20"
+                                                    value="<?php echo htmlspecialchars(\App\Models\User::formatWhatsapp($user['whatsapp'] ?? null)); ?>"
+                                                    placeholder="(11) 91234-5678"
+                                                    class="w-full bg-input-base border <?php echo $hasWhatsapp ? 'border-content-secondary/20' : 'border-amber-500/60'; ?> rounded-xl pl-10 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                                            </div>
+                                            <p class="text-xs mt-1.5 <?php echo $hasWhatsapp ? 'text-content-secondary' : 'text-amber-600 dark:text-amber-400'; ?>">
+                                                <?php echo $hasWhatsapp ? $lang['profile_whatsapp_hint'] : $lang['profile_whatsapp_missing']; ?>
+                                            </p>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 

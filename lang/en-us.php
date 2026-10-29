@@ -166,6 +166,10 @@ return[
 
     'profile_error_upload' => 'Error uploading image. Try a smaller file (JPG/PNG).',
     'profile_error_update' => 'Error updating profile.',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => 'Shown in the app as "Contact the owner" on your courts.',
+    'profile_whatsapp_missing' => 'Without WhatsApp, the "Contact the owner" button does not appear in the app. Required for owners to add or edit a court.',
+    'profile_error_whatsapp' => 'Invalid WhatsApp. Use area code and number, e.g. (11) 91234-5678.',
     'profile_error_data' => 'Could not load user data.',
 
     'security_change_password_title' => 'Change Password',

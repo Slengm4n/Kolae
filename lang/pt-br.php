@@ -205,6 +205,10 @@ return [
     //Erros
     'profile_error_upload' => 'Erro ao fazer upload da imagem. Tente um arquivo menor (JPG/PNG).',
     'profile_error_update' => 'Erro ao atualizar o perfil.',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => 'Aparece no app como "Falar com o dono" nas suas quadras.',
+    'profile_whatsapp_missing' => 'Sem WhatsApp, o botão "Falar com o dono" não aparece no app. Obrigatório para o dono cadastrar ou editar quadra.',
+    'profile_error_whatsapp' => 'WhatsApp inválido. Use DDD e número, por exemplo (11) 91234-5678.',
     'profile_error_data' => 'Não foi possível carregar os dados do usuário.',
 
     //Segurança
