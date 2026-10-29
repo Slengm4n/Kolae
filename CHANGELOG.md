@@ -13,7 +13,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
-- Banco (patch `database/patches/004_horario_whatsapp_agenda.sql`): horário de funcionamento das quadras (`venue_hours`), esportes de cada quadra (`venue_sports`), WhatsApp do dono (`users.whatsapp`) e partidas no modelo novo, agendadas pelo dono (`matches` com esporte opcional e `renter_name`).
+- Banco (patch `database/patches/004_horario_whatsapp_agenda.sql`): horário de funcionamento das quadras (`venue_hours`), esportes de cada quadra (`venue_sports`), WhatsApp do dono (`users.whatsapp`), descrição da quadra (`venues.description`) e partidas no modelo novo, agendadas pelo dono (`matches` com esporte opcional e `renter_name`).
 
 ### Removido
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).

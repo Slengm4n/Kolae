@@ -1,12 +1,12 @@
 -- =====================================================================
 -- Patch 004 — Horário de funcionamento, WhatsApp do dono, agenda de partidas
 -- =====================================================================
--- Modelo aprovado em 28/10/2026: docs/modelo-status.md (D21–D27) e D29.
+-- Modelo aprovado em 28/10/2026: docs/modelo-status.md (D21–D27), D29 e D30.
 --
 -- O que faz:
 --   * cria venue_hours (um intervalo de funcionamento por dia da semana)
 --   * cria venue_sports (esportes de cada quadra, D29)
---   * adiciona users.whatsapp
+--   * adiciona users.whatsapp e venues.description (D30)
 --   * remove match_participants (modelo antigo, vazia)
 --   * matches: sport_id opcional, renter_name novo, max_players removido,
 --     status só scheduled | cancelled, índice para a agenda
@@ -59,6 +59,11 @@ CREATE TABLE IF NOT EXISTS `venue_sports` (
 ALTER TABLE `users`
   ADD COLUMN IF NOT EXISTS `whatsapp` varchar(20) NULL DEFAULT NULL
     COMMENT 'Só dígitos, com DDI e DDD: 5511999999999' AFTER `cnpj`;
+
+-- Descrição da quadra, para a seção "Sobre a quadra" do app (D30)
+ALTER TABLE `venues`
+  ADD COLUMN IF NOT EXISTS `description` varchar(1000) NULL DEFAULT NULL
+    COMMENT 'Texto livre do dono (opcional)' AFTER `name`;
 
 -- ---------------------------------------------------------------------
 -- 4. Remove match_participants (D26). Antes de mexer em matches, porque

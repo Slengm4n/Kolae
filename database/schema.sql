@@ -169,6 +169,7 @@ CREATE TABLE `venues` (
   `user_id` int(11) NOT NULL,
   `address_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `description` varchar(1000) DEFAULT NULL COMMENT 'Texto livre do dono (opcional)',
   `average_price_per_hour` decimal(10,2) DEFAULT NULL,
   `court_capacity` int(11) DEFAULT NULL,
   `has_leisure_area` tinyint(1) DEFAULT 0,

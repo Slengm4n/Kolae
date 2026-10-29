@@ -132,7 +132,8 @@ Table venues {
   user_id int [not null]
   address_id int [not null]
   name varchar(255) [not null]
-  average_price_per_hour decimal(10,2)
+  description varchar(1000) [note: 'Texto livre do dono, seção "Sobre a quadra" do app (D30). Patch 004']
+  average_price_per_hour decimal(10,2) [note: '0 = grátis; NULL = não informado (D31)']
   court_capacity int
   has_leisure_area tinyint(1) [default: 0]
   leisure_area_capacity int
