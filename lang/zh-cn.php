@@ -159,6 +159,10 @@ return[
 
     'profile_error_upload' => '图片上传错误。请尝试较小的文件 (JPG/PNG)。',
     'profile_error_update' => '更新资料错误。',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => '在应用中您的场地上显示为“联系场主”。',
+    'profile_whatsapp_missing' => '没有 WhatsApp，应用中不会显示“联系场主”按钮。场主登记或编辑场地时必填。',
+    'profile_error_whatsapp' => 'WhatsApp 无效。请填写区号和号码，例如 (11) 91234-5678。',
     'profile_error_data' => '无法加载用户数据。',
 
     'security_change_password_title' => '更改密码',

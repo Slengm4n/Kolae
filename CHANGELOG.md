@@ -18,6 +18,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Base das telas do dono (S4), ainda sem tela: validação do horário de funcionamento (D21, D22) e das partidas (sem sobrepor outra, dentro do horário, D27), aviso de partidas que ficam fora depois de mudar o horário, e gravar horário, agendar e cancelar partidas (`VenueHour`, `Game`).
 - Testes automatizados em `tests/` (fora do deploy): regra do status e validações (`venue_schedule_test.php`, sem banco) e os models da agenda no banco local (`agenda_db_test.php`).
 - Banco (patch `database/patches/004_horario_whatsapp_agenda.sql`): horário de funcionamento das quadras (`venue_hours`), esportes de cada quadra (`venue_sports`), WhatsApp do dono (`users.whatsapp`), descrição da quadra (`venues.description`) e partidas no modelo novo, agendadas pelo dono (`matches` com esporte opcional e `renter_name`).
+- **WhatsApp no perfil** (D24), para donos e admins: aceita o número digitado de qualquer jeito e grava só os dígitos com 55 (`User::normalizeWhatsapp`); avisa o dono sem número de que o "Falar com o dono" não aparece no app. Nos 7 idiomas. Teste em `tests/whatsapp_test.php`.
 
 ### Alterado
 - **Nova home**, com a identidade do app: abertura com prévia ilustrada do app e os selos de status, "Como funciona" em 3 passos, os status das quadras, quadras reais cadastradas (foto, bairro, piso, preço), chamada para responsáveis por quadra, "Sobre nós" e parceiros. Botões "Entrar" e "Cadastre-se" visíveis no topo; tudo nos 7 idiomas.

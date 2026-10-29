@@ -150,6 +150,10 @@ return[
 
     'profile_error_upload' => 'Errore nel caricamento dell\'immagine. Prova un file più piccolo (JPG/PNG).',
     'profile_error_update' => 'Errore durante l\'aggiornamento del profilo.',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => 'Appare nell\'app come "Contatta il proprietario" sui tuoi campi.',
+    'profile_whatsapp_missing' => 'Senza WhatsApp, il pulsante "Contatta il proprietario" non appare nell\'app. Obbligatorio per il proprietario per registrare o modificare un campo.',
+    'profile_error_whatsapp' => 'WhatsApp non valido. Usa prefisso e numero, ad esempio (11) 91234-5678.',
     'profile_error_data' => 'Impossibile caricare i dati dell\'utente.',
 
     'security_change_password_title' => 'Cambia password',

@@ -161,6 +161,10 @@ return[
 
     'profile_error_upload' => 'छवि अपलोड करने में त्रुटि। एक छोटी फ़ाइल (JPG/PNG) आज़माएँ।',
     'profile_error_update' => 'प्रोफ़ाइल अपडेट करने में त्रुटि।',
+    'profile_whatsapp' => 'WhatsApp',
+    'profile_whatsapp_hint' => 'ऐप में आपके कोर्ट पर "मालिक से बात करें" के रूप में दिखता है।',
+    'profile_whatsapp_missing' => 'WhatsApp के बिना, ऐप में "मालिक से बात करें" बटन नहीं दिखता। कोर्ट जोड़ने या बदलने के लिए मालिक को यह ज़रूरी है।',
+    'profile_error_whatsapp' => 'अमान्य WhatsApp। एरिया कोड और नंबर डालें, जैसे (11) 91234-5678।',
     'profile_error_data' => 'उपयोगकर्ता डेटा लोड नहीं किया जा सका।',
 
     'security_change_password_title' => 'पासवर्ड बदलें',
