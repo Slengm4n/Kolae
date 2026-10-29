@@ -22,7 +22,7 @@ Como rodar o backend (site + `/api/v1`) no Windows com XAMPP e como o app mobile
    cmd /c mklink /J C:\xampp\htdocs\kolae C:\Users\<você>\Documents\GitHub\Kolae
    ```
 
-   O projeto precisa ficar em `/kolae`: o `index.php` e o `.htaccess` esperam esse caminho no ambiente local.
+   O projeto precisa ficar em `/kolae`: o `index.php` espera esse caminho no ambiente local (na produção, o site fica na raiz do domínio).
 
 3. **Extensões do PHP**: no painel do XAMPP, Apache → Config → `PHP (php.ini)`, tirar o `;` do começo destas linhas e reiniciar o Apache:
 
