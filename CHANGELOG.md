@@ -13,6 +13,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- Seed de demonstração para o notebook (`database/seeds/demo_notebook.sql`, só local): horário, esportes e WhatsApp fictício nas quadras de verdade e partidas a partir da hora atual, para o app ter quadras "Em uso" e "Disponível". O seed de teste da S3 deixa de apontar para fotos que não existem.
 - API da Sprint 3 para o app: `GET /venues/{id}` (fotos, descrição, endereço, horário de funcionamento e dono com WhatsApp) e `GET /venues/{id}/schedule` (faixas livres e ocupadas do dia).
 - Status da quadra calculado pela API (`available`, `in_use`, `closed`) com `status_until`, a partir do horário de funcionamento e das partidas agendadas pelo dono (`App\Core\VenueSchedule`).
 - Base das telas do dono (S4), ainda sem tela: validação do horário de funcionamento (D21, D22) e das partidas (sem sobrepor outra, dentro do horário, D27), aviso de partidas que ficam fora depois de mudar o horário, e gravar horário, agendar e cancelar partidas (`VenueHour`, `Game`).

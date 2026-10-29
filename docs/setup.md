@@ -109,4 +109,10 @@ O segundo precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o
 
 5. **HTTP sem HTTPS**: o backend local é `http://`. O Expo Go aceita, mas em um build próprio (APK/IPA) o Android e o iOS bloqueiam HTTP por padrão; aí é preciso liberar o tráfego HTTP na configuração do build (ex: `usesCleartextTraffic` no Android). Para a apresentação, o Expo Go resolve.
 
+6. **Dados para o app ter o que mostrar** (no notebook, nunca na produção):
+   - `database/seeds/teste_status.sql`: 5 quadras de teste, uma para cada status. Usado pelos testes da S3.
+   - `database/seeds/demo_notebook.sql`: dá horário, esportes e WhatsApp fictício às quadras de verdade e cria partidas a partir da hora atual, para o mapa ter quadras "Em uso" e "Disponível".
+   - Os status dependem do relógio. Antes de um teste com o app, renovar: `teste_status_limpar.sql`, `teste_status.sql` e `demo_notebook.sql`, nessa ordem.
+   - **Fotos:** a pasta `uploads/` fica fora do git. Para as quadras copiadas da produção terem foto, baixar `htdocs/uploads/` da produção (gerenciador de arquivos da hospedagem ou FTP) para a pasta `uploads/` do projeto.
+
 O contrato da API (formato das respostas, erros, endpoints) está em `docs/api.md`.

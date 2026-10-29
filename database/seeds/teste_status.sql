@@ -71,6 +71,6 @@ INSERT INTO matches (venue_id, creator_user_id, renter_name, status, start_time,
   (@vB, @dono, NULL, 'scheduled', NOW() + INTERVAL 75 MINUTE, NOW() + INTERVAL 90 MINUTE),
   (@vB, @dono, NULL, 'cancelled', NOW() - INTERVAL 10 MINUTE, NOW() + INTERVAL 10 MINUTE);
 
-INSERT INTO venues_images (venue_id, file_path) VALUES (@vA, 'venue_capa.jpg'), (@vA, 'venue_2.jpg');
+-- Sem fotos: o seed não cria arquivos em uploads/, então a capa vem null e o app usa a imagem padrão
 
 SELECT @vA AS A, @vB AS B, @vC AS C, @vD AS D, @vE AS E, @fut AS futebol, @vol AS volei;
