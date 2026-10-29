@@ -137,7 +137,25 @@ Respostas às perguntas do `docs/modelo-status.md`, que passa a valer como model
 
 ## Contrato da S3
 
-### D29 · Esportes de cada quadra (`venue_sports`) · **proposta (28/10/2026), confirmar na revisão do contrato da S3**
+Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa, filtros, card, informações da quadra e agenda).
+
+### D29 · Esportes de cada quadra (`venue_sports`) (28/10/2026)
 - **O quê:** tabela `venue_sports` (quadra × esporte) no patch 004. Na S4, o formulário de quadra do site ganha caixas de seleção dos esportes. A API devolve `sports` em cada quadra e aceita o filtro `sport_id`.
-- **Por quê:** o banco não liga quadra a esporte, mas o filtro por esporte é o mais natural no app (e já estava planejado para a S3). Custo baixo: uma tabela e uma lista de caixas num formulário que já existe.
-- **Se não for aceita:** `sports` e `sport_id` saem do contrato em `docs/api.md`.
+- **Por quê:** o banco não ligava quadra a esporte, e o filtro por esporte é o primeiro chip do mapa e da home do app.
+- **Cuidado:** até o dono marcar, `sports` vem vazio e a quadra some do filtro. **Os dados de demonstração (S6) precisam ter os esportes marcados.**
+
+### D30 · Descrição da quadra (28/10/2026)
+- **O quê:** `venues.description` (texto opcional, até 1000 caracteres) no patch 004 e um campo de texto no formulário de quadra do site (S4). Vai no detalhe da API; `null` esconde a seção "Sobre a quadra" no app.
+- **Por quê:** a tela de informações da quadra tem essa seção e ficaria vazia sem ela.
+
+### D31 · Preço `0` = grátis, `null` = não informado (28/10/2026)
+- **O quê:** `price_per_hour_cents: 0` é quadra grátis; `null` é "Preço não informado". O filtro `max_price_cents` inclui as grátis (`max_price_cents=0` = só grátis); as sem preço ficam de fora. No site (S4), o preço pode ficar vazio (não informado) ou ser `0`.
+- **Por quê:** o app mostrava `null` como "Grátis" e o filtro tem um chip "Grátis"; os dois casos precisam ser diferentes.
+
+### D32 · Filtro de área de lazer (28/10/2026)
+- **O quê:** `has_leisure_area` vai no resumo da quadra e é aceito como filtro (`has_leisure_area=true`), igual a `is_covered`.
+- **Por quê:** o design de filtros do app tem o chip "Área de lazer".
+
+### D33 · Avaliação e distância no detalhe resolvidas no app (28/10/2026)
+- **O quê:** a seção "Mais avaliadas" da home do app vira "Disponíveis agora" (`GET /venues?status=available`), porque avaliação é vitrine (D04) e não há como ordenar por ela. A distância no detalhe é calculada pelo app, com a posição da pessoa e as coordenadas da quadra.
+- **Por quê:** distância não é regra de negócio como o status, então calcular no app não contraria a D03. Nenhuma mudança no contrato.
