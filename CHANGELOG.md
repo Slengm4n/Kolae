@@ -29,6 +29,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
 ### Corrigido
+- Depois de um deploy, quem já tinha aberto o site via a página quebrada: o navegador reaproveitava o CSS e o JS antigos do cache. Os endereços de `style.css` e `bundle.js` passam a levar a versão do arquivo (`?v=...`, via `ViewHelper::asset`), que muda a cada deploy.
 - Cadastro de quadra: marcar uma comodidade (iluminação, cobertura, área de lazer) dava erro de JavaScript, o cartão não ficava destacado e a capacidade da área de lazer nunca aparecia (o script procurava um id que não existe). Agora a capacidade aparece ao marcar e é zerada ao desmarcar.
 - Perfil: uma variável declarada duas vezes derrubava o script da página (menu do usuário e pré-visualização da foto não funcionavam). O menu e o tema passam a vir só do `bundle.js`, sem tratar cada clique duas vezes.
 - O seletor de idioma não funcionava pelo módulo JavaScript (esperava um evento que já tinha passado); a home dependia de uma cópia do código no HTML.

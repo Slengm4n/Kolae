@@ -318,7 +318,7 @@ $partners = [
 
     <?php include BASE_PATH . '/app/views/partials/public_footer.php'; ?>
 
-    <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
 </body>
 
 </html>

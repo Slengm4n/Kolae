@@ -34,4 +34,17 @@ class ViewHelper
             throw new Exception("A view '{$view}' não foi encontrada em: {$viewPath}");
         }
     }
+
+    /**
+     * URL de um arquivo de assets/ com a versão no fim (?v=data de modificação).
+     * Cada deploy muda a data, então o navegador baixa o CSS/JS novo em vez de
+     * usar o antigo do cache.
+     * @param string $path Caminho dentro do projeto (ex: 'assets/css/style.css').
+     */
+    public static function asset(string $path): string
+    {
+        $file = BASE_PATH . '/' . ltrim($path, '/');
+        $version = is_file($file) ? '?v=' . filemtime($file) : '';
+        return BASE_URL . '/' . ltrim($path, '/') . $version;
+    }
 }

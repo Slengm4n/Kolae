@@ -15,7 +15,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
 
-    <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
     <?php include 'app/views/partials/theme_script.php'; ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,7 +226,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
     </main>
 
-    <script type="module" src="<?php echo BASE_URL; ?>/assets/js/bundle.js"></script>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
 
 </body>
 

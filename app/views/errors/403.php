@@ -1,4 +1,4 @@
- <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
+ <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
 <div class="flex flex-col items-center justify-center min-h-screen bg-[#0D1117] text-gray-200 p-8">
     <div class="text-center">
         <h1 class="text-9xl font-extrabold text-brand-500 mb-4 tracking-widest">403</h1>
