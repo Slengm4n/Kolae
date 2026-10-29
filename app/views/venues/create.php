@@ -19,7 +19,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
@@ -113,7 +113,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-cyan-600 dark:text-cyan-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-cyan-600 dark:after:bg-cyan-400 after:scale-x-100 transition-transform">
+                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
                     <?php echo $lang['global_home_panel'] ?></a>
             </nav>
 
@@ -125,11 +125,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             alt="Avatar"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
                             <?php echo strtoupper(substr($userName, 0, 1)); ?>
                         </div>
                     <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
                             <?php echo strtoupper(substr($userName, 0, 1)); ?>
                         </div>
                     <?php endif; ?>
@@ -171,10 +171,10 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                     <?php
                     foreach (\App\Models\Venue::FLOOR_TYPES as $pisoValue => $piso):
                     ?>
-                        <div class="option-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 cursor-pointer hover:border-cyan-500 group flex items-center justify-between" data-value="<?php echo htmlspecialchars($pisoValue); ?>">
-                            <span class="font-semibold text-lg text-content-primary group-hover:text-cyan-600 dark:group-hover:text-cyan-400"><?php echo htmlspecialchars($piso); ?></span>
-                            <div class="w-5 h-5 rounded-full border-2 border-content-secondary/30 group-hover:border-cyan-500 flex items-center justify-center">
-                                <div class="w-2.5 h-2.5 rounded-full bg-cyan-500 opacity-0 transition-opacity check-dot"></div>
+                        <div class="option-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 cursor-pointer hover:border-brand-500 group flex items-center justify-between" data-value="<?php echo htmlspecialchars($pisoValue); ?>">
+                            <span class="font-semibold text-lg text-content-primary group-hover:text-brand-600 dark:group-hover:text-brand-400"><?php echo htmlspecialchars($piso); ?></span>
+                            <div class="w-5 h-5 rounded-full border-2 border-content-secondary/30 group-hover:border-brand-500 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 rounded-full bg-brand-500 opacity-0 transition-opacity check-dot"></div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -187,11 +187,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
                 <div class="bg-surface-elevated border border-content-secondary/10 rounded-3xl p-8 md:p-12 shadow-lg">
                     <div class="flex flex-col items-center gap-6">
-                        <i class="fas fa-users text-5xl text-cyan-500 mb-2"></i>
+                        <i class="fas fa-users text-5xl text-brand-500 mb-2"></i>
                         <div class="counter-input flex items-center gap-6" data-input-name="court_capacity" data-min-value="2">
-                            <button type="button" class="counter-btn minus w-14 h-14 rounded-2xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-cyan-500 hover:border-cyan-500 text-2xl transition-all font-bold">-</button>
+                            <button type="button" class="counter-btn minus w-14 h-14 rounded-2xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-brand-500 hover:border-brand-500 text-2xl transition-all font-bold">-</button>
                             <span class="counter-value text-5xl font-bold text-content-primary w-20 text-center">2</span>
-                            <button type="button" class="counter-btn plus w-14 h-14 rounded-2xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-cyan-500 hover:border-cyan-500 text-2xl transition-all font-bold">+</button>
+                            <button type="button" class="counter-btn plus w-14 h-14 rounded-2xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-brand-500 hover:border-brand-500 text-2xl transition-all font-bold">+</button>
                         </div>
                         <span class="text-sm font-semibold uppercase tracking-widest text-content-secondary">Jogadores</span>
                     </div>
@@ -217,14 +217,14 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                     ];
                     foreach ($comodidades as $com):
                     ?>
-                        <label <?php echo isset($com['id']) ? 'id="' . $com['id'] . '"' : ''; ?> class="checkbox-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-cyan-500 transition-all text-center h-32 relative overflow-hidden group">
+                        <label <?php echo isset($com['id']) ? 'id="' . $com['id'] . '"' : ''; ?> class="checkbox-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-brand-500 transition-all text-center h-32 relative overflow-hidden group">
                             <input type="checkbox" name="<?php echo $com['name']; ?>" value="1" class="hidden peer">
-                            <div class="absolute inset-0 bg-cyan-500/5 opacity-0 peer-checked:opacity-100 transition-opacity"></div>
-                            <div class="absolute top-3 right-3 w-5 h-5 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center opacity-0 transform scale-0 peer-checked:opacity-100 peer-checked:scale-100 transition-all">
+                            <div class="absolute inset-0 bg-brand-500/5 opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                            <div class="absolute top-3 right-3 w-5 h-5 rounded-full bg-brand-500 text-white text-xs flex items-center justify-center opacity-0 transform scale-0 peer-checked:opacity-100 peer-checked:scale-100 transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
 
-                            <i class="fas fa-<?php echo $com['icon']; ?> text-3xl text-content-secondary group-hover:text-cyan-500 peer-checked:text-cyan-500 transition-colors"></i>
+                            <i class="fas fa-<?php echo $com['icon']; ?> text-3xl text-content-secondary group-hover:text-brand-500 peer-checked:text-brand-500 transition-colors"></i>
                             <span class="font-semibold text-sm text-content-primary"><?php echo $com['label']; ?></span>
                         </label>
                     <?php endforeach; ?>
@@ -237,9 +237,9 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             <p class="text-sm text-content-secondary">Quantas pessoas a churrasqueira/área suporta?</p>
                         </div>
                         <div class="counter-input flex items-center gap-4" data-input-name="leisure_area_capacity" data-min-value="0">
-                            <button type="button" class="counter-btn minus w-10 h-10 rounded-xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-cyan-500">-</button>
+                            <button type="button" class="counter-btn minus w-10 h-10 rounded-xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-brand-500">-</button>
                             <span class="counter-value text-xl font-bold text-content-primary w-12 text-center">0</span>
-                            <button type="button" class="counter-btn plus w-10 h-10 rounded-xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-cyan-500">+</button>
+                            <button type="button" class="counter-btn plus w-10 h-10 rounded-xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-brand-500">+</button>
                         </div>
                     </div>
                 </div>
@@ -252,13 +252,13 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 <div class="space-y-6">
                     <div>
                         <label for="name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Nome do Local <span class="text-red-500">*</span></label>
-                        <input type="text" id="name" name="name" class="w-full px-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="Ex: Arena Kolaê">
+                        <input type="text" id="name" name="name" class="w-full px-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Arena Kolaê">
                     </div>
                     <div>
                         <label for="average_price_per_hour" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Preço Médio por Hora (R$) <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <span class="absolute left-4 top-4 text-content-secondary font-semibold">R$</span>
-                            <input type="number" step="0.01" min="0.01" id="average_price_per_hour" name="average_price_per_hour" placeholder="00,00" class="w-full pl-12 pr-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-mono text-lg">
+                            <input type="number" step="0.01" min="0.01" id="average_price_per_hour" name="average_price_per_hour" placeholder="00,00" class="w-full pl-12 pr-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-mono text-lg">
                         </div>
                     </div>
                 </div>
@@ -272,9 +272,9 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                     <div>
                         <label for="cep" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">CEP <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <input type="text" id="cep" name="cep" placeholder="00000-000" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="cep" name="cep" placeholder="00000-000" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                             <div id="cep-loading" class="absolute right-4 top-3.5 hidden">
-                                <i class="fas fa-circle-notch fa-spin text-cyan-500"></i>
+                                <i class="fas fa-circle-notch fa-spin text-brand-500"></i>
                             </div>
                         </div>
                     </div>
@@ -282,33 +282,33 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                     <div class="grid grid-cols-3 gap-4">
                         <div class="col-span-2">
                             <label for="street" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Rua <span class="text-red-500">*</span></label>
-                            <input type="text" id="street" name="street" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="street" name="street" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                         <div>
                             <label for="number" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Número <span class="text-red-500">*</span></label>
-                            <input type="text" id="number" name="number" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="number" name="number" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="neighborhood" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Bairro <span class="text-red-500">*</span></label>
-                            <input type="text" id="neighborhood" name="neighborhood" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="neighborhood" name="neighborhood" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                         <div>
                             <label for="complement" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Complemento</label>
-                            <input type="text" id="complement" name="complement" placeholder="Ex: Apto 101" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="complement" name="complement" placeholder="Ex: Apto 101" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-4">
                         <div class="col-span-2">
                             <label for="city" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Cidade <span class="text-red-500">*</span></label>
-                            <input type="text" id="city" name="city" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="city" name="city" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                         <div>
                             <label for="state" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Estado <span class="text-red-500">*</span></label>
-                            <input type="text" id="state" name="state" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-cyan-500 transition-all">
+                            <input type="text" id="state" name="state" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                     </div>
                 </div>
@@ -318,10 +318,10 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Fotos da Quadra</h2>
                 <p class="text-content-secondary text-center mb-8">Boas fotos aumentam em 80% as chances de reserva.</p>
 
-                <div id="drop-area" class="border-2 border-dashed border-content-secondary/30 rounded-2xl p-12 text-center cursor-pointer hover:border-cyan-500 hover:bg-cyan-500/5 transition-all group bg-surface-elevated">
+                <div id="drop-area" class="border-2 border-dashed border-content-secondary/30 rounded-2xl p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-500/5 transition-all group bg-surface-elevated">
                     <label for="images" class="cursor-pointer flex flex-col items-center">
                         <div class="w-16 h-16 rounded-full bg-surface-base flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i class="fas fa-cloud-upload-alt text-3xl text-content-secondary group-hover:text-cyan-500"></i>
+                            <i class="fas fa-cloud-upload-alt text-3xl text-content-secondary group-hover:text-brand-500"></i>
                         </div>
                         <p class="font-bold text-lg text-content-primary">Arraste e solte ou clique para selecionar</p>
                         <p class="text-sm text-content-secondary mt-1">JPG ou PNG (Máx 5MB)</p>
@@ -338,7 +338,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
     <footer class="w-full p-4 border-t border-content-secondary/10 bg-surface-elevated z-50">
         <div class="max-w-2xl mx-auto">
             <div class="w-full bg-surface-base rounded-full h-1.5 mb-6 overflow-hidden">
-                <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 16%"></div>
+                <div id="progress-bar" class="bg-gradient-to-r from-brand-500 to-brand-700 h-1.5 rounded-full transition-all duration-500" style="width: 16%"></div>
             </div>
 
             <div class="flex justify-between items-center">
@@ -346,7 +346,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                     <i class="fas fa-arrow-left mr-2"></i> Voltar
                 </button>
 
-                <button id="next-btn" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition-all transform hover:-translate-y-0.5 flex items-center">
+                <button id="next-btn" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all transform hover:-translate-y-0.5 flex items-center">
                     Avançar <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
@@ -414,11 +414,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 // Botão Avançar/Concluir
                 if (currentStep === totalSteps - 1) {
                     nextBtn.innerHTML = 'Concluir <i class="fas fa-check ml-2"></i>';
-                    nextBtn.classList.remove('bg-cyan-500', 'hover:bg-cyan-400');
+                    nextBtn.classList.remove('bg-brand-500', 'hover:bg-brand-400');
                     nextBtn.classList.add('bg-green-500', 'hover:bg-green-400');
                 } else {
                     nextBtn.innerHTML = 'Avançar <i class="fas fa-arrow-right ml-2"></i>';
-                    nextBtn.classList.add('bg-cyan-500', 'hover:bg-cyan-400');
+                    nextBtn.classList.add('bg-brand-500', 'hover:bg-brand-400');
                     nextBtn.classList.remove('bg-green-500', 'hover:bg-green-400');
                 }
 
@@ -460,7 +460,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
                 // Validação Piso (Step 0)
                 if (index === 0) {
-                    const selected = currentStepEl.querySelector('.option-card.border-cyan-500'); // Verifica classe de ativo
+                    const selected = currentStepEl.querySelector('.option-card.border-brand-500'); // Verifica classe de ativo
                     if (!selected) {
                         showToast('Selecione um tipo de piso.');
                         return false;
@@ -509,7 +509,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                     // Prepara inputs hidden para os dados que não são inputs reais do form (Ex: cards selecionáveis)
 
                     // 1. Piso
-                    const pisoSelected = document.querySelector('#step-1 .option-card.border-cyan-500');
+                    const pisoSelected = document.querySelector('#step-1 .option-card.border-brand-500');
                     if (pisoSelected) {
                         const input = document.createElement('input');
                         input.type = 'hidden';
@@ -539,11 +539,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 card.addEventListener('click', () => {
                     // Remove ativo de todos
                     document.querySelectorAll('#step-1 .option-card').forEach(c => {
-                        c.classList.remove('border-cyan-500', 'bg-cyan-500/10');
+                        c.classList.remove('border-brand-500', 'bg-brand-500/10');
                         c.querySelector('.check-dot').classList.remove('opacity-100');
                     });
                     // Ativa o clicado
-                    card.classList.add('border-cyan-500', 'bg-cyan-500/10');
+                    card.classList.add('border-brand-500', 'bg-brand-500/10');
                     card.querySelector('.check-dot').classList.add('opacity-100');
                 });
             });
@@ -556,21 +556,24 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 const updateVisual = () => {
                     const isChecked = checkbox.checked;
 
-                    if (isChecked) {
-                        card.classLi.st.add('border-cyan-400', 'bg-cyan-500/10');
-                        card.cardSelector('i').classList.add('text-cyan-400');
-                    } else {
-                        card.classList.remove('border-cyan-400', 'bg-cyan-500/10');
-                        card.querySelector('i').classList.remove('text-cyan-400');
-                    }
+                    card.classList.toggle('border-brand-400', isChecked);
+                    card.classList.toggle('bg-brand-500/10', isChecked);
+                    card.querySelector('i').classList.toggle('text-brand-400', isChecked);
 
                     formData[checkbox.name] = isChecked ? 1 : 0;
 
-                    if (card.id === 'leisure-area-checkbox-card') {
+                    // Área de lazer: mostra a capacidade só quando marcada; ao desmarcar, zera
+                    if (card.id === 'leisure-area-card') {
                         const leisureContainer = document.getElementById('leisure-capacity-container');
                         if (leisureContainer) {
-                            leisureCounter.querySelector('.counter-valeu').textContent = '0';
-                            formData['leisure_area_capacity'] = 0;
+                            leisureContainer.classList.toggle('hidden', !isChecked);
+                            if (!isChecked) {
+                                const counterValue = leisureContainer.querySelector('.counter-value');
+                                const hiddenInput = leisureContainer.querySelector('input[name="leisure_area_capacity"]');
+                                if (counterValue) counterValue.textContent = '0';
+                                if (hiddenInput) hiddenInput.value = '0';
+                                formData['leisure_area_capacity'] = 0;
+                            }
                         }
                     }
                 }
@@ -660,10 +663,10 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
             // Efeitos visuais
             ['dragenter', 'dragover'].forEach(eventName => {
-                dropArea.addEventListener(eventName, () => dropArea.classList.add('border-cyan-500', 'bg-cyan-500/10'), false);
+                dropArea.addEventListener(eventName, () => dropArea.classList.add('border-brand-500', 'bg-brand-500/10'), false);
             });
             ['dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, () => dropArea.classList.remove('border-cyan-500', 'bg-cyan-500/10'), false);
+                dropArea.addEventListener(eventName, () => dropArea.classList.remove('border-brand-500', 'bg-brand-500/10'), false);
             });
 
             // Handle Drop e Input Change

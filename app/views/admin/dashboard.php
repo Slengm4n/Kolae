@@ -17,7 +17,7 @@ $recentUsers = $data['recentUsers'] ?? [];
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
@@ -53,7 +53,7 @@ $recentUsers = $data['recentUsers'] ?? [];
 
             <div class="p-8 text-center border-b border-content-secondary/10">
                 <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-cyan-500"></i>
+                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
                 </div>
                 <h2 class="text-lg font-bold text-content-primary tracking-wide">
                     <?php echo htmlspecialchars($userName); ?>
@@ -62,7 +62,7 @@ $recentUsers = $data['recentUsers'] ?? [];
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-l-4 border-cyan-500 rounded-r-lg transition-all shadow-sm">
+                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all shadow-sm">
                     <i class="fas fa-home w-5 text-center"></i>
                     <span>Início</span>
                 </a>

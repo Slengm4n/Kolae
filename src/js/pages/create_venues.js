@@ -69,7 +69,7 @@ export function initCreateVenue() {
 
             // Validação Etapa 1 (Index 0): Piso
             if (stepIndex === 0) {
-                const selected = document.querySelector('#step-1 .option-card.border-cyan-400');
+                const selected = document.querySelector('#step-1 .option-card.border-brand-400');
                 if (!selected) {
                     showToast('Por favor, selecione um tipo de piso.');
                     isValid = false;
@@ -163,8 +163,8 @@ export function initCreateVenue() {
                 const group = card.parentElement;
                 group
                     .querySelectorAll('.option-card')
-                    .forEach((c) => c.classList.remove('border-cyan-400', 'bg-cyan-500/10'));
-                card.classList.add('border-cyan-400', 'bg-cyan-500/10');
+                    .forEach((c) => c.classList.remove('border-brand-400', 'bg-brand-500/10'));
+                card.classList.add('border-brand-400', 'bg-brand-500/10');
                 formData[group.dataset.inputName] = card.dataset.value;
             });
         });
@@ -194,9 +194,9 @@ export function initCreateVenue() {
             const checkbox = card.querySelector('input[type="checkbox"]');
             card.addEventListener('click', () => {
                 checkbox.checked = !checkbox.checked;
-                card.classList.toggle('border-cyan-400', checkbox.checked);
-                card.classList.toggle('bg-cyan-500/10', checkbox.checked);
-                card.querySelector('i').classList.toggle('text-cyan-400', checkbox.checked);
+                card.classList.toggle('border-brand-400', checkbox.checked);
+                card.classList.toggle('bg-brand-500/10', checkbox.checked);
+                card.querySelector('i').classList.toggle('text-brand-400', checkbox.checked);
                 formData[checkbox.name] = checkbox.checked ? 1 : 0;
 
                 if (card.id === 'leisure-area-checkbox-card') {
@@ -248,10 +248,10 @@ export function initCreateVenue() {
             }),
         );
         ['dragenter', 'dragover'].forEach((eName) =>
-            dropArea.addEventListener(eName, () => dropArea.classList.add('border-cyan-400', 'bg-gray-800/50')),
+            dropArea.addEventListener(eName, () => dropArea.classList.add('border-brand-400', 'bg-gray-800/50')),
         );
         ['dragleave', 'drop'].forEach((eName) =>
-            dropArea.addEventListener(eName, () => dropArea.classList.remove('border-cyan-400', 'bg-gray-800/50')),
+            dropArea.addEventListener(eName, () => dropArea.classList.remove('border-brand-400', 'bg-gray-800/50')),
         );
 
         const handleFiles = (files) => {

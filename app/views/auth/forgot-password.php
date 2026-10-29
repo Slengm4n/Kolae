@@ -15,7 +15,7 @@ $message = null;
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <?php include 'app/views/partials/theme_script.php'; ?>
 
@@ -98,12 +98,12 @@ $message = null;
                                 <i class="fas fa-envelope text-content-secondary"></i>
                             </div>
                             <input id="email" name="email" type="email" autocomplete="email" placeholder="<?php echo $lang['forget_email_registred']; ?>" required
-                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
+                                class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all">
                         </div>
                     </div>
 
                     <div>
-                        <button id="submit-btn" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-white bg-cyan-500 hover:bg-cyan-400 hover:shadow-cyan-500/20 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base focus:ring-cyan-500 transition-all duration-200 transform">
+                        <button id="submit-btn" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-white bg-brand-500 hover:bg-brand-400 hover:shadow-brand-500/20 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base focus:ring-brand-500 transition-all duration-200 transform">
                             <?php echo $lang['forget_btn_recover']; ?>
                         </button>
                     </div>
@@ -111,7 +111,7 @@ $message = null;
 
                 <p class="mt-8 text-center text-sm text-content-secondary">
                     <?php echo $lang['remember_passoword_text']; ?>
-                    <a href="<?= BASE_URL ?>/login" class="font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 transition-colors hover:underline"><?php echo $lang['remember_password_btn']; ?></a>
+                    <a href="<?= BASE_URL ?>/login" class="font-medium text-brand-600 dark:text-brand-400 hover:text-brand-500 transition-colors hover:underline"><?php echo $lang['remember_password_btn']; ?></a>
                 </p>
             </div>
         </div>

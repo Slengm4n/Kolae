@@ -20,7 +20,7 @@ $error = $error ?? null;
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
@@ -47,8 +47,8 @@ $error = $error ?? null;
     <div class="w-full max-w-md animate-up">
 
         <div class="text-center mb-8">
-            <div class="w-24 h-24 bg-cyan-500/10 dark:bg-cyan-500/5 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/10 backdrop-blur-sm border border-cyan-500/20">
-                <i class="fas fa-shield-alt text-5xl text-cyan-600 dark:text-cyan-400"></i>
+            <div class="w-24 h-24 bg-brand-500/10 dark:bg-brand-500/5 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-500/10 backdrop-blur-sm border border-brand-500/20">
+                <i class="fas fa-shield-alt text-5xl text-brand-600 dark:text-brand-400"></i>
             </div>
 
             <h1 class="text-3xl font-bold text-content-primary mb-3 tracking-tight">
@@ -76,16 +76,16 @@ $error = $error ?? null;
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fas fa-building text-content-secondary/70 transition-colors group-focus-within:text-cyan-500"></i>
+                            <i class="fas fa-building text-content-secondary/70 transition-colors group-focus-within:text-brand-500"></i>
                         </div>
 
                         <input type="text" id="cnpj" name="cnpj" placeholder="<?php echo $lang['cnpj_input_ph']; ?>" required maxlength="18"
-                            class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-4 text-content-primary placeholder-content-secondary/50 font-mono tracking-wide focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-300 shadow-sm">
+                            class="w-full bg-white dark:bg-surface-secondary/50 border border-gray-200 dark:border-gray-700/50 rounded-xl pl-12 pr-4 py-4 text-content-primary placeholder-content-secondary/50 font-mono tracking-wide focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300 shadow-sm">
                     </div>
                 </div>
 
                 <button type="submit"
-                    class="w-full flex justify-center items-center py-4 px-6 rounded-xl shadow-lg shadow-cyan-500/20 text-base font-bold text-white bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 hover:shadow-cyan-500/40 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-cyan-500/30 transition-all duration-300 active:scale-[0.98]">
+                    class="w-full flex justify-center items-center py-4 px-6 rounded-xl shadow-lg shadow-brand-500/20 text-base font-bold text-white bg-gradient-to-r from-brand-500 to-brand-400 hover:from-brand-400 hover:to-brand-300 hover:shadow-brand-500/40 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-brand-500/30 transition-all duration-300 active:scale-[0.98]">
                     <i class="fas fa-check mr-2"></i> <?php echo $lang['cnpj_btn_register']; ?>
                 </button>
             </form>
@@ -93,7 +93,7 @@ $error = $error ?? null;
             <div class="mt-10 text-center">
                 <a href="<?php echo BASE_URL; ?>/dashboard"
                     class="group inline-flex items-center text-content-secondary hover:text-content-primary transition-colors font-medium">
-                    <i class="fas fa-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform text-cyan-500"></i>
+                    <i class="fas fa-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform text-brand-500"></i>
                     <?php echo $lang['cnpj_btn_back']; ?>
                 </a>
             </div>

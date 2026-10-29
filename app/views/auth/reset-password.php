@@ -31,7 +31,7 @@ if (isset($_GET['error'])) {
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
@@ -93,19 +93,19 @@ if (isset($_GET['error'])) {
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_one']; ?> </label>
                     <div class="mt-1">
-                        <input id="password" name="password" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <input id="password" name="password" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
                     </div>
                 </div>
 
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_two']; ?></label>
                     <div class="mt-1">
-                        <input id="password_confirmation" name="password_confirmation" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <input id="password_confirmation" name="password_confirmation" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
                     </div>
                 </div>
 
                 <div>
-                    <button id='reset-button' type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-400 transition-colors">
+                    <button id='reset-button' type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-brand-400 hover:bg-brand-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-brand-400 transition-colors">
                         <?php echo $lang['reset_password_btn']; ?>
                     </button>
                 </div>
@@ -113,7 +113,7 @@ if (isset($_GET['error'])) {
 
             <p class="mt-8 text-center text-sm text-gray-400">
                 <?php echo $lang['remember_passoword_text']; ?>
-                <a href="<?= BASE_URL ?>/login" class="font-medium text-cyan-400 hover:text-cyan-300"><?php echo $lang['remember_password_btn']; ?> </a>
+                <a href="<?= BASE_URL ?>/login" class="font-medium text-brand-400 hover:text-brand-300"><?php echo $lang['remember_password_btn']; ?> </a>
             </p>
         </div>
     </div>

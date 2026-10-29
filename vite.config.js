@@ -8,9 +8,8 @@ export default defineConfig({
     build: {
         outDir: 'assets',
         emptyOutDir: false,
-        watch: {
-            exclude: ['assets/**', 'node_modules/**'],
-        },
+        // Sem "watch" aqui: senão o "npm run build" fica vigiando e nunca termina.
+        // Para vigiar durante o desenvolvimento, use "npm run watch" (vite build --watch).
         rollupOptions: {
             input: path.resolve(__dirname, 'src/js/main.js'),
             output: {

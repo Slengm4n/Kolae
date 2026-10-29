@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
@@ -41,7 +41,7 @@
 
             <div class="p-8 text-center border-b border-content-secondary/10">
                 <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-cyan-500"></i>
+                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
                 </div>
                 <h2 class="text-lg font-bold text-content-primary tracking-wide">
                     <?php echo htmlspecialchars($userName ?? 'Admin'); ?>
@@ -51,15 +51,15 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
                 <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-home w-5 text-center group-hover:text-cyan-500"></i><span>Início</span>
+                    <i class="fas fa-home w-5 text-center group-hover:text-brand-500"></i><span>Início</span>
                 </a>
                 <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-users w-5 text-center group-hover:text-cyan-500"></i><span>Usuários</span>
+                    <i class="fas fa-users w-5 text-center group-hover:text-brand-500"></i><span>Usuários</span>
                 </a>
                 <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
                     <i class="fas fa-running w-5 text-center group-hover:text-purple-500"></i><span>Esportes</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-l-4 border-cyan-500 rounded-r-lg transition-all shadow-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all shadow-sm">
                     <i class="fas fa-map-marker-alt w-5 text-center"></i><span>Mapa</span>
                 </a>
                 <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
@@ -85,16 +85,16 @@
 
             <div id="map" class="w-full h-full z-0 outline-none bg-surface-base"></div>
 
-            <button id="sidebar-toggle" class="md:hidden absolute top-4 left-4 z-10 p-3 bg-surface-elevated/90 backdrop-blur-md rounded-xl text-cyan-500 border border-content-secondary/10 shadow-lg active:scale-95 transition-transform">
+            <button id="sidebar-toggle" class="md:hidden absolute top-4 left-4 z-10 p-3 bg-surface-elevated/90 backdrop-blur-md rounded-xl text-brand-500 border border-content-secondary/10 shadow-lg active:scale-95 transition-transform">
                 <i class="fas fa-bars text-xl"></i>
             </button>
 
             <div class="absolute top-4 left-16 right-4 md:left-1/2 md:-translate-x-1/2 md:w-96 z-10">
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-content-secondary group-focus-within:text-cyan-500 transition-colors"></i>
+                        <i class="fas fa-search text-content-secondary group-focus-within:text-brand-500 transition-colors"></i>
                     </div>
-                    <input type="text" class="venue-search-input block w-full pl-10 pr-4 py-3 bg-surface-elevated/90 backdrop-blur-md border border-content-secondary/20 rounded-xl text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-xl transition-all" placeholder="Buscar local...">
+                    <input type="text" class="venue-search-input block w-full pl-10 pr-4 py-3 bg-surface-elevated/90 backdrop-blur-md border border-content-secondary/20 rounded-xl text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-xl transition-all" placeholder="Buscar local...">
 
                     <div class="venue-search-results absolute mt-2 w-full bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-2xl z-20 hidden max-h-60 overflow-y-auto custom-scrollbar"></div>
                 </div>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="space-y-4">
                         <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0 text-cyan-500">
+                            <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center flex-shrink-0 text-brand-500">
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div>
@@ -125,7 +125,7 @@
                 </div>
                 
                 <div class="pt-4 border-t border-content-secondary/10 mt-auto">
-                    <a id="venue-details-link" href="#" class="w-full flex items-center justify-center bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-6 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5">
+                    <a id="venue-details-link" href="#" class="w-full flex items-center justify-center bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5">
                         Ver Detalhes Completos <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -203,7 +203,7 @@
                         icon: {
                             path: google.maps.SymbolPath.CIRCLE,
                             scale: 8,
-                            fillColor: "#06b6d4", // Cyan-500
+                            fillColor: "#0084FF", // brand-500 (azul da marca)
                             fillOpacity: 1,
                             strokeWeight: 2,
                             strokeColor: "#FFFFFF" // Borda branca para contraste
@@ -249,7 +249,7 @@
                         filtered.forEach(venue => {
                             const item = document.createElement('div');
                             item.className = 'p-3 hover:bg-surface-base cursor-pointer text-sm text-content-secondary hover:text-content-primary border-b border-content-secondary/10 last:border-0 transition-colors flex items-center gap-3';
-                            item.innerHTML = `<div class="w-8 h-8 bg-surface-base rounded flex items-center justify-center text-cyan-500"><i class="fas fa-map-marker-alt"></i></div><div><p class="font-medium">${venue.name}</p><p class="text-xs text-content-secondary truncate w-48">${venue.city}</p></div>`;
+                            item.innerHTML = `<div class="w-8 h-8 bg-surface-base rounded flex items-center justify-center text-brand-500"><i class="fas fa-map-marker-alt"></i></div><div><p class="font-medium">${venue.name}</p><p class="text-xs text-content-secondary truncate w-48">${venue.city}</p></div>`;
                             item.addEventListener('click', () => {
                                 const target = markers.find(m => m.venueData.id === venue.id);
                                 if (target) {

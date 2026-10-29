@@ -1,5 +1,7 @@
 export function initLanguageSwitcher() {
-    document.addEventListener('DOMContentLoaded', () => {
+    // Já é chamada dentro do DOMContentLoaded do main.js; esperar outro DOMContentLoaded
+    // aqui fazia o seletor nunca funcionar (o evento já tinha passado).
+    {
         const langBtn = document.getElementById('lang-btn');
         const langModal = document.getElementById('lang-modal');
         const langBox = document.getElementById('lang-box');
@@ -61,5 +63,5 @@ export function initLanguageSwitcher() {
                 }
             });
         }
-    });
+    }
 }

@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
 
@@ -66,7 +66,7 @@
 
             <div class="p-8 text-center border-b border-content-secondary/10">
                 <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-cyan-500"></i>
+                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
                 </div>
                 <h2 class="text-lg font-bold text-content-primary tracking-wide">
                     <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
@@ -76,10 +76,10 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-home w-5 text-center group-hover:text-cyan-500"></i>
+                    <i class="fas fa-home w-5 text-center group-hover:text-brand-500"></i>
                     <span>Início</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-l-4 border-cyan-500 rounded-r-lg transition-all">
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all">
                     <i class="fas fa-users w-5 text-center"></i>
                     <span>Usuários</span>
                 </a>
@@ -129,13 +129,13 @@
                     <h1 class="text-3xl font-bold mb-1 text-content-primary">Gerir Usuários</h1>
                     <p class="text-content-secondary text-sm">Administre o acesso e permissões do sistema.</p>
                 </div>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios/criar" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5">
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios/criar" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
                     <i class="fas fa-plus mr-2"></i> Novo Usuário
                 </a>
             </div>
 
             <div class="md:hidden mb-4 animate-up delay-100">
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios/criar" class="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-2.5 px-4 rounded-xl flex justify-center items-center shadow-md text-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios/criar" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-2.5 px-4 rounded-xl flex justify-center items-center shadow-md text-sm">
                     <i class="fas fa-plus mr-2"></i> Novo Usuário
                 </a>
             </div>
@@ -154,7 +154,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-search text-content-secondary text-sm"></i>
                     </div>
-                    <input type="text" id="searchInput" class="block w-full pl-9 pr-4 py-2.5 border border-content-secondary/20 rounded-xl bg-surface-elevated text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-sm transition-all" placeholder="Pesquisar...">
+                    <input type="text" id="searchInput" class="block w-full pl-9 pr-4 py-2.5 border border-content-secondary/20 rounded-xl bg-surface-elevated text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-sm transition-all" placeholder="Pesquisar...">
                 </div>
             </div>
 
@@ -213,7 +213,7 @@
                                         </td>
                                         <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-right text-sm font-medium pr-4 md:pr-8">
                                             <div class="flex items-center justify-end gap-3 md:gap-4">
-                                                <a href="<?php echo BASE_URL; ?>/admin/usuarios/editar/<?php echo $user['id']; ?>" class="text-content-secondary hover:text-cyan-500 p-1 transition-colors" title="Editar">
+                                                <a href="<?php echo BASE_URL; ?>/admin/usuarios/editar/<?php echo $user['id']; ?>" class="text-content-secondary hover:text-brand-500 p-1 transition-colors" title="Editar">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
                                                 <form action="<?php echo BASE_URL; ?>/admin/usuarios/excluir/<?php echo $user['id']; ?>" method="POST" class="inline" onsubmit="return confirm('Tem a certeza?');">
@@ -249,7 +249,7 @@
                 <strong class="block font-bold mb-1 text-yellow-600 dark:text-yellow-400">Importante</strong> Copie a senha abaixo agora.
             </div>
             <div class="relative mb-4">
-                <input type="password" id="modal-password-display" readonly class="w-full bg-input-base border border-content-secondary/20 rounded-lg pl-3 pr-20 py-3 text-lg text-cyan-600 dark:text-cyan-300 font-mono text-center tracking-widest">
+                <input type="password" id="modal-password-display" readonly class="w-full bg-input-base border border-content-secondary/20 rounded-lg pl-3 pr-20 py-3 text-lg text-brand-600 dark:text-brand-300 font-mono text-center tracking-widest">
                 <div class="absolute top-1/2 right-2 -translate-y-1/2 flex items-center space-x-1 bg-surface-base rounded p-1 border border-content-secondary/10">
                     <button id="toggle-visibility-btn" class="p-1.5 text-content-secondary hover:text-content-primary rounded"><i class="fas fa-eye text-xs"></i></button>
                     <div class="w-px h-3 bg-content-secondary/20"></div>
@@ -259,7 +259,7 @@
             <div class="text-center">
                 <p class="text-[10px] text-content-secondary mb-2">Fecha em <span id="modal-timer-countdown" class="text-content-primary font-bold">30</span>s</p>
                 <div class="w-full bg-surface-base rounded-full h-1">
-                    <div id="modal-timer-bar" class="bg-cyan-500 h-1 rounded-full" style="width: 100%;"></div>
+                    <div id="modal-timer-bar" class="bg-brand-500 h-1 rounded-full" style="width: 100%;"></div>
                 </div>
             </div>
         </div>

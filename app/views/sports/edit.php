@@ -9,7 +9,7 @@
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -52,14 +52,14 @@
         <aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
             <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"><i class="fas fa-times text-2xl"></i></button>
             <div class="p-8 text-center border-b border-gray-800/50">
-                <div class="w-20 h-20 rounded-full bg-gray-800 border border-gray-700 mx-auto flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-user-shield text-3xl text-cyan-400"></i></div>
+                <div class="w-20 h-20 rounded-full bg-gray-800 border border-gray-700 mx-auto flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-user-shield text-3xl text-brand-400"></i></div>
                 <h2 class="text-lg font-bold text-white tracking-wide"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?></h2>
                 <p class="text-xs text-gray-500 uppercase tracking-wider mt-1">Admin Kolae</p>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-home w-5 text-center group-hover:text-cyan-400"></i><span>Início</span></a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-users w-5 text-center group-hover:text-cyan-400"></i><span>Usuários</span></a>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-cyan-500/10 text-cyan-400 border-l-4 border-cyan-400 rounded-r-lg transition-all shadow-md"><i class="fas fa-running w-5 text-center"></i><span>Esportes</span></a>
+                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-home w-5 text-center group-hover:text-brand-400"></i><span>Início</span></a>
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-users w-5 text-center group-hover:text-brand-400"></i><span>Usuários</span></a>
+                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-400 border-l-4 border-brand-400 rounded-r-lg transition-all shadow-md"><i class="fas fa-running w-5 text-center"></i><span>Esportes</span></a>
                 <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-400"></i><span>Mapa</span></a>
                 <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-400"></i><span>Quadras</span></a>
             </nav>
@@ -72,7 +72,7 @@
         <main class="md:ml-64 flex-1 p-4 md:p-10 relative z-10 w-full max-w-[100vw]">
 
             <div class="flex items-center gap-3 md:hidden mb-6 animate-up">
-                <button id="sidebar-toggle" class="p-2.5 bg-gray-800 rounded-lg text-cyan-400 border border-gray-700 active:bg-gray-700"><i class="fas fa-bars text-lg"></i></button>
+                <button id="sidebar-toggle" class="p-2.5 bg-gray-800 rounded-lg text-brand-400 border border-gray-700 active:bg-gray-700"><i class="fas fa-bars text-lg"></i></button>
                 <div>
                     <h1 class="text-xl font-bold text-white leading-tight">Editar Esporte</h1>
                 </div>
@@ -98,7 +98,7 @@
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fas fa-trophy text-gray-500 text-sm"></i></div>
                                 <input id="name" name="name" type="text" value="<?php echo htmlspecialchars($sport['name']); ?>" required
-                                    class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+                                    class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                             </div>
                         </div>
 
@@ -113,7 +113,7 @@
 
                         <div class="pt-4 flex gap-3 md:justify-end">
                             <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex-1 md:flex-none text-center bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-3 px-6 rounded-xl transition-colors border border-gray-700 text-sm">Cancelar</a>
-                            <button type="submit" class="flex-1 md:flex-none text-center bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 text-sm">Salvar Alterações</button>
+                            <button type="submit" class="flex-1 md:flex-none text-center bg-brand-500 hover:bg-brand-400 text-black font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 text-sm">Salvar Alterações</button>
                         </div>
                     </form>
                 <?php endif; ?>
@@ -160,7 +160,7 @@
                 icons.forEach(iconClass => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = `p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 ${iconClass === currentIcon ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)]' : 'bg-gray-800 border-transparent text-gray-500 hover:bg-gray-700 hover:text-gray-300'}`;
+                    btn.className = `p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 ${iconClass === currentIcon ? 'bg-brand-500/20 border-brand-500 text-brand-400 shadow-[0_0_10px_rgba(51, 157, 255,0.2)]' : 'bg-gray-800 border-transparent text-gray-500 hover:bg-gray-700 hover:text-gray-300'}`;
                     btn.dataset.icon = iconClass;
                     btn.innerHTML = `<i class="fas ${iconClass} text-xl"></i>`;
 
@@ -177,7 +177,7 @@
                     });
 
                     // Activate clicked
-                    btn.className = 'p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 bg-cyan-500/20 border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)] scale-105';
+                    btn.className = 'p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 bg-brand-500/20 border-brand-500 text-brand-400 shadow-[0_0_10px_rgba(51, 157, 255,0.2)] scale-105';
 
                     selectedIconInput.value = btn.dataset.icon;
                     iconError.classList.add('hidden');
