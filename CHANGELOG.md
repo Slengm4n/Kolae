@@ -24,6 +24,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - `POST /api/v1/games`: a partida é agendada pelo dono no site (D02).
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
+### Corrigido
+- API na produção: números decimais (coordenadas, distância) saíam com dígitos demais (`-23.565065499999999…`) por causa da configuração do PHP do InfinityFree. Agora saem com o menor número de dígitos (`-23.5650655`).
+
 ### Documentação
 - Contrato da S3 em `docs/api.md`, revisado pelo Rafael (D29–D33), e D34 (quadra desativada fora da API).
 

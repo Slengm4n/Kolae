@@ -83,6 +83,9 @@ class ApiResponse
             http_response_code($statusCode);
             header('Content-Type: application/json; charset=utf-8');
         }
+        // Números decimais com o menor número de dígitos (-23.5428, não -23.542799999999999...).
+        // A produção (InfinityFree) usa serialize_precision = 17; o padrão do PHP é -1.
+        ini_set('serialize_precision', '-1');
         echo json_encode($payload, self::JSON_FLAGS);
         exit;
     }
