@@ -19,7 +19,7 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 - **`CHANGELOG.md`**: mudanças em `[Não lançado]` até o fim da sprint.
 - Plano original (pode estar desatualizado; o que vale é `docs/`): https://claude.ai/artifact/JSdR7eYfrkZFTk5qcVAv4R
 
-## Situação em 28/10/2026
+## Situação em 29/10/2026
 
 - **S1 concluída**, lançada como **v1.4.0**.
 - **S2 do backend concluída**, lançada como **v1.5.0** (tag em 28/10).
@@ -33,7 +33,7 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 ### Pendências fora do código
 - Trocar a senha do MySQL da produção e, logo em seguida, o `DB_PASS` do `config.php` da produção pelo FTP (senão o site cai).
 - Escolher a hospedagem nova (D13) até 07/11: decide onde a apresentação roda.
-- Preparar o notebook para o Rafael integrar a S3: branch atualizada, patch 004 e `database/seeds/teste_status.sql` (renova os três status; limpar com `teste_status_limpar.sql`).
+- Notebook pronto para o Rafael integrar a S3 (29/10): `main` atualizada, patch 004 e `database/seeds/teste_status.sql` aplicados no `kolae_db`; API conferida pelo IP do Wi-Fi (`192.168.0.172`, pode mudar de rede para rede). As partidas do seed são relativas à hora em que ele roda: para renovar os status antes de um teste, rodar `teste_status_limpar.sql` e depois `teste_status.sql`.
 - Atualizar a cópia do plano no Google Drive ("Kolae 2.0 — Plano da equipe") com o prazo novo: precisa do conector Google Docs autorizado.
 
 ### Do lado do app (Rafael), combinado em 28/10
@@ -52,7 +52,7 @@ Piso com as chaves da API; `icon_path` (Font Awesome) convertido para MaterialCo
 
 ## Ambiente
 
-- **Local (notebook):** XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10 + patches 001–003; **falta o 004**). PHP 8.2 no XAMPP (com GD); PHP 8.4 do Laravel Herd no PATH só para `php -l` e `composer` (não usar o Herd para servir o site). `config.php` fora do git, com `SMTP_*`.
+- **Local (notebook):** XAMPP com junction `C:\xampp\htdocs\kolae` → repositório. Apache na 8080 (`http://localhost:8080/kolae`), MySQL na 3306, banco `kolae_db` (cópia da produção de 27/10 + patches 001–004 + seed `teste_status.sql`, desde 29/10). PHP 8.2 no XAMPP (com GD); PHP 8.4 do Laravel Herd no PATH só para `php -l` e `composer` (não usar o Herd para servir o site). `config.php` fora do git, com `SMTP_*`.
 - **Local (PC de casa):** XAMPP em `F:\Programas\Xampp`, Apache na **80** (`http://localhost/kolae`), banco `kolae_db` criado do `schema.sql` + patch 004. PHP e Composer fora do PATH: `F:\Programas\Xampp\php\php.exe` e `F:\Programas\Xampp\php\composer.bat`.
 - **Cliente `mysql` do XAMPP pela linha de comando:** usar `--default-character-set=utf8mb4`; o padrão (`cp850`) corrompe os acentos. Pelo phpMyAdmin não há esse problema.
 - **Produção:** InfinityFree, `https://kolae.gamer.gd`. Push na `main` → GitHub Actions → FTP. **A `main` publica direto.**
