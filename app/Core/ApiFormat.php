@@ -44,10 +44,24 @@ class ApiFormat
             'email' => $user['email'],
             'birthdate' => $user['birthdate'] ?: null,
             'role' => $user['role'],
-            'avatar_url' => !empty($user['avatar_path'])
-                ? BASE_URL . '/uploads/avatars/' . $user['id'] . '/' . $user['avatar_path']
-                : null,
+            'avatar_url' => self::uploadUrl('avatars/' . $user['id'], $user['avatar_path'] ?? null),
             'created_at' => self::datetime($user['created_at'] ?? null)
         ];
+    }
+
+    /**
+     * Endereço público de um arquivo enviado (uploads/<pasta>/<arquivo>), ou null se o
+     * banco aponta para um arquivo que não existe no servidor (ex: banco copiado sem a
+     * pasta uploads/). Assim o app mostra a imagem padrão em vez de uma imagem quebrada.
+     */
+    public static function uploadUrl(string $folder, ?string $fileName): ?string
+    {
+        if ($fileName === null || $fileName === '' || basename($fileName) !== $fileName) {
+            return null;
+        }
+        if (!is_file(BASE_PATH . '/uploads/' . $folder . '/' . $fileName)) {
+            return null;
+        }
+        return BASE_URL . '/uploads/' . $folder . '/' . rawurlencode($fileName);
     }
 }
