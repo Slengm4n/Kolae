@@ -423,4 +423,12 @@ return[
     'data_next_hours' => '¡Cancha registrada! Ahora registra el horario de atención: sin él, la cancha aparece como "Cerrada" en la app.',
     'panel_status_disabled' => 'Desactivada',
     'panel_no_hours' => 'Sin horario registrado: aparece como "Cerrada" en la app. Toca para registrarlo.',
+    'legal_terms_title' => 'Términos de uso',
+    'legal_privacy_title' => 'Política de privacidad',
+    'legal_footer_label' => 'Documentos legales',
+    'legal_kicker' => 'Legal',
+    'legal_updated' => 'Última actualización: {date}',
+    'legal_toc' => 'En esta página',
+    'legal_pt_only' => 'Este documento solo está disponible en portugués, el idioma que tiene validez legal en Brasil.',
+    'legal_see_also' => 'Ver también:',
 ];  

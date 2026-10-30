@@ -487,4 +487,12 @@ return [
     'data_next_hours' => 'Quadra cadastrada! Agora cadastre o horário de funcionamento: sem ele, a quadra aparece como "Fechada" no app.',
     'panel_status_disabled' => 'Desativada',
     'panel_no_hours' => 'Sem horário cadastrado: aparece como "Fechada" no app. Toque para cadastrar.',
+    'legal_terms_title' => 'Termos de Uso',
+    'legal_privacy_title' => 'Política de Privacidade',
+    'legal_footer_label' => 'Documentos legais',
+    'legal_kicker' => 'Documentos legais',
+    'legal_updated' => 'Última atualização: {date}',
+    'legal_toc' => 'Nesta página',
+    'legal_pt_only' => 'Este documento está disponível apenas em português.',
+    'legal_see_also' => 'Veja também:',
 ];

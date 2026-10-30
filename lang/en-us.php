@@ -430,4 +430,12 @@ return[
     'data_next_hours' => 'Court added! Now set the opening hours: without them, the court shows as "Closed" in the app.',
     'panel_status_disabled' => 'Deactivated',
     'panel_no_hours' => 'No opening hours yet: it shows as "Closed" in the app. Tap to add them.',
+    'legal_terms_title' => 'Terms of Use',
+    'legal_privacy_title' => 'Privacy Policy',
+    'legal_footer_label' => 'Legal documents',
+    'legal_kicker' => 'Legal',
+    'legal_updated' => 'Last updated: {date}',
+    'legal_toc' => 'On this page',
+    'legal_pt_only' => 'This document is only available in Portuguese, the language that is legally binding in Brazil.',
+    'legal_see_also' => 'See also:',
 ];

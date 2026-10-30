@@ -192,9 +192,9 @@ if (isset($_GET['error'])) {
 
                             <span class="text-sm font-medium text-content-secondary group-hover:text-content-primary transition-colors leading-snug">
                                 <?php echo $lang['register_accept_agree']; ?>
-                                <a href="#" class="text-brand-600 dark:text-brand-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_terms_btn']; ?></a>
+                                <a href="<?php echo BASE_URL; ?>/termos" target="_blank" rel="noopener" class="text-brand-600 dark:text-brand-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_terms_btn']; ?></a>
                                 <?php echo $lang['global_and']; ?>
-                                <a href="#" class="text-brand-600 dark:text-brand-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_privacy_btn']; ?></a>.
+                                <a href="<?php echo BASE_URL; ?>/privacidade" target="_blank" rel="noopener" class="text-brand-600 dark:text-brand-400 hover:underline decoration-2 underline-offset-2 z-10 relative"><?php echo $lang['register_privacy_btn']; ?></a>.
                             </span>
                         </label>
                     </div>

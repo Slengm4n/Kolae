@@ -2,6 +2,7 @@
 /**
  * Rodapé das páginas públicas. Usa: $lang (traduções).
  */
+$anchorBase = $anchorBase ?? ''; // '' na home; BASE_URL . '/' nas outras páginas
 $footerLinks = [
     '#como-funciona' => $lang['home_nav_how'],
     '#quadras'       => $lang['home_nav_venues'],
@@ -20,7 +21,7 @@ $footerLinks = [
             <h2 class="text-sm font-semibold uppercase tracking-wider text-content-primary"><?php echo htmlspecialchars($lang['home_footer_nav']); ?></h2>
             <ul class="mt-4 space-y-2.5 text-sm">
                 <?php foreach ($footerLinks as $href => $label): ?>
-                    <li><a href="<?php echo $href; ?>" class="text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($label); ?></a></li>
+                    <li><a href="<?php echo $anchorBase . $href; ?>" class="text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($label); ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </nav>
@@ -35,8 +36,12 @@ $footerLinks = [
     </div>
 
     <div class="border-t border-content-secondary/15">
-        <p class="container mx-auto px-4 sm:px-6 py-6 text-xs text-content-secondary text-center sm:text-left">
-            &copy; <?php echo date('Y'); ?> Kolae. <?php echo htmlspecialchars($lang['home_footer_rights']); ?>
-        </p>
+        <div class="container mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-content-secondary">
+            <p>&copy; <?php echo date('Y'); ?> Kolae. <?php echo htmlspecialchars($lang['home_footer_rights']); ?></p>
+            <nav class="flex gap-4" aria-label="<?php echo htmlspecialchars($lang['legal_footer_label']); ?>">
+                <a href="<?php echo BASE_URL; ?>/termos" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($lang['legal_terms_title']); ?></a>
+                <a href="<?php echo BASE_URL; ?>/privacidade" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($lang['legal_privacy_title']); ?></a>
+            </nav>
+        </div>
     </div>
 </footer>

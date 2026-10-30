@@ -7,6 +7,7 @@
  */
 $isLoggedIn = isset($_SESSION['user_id']);
 $userName = $_SESSION['user_name'] ?? '';
+$anchorBase = $anchorBase ?? ''; // '' na home; BASE_URL . '/' nas outras páginas, para as âncoras levarem à home
 $navLinks = [
     '#como-funciona' => $lang['home_nav_how'],
     '#quadras'       => $lang['home_nav_venues'],
@@ -34,7 +35,7 @@ $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-whit
 
         <nav class="hidden lg:flex items-center gap-8" aria-label="<?php echo htmlspecialchars($lang['home_footer_nav']); ?>">
             <?php foreach ($navLinks as $href => $label): ?>
-                <a href="<?php echo $href; ?>" class="text-sm font-medium text-white/80 hover:text-white transition-colors"><?php echo htmlspecialchars($label); ?></a>
+                <a href="<?php echo $anchorBase . $href; ?>" class="text-sm font-medium text-white/80 hover:text-white transition-colors"><?php echo htmlspecialchars($label); ?></a>
             <?php endforeach; ?>
         </nav>
 
@@ -82,7 +83,7 @@ $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-whit
                     <ul class="py-2 text-sm">
                         <?php foreach ($navLinks as $href => $label): ?>
                             <li class="lg:hidden">
-                                <a href="<?php echo $href; ?>" class="block px-5 py-3 hover:bg-surface-secondary transition-colors"><?php echo htmlspecialchars($label); ?></a>
+                                <a href="<?php echo $anchorBase . $href; ?>" class="block px-5 py-3 hover:bg-surface-secondary transition-colors"><?php echo htmlspecialchars($label); ?></a>
                             </li>
                         <?php endforeach; ?>
                         <li class="lg:hidden border-t border-content-secondary/15 my-1"></li>

@@ -422,4 +422,12 @@ return[
     'data_next_hours' => '场地已登记！现在请填写营业时间：没有营业时间，场地在应用中显示为"关闭"。',
     'panel_status_disabled' => '已停用',
     'panel_no_hours' => '尚未填写营业时间：应用中显示为"关闭"。点击填写。',
+    'legal_terms_title' => '使用条款',
+    'legal_privacy_title' => '隐私政策',
+    'legal_footer_label' => '法律文件',
+    'legal_kicker' => '法律信息',
+    'legal_updated' => '最后更新：{date}',
+    'legal_toc' => '本页内容',
+    'legal_pt_only' => '本文件仅提供葡萄牙语版本，这是在巴西具有法律效力的语言。',
+    'legal_see_also' => '另请参阅：',
 ];

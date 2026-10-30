@@ -18,6 +18,18 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 
 A produção é `https://`, então o APK não precisa liberar tráfego HTTP para ela. O backend local é `http://`: para testar o app contra o notebook, o Expo Go aceita; num APK é preciso liberar HTTP no build. Passo a passo em `docs/setup.md`.
 
+## Páginas do site abertas pelo app
+
+Não são endpoints da API: são páginas HTML do site, para o app abrir no navegador ou numa WebView (D42).
+
+| Página | URL de produção |
+| :---- | :---- |
+| Termos de Uso | `https://kolae.online/termos` |
+| Política de Privacidade | `https://kolae.online/privacidade` |
+| Esqueci a senha (site) | `https://kolae.online/forgot-password` |
+
+O texto é só em português. Para abrir com título e menu em outro idioma, acrescente `?lang=` (ex: `?lang=en-us`).
+
 ## Formato das respostas
 
 Toda resposta é JSON (`Content-Type: application/json; charset=utf-8`), inclusive erros, 404 e falhas internas.
