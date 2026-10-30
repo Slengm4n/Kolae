@@ -10,6 +10,8 @@ use App\Models\Venue;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\VenueImage;
+use App\Models\VenueSport;
+use App\Models\Sport;
 
 class VenueController
 {
@@ -126,13 +128,17 @@ class VenueController
 
         // A view lista as fotos atuais (para exibir e marcar para exclusão)
         $venue['images'] = VenueImage::findByVenueId($id);
+        $selectedSports = array_column(VenueSport::findByVenueIds([$id])[$id] ?? [], 'id');
 
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
             'venue' => $venue,
             'routePrefix' => $this->getRoutePrefix(), // Rotas do formulário (/admin ou /dashboard)
             'backUrl' => $this->getRedirectUrl(),     // Destino do "Cancelar" e do "Painel"
-            'status' => VenueAccess::currentStatus($venue) // Selo no topo, igual ao do app (D40)
+            'status' => VenueAccess::currentStatus($venue), // Selo no topo, igual ao do app (D40)
+            'sports' => Sport::getAll(),
+            'selectedSports' => $selectedSports,
+            'needsWhatsapp' => $this->needsWhatsapp($venue),
         ];
         ViewHelper::render('venues/edit', $data);
     }
@@ -156,6 +162,25 @@ class VenueController
                 exit;
             }
 
+            $editUrl = BASE_URL . $this->getRoutePrefix() . '/quadras/editar/' . $id;
+
+            // Preço (D31): valor, grátis (0) ou não informado (NULL)
+            $price = $this->parsePrice($_POST);
+            if ($price === false) {
+                header('Location: ' . $editUrl . '?error=price');
+                exit;
+            }
+
+            // WhatsApp do dono (D38): pedido aqui se ainda não tiver
+            if ($this->needsWhatsapp($venue)) {
+                $whatsapp = User::normalizeWhatsapp((string)($_POST['whatsapp'] ?? ''));
+                if ($whatsapp === null) {
+                    header('Location: ' . $editUrl . '?error=whatsapp');
+                    exit;
+                }
+                User::update((int)$_SESSION['user_id'], ['whatsapp' => $whatsapp]);
+            }
+
             //Atualiza o endereço
             $addressData = [
                 'cep' => $_POST['cep'],
@@ -172,17 +197,22 @@ class VenueController
             //Atualiza a quadra
             $venueData = [
                 'name' => $_POST['name'],
-                'average_price_per_hour' => $_POST['average_price_per_hour'],
+                'description' => $this->parseDescription($_POST['description'] ?? null),
+                'average_price_per_hour' => $price,
                 'court_capacity' => $_POST['court_capacity'],
                 'has_leisure_area' => $_POST['has_leisure_area'] ?? 0,
                 'leisure_area_capacity' => $_POST['leisure_area_capacity'] ?? null,
                 'floor_type' => $this->sanitizeFloorType($_POST['floor_type'] ?? null),
                 'has_lighting' => $_POST['has_lighting'] ?? 0,
                 'is_covered' => $_POST['is_covered'] ?? 0,
-                // Mantém o status atual se o formulário não enviar um válido (antes reativava quadras inativas)
-                'status' => in_array($_POST['status'] ?? null, Venue::STATUSES, true) ? $_POST['status'] : $venue['status']
+                'status' => $this->parseStatus($_POST['status'] ?? null, $venue['status'])
             ];
             Venue::update($id, $venueData);
+
+            // Esportes da quadra (D29); o formulário sempre manda a lista (mesmo vazia)
+            if (isset($_POST['sports_sent'])) {
+                VenueSport::replaceForVenue($id, is_array($_POST['sports'] ?? null) ? $_POST['sports'] : []);
+            }
 
             //Logica de Imagem 
             if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
@@ -203,8 +233,8 @@ class VenueController
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $this->handleImageUploads($id);
             }
-            $redirectUrl = $this->getRedirectUrl();
-            header('Location: ' . BASE_URL . $redirectUrl . '?status=updated');
+            // Fica na aba Dados com a confirmação (D35)
+            header('Location: ' . $editUrl . '?status=updated');
             exit;
         }
     }
@@ -288,6 +318,70 @@ class VenueController
     private function sanitizeFloorType(?string $floorType): ?string
     {
         return array_key_exists((string)$floorType, Venue::FLOOR_TYPES) ? $floorType : null;
+    }
+
+    /** Tamanho máximo de "Sobre a quadra" (venues.description, D30). */
+    public const DESCRIPTION_MAX = 1000;
+
+    /**
+     * Preço por hora do formulário (D31): price_mode = value | free | none.
+     * @return string|null|false valor ('80.00'), '0.00' (grátis), null (não informado) ou false se inválido
+     */
+    private function parsePrice(array $input)
+    {
+        $mode = $input['price_mode'] ?? 'value';
+        if ($mode === 'free') {
+            return '0.00';
+        }
+        if ($mode === 'none') {
+            return null;
+        }
+        // Aceita "80", "80,50" e "1.234,56"
+        $raw = trim((string)($input['average_price_per_hour'] ?? ''));
+        if (str_contains($raw, ',')) {
+            $raw = str_replace(['.', ','], ['', '.'], $raw);
+        }
+        if (!is_numeric($raw) || (float)$raw <= 0 || (float)$raw > 99999999) {
+            return false;
+        }
+        return number_format((float)$raw, 2, '.', '');
+    }
+
+    /**
+     * "Sobre a quadra": texto livre, opcional, até 1000 caracteres; vazio vira NULL.
+     */
+    private function parseDescription($value): ?string
+    {
+        $text = trim(str_replace("\r\n", "\n", (string)$value));
+        return $text === '' ? null : mb_substr($text, 0, self::DESCRIPTION_MAX);
+    }
+
+    /**
+     * Situação da quadra (D34): o formulário só escolhe available ou maintenance.
+     * Quadra desativada (unavailable) continua desativada.
+     */
+    private function parseStatus($value, string $current): string
+    {
+        if ($current === 'unavailable') {
+            return $current;
+        }
+        return in_array($value, ['available', 'maintenance'], true) ? $value : $current;
+    }
+
+    /**
+     * O formulário pede o WhatsApp quando quem edita é o próprio dono (owner) e ainda
+     * não cadastrou o número (D24, D38). O admin não é obrigado.
+     */
+    private function needsWhatsapp(?array $venue): bool
+    {
+        if (($_SESSION['user_role'] ?? null) !== 'owner') {
+            return false;
+        }
+        if ($venue !== null && (int)$venue['user_id'] !== (int)$_SESSION['user_id']) {
+            return false;
+        }
+        $user = User::findById((int)$_SESSION['user_id']);
+        return empty($user['whatsapp']);
     }
 
     /**

@@ -55,6 +55,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Opções de preço (D31) */
+        .price-mode { cursor: pointer; }
+        .price-mode > span { display: inline-block; padding: .55rem 1rem; border-radius: 9999px; border: 1px solid color-mix(in srgb, var(--color-content-secondary) 30%, transparent); font-size: .875rem; font-weight: 600; transition: all .15s; }
+        .price-mode > span:hover { border-color: #0084FF; }
     </style>
 </head>
 
@@ -138,23 +143,116 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                 <input type="hidden" id="court_capacity_input" name="court_capacity" value="<?php echo htmlspecialchars($venue['court_capacity']); ?>">
                 <input type="hidden" id="leisure_area_capacity_input" name="leisure_area_capacity" value="<?php echo htmlspecialchars($venue['leisure_area_capacity']); ?>">
 
+                <?php
+                $formMessages = [
+                    'updated' => ['green', 'fa-check-circle', $lang['data_saved']],
+                    'price' => ['red', 'fa-exclamation-circle', $lang['data_price_invalid']],
+                    'whatsapp' => ['red', 'fa-exclamation-circle', $lang['data_whatsapp_invalid']],
+                ];
+                $formMsgKey = ($_GET['status'] ?? null) === 'updated' ? 'updated' : ($_GET['error'] ?? null);
+                if (isset($formMessages[$formMsgKey])): [$c, $ic, $text] = $formMessages[$formMsgKey]; ?>
+                    <div class="p-4 rounded-xl border flex items-start gap-3 <?php echo $c === 'green' ? 'border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400' : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'; ?>" role="<?php echo $c === 'green' ? 'status' : 'alert'; ?>">
+                        <span class="mt-0.5"><i class="fas <?php echo $ic; ?>"></i></span><p class="text-sm font-medium"><?php echo $text; ?></p>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($data['needsWhatsapp'])): ?>
+                    <!-- WhatsApp do dono (D38): obrigatório para quem tem quadra -->
+                    <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border-2 border-amber-500/40 shadow-lg">
+                        <h2 class="text-xl font-bold text-content-primary mb-1 flex items-center gap-3"><span class="text-green-500"><i class="fab fa-whatsapp"></i></span><?php echo $lang['data_whatsapp_title']; ?></h2>
+                        <p class="text-sm text-content-secondary mb-4"><?php echo $lang['data_whatsapp_text']; ?></p>
+                        <label for="whatsapp" class="sr-only"><?php echo $lang['data_whatsapp_title']; ?></label>
+                        <input type="tel" id="whatsapp" name="whatsapp" required inputmode="tel" autocomplete="tel" placeholder="(11) 99999-0000"
+                            class="w-full md:w-80 bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
+                        <p id="whatsapp-error" class="hidden mt-2 text-sm text-red-600 dark:text-red-400" role="alert"><?php echo $lang['data_whatsapp_invalid']; ?></p>
+                    </div>
+                <?php endif; ?>
+
                 <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg">
                     <h2 class="text-xl font-bold text-content-primary mb-6 flex items-center gap-3"><i class="fas fa-info-circle text-brand-500"></i><?php echo $lang['edit_venue_info_title'] ?></h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
                         <div>
-                            <label class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['venue_name'] ?></label>
-                            <input type="text" name="name" required value="<?php echo htmlspecialchars($venue['name']); ?>" 
+                            <label for="venue-name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['venue_name'] ?></label>
+                            <input type="text" id="venue-name" name="name" required value="<?php echo htmlspecialchars($venue['name']); ?>"
                                 class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['edit_venue_price'] ?></label>
-                            <div class="relative">
-                                <span class="absolute left-4 top-3 text-content-secondary">R$</span>
-                                <input type="number" step="0.01" name="average_price_per_hour" value="<?php echo htmlspecialchars($venue['average_price_per_hour']); ?>" 
-                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
+
+                        <?php
+                        // Preço (D31): valor, grátis (0) ou não informado (NULL)
+                        $priceRaw = $venue['average_price_per_hour'];
+                        $priceMode = $priceRaw === null ? 'none' : ((float)$priceRaw == 0 ? 'free' : 'value');
+                        ?>
+                        <fieldset>
+                            <legend class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['edit_venue_price'] ?></legend>
+                            <div class="flex flex-wrap gap-2" role="radiogroup">
+                                <?php foreach (['value' => $lang['data_price_value'], 'free' => $lang['data_price_free'], 'none' => $lang['data_price_none']] as $mode => $label): ?>
+                                    <label class="price-mode">
+                                        <input type="radio" name="price_mode" value="<?php echo $mode; ?>" class="sr-only peer" <?php echo $priceMode === $mode ? 'checked' : ''; ?>>
+                                        <span class="peer-checked:bg-brand-500 peer-checked:text-white peer-checked:border-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500"><?php echo $label; ?></span>
+                                    </label>
+                                <?php endforeach; ?>
                             </div>
+                            <div id="price-value-box" class="relative mt-3 md:w-64 <?php echo $priceMode === 'value' ? '' : 'hidden'; ?>">
+                                <span class="absolute left-4 top-3 text-content-secondary">R$</span>
+                                <label for="price-input" class="sr-only"><?php echo $lang['data_price_value']; ?></label>
+                                <input type="text" id="price-input" inputmode="decimal" name="average_price_per_hour" value="<?php echo $priceMode === 'value' ? htmlspecialchars(number_format((float)$priceRaw, 2, ',', '')) : ''; ?>" placeholder="0,00"
+                                    class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-11 pr-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
+                            </div>
+                            <p class="mt-2 text-xs text-content-secondary"><?php echo $lang['data_price_hint']; ?></p>
+                            <p id="price-error" class="hidden mt-2 text-sm text-red-600 dark:text-red-400" role="alert"><?php echo $lang['data_price_invalid']; ?></p>
+                        </fieldset>
+
+                        <div>
+                            <div class="flex items-end justify-between mb-1.5 ml-1">
+                                <label for="description" class="block text-xs font-bold text-content-secondary uppercase tracking-wider"><?php echo $lang['data_description']; ?> <span class="font-normal normal-case">(<?php echo $lang['agenda_optional']; ?>)</span></label>
+                                <span class="text-xs text-content-secondary tabular-nums"><span id="description-count"><?php echo mb_strlen((string)$venue['description']); ?></span>/1000</span>
+                            </div>
+                            <textarea id="description" name="description" rows="4" maxlength="1000" placeholder="<?php echo htmlspecialchars($lang['data_description_placeholder']); ?>"
+                                class="w-full bg-input-base border border-content-secondary/20 rounded-xl px-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all resize-y"><?php echo htmlspecialchars((string)$venue['description']); ?></textarea>
+                            <p class="mt-1 text-xs text-content-secondary ml-1"><?php echo $lang['data_description_hint']; ?></p>
                         </div>
                     </div>
+                </div>
+
+                <?php if ($venue['status'] !== 'unavailable'): ?>
+                    <!-- Situação da quadra (D34) -->
+                    <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg">
+                        <h2 class="text-xl font-bold text-content-primary mb-4 flex items-center gap-3"><span class="text-brand-500"><i class="fas fa-toggle-on"></i></span><?php echo $lang['data_status_title']; ?></h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup">
+                            <?php foreach (['available' => ['status-badge--available', $lang['home_status_available'], $lang['data_status_available_text']], 'maintenance' => ['status-badge--closed', $lang['data_status_maintenance'], $lang['data_status_maintenance_text']]] as $st => [$badge, $label, $hint]): ?>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="status" value="<?php echo $st; ?>" class="sr-only peer" <?php echo $venue['status'] === $st ? 'checked' : ''; ?>>
+                                    <span class="block h-full p-4 rounded-xl border border-content-secondary/20 bg-surface-base transition-colors peer-checked:border-brand-500 peer-checked:bg-brand-500/5 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
+                                        <span class="status-badge <?php echo $badge; ?>"><?php echo $label; ?></span>
+                                        <span class="block mt-2 text-sm text-content-secondary"><?php echo $hint; ?></span>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Esportes (D29) -->
+                <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg">
+                    <h2 class="text-xl font-bold text-content-primary mb-1 flex items-center gap-3"><span class="text-green-500"><i class="fas fa-futbol"></i></span><?php echo $lang['data_sports_title']; ?></h2>
+                    <p class="text-sm text-content-secondary mb-4"><?php echo $lang['data_sports_hint']; ?></p>
+                    <input type="hidden" name="sports_sent" value="1">
+                    <?php if (empty($data['sports'])): ?>
+                        <p class="text-sm text-content-secondary"><?php echo $lang['data_sports_empty']; ?></p>
+                    <?php else: ?>
+                        <div class="flex flex-wrap gap-2">
+                            <?php foreach ($data['sports'] as $sport):
+                                $checked = in_array((int)$sport['id'], array_map('intval', $data['selectedSports']), true); ?>
+                                <label class="cursor-pointer">
+                                    <input type="checkbox" name="sports[]" value="<?php echo (int)$sport['id']; ?>" class="sr-only peer" <?php echo $checked ? 'checked' : ''; ?>>
+                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-content-secondary/25 text-sm font-semibold text-content-primary transition-colors peer-checked:bg-brand-500 peer-checked:border-brand-500 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
+                                        <?php if (!empty($sport['icon_path'])): ?><span><i class="fas <?php echo htmlspecialchars($sport['icon_path']); ?>"></i></span><?php endif; ?>
+                                        <?php echo htmlspecialchars($sport['name']); ?>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -513,6 +611,51 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                     confirmDeleteBtn.classList.toggle('cursor-not-allowed', !match);
                 });
             }
+
+            // --- Preço (D31), descrição (D30) e WhatsApp (D38) ---
+            const venueForm = document.getElementById('venue-form');
+            const priceBox = document.getElementById('price-value-box');
+            const priceInput = document.getElementById('price-input');
+            const priceError = document.getElementById('price-error');
+            const priceMode = () => (venueForm.querySelector('input[name="price_mode"]:checked') || {}).value;
+            venueForm.querySelectorAll('input[name="price_mode"]').forEach(r => r.addEventListener('change', () => {
+                priceBox.classList.toggle('hidden', priceMode() !== 'value');
+                priceError.classList.add('hidden');
+                if (priceMode() === 'value') priceInput.focus();
+            }));
+
+            const description = document.getElementById('description');
+            const descriptionCount = document.getElementById('description-count');
+            description.addEventListener('input', () => { descriptionCount.textContent = description.value.length; });
+
+            const whatsapp = document.getElementById('whatsapp');
+            const whatsappError = document.getElementById('whatsapp-error');
+            // Mesma regra do servidor (User::normalizeWhatsapp): DDD + número, com ou sem 55
+            const validWhatsapp = v => {
+                let d = v.replace(/\D/g, '');
+                if (d.length === 10 || d.length === 11) d = '55' + d;
+                return /^55[1-9][1-9](9\d{8}|[2-8]\d{7})$/.test(d);
+            };
+
+            venueForm.addEventListener('submit', e => {
+                let firstError = null;
+                if (priceMode() === 'value') {
+                    const n = parseFloat(priceInput.value.replace(/\./g, '').replace(',', '.'));
+                    const bad = !(n > 0);
+                    priceError.classList.toggle('hidden', !bad);
+                    if (bad) firstError = firstError || priceInput;
+                }
+                if (whatsapp) {
+                    const bad = !validWhatsapp(whatsapp.value);
+                    whatsappError.classList.toggle('hidden', !bad);
+                    if (bad) firstError = firstError || whatsapp;
+                }
+                if (firstError) {
+                    e.preventDefault();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus({ preventScroll: true });
+                }
+            });
         });
     </script>
 </body>
