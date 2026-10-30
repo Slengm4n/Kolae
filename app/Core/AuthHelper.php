@@ -87,8 +87,9 @@ class AuthHelper
                     // SUCESSO! Loga o usuário automaticamente
                     $user = User::findById($token['user_id']);
 
-                    // Verifica se o usuário ainda existe (pode ter sido deletado)
-                    if ($user) {
+                    // Verifica se o usuário ainda existe e está ativo
+                    if ($user && ($user['status'] ?? 'active') === 'active') {
+                        session_regenerate_id(true);
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['user_name'] = $user['name'];
                         $_SESSION['user_role'] = $user['role'];
@@ -99,6 +100,57 @@ class AuthHelper
         } catch (\Exception $e) {
             // Se der erro no banco, ignora silenciosamente e deixa o usuário logar manualmente
         }
+    }
+
+    /** Validade do "lembrar de mim". */
+    private const REMEMBER_DAYS = 30;
+
+    /**
+     * Cria o token do "lembrar de mim" em user_tokens e grava o cookie "selector:validator".
+     * No banco fica só o hash do validator.
+     */
+    public static function issueRememberToken(int $userId): void
+    {
+        $selector = bin2hex(random_bytes(16));
+        $validator = bin2hex(random_bytes(32));
+        $expiry = time() + self::REMEMBER_DAYS * 86400;
+
+        try {
+            $sql = "INSERT INTO user_tokens (user_id, selector, hashed_validator, expiry) VALUES (?, ?, ?, ?)";
+            Database::getConnection()->prepare($sql)
+                ->execute([$userId, $selector, hash('sha256', $validator), date('Y-m-d H:i:s', $expiry)]);
+        } catch (\Exception $e) {
+            error_log('Erro ao salvar o token do lembrar de mim: ' . $e->getMessage());
+            return;
+        }
+
+        setcookie('remember_me', $selector . ':' . $validator, [
+            'expires' => $expiry,
+            'path' => '/',
+            'secure' => session_get_cookie_params()['secure'],
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+    }
+
+    /**
+     * Apaga o token do "lembrar de mim" deste navegador (logout).
+     */
+    public static function forgetRememberToken(): void
+    {
+        if (!isset($_COOKIE['remember_me'])) {
+            return;
+        }
+
+        $selector = explode(':', $_COOKIE['remember_me'])[0];
+        try {
+            Database::getConnection()->prepare("DELETE FROM user_tokens WHERE selector = ?")->execute([$selector]);
+        } catch (\Exception $e) {
+            error_log('Erro ao apagar o token do lembrar de mim: ' . $e->getMessage());
+        }
+
+        setcookie('remember_me', '', ['expires' => time() - 3600, 'path' => '/']);
+        unset($_COOKIE['remember_me']);
     }
 
     /**

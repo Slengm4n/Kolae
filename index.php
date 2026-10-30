@@ -123,6 +123,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 AuthHelper::checkRememberMe();
+
+// Formulários do site precisam do token CSRF (a API usa o token do cabeçalho Authorization)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !\App\Core\ApiResponse::isApiRequest()) {
+    \App\Core\Csrf::verifyOrFail();
+}
 // --- Instância do Roteador ---
 $router = new Router();
 

@@ -70,6 +70,7 @@ $error = $error ?? null;
             <?php endif; ?>
 
             <form action="<?php echo BASE_URL; ?>/dashboard/cnpj" method="POST" class="space-y-6">
+                <?php echo \App\Core\Csrf::field(); ?>
                 <div class="group">
                     <label for="cnpj" class="block text-sm font-bold text-content-primary mb-2 ml-1">
                         <?php echo $lang['cnpj_title_input']; ?>

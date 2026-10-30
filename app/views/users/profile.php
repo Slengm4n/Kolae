@@ -140,6 +140,7 @@ $userId = $_SESSION['user_id'] ?? 0;
                     <?php if (!empty($user)) : ?>
 
                         <form action="<?php echo BASE_URL; ?>/dashboard/perfil/atualizar" method="POST" enctype="multipart/form-data">
+                            <?php echo \App\Core\Csrf::field(); ?>
 
                             <div class="flex flex-col lg:flex-row gap-10 mb-10">
                                 <div class="flex flex-col items-center lg:items-start">

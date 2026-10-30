@@ -9,6 +9,9 @@ if (isset($_GET['error'])) {
         case 'password_mismatch':
             $errorMessage = $lang['reset_password_mismatch'];
             break;
+        case 'weak_password':
+            $errorMessage = $lang['register_password_character'];
+            break;
         case 'invalid_token':
             $errorMessage = $lang['reset_invalid'];
             break;
@@ -86,6 +89,7 @@ if (isset($_GET['error'])) {
 
             <!-- Action aponta para a rota POST de reset -->
             <form id="reset-form" action="<?= BASE_URL ?>/reset-password" method="POST" class="space-y-6">
+                <?php echo \App\Core\Csrf::field(); ?>
 
                 <!-- Campo Oculto com o Token -->
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
@@ -93,14 +97,14 @@ if (isset($_GET['error'])) {
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_one']; ?> </label>
                     <div class="mt-1">
-                        <input id="password" name="password" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
+                        <input id="password" name="password" type="password" minlength="8" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
                     </div>
                 </div>
 
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_two']; ?></label>
                     <div class="mt-1">
-                        <input id="password_confirmation" name="password_confirmation" type="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
+                        <input id="password_confirmation" name="password_confirmation" type="password" minlength="8" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
                     </div>
                 </div>
 

@@ -150,6 +150,7 @@ $canSchedule = $hasHours && $opens && !$isPast;
                             </div>
                             <?php if (!$finished): ?>
                                 <form method="POST" action="<?php echo $base . '/cancelar/' . (int)$m['id']; ?>" class="cancel-form">
+                                    <?php echo \App\Core\Csrf::field(); ?>
                                     <input type="hidden" name="data" value="<?php echo $date; ?>">
                                     <button type="submit" class="text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-lg px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"><?php echo $lang['agenda_cancel']; ?></button>
                                 </form>
@@ -179,6 +180,7 @@ $canSchedule = $hasHours && $opens && !$isPast;
 
                 <form id="schedule-form" method="POST" action="<?php echo $base; ?>" class="mt-5 space-y-5" novalidate
                     data-opens="<?php echo $opens; ?>" data-closes="<?php echo $closes; ?>">
+                    <?php echo \App\Core\Csrf::field(); ?>
                     <input type="hidden" name="data" value="<?php echo $date; ?>">
 
                     <div class="grid grid-cols-2 gap-4">

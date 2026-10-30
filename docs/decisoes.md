@@ -206,3 +206,20 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Por quê:** um texto só, mantido num lugar, vale para site e app. Traduzir texto jurídico para 7 idiomas é caro e arriscado; a versão que vale pela lei brasileira é a em português.
 - **Onde:** `app/Controllers/LegalController.php` (data da versão em `UPDATED_AT`, e-mail de contato em `CONTACT_EMAIL`), `app/views/legal/` (`terms_content.php`, `privacy_content.php`, `page.php`). Ao mudar o texto, atualizar `UPDATED_AT`.
 - **Contato:** `contato@kolae.online`.
+
+## Segurança (S5)
+
+### D43 · CSRF em todos os formulários do site (29/10/2026)
+- **O quê:** um token por sessão (`App\Core\Csrf`), no campo escondido `_csrf` de todo `<form method="POST">`, conferido em `index.php` antes do roteador. Sem token ou com token errado: **403** e a página "Página expirada" com botão Voltar. A API (`/api/v1`) fica de fora, porque autentica pelo cabeçalho `Authorization`, que outro site não consegue enviar.
+- **Por quê 403 e não 419 (o do Laravel):** o Apache troca status que ele não conhece por 500.
+- **Regra para telas novas:** todo formulário POST leva `<?php echo \App\Core\Csrf::field(); ?>` logo depois do `<form>`. Esquecer o campo dá 403 na hora do teste, então não passa despercebido.
+- **Efeito colateral:** envio maior que o `post_max_size` do PHP chega com o `$_POST` vazio e também cai na página "Página expirada", cujo texto cita arquivos grandes demais.
+
+### D44 · "Lembrar de mim" com `user_tokens` (29/10/2026)
+- **O quê:** o login grava em `user_tokens` (selector + hash SHA-256 do validator, 30 dias) e o cookie `remember_me` leva `selector:validator`, HttpOnly, SameSite=Lax e Secure no HTTPS. Antes o login gravava em `users.remember_token` e a leitura procurava em `user_tokens`, então nunca funcionava. Logout apaga o token daquele navegador. Conta inativa não entra pelo cookie.
+- **`users.remember_token`:** não é mais usada; fica no banco até a migração para o Laravel.
+
+### D45 · Limite de tentativas de login, no site e na API (29/10/2026)
+- **O quê:** numa janela de 15 minutos, 5 erros na mesma conta a partir do mesmo IP, ou 20 erros do mesmo IP em qualquer conta, bloqueiam o login até o erro mais antigo vencer. Bloqueado, nem a senha certa entra. Login certo zera os erros daquela conta e IP. Site: mensagem com os minutos e a sugestão de "Esqueci a senha". API: `429 TOO_MANY_ATTEMPTS` com o cabeçalho `Retry-After` (segundos).
+- **Onde:** `App\Core\LoginThrottle`, tabela `login_attempts` (patch 005; o e-mail fica só como hash). Sem a tabela, o login funciona sem limite, então o deploy não quebra se o patch atrasar.
+- **Por quê por conta + IP, e não só por conta:** bloquear só pela conta deixaria qualquer pessoa trancar a conta de outra errando a senha de propósito.

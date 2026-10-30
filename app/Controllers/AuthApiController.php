@@ -6,6 +6,7 @@ use App\Core\BaseApiController;
 use App\Core\Mailer;
 use App\Models\User;
 use Exception;
+use App\Core\LoginThrottle;
 
 class AuthApiController extends BaseApiController
 {
@@ -32,13 +33,24 @@ class AuthApiController extends BaseApiController
         }
         $this->failIfInvalid($errors);
 
+        // Muitos erros seguidos: 429 com Retry-After, sem conferir a senha (LoginThrottle)
+        $wait = LoginThrottle::retryAfter($email);
+        if ($wait !== null) {
+            header('Retry-After: ' . $wait);
+            $minutes = LoginThrottle::minutes($wait);
+            $this->sendError("Muitas tentativas de login. Tente de novo em {$minutes} min.", 'TOO_MANY_ATTEMPTS', 429);
+        }
+
         try {
             //Busca o usuário pelo email (findByEmail só retorna usuários ativos)
             $user = User::findByEmail($email);
 
             if (!$user || !password_verify($password, $user['password'])) {
+                LoginThrottle::recordFailure($email);
                 $this->sendError('E-mail ou senha incorretos.', 'INVALID_CREDENTIALS', 401);
             }
+
+            LoginThrottle::clear($email);
 
             $this->sendSuccess($this->tokenResponse($user));
         } catch (Exception $e) {

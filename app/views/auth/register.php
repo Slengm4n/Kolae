@@ -122,6 +122,7 @@ if (isset($_GET['error'])) {
                 <?php endif; ?>
 
                 <form id="register-form" action="<?php echo BASE_URL; ?>/register/store" method="POST" class="space-y-5">
+                    <?php echo \App\Core\Csrf::field(); ?>
 
                     <div>
                         <label for="name" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['register_name']; ?></label>
@@ -164,7 +165,7 @@ if (isset($_GET['error'])) {
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-calendar text-content-secondary"></i>
                             </div>
-                            <input id="password" name="password" type="password" autocomplete="new-password" required
+                            <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" required
                                 class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['register_password_ph']; ?>">
                         </div>
@@ -176,7 +177,7 @@ if (isset($_GET['error'])) {
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-calendar text-content-secondary"></i>
                             </div>
-                            <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required
+                            <input id="password_confirmation" name="password_confirmation" type="password" minlength="8" autocomplete="new-password" required
                                 class="w-full bg-surface-secondary border border-content-secondary/20 rounded-lg pl-10 pr-4 py-3 text-sm text-content-primary placeholder-content-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                                 placeholder="<?php echo $lang['register_password_ph_two']; ?>">
                         </div>

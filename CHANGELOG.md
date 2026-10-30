@@ -13,6 +13,8 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Proteção contra CSRF** (S5, D43): todos os formulários do site levam um token da sessão; envio sem ele mostra a página "Página expirada" (403), nos 7 idiomas.
+- **Limite de tentativas de login** (S5, D45), no site e na API: 5 erros seguidos na mesma conta em 15 minutos bloqueiam o login até vencer o prazo. A API responde `429 TOO_MANY_ATTEMPTS` com `Retry-After`. Precisa do patch 005.
 - **Termos de Uso e Política de Privacidade** (D42): páginas `/termos` e `/privacidade`, com índice, texto conforme a LGPD, tema claro/escuro e versão para celular. Ficam no rodapé do site e no cadastro, e o app abre as mesmas URLs. O texto é só em português; título e menu seguem o idioma, com um aviso nos outros idiomas.
 - **Aba Horário da quadra** (S4, D35), para o dono e o admin: os 7 dias com interruptor aberto/fechado e "abre / fecha", preenchimento rápido (seg a sex, sáb e dom, todos os dias), validação na hora e no servidor, resumo "Como aparece no app", aviso de quadra sem horário (D23) e lista de partidas futuras que ficaram fora do horário (D27). As páginas da quadra ganham um topo comum com o selo de status ao vivo e as abas Dados, Horário e Agenda. Textos nos 7 idiomas.
 - **Aba Agenda da quadra** (S4, D37, D39), para o dono e o admin: um dia por vez (setas, "Hoje" e escolher data), linha do tempo com as faixas livres e ocupadas e a marca do "agora", lista das partidas do dia com "Cancelar" (com confirmação) e "Agendar partida" (início, fim, atalhos de duração, esporte e "para quem" opcionais). Valida no navegador e no servidor: fora do horário, conflito com outra partida, horário que já passou, dia fechado. "Para quem" fica só no site; o app vê só o horário ocupado. As partidas fora do horário na aba Horário levam direto ao dia na Agenda.
@@ -42,6 +44,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
 ### Corrigido
+- **"Lembrar de mim" não funcionava** (S5, D44): o login gravava o token num lugar e a leitura procurava em outro. Agora usa `user_tokens` (selector e hash do validator), o cookie é HttpOnly e Secure no HTTPS, e o logout apaga o token.
+- **Senha mínima de 8 caracteres no site** (S5, D08): cadastro e redefinição de senha aceitavam qualquer tamanho e a dica dizia 6. Agora conferem no navegador e no servidor, como a API e o perfil.
+- **XSS no mapa do admin** (S5): os dados das quadras entravam no `<script>` sem escapar `</script>`, e a busca montava o nome da quadra como HTML. Agora o JSON sai escapado e o nome entra como texto. O mesmo escape foi aplicado na senha gerada mostrada em Usuários.
 - Depois de um deploy, quem já tinha aberto o site via a página quebrada: o navegador reaproveitava o CSS e o JS antigos do cache. Os endereços de `style.css` e `bundle.js` passam a levar a versão do arquivo (`?v=...`, via `ViewHelper::asset`), que muda a cada deploy.
 - Cadastro de quadra: marcar uma comodidade (iluminação, cobertura, área de lazer) dava erro de JavaScript, o cartão não ficava destacado e a capacidade da área de lazer nunca aparecia (o script procurava um id que não existe). Agora a capacidade aparece ao marcar e é zerada ao desmarcar.
 - Perfil: uma variável declarada duas vezes derrubava o script da página (menu do usuário e pré-visualização da foto não funcionavam). O menu e o tema passam a vir só do `bundle.js`, sem tratar cada clique duas vezes.

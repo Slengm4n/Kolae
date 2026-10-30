@@ -33,6 +33,7 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 - **Login e cadastro:** sem rework antes da entrega; os ajustes deles (senha mínima de 8, "lembrar de mim", limite de tentativas) entram na S5, e o acabamento visual na S6, se sobrar tempo.
 - **S4 em produção (PR #57).** Branches limpas: só `main`, `develop` e `v2.0-laravel`.
 - **Termos de Uso e Política de Privacidade (D42):** `/termos` e `/privacidade`, só em português, linkadas no rodapé e no cadastro; o app abre as mesmas URLs (listadas em `docs/api.md`). Contato: `contato@kolae.online`.
+- **S5 no código em 29/10 (branch `feat/s5-seguranca`, D43–D45):** CSRF em todos os formulários (403 "Página expirada"), "lembrar de mim" com `user_tokens`, senha mínima 8 no cadastro e na redefinição, limite de tentativas de login (site e API, `429 TOO_MANY_ATTEMPTS`, patch 005) e XSS do mapa do admin. Teste de clique `teste_s5.js` (33 passos). **Formulário novo precisa de `Csrf::field()`.** Na produção: aplicar o patch 005.
 - **Próximo:** dados de demonstração na produção (horário, esportes e partidas nas quadras reais) e a S5 (segurança: CSRF, XSS no `admin/map.php`, limite de tentativas; "lembrar de mim"; senha mínima no site).
 
 ### Pendências fora do código

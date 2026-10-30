@@ -162,6 +162,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
     <main class="flex-grow flex items-center justify-center py-10 px-4">
         <form id="venue-form" action="<?php echo BASE_URL . $routePrefix; ?>/quadras/salvar" method="POST" enctype="multipart/form-data" class="w-full max-w-4xl">
+            <?php echo \App\Core\Csrf::field(); ?>
 
             <?php
             // Erros do servidor (quando passam pela validação do navegador)

@@ -32,6 +32,15 @@ CREATE TABLE `countries` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `login_attempts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email_hash` char(64) NOT NULL COMMENT 'SHA-256 do e-mail em minúsculas',
+  `ip` varchar(45) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_login_attempts_account` (`email_hash`, `ip`, `created_at`),
+  KEY `idx_login_attempts_ip` (`ip`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `matches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `venue_id` int(11) NOT NULL,

@@ -112,7 +112,7 @@ return[
     'register_email_ph' => 'your@email.com',
     'register_birthday' => '生年月日',
     'register_password' => 'パスワード',
-    'register_password_ph' => '最低6文字',
+    'register_password_ph' => '最低8文字',
     'register_password_two' => 'パスワードを確認',
     'register_password_ph_two' => 'パスワードを繰り返す',
 
@@ -127,7 +127,7 @@ return[
 
     'register_email_exists' => 'このメールアドレスはすでに登録されています。ログインを試してください。',
     'register_failed' => 'アカウントの作成中にエラーが発生しました。後でもう一度お試しください。',
-    'register_password_character' => 'パスワードは少なくとも6文字である必要があります。',
+    'register_password_character' => 'パスワードは少なくとも8文字である必要があります。',
 
 
 
@@ -457,4 +457,8 @@ return[
     'legal_toc' => 'このページの内容',
     'legal_pt_only' => 'この文書はポルトガル語のみで提供されています（ブラジルで法的効力を持つ言語です）。',
     'legal_see_also' => '関連項目：',
+    'login_too_many' => 'ログインの試行回数が多すぎます。{minutes}分後にもう一度お試しいただくか、「パスワードを忘れた場合」をご利用ください。',
+    'csrf_title' => 'ページの有効期限が切れました',
+    'csrf_text' => 'フォームを送信できませんでした。ページを長時間開いていたか、アップロードしたファイルが大きすぎた可能性があります。前のページに戻り、再読み込みしてからもう一度お試しください。',
+    'csrf_back' => '戻る',
 ];

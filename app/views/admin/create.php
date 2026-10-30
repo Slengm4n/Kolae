@@ -94,6 +94,7 @@
             <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 max-w-3xl mx-auto shadow-xl animate-up delay-100">
 
                 <form action="<?php echo BASE_URL; ?>/admin/usuarios/salvar" method="POST" class="space-y-5 md:space-y-6">
+                    <?php echo \App\Core\Csrf::field(); ?>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
 

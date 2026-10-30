@@ -14,6 +14,9 @@ if (isset($_GET['error'])) {
         case 'invalid_token':
             $message = $lang['error_invalid_token'];
             break;
+        case 'too_many':
+            $message = strtr($lang['login_too_many'], ['{minutes}' => (int)($_GET['minutes'] ?? 15)]);
+            break;
         case 'inactive_account':
             $message = $lang['error_account_inactive'];
             break;
@@ -117,6 +120,7 @@ if (isset($_GET['error'])) {
                 <?php endif; ?>
 
                 <form id="login-form" action="<?php echo BASE_URL; ?>/login/authenticate" method="POST" class="space-y-6">
+                    <?php echo \App\Core\Csrf::field(); ?>
                     <div>
                         <label for="email" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['global_email']; ?></label>
                         <div class="mt-1 relative">

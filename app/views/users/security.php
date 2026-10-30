@@ -155,6 +155,7 @@ $userId = $_SESSION['user_id'] ?? 0;
                     <?php endif; ?>
 
                     <form action="<?php echo BASE_URL; ?>/dashboard/perfil/seguranca/atualizar" method="POST" class="max-w-lg space-y-6">
+                        <?php echo \App\Core\Csrf::field(); ?>
 
                         <div>
                             <label for="current_password" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo $lang['security_present_password'] ?></label>

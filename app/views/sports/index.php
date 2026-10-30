@@ -147,6 +147,7 @@
                                 </a>
 
                                 <form action="<?php echo BASE_URL; ?>/admin/esportes/excluir/<?php echo $sport['id']; ?>" method="POST" onsubmit="return confirm('Tem a certeza?');">
+                                    <?php echo \App\Core\Csrf::field(); ?>
                                     <button type="submit" class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-surface-base rounded-full text-content-secondary border border-content-secondary/10 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors shadow-sm" title="Excluir">
                                         <i class="fas fa-trash-alt text-xs"></i>
                                     </button>

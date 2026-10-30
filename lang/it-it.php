@@ -93,7 +93,7 @@ return[
     'register_email_ph' => 'tua@email.com',
     'register_birthday' => 'Data di nascita',
     'register_password' => 'Password',
-    'register_password_ph' => 'Minimo 6 caratteri',
+    'register_password_ph' => 'Minimo 8 caratteri',
     'register_password_two' => 'Conferma password',
     'register_password_ph_two' => 'Ripeti la password',
 
@@ -106,7 +106,7 @@ return[
     
     'register_email_exists' => 'Questa email è già registrata. Prova ad accedere.',
     'register_failed' => 'Errore durante la creazione dell\'account. Riprova più tardi.',
-    'register_password_character' => 'La password deve contenere almeno 6 caratteri.',
+    'register_password_character' => 'La password deve contenere almeno 8 caratteri.',
 
     'dashboard_view_profile' => 'Vedi profilo completo',
     'dashboard_user_greetings' => 'Ciao',
@@ -414,4 +414,8 @@ return[
     'legal_toc' => 'In questa pagina',
     'legal_pt_only' => 'Questo documento è disponibile solo in portoghese, la lingua con valore legale in Brasile.',
     'legal_see_also' => 'Vedi anche:',
+    'login_too_many' => 'Troppi tentativi di accesso. Riprova tra {minutes} min o usa "Password dimenticata".',
+    'csrf_title' => 'Pagina scaduta',
+    'csrf_text' => 'Non è stato possibile inviare il modulo. La pagina potrebbe essere rimasta aperta troppo a lungo, oppure i file erano troppo grandi. Torna indietro, ricarica la pagina e riprova.',
+    'csrf_back' => 'Torna indietro',
 ];

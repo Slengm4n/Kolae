@@ -122,7 +122,7 @@ return [
     'register_email_ph' => 'seu@email.com',
     'register_birthday' => 'Data de nascimento',
     'register_password' => 'Senha',
-    'register_password_ph' => 'Mínimo de 6 caracteres',
+    'register_password_ph' => 'Mínimo de 8 caracteres',
     'register_password_two' => 'Confirmar senha',
     'register_password_ph_two' => 'Repita a senha',
 
@@ -140,7 +140,7 @@ return [
     //Cadastro (Erros)
     'register_email_exists' => 'Este e-mail já está cadastrado. Tente fazer login.',
     'register_failed' => 'Erro ao criar conta. Tente novamente mais tarde.',
-    'register_password_character' => 'A senha deve ter pelo menos 6 caracteres.',
+    'register_password_character' => 'A senha deve ter pelo menos 8 caracteres.',
     //Fim cadastro
 
     //Dashboard (Usuário)
@@ -495,4 +495,8 @@ return [
     'legal_toc' => 'Nesta página',
     'legal_pt_only' => 'Este documento está disponível apenas em português.',
     'legal_see_also' => 'Veja também:',
+    'login_too_many' => 'Muitas tentativas de login. Tente de novo em {minutes} min ou use "Esqueci a senha".',
+    'csrf_title' => 'Página expirada',
+    'csrf_text' => 'Não conseguimos enviar o formulário. A página pode ter ficado aberta por muito tempo, ou os arquivos enviados eram grandes demais. Volte, recarregue a página e tente de novo.',
+    'csrf_back' => 'Voltar',
 ];
