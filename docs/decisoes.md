@@ -198,3 +198,11 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Como ficou:** PHP 8.2; banco `joao5502_kolae` (MySQL local do servidor, `DB_HOST = localhost`), importado do InfinityFree; fotos de `uploads/` copiadas; `config.php` com as mesmas `ENCRYPTION_KEY`, `ENCRYPTION_IV` e `JWT_SECRET` (CNPJs e logins continuam valendo) e banco com senha nova. Deploy pelo GitHub Actions com uma conta FTP só para isso (`deploy@kolae.online`, enxerga só a `public_html`; secret `FTP_SERVER_DIR = /`).
 - **Onde:** `docs/hospedagem.md` (passo a passo e o que falta), `.github/workflows/deploy.yml`, `docs/api.md` (base URL).
 - **InfinityFree:** fica no ar alguns dias, sem receber deploy, até a HostGator se provar estável; depois é cancelado.
+
+## Documentos legais
+
+### D42 · Termos de Uso e Política de Privacidade em páginas do site, só em português (29/10/2026)
+- **O quê:** duas páginas públicas, `/termos` e `/privacidade`, com índice e texto conforme a LGPD. O site linka as duas no rodapé e no cadastro (abrem em nova aba); **o app abre as mesmas URLs** (navegador ou WebView), sem tela própria. O texto fica só em português; título, menu e um aviso ("disponível apenas em português") seguem o idioma escolhido.
+- **Por quê:** um texto só, mantido num lugar, vale para site e app. Traduzir texto jurídico para 7 idiomas é caro e arriscado; a versão que vale pela lei brasileira é a em português.
+- **Onde:** `app/Controllers/LegalController.php` (data da versão em `UPDATED_AT`, e-mail de contato em `CONTACT_EMAIL`), `app/views/legal/` (`terms_content.php`, `privacy_content.php`, `page.php`). Ao mudar o texto, atualizar `UPDATED_AT`.
+- **Contato:** `contato@kolae.online`.

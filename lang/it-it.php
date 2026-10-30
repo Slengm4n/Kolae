@@ -406,4 +406,12 @@ return[
     'data_next_hours' => 'Campo registrato! Ora inserisci gli orari di apertura: senza, il campo appare come "Chiuso" nell\'app.',
     'panel_status_disabled' => 'Disattivato',
     'panel_no_hours' => 'Nessun orario inserito: appare come "Chiuso" nell\'app. Tocca per inserirlo.',
+    'legal_terms_title' => 'Termini di utilizzo',
+    'legal_privacy_title' => 'Informativa sulla privacy',
+    'legal_footer_label' => 'Documenti legali',
+    'legal_kicker' => 'Note legali',
+    'legal_updated' => 'Ultimo aggiornamento: {date}',
+    'legal_toc' => 'In questa pagina',
+    'legal_pt_only' => 'Questo documento è disponibile solo in portoghese, la lingua con valore legale in Brasile.',
+    'legal_see_also' => 'Vedi anche:',
 ];

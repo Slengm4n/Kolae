@@ -449,4 +449,12 @@ return[
     'data_next_hours' => 'コートを登録しました！次に営業時間を登録してください。登録しないとアプリでは「閉店」と表示されます。',
     'panel_status_disabled' => '無効',
     'panel_no_hours' => '営業時間が未登録のため、アプリでは「閉店」と表示されます。タップして登録してください。',
+    'legal_terms_title' => '利用規約',
+    'legal_privacy_title' => 'プライバシーポリシー',
+    'legal_footer_label' => '法的文書',
+    'legal_kicker' => '法的情報',
+    'legal_updated' => '最終更新日：{date}',
+    'legal_toc' => 'このページの内容',
+    'legal_pt_only' => 'この文書はポルトガル語のみで提供されています（ブラジルで法的効力を持つ言語です）。',
+    'legal_see_also' => '関連項目：',
 ];
