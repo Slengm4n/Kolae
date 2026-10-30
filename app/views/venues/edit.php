@@ -123,6 +123,14 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
             </div>
         <?php else: ?>
 
+            <?php
+            // Topo com o selo de status e as abas Dados, Horário e Agenda (D35)
+            $activeTab = 'data';
+            $routePrefix = $prefix;
+            $status = $data['status'];
+            include BASE_PATH . '/app/views/partials/venue_top.php';
+            ?>
+
             <form id="venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/atualizar/<?php echo $venue['id']; ?>" method="POST" enctype="multipart/form-data" class="space-y-8 pb-24 md:pb-8 animate-up">
 
                 <input type="hidden" name="address_id" value="<?php echo $venue['address_id']; ?>">

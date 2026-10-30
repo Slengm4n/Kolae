@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\AuthHelper;
 use App\Core\ImageHelper;
+use App\Core\VenueAccess;
 use App\Core\ViewHelper;
 use App\Models\Venue;
 use App\Models\User;
@@ -130,7 +131,8 @@ class VenueController
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
             'venue' => $venue,
             'routePrefix' => $this->getRoutePrefix(), // Rotas do formulário (/admin ou /dashboard)
-            'backUrl' => $this->getRedirectUrl()      // Destino do "Cancelar" e do "Painel"
+            'backUrl' => $this->getRedirectUrl(),     // Destino do "Cancelar" e do "Painel"
+            'status' => VenueAccess::currentStatus($venue) // Selo no topo, igual ao do app (D40)
         ];
         ViewHelper::render('venues/edit', $data);
     }
