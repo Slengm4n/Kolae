@@ -163,6 +163,15 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
     <main class="flex-grow flex items-center justify-center py-10 px-4">
         <form id="venue-form" action="<?php echo BASE_URL . $routePrefix; ?>/quadras/salvar" method="POST" enctype="multipart/form-data" class="w-full max-w-4xl">
 
+            <?php
+            // Erros do servidor (quando passam pela validação do navegador)
+            $createErrors = ['price_error' => $lang['data_price_invalid'], 'whatsapp_error' => $lang['data_whatsapp_invalid']];
+            if (isset($createErrors[$_GET['status'] ?? ''])): ?>
+                <div class="max-w-2xl mx-auto mb-6 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400 text-sm font-medium flex items-start gap-3" role="alert">
+                    <span class="mt-0.5"><i class="fas fa-exclamation-circle"></i></span><span><?php echo $createErrors[$_GET['status']]; ?></span>
+                </div>
+            <?php endif; ?>
+
             <div id="step-1" class="step active w-full max-w-3xl mx-auto">
                 <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Tipo de Piso</h2>
                 <p class="text-content-secondary text-center mb-8">Qual o revestimento principal da sua quadra?</p>
@@ -243,6 +252,27 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                         </div>
                     </div>
                 </div>
+
+                <!-- Esportes da quadra (D29, D36) -->
+                <div class="mt-8 bg-surface-elevated border border-content-secondary/10 rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-content-primary"><?php echo $lang['data_sports_title']; ?></h3>
+                    <p class="text-sm text-content-secondary mb-4"><?php echo $lang['data_sports_hint']; ?></p>
+                    <?php if (empty($data['sports'])): ?>
+                        <p class="text-sm text-content-secondary"><?php echo $lang['data_sports_empty']; ?></p>
+                    <?php else: ?>
+                        <div class="flex flex-wrap gap-2">
+                            <?php foreach ($data['sports'] as $sport): ?>
+                                <label class="cursor-pointer">
+                                    <input type="checkbox" name="sports[]" value="<?php echo (int)$sport['id']; ?>" class="sr-only peer">
+                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-content-secondary/25 text-sm font-semibold text-content-primary transition-colors peer-checked:bg-brand-500 peer-checked:border-brand-500 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
+                                        <?php if (!empty($sport['icon_path'])): ?><span><i class="fas <?php echo htmlspecialchars($sport['icon_path']); ?>"></i></span><?php endif; ?>
+                                        <?php echo htmlspecialchars($sport['name']); ?>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div id="step-4" class="step w-full max-w-2xl mx-auto">
@@ -254,13 +284,43 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                         <label for="name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Nome do Local <span class="text-red-500">*</span></label>
                         <input type="text" id="name" name="name" class="w-full px-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Arena Kolaê">
                     </div>
-                    <div>
-                        <label for="average_price_per_hour" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Preço Médio por Hora (R$) <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-4 text-content-secondary font-semibold">R$</span>
-                            <input type="number" step="0.01" min="0.01" id="average_price_per_hour" name="average_price_per_hour" placeholder="00,00" class="w-full pl-12 pr-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-mono text-lg">
+                    <!-- Preço (D31): valor, grátis ou não informado -->
+                    <fieldset>
+                        <legend class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['edit_venue_price']; ?></legend>
+                        <div class="flex flex-wrap gap-2" role="radiogroup">
+                            <?php foreach (['value' => $lang['data_price_value'], 'free' => $lang['data_price_free'], 'none' => $lang['data_price_none']] as $mode => $label): ?>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="price_mode" value="<?php echo $mode; ?>" class="sr-only peer" <?php echo $mode === 'value' ? 'checked' : ''; ?>>
+                                    <span class="inline-block px-4 py-2 rounded-full border border-content-secondary/30 text-sm font-semibold transition-colors peer-checked:bg-brand-500 peer-checked:text-white peer-checked:border-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500"><?php echo $label; ?></span>
+                                </label>
+                            <?php endforeach; ?>
                         </div>
+                        <div id="price-value-box" class="relative mt-3">
+                            <span class="absolute left-4 top-4 text-content-secondary font-semibold">R$</span>
+                            <label for="average_price_per_hour" class="sr-only"><?php echo $lang['data_price_value']; ?></label>
+                            <input type="text" inputmode="decimal" id="average_price_per_hour" name="average_price_per_hour" placeholder="0,00" class="w-full pl-12 pr-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-mono text-lg">
+                        </div>
+                        <p class="mt-2 text-xs text-content-secondary"><?php echo $lang['data_price_hint']; ?></p>
+                    </fieldset>
+
+                    <!-- Sobre a quadra (D30) -->
+                    <div>
+                        <div class="flex items-end justify-between mb-2">
+                            <label for="description" class="block text-xs font-bold text-content-secondary uppercase tracking-wider"><?php echo $lang['data_description']; ?> <span class="font-normal normal-case">(<?php echo $lang['agenda_optional']; ?>)</span></label>
+                            <span class="text-xs text-content-secondary tabular-nums"><span id="description-count">0</span>/1000</span>
+                        </div>
+                        <textarea id="description" name="description" rows="4" maxlength="1000" placeholder="<?php echo htmlspecialchars($lang['data_description_placeholder']); ?>" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all resize-y"></textarea>
+                        <p class="mt-1 text-xs text-content-secondary"><?php echo $lang['data_description_hint']; ?></p>
                     </div>
+
+                    <?php if (!empty($data['needsWhatsapp'])): ?>
+                        <!-- WhatsApp do dono (D38) -->
+                        <div class="p-5 rounded-2xl border-2 border-amber-500/40 bg-surface-elevated">
+                            <label for="whatsapp" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1"><span class="text-green-500"><i class="fab fa-whatsapp"></i></span> <?php echo $lang['data_whatsapp_title']; ?> <span class="text-red-500">*</span></label>
+                            <p class="text-sm text-content-secondary mb-3"><?php echo $lang['data_whatsapp_text']; ?></p>
+                            <input type="tel" id="whatsapp" name="whatsapp" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-0000" class="w-full px-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -471,13 +531,26 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 if (index === 3) {
                     const name = document.getElementById('name');
                     const price = document.getElementById('average_price_per_hour');
+                    const whatsapp = document.getElementById('whatsapp');
                     if (!name.value.trim()) {
                         highlightError(name);
                         isValid = false;
                     }
-                    if (!price.value.trim()) {
+                    // Preço só é exigido em "Valor por hora" (D31): maior que zero, aceita 1.234,56
+                    const priceMode = (document.querySelector('input[name="price_mode"]:checked') || {}).value;
+                    const priceNumber = parseFloat(price.value.replace(/\./g, '').replace(',', '.'));
+                    if (priceMode === 'value' && !(priceNumber > 0)) {
                         highlightError(price);
                         isValid = false;
+                    }
+                    // WhatsApp do dono (D38): mesma regra do servidor (User::normalizeWhatsapp)
+                    if (whatsapp) {
+                        let digits = whatsapp.value.replace(/\D/g, '');
+                        if (digits.length === 10 || digits.length === 11) digits = '55' + digits;
+                        if (!/^55[1-9][1-9](9\d{8}|[2-8]\d{7})$/.test(digits)) {
+                            highlightError(whatsapp);
+                            isValid = false;
+                        }
                     }
                     if (!isValid) showToast('Preencha os campos obrigatórios.');
                 }
@@ -583,6 +656,17 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 // O PULO DO GATO: Escuta a mudança no input, não o clique no card
                 checkbox.addEventListener('change', updateVisual);
             });
+
+            // Preço (D31): o campo de valor só aparece em "Valor por hora"
+            const priceBox = document.getElementById('price-value-box');
+            document.querySelectorAll('input[name="price_mode"]').forEach(radio => radio.addEventListener('change', () => {
+                priceBox.classList.toggle('hidden', radio.value !== 'value' || !radio.checked);
+            }));
+
+            // Sobre a quadra (D30): contador de caracteres
+            const description = document.getElementById('description');
+            const descriptionCount = document.getElementById('description-count');
+            description.addEventListener('input', () => { descriptionCount.textContent = description.value.length; });
 
             // Contadores (Capacidade)
             document.querySelectorAll('.counter-input').forEach(counter => {

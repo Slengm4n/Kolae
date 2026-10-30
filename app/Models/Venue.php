@@ -300,9 +300,10 @@ class Venue
     {
         $pdo = Database::getConnection();
         $data['status'] = $data['status'] ?? 'available';
+        $data['description'] = $data['description'] ?? null; // D30, opcional
 
-        $query = "INSERT INTO venues (user_id, address_id, name, average_price_per_hour, court_capacity, has_leisure_area, leisure_area_capacity, floor_type, has_lighting, is_covered, status) 
-                  VALUES (:user_id, :address_id, :name, :average_price_per_hour, :court_capacity, :has_leisure_area, :leisure_area_capacity, :floor_type, :has_lighting, :is_covered, :status)";
+        $query = "INSERT INTO venues (user_id, address_id, name, description, average_price_per_hour, court_capacity, has_leisure_area, leisure_area_capacity, floor_type, has_lighting, is_covered, status)
+                  VALUES (:user_id, :address_id, :name, :description, :average_price_per_hour, :court_capacity, :has_leisure_area, :leisure_area_capacity, :floor_type, :has_lighting, :is_covered, :status)";
 
         $stmt = $pdo->prepare($query);
 

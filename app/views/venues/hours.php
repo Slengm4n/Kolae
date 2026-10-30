@@ -30,7 +30,12 @@ $dayLabel = function (array $days) use ($lang): string {
     <main class="container mx-auto px-4 py-6 md:py-10 max-w-3xl pb-28 md:pb-10">
         <?php include BASE_PATH . '/app/views/partials/venue_top.php'; ?>
 
-        <?php if ($flash === 'saved'): ?>
+        <?php if ($flash === 'created'): ?>
+            <!-- Recém-cadastrada (D36): o próximo passo é o horário -->
+            <div class="mb-6 p-4 rounded-xl border border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400 flex items-start gap-3" role="status">
+                <span class="mt-0.5"><i class="fas fa-check-circle"></i></span><p class="text-sm font-medium"><?php echo $lang['data_next_hours']; ?></p>
+            </div>
+        <?php elseif ($flash === 'saved'): ?>
             <div class="mb-6 p-4 rounded-xl border border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400 flex items-start gap-3" role="status">
                 <span class="mt-0.5"><i class="fas fa-check-circle"></i></span><p class="text-sm font-medium"><?php echo $lang['hours_saved']; ?></p>
             </div>
@@ -46,7 +51,7 @@ $dayLabel = function (array $days) use ($lang): string {
             </div>
         <?php endif; ?>
 
-        <?php if (!$hasHours && !$errors): ?>
+        <?php if (!$hasHours && !$errors && $flash !== 'created'): ?>
             <div class="mb-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300 flex items-start gap-3">
                 <span class="mt-0.5"><i class="fas fa-clock"></i></span>
                 <div>

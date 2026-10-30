@@ -42,7 +42,9 @@ class VenueController
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuário',
             'routePrefix' => $this->getRoutePrefix(),
-            'backUrl' => $this->getRedirectUrl()
+            'backUrl' => $this->getRedirectUrl(),
+            'sports' => Sport::getAll(),                   // Esportes da quadra (D29, D36)
+            'needsWhatsapp' => $this->needsWhatsapp(null), // WhatsApp do dono (D38)
         ];
         ViewHelper::render('venues/create', $data);
     }
@@ -56,7 +58,24 @@ class VenueController
         $this->checkCnpjStatus();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $createUrl = BASE_URL . $this->getRoutePrefix() . '/quadras/criar';
 
+            // Preço (D31): valor, grátis (0) ou não informado (NULL)
+            $price = $this->parsePrice($_POST);
+            if ($price === false) {
+                header('Location: ' . $createUrl . '?status=price_error');
+                exit;
+            }
+
+            // WhatsApp do dono (D38)
+            if ($this->needsWhatsapp(null)) {
+                $whatsapp = User::normalizeWhatsapp((string)($_POST['whatsapp'] ?? ''));
+                if ($whatsapp === null) {
+                    header('Location: ' . $createUrl . '?status=whatsapp_error');
+                    exit;
+                }
+                User::update((int)$_SESSION['user_id'], ['whatsapp' => $whatsapp]);
+            }
 
             //Cria o endereço
             $addressData = [
@@ -81,7 +100,8 @@ class VenueController
                 'user_id' => $_SESSION['user_id'],
                 'address_id' => $addressId,
                 'name' => $_POST['name'],
-                'average_price_per_hour' => $_POST['average_price_per_hour'],
+                'description' => $this->parseDescription($_POST['description'] ?? null),
+                'average_price_per_hour' => $price,
                 'court_capacity' => $_POST['court_capacity'],
                 'has_leisure_area' => $_POST['has_leisure_area'] ?? 0,
                 'leisure_area_capacity' => $_POST['leisure_area_capacity'] ?? null,
@@ -97,13 +117,16 @@ class VenueController
                 exit;
             }
 
+            // Esportes da quadra (D29)
+            VenueSport::replaceForVenue((int)$venueId, is_array($_POST['sports'] ?? null) ? $_POST['sports'] : []);
+
             //Processa e salva as imagens
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $this->handleImageUploads($venueId);
             }
 
-            $redirectUrl = $this->getRedirectUrl();
-            header('Location: ' . BASE_URL . $redirectUrl . '?status=created');
+            // O horário não entra no passo a passo: vai direto para a aba Horário (D36, D23)
+            header('Location: ' . BASE_URL . $this->getRoutePrefix() . '/quadras/' . (int)$venueId . '/horario?status=created');
             exit;
         }
     }
