@@ -27,9 +27,9 @@ jobs:
                   server: ${{ secrets.FTP_SERVER }}
                   username: ${{ secrets.FTP_USERNAME }}
                   password: ${{ secrets.FTP_PASSWORD }}
-                  # Pasta do site no FTP: /htdocs/ no InfinityFree, /public_html/ na HostGator.
-                  # Vem do secret FTP_SERVER_DIR; sem ele, continua /htdocs/.
-                  server-dir: ${{ secrets.FTP_SERVER_DIR || '/htdocs/' }}
+                  # Pasta do site, vista pela conta de FTP. Na HostGator a conta deploy@kolae.online
+                  # já começa na public_html, então é /. Vem do secret FTP_SERVER_DIR (D41).
+                  server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
                   exclude: |
                       **/.git*
                       **/.git*/**

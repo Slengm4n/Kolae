@@ -2,7 +2,7 @@
 
 Como rodar o backend (site + `/api/v1`) no Windows com XAMPP e como o app mobile se conecta a ele.
 
-> **Por que o app usa o backend local:** a hospedagem atual (InfinityFree) responde a clientes que não são navegador com um desafio JavaScript em vez do JSON, então o app não consegue usar a API da produção. Até a migração de hospedagem, o app aponta para o XAMPP de um notebook na mesma rede Wi-Fi.
+> **Produção:** o app usa `https://kolae.online/api/v1` (HostGator, D41). O backend local serve para desenvolver e para testar uma mudança no app **antes** do deploy.
 
 ## 1. Backend no XAMPP
 
@@ -89,7 +89,9 @@ C:\xampp\php\php.exe tests/agenda_db_test.php        # horário e partidas no ba
 
 O segundo precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o banco como encontrou. A pasta `tests/` não vai para a produção.
 
-## 2. App mobile apontando para o notebook
+## 2. App mobile apontando para o notebook (só para testes locais)
+
+No uso normal, o app aponta para a produção: `https://kolae.online/api/v1`. Os passos abaixo são para testar o app contra uma mudança que ainda não foi para a produção.
 
 1. O notebook com o XAMPP e o celular (ou o emulador) precisam estar **na mesma rede Wi-Fi**.
 
@@ -107,12 +109,12 @@ O segundo precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o
    - **Firewall do Windows**: liberar o "Apache HTTP Server" para o perfil da rede atual (Pública ou Privada).
    - **Rede da faculdade ou pública**: muitas bloqueiam a comunicação entre aparelhos (isolamento de clientes). Use o **roteador do celular** (hotspot) com o notebook conectado nele.
 
-5. **HTTP sem HTTPS**: o backend local é `http://`. O Expo Go aceita, mas em um build próprio (APK/IPA) o Android e o iOS bloqueiam HTTP por padrão; aí é preciso liberar o tráfego HTTP na configuração do build (ex: `usesCleartextTraffic` no Android). Para a apresentação, o Expo Go resolve.
+5. **HTTP sem HTTPS**: o backend local é `http://`. O Expo Go aceita, mas em um build próprio (APK/IPA) o Android e o iOS bloqueiam HTTP por padrão; aí é preciso liberar o tráfego HTTP na configuração do build (ex: `usesCleartextTraffic` no Android). A produção é `https://` e não precisa disso.
 
 6. **Dados para o app ter o que mostrar** (no notebook, nunca na produção):
    - `database/seeds/teste_status.sql`: 5 quadras de teste, uma para cada status. Usado pelos testes da S3.
    - `database/seeds/demo_notebook.sql`: dá horário, esportes e WhatsApp fictício às quadras de verdade e cria partidas a partir da hora atual, para o mapa ter quadras "Em uso" e "Disponível".
    - Os status dependem do relógio. Antes de um teste com o app, renovar: `teste_status_limpar.sql`, `teste_status.sql` e `demo_notebook.sql`, nessa ordem.
-   - **Fotos:** a pasta `uploads/` fica fora do git. Para as quadras copiadas da produção terem foto, baixar `htdocs/uploads/` da produção (gerenciador de arquivos da hospedagem ou FTP) para a pasta `uploads/` do projeto.
+   - **Fotos:** a pasta `uploads/` fica fora do git. Para as quadras copiadas da produção terem foto, baixar `public_html/uploads/` da produção (Gerenciador de Arquivos do cPanel da HostGator: compactar a pasta e baixar o `.zip`) para a pasta `uploads/` do projeto.
 
 O contrato da API (formato das respostas, erros, endpoints) está em `docs/api.md`.

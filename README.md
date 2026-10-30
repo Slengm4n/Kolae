@@ -6,7 +6,7 @@
 
 O **Kolae** é uma plataforma web desenvolvida para conectar atletas e entusiastas do esporte. O objetivo é facilitar a busca por parceiros de treino, equipes, locais para praticar esporte (quadras, campos) e eventos esportivos na sua região.
 
-🔗 **[Acesse o projeto ao vivo](https://kolae.gamer.gd)**
+🔗 **[Acesse o projeto ao vivo](https://kolae.online)**
 
 ![Screenshot do Dashboard](https://i.postimg.cc/GmV2qBBF/print-dashboard.png)
 
@@ -54,7 +54,7 @@ O projeto utiliza uma arquitetura **MVC (Model-View-Controller) customizada**, f
 * **Base de Dados:** MySQL / MariaDB, modelada no [dbdiagram](https://dbdiagram.io) (`database/kolae.dbml`); mudanças aplicadas por scripts em `database/patches/`
 * **Gestão de Dependências:** Composer (PHP) e NPM (Assets)
 * **Internacionalização:** Sistema de variáveis de tradução para múltiplos idiomas
-* **CI/CD:** Deploy automatizado para InfinityFree via GitHub Actions
+* **CI/CD:** Deploy automatizado para a HostGator (FTP) via GitHub Actions
 
 ---
 
