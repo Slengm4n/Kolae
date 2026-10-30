@@ -13,6 +13,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Aba Horário da quadra** (S4, D35), para o dono e o admin: os 7 dias com interruptor aberto/fechado e "abre / fecha", preenchimento rápido (seg a sex, sáb e dom, todos os dias), validação na hora e no servidor, resumo "Como aparece no app", aviso de quadra sem horário (D23) e lista de partidas futuras que ficaram fora do horário (D27). As páginas da quadra ganham um topo comum com o selo de status ao vivo e as abas Dados, Horário e Agenda. Textos nos 7 idiomas.
 - Seed de demonstração para o notebook (`database/seeds/demo_notebook.sql`, só local): horário, esportes e WhatsApp fictício nas quadras de verdade e partidas a partir da hora atual, para o app ter quadras "Em uso" e "Disponível". O seed de teste da S3 deixa de apontar para fotos que não existem.
 - API da Sprint 3 para o app: `GET /venues/{id}` (fotos, descrição, endereço, horário de funcionamento e dono com WhatsApp) e `GET /venues/{id}/schedule` (faixas livres e ocupadas do dia).
 - Status da quadra calculado pela API (`available`, `in_use`, `closed`) com `status_until`, a partir do horário de funcionamento e das partidas agendadas pelo dono (`App\Core\VenueSchedule`).
