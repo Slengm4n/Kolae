@@ -190,24 +190,43 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                             ? BASE_URL . '/uploads/venues/' . $venue['id'] . '/' . htmlspecialchars($venue['image_path'])
                             : $placeholder;
                         ?>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/quadras/editar/<?php echo $venue['id']; ?>" class="group block bg-surface-elevated rounded-2xl overflow-hidden border border-content-secondary/10 hover:border-content-secondary/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                            <div class="relative aspect-video overflow-hidden">
-                                <img src="<?php echo $imageSrc; ?>" alt="<?php echo htmlspecialchars($venue['name']); ?>"
-                                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                                    onerror="this.onerror=null; this.src='<?php echo $placeholder; ?>';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-                                <div class="absolute top-3 right-3 bg-white/90 dark:bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-black dark:text-white border border-white/20 shadow-sm">
-                                    <i class="fas fa-pencil-alt mr-1"></i> <?php echo $lang['dashboard_user_venue_edit']; ?>
+                        <?php
+                        // Selo ao vivo (D40): mesma regra da API; desativada tem selo próprio (D34)
+                        $live = $venue['live_status'];
+                        $disabled = $venue['status'] === 'unavailable';
+                        $badgeClass = $disabled ? 'status-badge--closed' : (['available' => 'status-badge--available', 'in_use' => 'status-badge--in-use'][$live['status']] ?? 'status-badge--closed');
+                        $badgeText = $disabled ? $lang['panel_status_disabled'] : $lang['home_status_' . $live['status']];
+                        $badgeUntil = $disabled ? '' : \App\Core\VenueAccess::statusUntilText($live, $lang);
+                        $venueBase = BASE_URL . '/dashboard/quadras';
+                        ?>
+                        <article class="venue-card group bg-surface-elevated rounded-2xl overflow-hidden border border-content-secondary/10 hover:border-content-secondary/30 hover:shadow-xl transition-all duration-300 flex flex-col" data-venue-id="<?php echo (int)$venue['id']; ?>">
+                            <a href="<?php echo $venueBase; ?>/editar/<?php echo (int)$venue['id']; ?>" class="block">
+                                <div class="relative aspect-video overflow-hidden">
+                                    <img src="<?php echo $imageSrc; ?>" alt="<?php echo htmlspecialchars($venue['name']); ?>"
+                                        class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                        onerror="this.onerror=null; this.src='<?php echo $placeholder; ?>';">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                                    <span class="absolute top-3 left-3 status-badge <?php echo $badgeClass; ?> shadow-sm"><?php echo htmlspecialchars($badgeText); ?><?php if ($badgeUntil !== ''): ?> <span class="font-normal opacity-80">· <?php echo htmlspecialchars($badgeUntil); ?></span><?php endif; ?></span>
                                 </div>
-                            </div>
-                            <div class="p-5">
-                                <h3 class="font-bold text-lg text-content-primary truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($venue['name']); ?></h3>
-                                <div class="flex items-center gap-2 mt-2 text-content-secondary text-sm">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span class="truncate"><?php echo htmlspecialchars($venue['street'] . ', ' . $venue['number']); ?></span>
+                                <div class="p-5 pb-3">
+                                    <h3 class="font-bold text-lg text-content-primary truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($venue['name']); ?></h3>
+                                    <div class="flex items-center gap-2 mt-2 text-content-secondary text-sm">
+                                        <span><i class="fas fa-map-marker-alt"></i></span>
+                                        <span class="truncate"><?php echo htmlspecialchars($venue['street'] . ', ' . $venue['number']); ?></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                            <?php if (!$venue['has_hours'] && !$disabled): ?>
+                                <a href="<?php echo $venueBase . '/' . (int)$venue['id']; ?>/horario" class="no-hours mx-5 mb-3 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-medium flex items-start gap-2 hover:bg-amber-500/15 transition-colors">
+                                    <span class="mt-0.5"><i class="fas fa-clock"></i></span><span><?php echo $lang['panel_no_hours']; ?></span>
+                                </a>
+                            <?php endif; ?>
+                            <nav class="mt-auto grid grid-cols-3 border-t border-content-secondary/10 text-sm font-semibold" aria-label="<?php echo htmlspecialchars($lang['venue_tabs_label']); ?>">
+                                <a href="<?php echo $venueBase; ?>/editar/<?php echo (int)$venue['id']; ?>" class="py-3 flex items-center justify-center gap-1.5 text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 hover:bg-surface-secondary transition-colors"><span><i class="fas fa-pen text-xs"></i></span><?php echo $lang['venue_tab_data']; ?></a>
+                                <a href="<?php echo $venueBase . '/' . (int)$venue['id']; ?>/horario" class="py-3 flex items-center justify-center gap-1.5 border-x border-content-secondary/10 text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 hover:bg-surface-secondary transition-colors"><span><i class="fas fa-clock text-xs"></i></span><?php echo $lang['venue_tab_hours']; ?></a>
+                                <a href="<?php echo $venueBase . '/' . (int)$venue['id']; ?>/agenda" class="py-3 flex items-center justify-center gap-1.5 text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 hover:bg-surface-secondary transition-colors"><span><i class="fas fa-calendar-days text-xs"></i></span><?php echo $lang['venue_tab_agenda']; ?></a>
+                            </nav>
+                        </article>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="col-span-full py-16 bg-surface-secondary/30 border-2 border-dashed border-content-secondary/20 rounded-3xl text-center flex flex-col items-center justify-center group hover:border-brand-500/50 transition-colors">

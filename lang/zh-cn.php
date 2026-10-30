@@ -420,4 +420,6 @@ return[
     'data_whatsapp_text' => '场地主必填：用于应用中的"联系场主"按钮，会保存到你的个人资料。',
     'data_whatsapp_invalid' => '请输入带区号的手机或电话，例如 (11) 99999-0000。',
     'data_next_hours' => '场地已登记！现在请填写营业时间：没有营业时间，场地在应用中显示为"关闭"。',
+    'panel_status_disabled' => '已停用',
+    'panel_no_hours' => '尚未填写营业时间：应用中显示为"关闭"。点击填写。',
 ];

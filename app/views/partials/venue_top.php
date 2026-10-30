@@ -6,21 +6,12 @@
  * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('data' | 'hours' | 'agenda'),
  *            $routePrefix ('/dashboard' | '/admin'), $backUrl.
  */
-use App\Core\VenueSchedule;
+use App\Core\VenueAccess;
 
 $statusKey = $status['status'] ?? 'closed';
 $statusClass = ['available' => 'status-badge--available', 'in_use' => 'status-badge--in-use', 'closed' => 'status-badge--closed'][$statusKey] ?? 'status-badge--closed';
 $statusLabel = $lang['home_status_' . $statusKey] ?? $statusKey;
-
-// "até 19:00", "abre 08:00" ou "abre Seg 08:00"
-$untilText = '';
-if (!empty($status['status_until'])) {
-    $until = $status['status_until'];
-    $time = $until->format('H:i');
-    $sameDay = $until->format('Y-m-d') === VenueSchedule::now()->format('Y-m-d');
-    $when = $sameDay ? $time : ($lang['weekday_short_' . $until->format('w')] . ' ' . $time);
-    $untilText = ($statusKey === 'closed' ? $lang['venue_status_opens'] : $lang['venue_status_until']) . ' ' . $when;
-}
+$untilText = VenueAccess::statusUntilText($status, $lang); // "até 19:00", "abre Seg 08:00"
 
 $topVenueId = (int)$venue['id'];
 $topBase = BASE_URL . $routePrefix . '/quadras'; // nomes próprios: o include divide variáveis com a página

@@ -47,6 +47,23 @@ class VenueAccess
     }
 
     /**
+     * Complemento do selo: "até 19:00", "abre 08:00" ou "abre Seg 08:00" ('' sem previsão).
+     * @param array $status resultado de currentStatus / VenueSchedule::status
+     * @param array $lang   textos do idioma atual
+     */
+    public static function statusUntilText(array $status, array $lang): string
+    {
+        $until = $status['status_until'] ?? null;
+        if (!$until) {
+            return '';
+        }
+        $time = $until->format('H:i');
+        $sameDay = $until->format('Y-m-d') === VenueSchedule::now()->format('Y-m-d');
+        $when = $sameDay ? $time : ($lang['weekday_short_' . $until->format('w')] . ' ' . $time);
+        return ($status['status'] === 'closed' ? $lang['venue_status_opens'] : $lang['venue_status_until']) . ' ' . $when;
+    }
+
+    /**
      * Status da quadra agora, pela mesma regra da API (D03, D40).
      * @return array{status: string, status_until: ?\DateTimeImmutable}
      */

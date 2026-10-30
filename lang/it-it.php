@@ -404,4 +404,6 @@ return[
     'data_whatsapp_text' => 'Obbligatorio per chi ha un campo: è il pulsante "Parla con il proprietario" nell\'app. Viene salvato nel tuo profilo.',
     'data_whatsapp_invalid' => 'Inserisci un cellulare o telefono con prefisso, es: (11) 99999-0000.',
     'data_next_hours' => 'Campo registrato! Ora inserisci gli orari di apertura: senza, il campo appare come "Chiuso" nell\'app.',
+    'panel_status_disabled' => 'Disattivato',
+    'panel_no_hours' => 'Nessun orario inserito: appare come "Chiuso" nell\'app. Tocca per inserirlo.',
 ];

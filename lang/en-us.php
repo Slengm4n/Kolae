@@ -428,4 +428,6 @@ return[
     'data_whatsapp_text' => 'Required for court owners: it powers the "Talk to the owner" button in the app. It is saved to your profile.',
     'data_whatsapp_invalid' => 'Enter a mobile or phone number with area code, e.g. (11) 99999-0000.',
     'data_next_hours' => 'Court added! Now set the opening hours: without them, the court shows as "Closed" in the app.',
+    'panel_status_disabled' => 'Deactivated',
+    'panel_no_hours' => 'No opening hours yet: it shows as "Closed" in the app. Tap to add them.',
 ];

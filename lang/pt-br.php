@@ -485,4 +485,6 @@ return [
     'data_whatsapp_text' => 'Obrigatório para quem tem quadra: é o botão "Falar com o dono" no app. Fica salvo no seu perfil.',
     'data_whatsapp_invalid' => 'Informe um celular ou telefone com DDD, ex: (11) 99999-0000.',
     'data_next_hours' => 'Quadra cadastrada! Agora cadastre o horário de funcionamento: sem ele, a quadra aparece como "Fechada" no app.',
+    'panel_status_disabled' => 'Desativada',
+    'panel_no_hours' => 'Sem horário cadastrado: aparece como "Fechada" no app. Toque para cadastrar.',
 ];
