@@ -7,6 +7,7 @@ use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\VenueController;
 use App\Controllers\VenueHoursController;
+use App\Controllers\VenueAgendaController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
 use App\Controllers\AuthApiController;
@@ -157,6 +158,9 @@ $router->group('/dashboard', function ($router) {
         // Abas da quadra (D35)
         $router->get('/{id}/horario', [VenueHoursController::class, 'show']);
         $router->post('/{id}/horario', [VenueHoursController::class, 'save']);
+        $router->get('/{id}/agenda', [VenueAgendaController::class, 'show']);
+        $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
+        $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
     });
 });
 
@@ -197,6 +201,9 @@ $router->group('/admin', function ($router) {
         // Abas da quadra (D35)
         $router->get('/{id}/horario', [VenueHoursController::class, 'show']);
         $router->post('/{id}/horario', [VenueHoursController::class, 'save']);
+        $router->get('/{id}/agenda', [VenueAgendaController::class, 'show']);
+        $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
+        $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
     });
 });
 

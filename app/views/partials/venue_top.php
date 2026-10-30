@@ -22,12 +22,12 @@ if (!empty($status['status_until'])) {
     $untilText = ($statusKey === 'closed' ? $lang['venue_status_opens'] : $lang['venue_status_until']) . ' ' . $when;
 }
 
-$venueId = (int)$venue['id'];
-$base = BASE_URL . $routePrefix . '/quadras';
+$topVenueId = (int)$venue['id'];
+$topBase = BASE_URL . $routePrefix . '/quadras'; // nomes próprios: o include divide variáveis com a página
 $tabs = [
-    'data' => ['label' => $lang['venue_tab_data'], 'icon' => 'fa-pen', 'url' => "$base/editar/$venueId"],
-    'hours' => ['label' => $lang['venue_tab_hours'], 'icon' => 'fa-clock', 'url' => "$base/$venueId/horario"],
-    'agenda' => ['label' => $lang['venue_tab_agenda'], 'icon' => 'fa-calendar-days', 'url' => $agendaUrl ?? null],
+    'data' => ['label' => $lang['venue_tab_data'], 'icon' => 'fa-pen', 'url' => "$topBase/editar/$topVenueId"],
+    'hours' => ['label' => $lang['venue_tab_hours'], 'icon' => 'fa-clock', 'url' => "$topBase/$topVenueId/horario"],
+    'agenda' => ['label' => $lang['venue_tab_agenda'], 'icon' => 'fa-calendar-days', 'url' => "$topBase/$topVenueId/agenda"],
 ];
 $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['city'] ?? null]));
 ?>

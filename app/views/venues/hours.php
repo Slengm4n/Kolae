@@ -64,10 +64,13 @@ $dayLabel = function (array $days) use ($lang): string {
                     <?php foreach ($outsideMatches as $m):
                         $start = new DateTimeImmutable($m['start_time']);
                         $end = new DateTimeImmutable($m['end_time']); ?>
-                        <li class="flex flex-wrap gap-x-2">
-                            <span class="font-semibold"><?php echo $lang['weekday_short_' . $start->format('w')] . ' ' . $start->format('d/m'); ?></span>
-                            <span><?php echo $start->format('H:i') . '–' . $end->format('H:i'); ?></span>
-                            <span class="opacity-80">· <?php echo htmlspecialchars($m['renter_name'] ?: $lang['hours_renter_none']); ?></span>
+                        <li>
+                            <a href="<?php echo BASE_URL . $routePrefix . '/quadras/' . (int)$venue['id'] . '/agenda?data=' . $start->format('Y-m-d'); ?>" class="inline-flex flex-wrap gap-x-2 hover:underline">
+                                <span class="font-semibold"><?php echo $lang['weekday_short_' . $start->format('w')] . ' ' . $start->format('d/m'); ?></span>
+                                <span><?php echo $start->format('H:i') . '–' . $end->format('H:i'); ?></span>
+                                <span class="opacity-80">· <?php echo htmlspecialchars($m['renter_name'] ?: $lang['hours_renter_none']); ?></span>
+                                <span aria-hidden="true">→</span>
+                            </a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
