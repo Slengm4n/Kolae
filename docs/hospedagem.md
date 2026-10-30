@@ -117,3 +117,7 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 
 ### h) Cancelar o InfinityFree
 - Depois de alguns dias sem problema na HostGator. Antes, conferir que nada aponta mais para `kolae.gamer.gd` (app, README, documentos).
+
+### i) Patch 005 junto com o deploy da S5
+- phpMyAdmin → banco `joao5502_kolae` → aba **SQL** → colar e executar `database/patches/005_login_attempts.sql`. Cria a tabela do limite de tentativas de login (D45).
+- Pode ser antes ou logo depois do merge: sem a tabela o login funciona, só fica sem o limite.

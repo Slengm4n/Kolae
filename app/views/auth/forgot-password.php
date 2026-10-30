@@ -91,6 +91,7 @@ $message = null;
                 ?>
 
                 <form action="<?= BASE_URL ?>/forgot-password" method="POST" class="space-y-6" id="forgot-form">
+                    <?php echo \App\Core\Csrf::field(); ?>
                     <div>
                         <label for="email" class="block text-sm font-medium text-content-secondary ml-1"><?php echo $lang['global_email']; ?></label>
                         <div class="mt-1 relative">

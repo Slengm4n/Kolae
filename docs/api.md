@@ -69,6 +69,7 @@ Toda resposta é JSON (`Content-Type: application/json; charset=utf-8`), inclusi
 | 401 | `AUTH_INVALID_TOKEN` | Token adulterado ou inválido |
 | 401 | `AUTH_INVALID_USER` | Usuário do token foi desativado |
 | 401 | `INVALID_CREDENTIALS` | Login com e-mail ou senha errados |
+| 429 | `TOO_MANY_ATTEMPTS` | Muitos logins errados (D45). O cabeçalho `Retry-After` diz em quantos segundos tentar de novo; `message` já traz os minutos |
 | 404 | `NOT_FOUND` | Rota ou recurso não existe |
 | 405 | `METHOD_NOT_ALLOWED` | Rota existe, mas com outro método |
 | 413 | `FILE_TOO_LARGE` | Upload acima do limite |
@@ -143,7 +144,7 @@ Público.
 }
 ```
 
-**Erros**: `422 VALIDATION_ERROR` (`email`, `password`), `401 INVALID_CREDENTIALS` (e-mail ou senha errados, ou conta inativa).
+**Erros**: `422 VALIDATION_ERROR` (`email`, `password`), `401 INVALID_CREDENTIALS` (e-mail ou senha errados, ou conta inativa), `429 TOO_MANY_ATTEMPTS` (5 erros seguidos na mesma conta em 15 minutos, D45: mostrar `message` e não deslogar nada).
 
 ### `POST /auth/register`
 

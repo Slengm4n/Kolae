@@ -216,6 +216,7 @@ $venues = $data['venues'] ?? [];
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
                                                 <form action="<?php echo BASE_URL; ?>/admin/quadras/excluir/<?php echo $venue['id']; ?>" method="POST" class="inline" onsubmit="return confirm('Tem a certeza que deseja excluir esta quadra?');">
+                                                    <?php echo \App\Core\Csrf::field(); ?>
                                                     <button type="submit" class="link-button text-content-secondary hover:text-red-500 p-1 transition-colors" title="Excluir">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>

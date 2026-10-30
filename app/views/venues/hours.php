@@ -83,6 +83,7 @@ $dayLabel = function (array $days) use ($lang): string {
         <?php endif; ?>
 
         <form id="hours-form" method="POST" action="<?php echo $action; ?>" novalidate>
+            <?php echo \App\Core\Csrf::field(); ?>
             <section class="bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm">
                 <div class="p-5 md:p-6 border-b border-content-secondary/10">
                     <h2 class="text-lg font-bold text-content-primary"><?php echo $lang['hours_title']; ?></h2>

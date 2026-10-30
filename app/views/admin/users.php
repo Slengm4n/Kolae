@@ -51,7 +51,7 @@
 
     <?php
     if (isset($_SESSION['flash_message']) && $_SESSION['flash_message']['type'] === 'success_with_password') {
-        $password = json_encode($_SESSION['flash_message']['password']);
+        $password = json_encode($_SESSION['flash_message']['password'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         echo "<script>document.addEventListener('DOMContentLoaded', () => { showPasswordModal($password); });</script>";
         unset($_SESSION['flash_message']);
     }
@@ -217,6 +217,7 @@
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
                                                 <form action="<?php echo BASE_URL; ?>/admin/usuarios/excluir/<?php echo $user['id']; ?>" method="POST" class="inline" onsubmit="return confirm('Tem a certeza?');">
+                                                    <?php echo \App\Core\Csrf::field(); ?>
                                                     <button type="submit" class="link-button text-content-secondary hover:text-red-500 p-1 transition-colors" title="Excluir">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>

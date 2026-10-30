@@ -98,7 +98,7 @@ return[
     'register_email_ph' => 'tu@correo.com',
     'register_birthday' => 'Fecha de nacimiento',
     'register_password' => 'Contraseña',
-    'register_password_ph' => 'Mínimo 6 caracteres',
+    'register_password_ph' => 'Mínimo 8 caracteres',
     'register_password_two' => 'Confirmar contraseña',
     'register_password_ph_two' => 'Repite la contraseña',
 
@@ -113,7 +113,7 @@ return[
 
     'register_email_exists' => 'Este correo electrónico ya está registrado. Intenta iniciar sesión.',
     'register_failed' => 'Error al crear la cuenta. Inténtalo de nuevo más tarde.',
-    'register_password_character' => 'La contraseña debe tener al menos 6 caracteres.',
+    'register_password_character' => 'La contraseña debe tener al menos 8 caracteres.',
     
     'dashboard_view_profile' => 'Ver perfil completo',
 
@@ -431,4 +431,8 @@ return[
     'legal_toc' => 'En esta página',
     'legal_pt_only' => 'Este documento solo está disponible en portugués, el idioma que tiene validez legal en Brasil.',
     'legal_see_also' => 'Ver también:',
+    'login_too_many' => 'Demasiados intentos de inicio de sesión. Inténtalo de nuevo en {minutes} min o usa "Olvidé mi contraseña".',
+    'csrf_title' => 'Página caducada',
+    'csrf_text' => 'No pudimos enviar el formulario. Es posible que la página haya estado abierta demasiado tiempo o que los archivos fueran demasiado grandes. Vuelve, recarga la página e inténtalo de nuevo.',
+    'csrf_back' => 'Volver',
 ];  

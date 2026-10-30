@@ -103,7 +103,7 @@ return[
     'register_email_ph' => 'your@email.com',
     'register_birthday' => 'Date of birth',
     'register_password' => 'Password',
-    'register_password_ph' => 'Minimum 6 characters',
+    'register_password_ph' => 'Minimum 8 characters',
     'register_password_two' => 'Confirm password',
     'register_password_ph_two' => 'Repeat password',
 
@@ -118,7 +118,7 @@ return[
 
     'register_email_exists' => 'This email is already registered. Try signing in.',
     'register_failed' => 'Error creating account. Please try again later.',
-    'register_password_character' => 'The password must be at least 6 characters long.',
+    'register_password_character' => 'The password must be at least 8 characters long.',
 
 
     'dashboard_view_profile' => 'View full profile',
@@ -438,4 +438,8 @@ return[
     'legal_toc' => 'On this page',
     'legal_pt_only' => 'This document is only available in Portuguese, the language that is legally binding in Brazil.',
     'legal_see_also' => 'See also:',
+    'login_too_many' => 'Too many login attempts. Try again in {minutes} min or use "Forgot password".',
+    'csrf_title' => 'Page expired',
+    'csrf_text' => 'We could not submit the form. The page may have been open for too long, or the uploaded files were too large. Go back, reload the page and try again.',
+    'csrf_back' => 'Go back',
 ];

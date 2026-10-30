@@ -249,7 +249,11 @@
                         filtered.forEach(venue => {
                             const item = document.createElement('div');
                             item.className = 'p-3 hover:bg-surface-base cursor-pointer text-sm text-content-secondary hover:text-content-primary border-b border-content-secondary/10 last:border-0 transition-colors flex items-center gap-3';
-                            item.innerHTML = `<div class="w-8 h-8 bg-surface-base rounded flex items-center justify-center text-brand-500"><i class="fas fa-map-marker-alt"></i></div><div><p class="font-medium">${venue.name}</p><p class="text-xs text-content-secondary truncate w-48">${venue.city}</p></div>`;
+                            item.innerHTML = `<div class="w-8 h-8 bg-surface-base rounded flex items-center justify-center text-brand-500"><i class="fas fa-map-marker-alt"></i></div><div><p class="font-medium"></p><p class="text-xs text-content-secondary truncate w-48"></p></div>`;
+                            // Nome e cidade vêm do cadastro: entram como texto, nunca como HTML
+                            const [nameEl, cityEl] = item.querySelectorAll('p');
+                            nameEl.textContent = venue.name;
+                            cityEl.textContent = venue.city;
                             item.addEventListener('click', () => {
                                 const target = markers.find(m => m.venueData.id === venue.id);
                                 if (target) {

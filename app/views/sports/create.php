@@ -101,6 +101,7 @@
             <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 max-w-4xl mx-auto shadow-xl animate-up delay-100">
 
                 <form action="<?php echo BASE_URL; ?>/admin/esportes/salvar" method="POST" class="space-y-6">
+                    <?php echo \App\Core\Csrf::field(); ?>
 
                     <div>
                         <label for="name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1">Nome do Esporte</label>

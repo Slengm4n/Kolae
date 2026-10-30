@@ -91,6 +91,7 @@
                 <?php else: $sport = $data['sport']; ?>
 
                     <form action="<?php echo BASE_URL; ?>/admin/esportes/atualizar" method="POST" class="space-y-6">
+                        <?php echo \App\Core\Csrf::field(); ?>
                         <input type="hidden" name="id" value="<?php echo htmlspecialchars($sport['id']); ?>">
 
                         <div>

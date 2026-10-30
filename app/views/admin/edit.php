@@ -102,6 +102,7 @@
                 <?php else: ?>
 
                     <form action="<?php echo BASE_URL; ?>/admin/usuarios/atualizar" method="POST" class="space-y-5 md:space-y-6">
+                        <?php echo \App\Core\Csrf::field(); ?>
 
                         <input type="hidden" name="id" value="<?php echo htmlspecialchars($userData['id']); ?>">
 

@@ -97,7 +97,7 @@ return[
     'register_email_ph' => '您的@电子邮件.com',
     'register_birthday' => '出生日期',
     'register_password' => '密码',
-    'register_password_ph' => '最少 6 个字符',
+    'register_password_ph' => '最少 8 个字符',
     'register_password_two' => '确认密码',
     'register_password_ph_two' => '重复密码',
 
@@ -112,7 +112,7 @@ return[
 
     'register_email_exists' => '此电子邮件已注册。请尝试登录。',
     'register_failed' => '创建账户时出错。请稍后再试。',
-    'register_password_character' => '密码必须至少有 6 个字符。',
+    'register_password_character' => '密码必须至少有 8 个字符。',
 
     'dashboard_view_profile' => '查看完整资料',
 
@@ -430,4 +430,8 @@ return[
     'legal_toc' => '本页内容',
     'legal_pt_only' => '本文件仅提供葡萄牙语版本，这是在巴西具有法律效力的语言。',
     'legal_see_also' => '另请参阅：',
+    'login_too_many' => '登录尝试次数过多。请在 {minutes} 分钟后重试，或使用“忘记密码”。',
+    'csrf_title' => '页面已过期',
+    'csrf_text' => '无法提交表单。页面可能打开时间过长，或上传的文件过大。请返回、刷新页面后重试。',
+    'csrf_back' => '返回',
 ];

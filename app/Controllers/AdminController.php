@@ -48,7 +48,7 @@ class AdminController
             $data = [
                 'userName' => $_SESSION['user_name'] ?? 'Admin',
                 //Converte os dados das quadras para JSON para ser usado pelo JavaScript no mapa
-                'venuesJson' => json_encode($venuesWithCoords)
+                'venuesJson' => json_encode($venuesWithCoords, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
             ];
 
             ViewHelper::render('admin/map', $data);

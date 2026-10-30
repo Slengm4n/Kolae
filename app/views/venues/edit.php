@@ -137,6 +137,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
             ?>
 
             <form id="venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/atualizar/<?php echo $venue['id']; ?>" method="POST" enctype="multipart/form-data" class="space-y-8 pb-24 md:pb-8 animate-up">
+                <?php echo \App\Core\Csrf::field(); ?>
 
                 <input type="hidden" name="address_id" value="<?php echo $venue['address_id']; ?>">
                 <input type="hidden" id="floor_type_input" name="floor_type" value="<?php echo htmlspecialchars($venue['floor_type']); ?>">
@@ -403,6 +404,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
             <div class="p-4 bg-surface-base rounded-b-2xl border-t border-content-secondary/10 flex justify-end gap-3">
                 <button type="button" id="cancel-delete-btn" class="px-4 py-2 text-content-secondary hover:text-content-primary transition-colors"><?php echo $lang['global_cancel'] ?></button>
                 <form id="delete-venue-form" action="<?php echo BASE_URL . $prefix; ?>/quadras/excluir/<?php echo $venue['id']; ?>" method="POST">
+                    <?php echo \App\Core\Csrf::field(); ?>
                     <button type="submit" id="confirm-delete-btn" class="px-6 py-2 bg-red-600 text-white font-bold rounded-lg opacity-50 cursor-not-allowed transition-all" disabled><?php echo $lang['edit_venue_desativar_btn'] ?></button>
                 </form>
             </div>

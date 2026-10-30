@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Core\AuthHelper;
+use App\Core\LoginThrottle;
 use App\Core\Mailer;
 use App\Core\ViewHelper;
 use App\Models\User;
@@ -24,10 +26,17 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
 
+            // Muitos erros seguidos: nem confere a senha (LoginThrottle)
+            $wait = LoginThrottle::retryAfter($email);
+            if ($wait !== null) {
+                header('Location: ' . BASE_URL . '/login?error=too_many&minutes=' . LoginThrottle::minutes($wait));
+                exit;
+            }
+
             $user = User::findByEmail($email);
 
-            // Ajustado de 'password_hash' para 'password' conforme o novo SQL
             if ($user && password_verify($password, $user['password'])) {
+                LoginThrottle::clear($email);
                 
                 // Impede fixação de sessão usando cookie antigo
                 session_regenerate_id(true);
@@ -38,29 +47,9 @@ class AuthController
                 $_SESSION['user_role'] = $user['role'];
                 $_SESSION['user_avatar'] = $user['avatar_path'];
 
-                // "Lembrar de mim" usando a nova coluna 'remember_token' da tabela 'users'
+                // "Lembrar de mim": token em user_tokens, lido por AuthHelper::checkRememberMe
                 if (isset($_POST['remember-me'])) {
-                    $rememberToken = bin2hex(random_bytes(32)); // Gera um token seguro de 64 caracteres
-
-                    try {
-                        $conn = \App\Core\Database::getConnection();
-                        // Atualiza o token diretamente na linha do usuário
-                        $sql = "UPDATE users SET remember_token = ? WHERE id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->execute([$rememberToken, $user['id']]);
-
-                        setcookie(
-                            'remember_me',
-                            $rememberToken,
-                            time() + (30 * 24 * 60 * 60), // 30 dias
-                            '/',
-                            '',
-                            false, // Mudar para true em produção com HTTPS
-                            true   // HttpOnly
-                        );
-                    } catch (\Exception $e) {
-                        error_log("Erro ao salvar remember_token: " . $e->getMessage());
-                    }
+                    AuthHelper::issueRememberToken((int)$user['id']);
                 }
 
                 // Redireciona dependendo do nível de acesso
@@ -68,6 +57,7 @@ class AuthController
                 header('Location: ' . BASE_URL . $redirect_to);
                 exit;
             } else {
+                LoginThrottle::recordFailure($email);
                 header('Location: ' . BASE_URL . '/login?error=credentials');
                 exit;
             }
@@ -88,6 +78,11 @@ class AuthController
             // Verifica se 'password' é igual a 'password_confirmation'
             if ($_POST['password'] !== $_POST['password_confirmation']) {
                 header('Location: ' . BASE_URL . '/register?error=password_mismatch');
+                exit;
+            }
+
+            if (mb_strlen($_POST['password'] ?? '') < User::PASSWORD_MIN_LENGTH) {
+                header('Location: ' . BASE_URL . '/register?error=weak_password');
                 exit;
             }
 
@@ -189,6 +184,11 @@ class AuthController
         }
 
         $email = $resetRequest['email'];
+        if (mb_strlen($password) < User::PASSWORD_MIN_LENGTH) {
+            header('Location: ' . BASE_URL . '/reset-password?token=' . urlencode($token) . '&error=weak_password');
+            exit;
+        }
+
         $newPasswordHash = password_hash($password, PASSWORD_DEFAULT);
 
         if (User::updatePassword($email, $newPasswordHash)) {
@@ -204,20 +204,7 @@ class AuthController
     // Processa o logout do usuário
     public function logout()
     {
-        // Limpa o remember_token do banco antes de destruir o cookie
-        if (isset($_COOKIE['remember_me'])) {
-            $token = $_COOKIE['remember_me'];
-            try {
-                $conn = \App\Core\Database::getConnection();
-                $sql = "UPDATE users SET remember_token = NULL WHERE remember_token = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([$token]);
-            } catch (\Exception $e) {
-                error_log("Erro ao limpar token de logout: " . $e->getMessage());
-            }
-            setcookie('remember_me', '', time() - 3600, '/');
-            unset($_COOKIE['remember_me']);
-        }
+        AuthHelper::forgetRememberToken();
 
         $_SESSION = [];
 
