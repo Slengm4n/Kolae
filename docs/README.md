@@ -9,7 +9,8 @@ Comece por aqui. Cada assunto tem **um** lugar; se a informação estiver em doi
 | [`decisoes.md`](decisoes.md) | Tudo o que foi decidido, com data e motivo (D01, D02...) | João e Rafael |
 | [`api.md`](api.md) | Contrato da API v1: formato, erros, endpoints, o que vem em cada sprint | Principalmente o Rafael (app) |
 | [`modelo-status.md`](modelo-status.md) | Status da quadra, horário de funcionamento e agenda (aprovado em 28/10; base da S3/S4) | João e Rafael |
-| [`setup.md`](setup.md) | Montar o ambiente local (XAMPP) e conectar o app ao notebook | Quem for rodar o projeto |
+| [`setup.md`](setup.md) | Montar o ambiente local (XAMPP) e testar o app contra o notebook antes do deploy | Quem for rodar o projeto |
+| [`hospedagem.md`](hospedagem.md) | Produção na HostGator (`https://kolae.online`, D41): como foi montada e o que falta configurar no cPanel | João |
 | [`../database/kolae.dbml`](../database/kolae.dbml) | Desenho do banco como ele é hoje (abrir no dbdiagram.io) | João |
 | [`../database/patches/`](../database/patches/) | Scripts que levam cada mudança de banco para a produção | João |
 | [`../CHANGELOG.md`](../CHANGELOG.md) | O que mudou em cada versão | Os dois e a banca |

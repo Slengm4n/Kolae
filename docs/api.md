@@ -6,17 +6,17 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 
 > **Estado:**
 > - **S2 (v1.5.0):** revisado e aprovado pelo João e pelo Rafael em 28/10/2026, implementado e em produção.
-> - **S3 (v1.6.0, até 08/11):** revisado pelo Rafael em 28/10/2026 (D29–D33) e **implementado e testado no ambiente local** (branch `feat/s3-patch-004`). Vai para a produção junto com o patch 004. Até lá, a produção responde `GET /venues` no formato legado; no notebook do João já vale o formato daqui.
+> - **S3 (v1.6.0, até 08/11):** revisado pelo Rafael em 28/10/2026 (D29–D33), implementado e **em produção** desde 28/10.
 
 ## Base URL
 
 | Ambiente | URL |
 | :---- | :---- |
-| Produção | `https://kolae.gamer.gd/api/v1`. **Não funciona para o app**: o InfinityFree devolve um desafio JavaScript em vez do JSON para clientes que não são navegador. |
-| Local (XAMPP), no próprio PC | `http://localhost:8080/kolae/api/v1` |
-| Local, a partir do celular | `http://<IP do notebook>:8080/kolae/api/v1` (ex: `http://192.168.0.172:8080/kolae/api/v1`) |
+| **Produção** | **`https://kolae.online/api/v1`** (HostGator, D41). É a que o app usa, inclusive pelo 4G e na apresentação |
+| Local (XAMPP), no próprio PC | `http://localhost:8080/kolae/api/v1` no notebook; `http://localhost/kolae/api/v1` no PC de casa (porta 80) |
+| Local, a partir do celular | `http://<IP do notebook>:8080/kolae/api/v1` (ex: `http://192.168.0.172:8080/kolae/api/v1`), só para testar mudanças antes do deploy |
 
-Até a migração de hospedagem, o app usa o backend local (`http://`, sem HTTPS). O Expo Go aceita; num APK é preciso liberar tráfego HTTP no build. Passo a passo em `docs/setup.md`.
+A produção é `https://`, então o APK não precisa liberar tráfego HTTP para ela. O backend local é `http://`: para testar o app contra o notebook, o Expo Go aceita; num APK é preciso liberar HTTP no build. Passo a passo em `docs/setup.md`.
 
 ## Formato das respostas
 

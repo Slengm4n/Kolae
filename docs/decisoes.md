@@ -59,7 +59,7 @@ Cada decisão tem: **o quê**, **por quê** e **onde isso aparece** (código ou 
 
 ## Infraestrutura
 
-### D13 · Opção C: o app usa o backend do notebook do João (27/10/2026)
+### D13 · Opção C: o app usa o backend do notebook do João (27/10/2026) · **substituída pela D41**
 - **O quê:** o InfinityFree devolve um desafio JavaScript (`/aes.js`) a clientes que não são navegador, então o app não consegue usar a API da produção. Até migrar de hospedagem, o app usa `http://<IP do notebook>:8080/kolae/api/v1` na mesma rede Wi-Fi.
 - **Pendente:** escolher uma hospedagem que aceite API (prevista para novembro). Isso decide se a apresentação usa a produção ou o notebook.
 - **Onde:** `docs/setup.md`, `index.php` (IP de rede privada conta como ambiente local).
@@ -133,7 +133,7 @@ Respostas às perguntas do `docs/modelo-status.md`, que passa a valer como model
 - **Corte:** a troca de e-mail com código (D11) sai do escopo da entrega; a tela fica só no mock do app, como vitrine (D04).
 - **Versões (D18):** v1.5.0 = S2, lançada ao abrir a S3; v1.6.0 = S3 (08/11); v1.7.0 = S4 (15/11); v1.8.0 = S5 (21/11); v1.9.0 = versão da entrega (28/11).
 - **Por quê:** o prazo encurtou uma semana; o backend do status vem para a S3 para a S4 ficar só com as telas, que são o maior risco.
-- **Pendente:** escolher a hospedagem (D13) na primeira semana de novembro, porque ela decide onde a apresentação roda.
+- **Hospedagem:** resolvida em 29/10 pela D41 (HostGator); a apresentação usa a produção.
 
 ## Contrato da S3
 
@@ -189,3 +189,12 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 ### D40 · Status ao vivo nos cards do painel do dono (29/10/2026)
 - **O quê:** os cards das quadras no painel mostram o selo de status (Disponível / Em uso / Fechada), calculado pela mesma regra da API (`VenueSchedule`), e o aviso "sem horário cadastrado" (D23).
 - **Por quê:** o dono vê na hora o que o app está mostrando.
+
+## Hospedagem
+
+### D41 · Produção na HostGator, em `kolae.online` (29/10/2026)
+- **O quê:** a produção saiu do InfinityFree e foi para a HostGator (Plano Start, cPanel), com domínio próprio: **`https://kolae.online`**. A API de produção, `https://kolae.online/api/v1`, responde JSON direto, então **o app passa a usar a produção** (inclusive na apresentação). O notebook continua só para desenvolvimento e testes locais.
+- **Por quê:** o InfinityFree respondia ao app com um desafio JavaScript em vez do JSON (D13). Na HostGator isso não acontece, e o domínio próprio fica melhor para a banca.
+- **Como ficou:** PHP 8.2; banco `joao5502_kolae` (MySQL local do servidor, `DB_HOST = localhost`), importado do InfinityFree; fotos de `uploads/` copiadas; `config.php` com as mesmas `ENCRYPTION_KEY`, `ENCRYPTION_IV` e `JWT_SECRET` (CNPJs e logins continuam valendo) e banco com senha nova. Deploy pelo GitHub Actions com uma conta FTP só para isso (`deploy@kolae.online`, enxerga só a `public_html`; secret `FTP_SERVER_DIR = /`).
+- **Onde:** `docs/hospedagem.md` (passo a passo e o que falta), `.github/workflows/deploy.yml`, `docs/api.md` (base URL).
+- **InfinityFree:** fica no ar alguns dias, sem receber deploy, até a HostGator se provar estável; depois é cancelado.
