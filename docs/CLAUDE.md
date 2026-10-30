@@ -29,9 +29,9 @@ O índice está em [`docs/README.md`](README.md). Resumo:
 - **Na produção, todas as quadras estão `closed` e com `sports` vazio**: nenhuma tem horário nem esportes ainda (as quadras atuais são de teste). Os dados de demonstração da S6 precisam de horário, esportes (D29) e partidas no horário da apresentação.
 - **Redesign em produção desde 29/10 (PR #47):** identidade do app no site inteiro, nova home com animações, partials públicos. Na conferência (72 capturas + teste de clique) saíram duas correções que já estavam na produção: comodidades do cadastro de quadra e script do perfil. CSS e JS com versão no endereço (`ViewHelper::asset`, `?v=`), para o navegador não usar o arquivo antigo depois de um deploy. Página de antes e depois: https://claude.ai/artifact/XCBNXHDsiwAcfwrjpn4cFF
 - **Produção na HostGator desde 29/10 (D41): `https://kolae.online`.** A API de produção responde JSON direto, então **o app usa a produção** (`https://kolae.online/api/v1`), inclusive na apresentação. Banco, fotos e `config.php` migrados do InfinityFree (mesmas chaves), deploy por FTP com a conta `deploy@kolae.online`. O InfinityFree fica no ar alguns dias, sem deploy, e depois é cancelado.
-- **S4 em andamento, em branches pequenas (D35–D40):** base da agenda (#51) e WhatsApp no perfil (#52) prontos. Faltam as abas Horário, Agenda e Dados, o cadastro e o painel.
+- **S4 concluída no código em 29/10 (D35–D40), uma branch por etapa, empilhadas:** `feat/s4-aba-horario` → `feat/s4-aba-agenda` → `feat/s4-aba-dados` → `feat/s4-cadastro` → `feat/s4-painel` (merge nessa ordem). Base da agenda (#51) e WhatsApp no perfil (#52) já estavam na `main`. Cada etapa tem teste de clique (scratchpad, `teste_*.js`) além dos `tests/`. Peças comuns: `VenueAccess` (acesso, painel, status, texto do selo), `partials/venue_top.php` (topo com selo e abas; variáveis com prefixo `top` para não sobrescrever as da página) e `partials/owner_header.php`.
 - **Login e cadastro:** sem rework antes da entrega; os ajustes deles (senha mínima de 8, "lembrar de mim", limite de tentativas) entram na S5, e o acabamento visual na S6, se sobrar tempo.
-- **Próximo: S4 (telas do dono no site)**: horário de funcionamento e agenda de partidas (D21–D27), WhatsApp no perfil (D24), e no formulário de quadra: descrição (D30), preço vazio ou `0` (D31), esportes (D29) e status "Disponível / Em manutenção" (D34). É o maior risco de prazo.
+- **Próximo:** merges da S4, dados de demonstração na produção (horário, esportes e partidas nas quadras reais) e a S5 (segurança: CSRF, XSS no `admin/map.php`, limite de tentativas; "lembrar de mim"; senha mínima no site).
 
 ### Pendências fora do código
 - **HostGator (ver `docs/hospedagem.md`, "O que falta"):** forçar HTTPS no cPanel; e-mail próprio `@kolae.online` para o "esqueci a senha"; limites de upload do PHP; SPF/DKIM; liberar `kolae.online` na chave do Google Maps; o Rafael testar o app pelo 4G; cancelar o InfinityFree depois de alguns dias.
@@ -70,7 +70,7 @@ Piso com as chaves da API; `icon_path` (Font Awesome) convertido para MaterialCo
 2. "Lembrar de mim": o login grava `users.remember_token`, mas `AuthHelper::checkRememberMe` lê `user_tokens` (S5).
 3. Senha mínima de 8 só na API; o site aceita qualquer tamanho (D08).
 4. Painel de admin e páginas de erro sem tradução (D19).
-5. Não há como cadastrar horário, partidas, esportes da quadra, descrição nem WhatsApp pelo site até a S4 (só por SQL).
+5. As quadras da produção ainda não têm horário nem esportes: com a S4 no ar, cadastrar pelo site (abas Horário e Dados) antes da apresentação.
 
 Corrigidos e em produção: upload sem validação, `SMTPDebug`, IDOR na edição de quadra, login da API, edição de quadra (`Venue::findById`), fuso das datas, chaves de tradução faltando, admin voltando ao painel errado, seletor de papel do admin, `GET /venues` no formato antigo e sem status, `Game::create` quebrado (removido), coordenadas com dígitos demais na produção.
 

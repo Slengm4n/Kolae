@@ -5,8 +5,11 @@ namespace App\Controllers;
 use App\Core\ImageHelper;
 use App\Core\AuthHelper;
 use App\Core\ViewHelper;
+use App\Core\VenueSchedule;
+use App\Models\Game;
 use App\Models\User;
 use App\Models\Venue;
+use App\Models\VenueHour;
 
 class UserController
 {
@@ -16,9 +19,23 @@ class UserController
         $userId = $_SESSION['user_id'];
         $user = User::findById($userId);
 
+        $venues = Venue::findByUserId($userId);
+
+        // Selo de status ao vivo em cada card, pela mesma regra da API (D40), e aviso de sem horário (D23)
+        $ids = array_map(fn($v) => (int)$v['id'], $venues);
+        $now = VenueSchedule::now();
+        $hours = VenueHour::findByVenueIds($ids);
+        $matches = Game::findScheduledOn($ids, $now->format('Y-m-d'));
+        foreach ($venues as &$venue) {
+            $id = (int)$venue['id'];
+            $venue['live_status'] = VenueSchedule::status($venue['status'], $hours[$id] ?? [], $matches[$id] ?? [], $now);
+            $venue['has_hours'] = !empty($hours[$id]);
+        }
+        unset($venue);
+
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuario',
-            'userVenues' => Venue::findByUserId($userId),
+            'userVenues' => $venues,
             'showCnpjModal' => empty($user['cnpj'])
         ];
 

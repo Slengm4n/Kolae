@@ -41,4 +41,30 @@ class VenueSport
         }
         return $sports;
     }
+
+    /**
+     * Troca os esportes de uma quadra. Ignora ids que não são de esportes ativos.
+     * @param int[] $sportIds
+     */
+    public static function replaceForVenue(int $venueId, array $sportIds): bool
+    {
+        $activeIds = array_map(fn($s) => (int)$s['id'], Sport::getAll());
+        $sportIds = array_values(array_intersect(array_unique(array_map('intval', $sportIds)), $activeIds));
+
+        $pdo = Database::getConnection();
+        try {
+            $pdo->beginTransaction();
+            $pdo->prepare("DELETE FROM venue_sports WHERE venue_id = ?")->execute([$venueId]);
+            $stmt = $pdo->prepare("INSERT INTO venue_sports (venue_id, sport_id) VALUES (?, ?)");
+            foreach ($sportIds as $sportId) {
+                $stmt->execute([$venueId, $sportId]);
+            }
+            $pdo->commit();
+            return true;
+        } catch (\PDOException $e) {
+            $pdo->rollBack();
+            error_log('Erro ao salvar os esportes da quadra ' . $venueId . ': ' . $e->getMessage());
+            return false;
+        }
+    }
 }
