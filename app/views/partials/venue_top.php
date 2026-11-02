@@ -1,9 +1,9 @@
 <?php
 /**
  * Topo das páginas de gerenciar uma quadra (D35): voltar ao painel, nome, selo de status
- * ao vivo (mesma regra da API, D40) e as abas Dados, Horário e Agenda.
+ * ao vivo (mesma regra da API, D40) e as abas Visão geral, Dados, Fotos, Horário e Agenda.
  *
- * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('data' | 'hours' | 'agenda'),
+ * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('overview' | 'data' | 'photos' | 'hours' | 'agenda'),
  *            $routePrefix ('/dashboard' | '/admin'), $backUrl.
  */
 use App\Core\VenueAccess;
@@ -16,7 +16,9 @@ $untilText = VenueAccess::statusUntilText($status, $lang); // "até 19:00", "abr
 $topVenueId = (int)$venue['id'];
 $topBase = BASE_URL . $routePrefix . '/quadras'; // nomes próprios: o include divide variáveis com a página
 $tabs = [
+    'overview' => ['label' => $lang['venue_tab_overview'], 'icon' => 'fa-eye', 'url' => "$topBase/$topVenueId/visao-geral"],
     'data' => ['label' => $lang['venue_tab_data'], 'icon' => 'fa-pen', 'url' => "$topBase/editar/$topVenueId"],
+    'photos' => ['label' => $lang['venue_tab_photos'], 'icon' => 'fa-images', 'url' => "$topBase/$topVenueId/fotos"],
     'hours' => ['label' => $lang['venue_tab_hours'], 'icon' => 'fa-clock', 'url' => "$topBase/$topVenueId/horario"],
     'agenda' => ['label' => $lang['venue_tab_agenda'], 'icon' => 'fa-calendar-days', 'url' => "$topBase/$topVenueId/agenda"],
 ];
@@ -50,7 +52,7 @@ $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['c
                 </span>
             <?php else: ?>
                 <a href="<?php echo $tab['url']; ?>"
-                    class="flex-1 min-w-max flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors <?php echo $active ? 'bg-surface-elevated text-brand-600 dark:text-brand-400 shadow-sm' : 'text-content-secondary hover:text-content-primary hover:bg-surface-elevated/60'; ?>"
+                    class="flex-1 min-w-0 sm:min-w-max flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-1 sm:px-4 py-2 sm:py-2.5 rounded-lg text-[11px] leading-tight sm:text-sm text-center font-semibold transition-colors <?php echo $active ? 'bg-surface-elevated text-brand-600 dark:text-brand-400 shadow-sm' : 'text-content-secondary hover:text-content-primary hover:bg-surface-elevated/60'; ?>"
                     <?php echo $active ? 'aria-current="page"' : ''; ?>>
                     <span><i class="fas <?php echo $tab['icon']; ?>"></i></span><?php echo $tab['label']; ?>
                 </a>

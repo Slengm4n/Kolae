@@ -237,25 +237,6 @@ class VenueController
                 VenueSport::replaceForVenue($id, is_array($_POST['sports'] ?? null) ? $_POST['sports'] : []);
             }
 
-            //Logica de Imagem 
-            if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
-                $uploadDir = BASE_PATH . "/uploads/venues/" . $id . "/";
-                foreach ($_POST['delete_images'] as $imageId) {
-                    $image = VenueImage::findById((int)$imageId);
-                    // Só apaga imagens que pertencem a esta quadra
-                    if ($image && (int)$image['venue_id'] === $id) {
-                        $fileName = basename($image['file_path']);
-                        $filePath = $uploadDir . $fileName;
-                        if (file_exists($filePath)) {
-                            unlink($filePath);
-                        }
-                        VenueImage::delete((int)$imageId);
-                    }
-                }
-            }
-            if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-                $this->handleImageUploads($id);
-            }
             // Fica na aba Dados com a confirmação (D35)
             header('Location: ' . $editUrl . '?status=updated');
             exit;
@@ -408,37 +389,10 @@ class VenueController
     }
 
     /**
-     * Processa o upload de múltiplas imagens para uma quadra.
+     * Processa o upload das fotos do cadastro (mesma regra e limite da aba Fotos, D46).
      */
     private function handleImageUploads(int $venueId)
     {
-        $uploadDir = BASE_PATH . "/uploads/venues/" . $venueId . "/";
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-
-        if (!is_array($_FILES['images']['name'])) {
-            return;
-        }
-
-        $imageCount = count($_FILES['images']['name']);
-        for ($i = 0; $i < $imageCount; $i++) {
-            if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
-                $tmpName = $_FILES['images']['tmp_name'][$i];
-
-                // Valida pelo conteúdo real e gera a extensão no servidor (ignora o nome original)
-                $fileExtension = ImageHelper::validateUpload($tmpName, $_FILES['images']['size'][$i]);
-                if ($fileExtension === false) {
-                    continue;
-                }
-
-                $newFileName = uniqid('venue_', true) . '.' . $fileExtension;
-                $destinationPath = $uploadDir . $newFileName;
-
-                if (move_uploaded_file($tmpName, $destinationPath)) {
-                    VenueImage::create($venueId, $newFileName);
-                }
-            }
-        }
+        VenuePhotosController::storeUploads($venueId);
     }
 }

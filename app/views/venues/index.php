@@ -212,6 +212,7 @@ $venues = $data['venues'] ?? [];
 
                                         <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-right text-sm font-medium pr-4 md:pr-8">
                                             <div class="flex items-center justify-end gap-3 md:gap-4">
+                                                <a href="<?php echo BASE_URL; ?>/admin/quadras/<?php echo (int)$venue['id']; ?>/visao-geral" class="text-content-secondary hover:text-brand-500 p-1 transition-colors" title="Visão geral"><i class="fas fa-eye"></i></a>
                                                 <a href="<?php echo BASE_URL; ?>/admin/quadras/editar/<?php echo $venue['id']; ?>" class="text-content-secondary hover:text-brand-500 p-1 transition-colors" title="Editar">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>

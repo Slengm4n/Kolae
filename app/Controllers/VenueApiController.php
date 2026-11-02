@@ -100,9 +100,8 @@ class VenueApiController extends BaseApiController
         $venue = $this->summary($row, $status, $sports, null);
         unset($venue['distance_km']); // no detalhe, o app calcula (D33)
 
-        // Fotos na ordem de envio: a primeira é a capa, igual ao cover_image_url
+        // Fotos na ordem escolhida pelo dono (aba Fotos, D46): a primeira é a capa, igual ao cover_image_url
         $images = VenueImage::findByVenueId($id);
-        usort($images, fn($a, $b) => (int)$a['id'] <=> (int)$b['id']);
 
         $openingHours = [];
         foreach ($hours as $weekday => $h) {

@@ -340,31 +340,28 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                     </div>
                 </div>
 
+                <!-- Fotos ficam na aba Fotos (D46): aqui só a prévia e o atalho -->
                 <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg">
-                    <h2 class="text-xl font-bold text-content-primary mb-6 flex items-center gap-3"><i class="fas fa-camera text-blue-500"></i><?php echo $lang['edit_venue_photo'] ?></h2>
-
-                    <div id="drop-area" class="border-2 border-dashed border-content-secondary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-500/5 transition-all group">
-                        <label for="images" class="cursor-pointer w-full h-full block">
-                            <div class="w-16 h-16 bg-surface-base rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-cloud-upload-alt text-3xl text-content-secondary group-hover:text-brand-500"></i>
-                            </div>
-                            <p class="font-bold text-content-primary"><?php echo $lang['edit_venue_photo_text_1'] ?></p>
-                            <p class="text-sm text-content-secondary"><?php echo $lang['edit_venue_photo_text_2'] ?></p>
-                            <input type="file" id="images" name="images[]" multiple accept="image/jpeg, image/png" class="hidden">
-                        </label>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-content-primary flex items-center gap-3"><i class="fas fa-camera text-blue-500"></i><?php echo $lang['edit_venue_photo'] ?></h2>
+                            <p class="text-sm text-content-secondary mt-1"><?php echo strtr($lang['photos_count'], ['{n}' => count($venue['images'] ?? []), '{max}' => \App\Models\VenueImage::MAX_PER_VENUE]); ?></p>
+                        </div>
+                        <a href="<?php echo BASE_URL . $prefix . '/quadras/' . (int)$venue['id'] . '/fotos'; ?>" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-content-secondary/20 text-sm font-semibold text-content-primary hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                            <span><i class="fas fa-images"></i></span><?php echo $lang['photos_manage']; ?>
+                        </a>
                     </div>
-
-                    <div id="preview-container" class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <?php if (!empty($venue['images'])): foreach ($venue['images'] as $image): ?>
-                                <div class="relative group aspect-square rounded-xl overflow-hidden border border-content-secondary/10">
-                                    <img src="<?php echo BASE_URL . '/uploads/venues/' . $venue['id'] . '/' . htmlspecialchars($image['file_path']); ?>" class="w-full h-full object-cover">
-                                    <button type="button" class="delete-existing-image absolute top-1 right-1 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg" data-image-id="<?php echo $image['id']; ?>">&times;</button>
+                    <?php if (!empty($venue['images'])): ?>
+                        <div class="mt-5 grid grid-cols-4 gap-3">
+                            <?php foreach (array_slice($venue['images'], 0, 4) as $i => $image): ?>
+                                <div class="relative aspect-square rounded-xl overflow-hidden border border-content-secondary/10 bg-surface-base">
+                                    <img src="<?php echo BASE_URL . '/uploads/venues/' . (int)$venue['id'] . '/' . htmlspecialchars(basename($image['file_path'])); ?>" alt="" class="w-full h-full object-cover" loading="lazy">
+                                    <?php if ($i === 0): ?><span class="absolute left-1.5 top-1.5 text-[10px] font-bold uppercase tracking-wide bg-brand-500 text-white rounded px-1.5 py-0.5"><?php echo $lang['photos_cover']; ?></span><?php endif; ?>
                                 </div>
-                        <?php endforeach;
-                        endif; ?>
-                    </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
-
                 <div class="hidden md:flex justify-end mt-8">
                     <a href="<?php echo BASE_URL . $backUrl; ?>" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors">
                         <?php echo $lang['global_cancel'] ?>
@@ -529,65 +526,6 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                             document.getElementById('complement').value = data.complemento || '';
                         }
                     } catch (e) {}
-                }
-            });
-
-            // Upload Logic (Com suporte a DataTransfer para novos arquivos)
-            const fileInput = document.getElementById('images');
-            const dropArea = document.getElementById('drop-area');
-            const previewContainer = document.getElementById('preview-container');
-            const dt = new DataTransfer();
-
-            const handleFiles = (files) => {
-                for (const file of files) {
-                    if (file.type.startsWith('image/')) {
-                        dt.items.add(file);
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            const div = document.createElement('div');
-                            div.className = 'relative group aspect-square rounded-xl overflow-hidden border border-content-secondary/10';
-                            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover"><button type="button" class="delete-new absolute top-1 right-1 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">&times;</button>`;
-                            previewContainer.appendChild(div);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                }
-                fileInput.files = dt.files;
-            };
-
-            fileInput.addEventListener('change', e => handleFiles(e.target.files));
-            dropArea.addEventListener('click', () => fileInput.click());
-            dropArea.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropArea.classList.add('highlight');
-            });
-            dropArea.addEventListener('dragleave', e => dropArea.classList.remove('highlight'));
-            dropArea.addEventListener('drop', e => {
-                e.preventDefault();
-                dropArea.classList.remove('highlight');
-                handleFiles(e.dataTransfer.files);
-            });
-
-            previewContainer.addEventListener('click', e => {
-                if (e.target.closest('.delete-new')) {
-                    const parentDiv = e.target.closest('div.relative');
-                    parentDiv.remove();
-                    // Reinicia o DataTransfer (simplificado)
-                    const remainingFiles = Array.from(dt.files).filter(f => f.name !== parentDiv.querySelector('img').src.split('/').pop()); 
-                    dt.items.clear(); // Limpa tudo
-                    // Nota: num caso real, usar FileReader result para comparar nomes é frágil, 
-                    // mas para este contexto serve. O ideal seria usar índices.
-                    // Para evitar bugs aqui, vamos apenas permitir a remoção visual ou resetar o input se o usuário remover.
-                    // Uma abordagem melhor para produção seria re-adicionar todos menos o removido se tivéssemos um ID único.
-                }
-                if (e.target.closest('.delete-existing-image')) {
-                    const id = e.target.closest('.delete-existing-image').dataset.imageId;
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'delete_images[]';
-                    input.value = id;
-                    document.getElementById('venue-form').appendChild(input);
-                    e.target.closest('.group').remove();
                 }
             });
 

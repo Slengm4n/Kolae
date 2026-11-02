@@ -58,7 +58,7 @@ class Venue
                            n.name AS neighborhood,
                            c.name AS city,
                            st.name AS state,
-                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY id ASC LIMIT 1) AS image_path
+                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.position ASC, vi.id ASC LIMIT 1) AS image_path
                     FROM venues v
                     JOIN addresses a ON v.address_id = a.id
                     JOIN streets s ON a.street_id = s.id
@@ -94,7 +94,7 @@ class Venue
                            n.name AS neighborhood,
                            c.name AS city,
                            st.name AS state,
-                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY id ASC LIMIT 1) AS image_path
+                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.position ASC, vi.id ASC LIMIT 1) AS image_path
                     FROM venues v
                     JOIN addresses a ON v.address_id = a.id
                     JOIN streets s ON a.street_id = s.id
@@ -129,7 +129,7 @@ class Venue
                            a.number, 
                            a.cep, 
                            a.complement,
-                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY id ASC LIMIT 1) AS image_path
+                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.position ASC, vi.id ASC LIMIT 1) AS image_path
                     FROM venues v
                     JOIN addresses a ON v.address_id = a.id
                     JOIN streets s ON a.street_id = s.id
@@ -184,7 +184,7 @@ class Venue
                                        v.floor_type, v.has_lighting, v.is_covered, v.status,
                                        a.cep, a.number, a.complement, a.latitude, a.longitude,
                                        s.name AS street, n.name AS neighborhood, c.name AS city, st.name AS state,
-                                       (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.id ASC LIMIT 1) AS image_path
+                                       (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.position ASC, vi.id ASC LIMIT 1) AS image_path
                                 FROM venues v
                                 JOIN addresses a ON v.address_id = a.id
                                 LEFT JOIN streets s ON a.street_id = s.id
@@ -272,7 +272,7 @@ class Venue
                            n.name AS neighborhood,
                            c.name AS city,
                            st.name AS state,
-                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY id ASC LIMIT 1) AS image_path
+                           (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.position ASC, vi.id ASC LIMIT 1) AS image_path
                     FROM venues v
                     JOIN addresses a ON v.address_id = a.id
                     JOIN streets s ON a.street_id = s.id

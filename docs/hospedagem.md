@@ -121,3 +121,7 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 ### i) Patch 005 junto com o deploy da S5
 - phpMyAdmin → banco `joao5502_kolae` → aba **SQL** → colar e executar `database/patches/005_login_attempts.sql`. Cria a tabela do limite de tentativas de login (D45).
 - Pode ser antes ou logo depois do merge: sem a tabela o login funciona, só fica sem o limite.
+
+### j) Patch 006 ANTES do merge da aba Fotos
+- phpMyAdmin → banco `joao5502_kolae` → aba **SQL** → colar e executar `database/patches/006_ordem_das_fotos.sql`. Cria a ordem das fotos (D46) mantendo a capa atual de cada quadra.
+- **Precisa ser antes do merge:** o código novo ordena por essa coluna e quebra sem ela. O código atual ignora a coluna, então aplicar antes não afeta nada.

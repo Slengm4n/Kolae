@@ -279,7 +279,7 @@ Calculado pela API a cada requisição, no horário de Brasília. **O app nunca 
 | `floor_type` | `synthetic`, `court`, `sand`, `clay`, `grass` ou `wood` (D15); o app traduz |
 | `has_leisure_area` | Tem área de lazer (D32) |
 | `court_capacity` | Pessoas na quadra; `null` se não informado |
-| `cover_image_url` | Primeira foto da quadra; `null` se não há foto ou o arquivo não existe no servidor (o app mostra a imagem padrão) |
+| `cover_image_url` | Capa da quadra: a primeira foto na ordem escolhida pelo dono na aba Fotos (D46); `null` se não há foto ou o arquivo não existe no servidor (o app mostra a imagem padrão) |
 | `sports` | Esportes que a quadra atende (lista, pode ser vazia até o dono marcar) (D29) |
 | `latitude`, `longitude` | `null` quando o endereço não foi geolocalizado: a quadra aparece na lista, mas não no mapa |
 | `distance_km` | Distância em km (uma casa decimal) até `lat`/`lng` enviados; `null` quando a busca não manda posição |
@@ -366,7 +366,7 @@ Detalhe de uma quadra: tudo do resumo, mais:
 | `distance_km` | Não vem no detalhe: o app calcula com a posição da pessoa e as coordenadas da quadra (D33) |
 | `description` | Texto livre do dono para a seção "Sobre a quadra", até 1000 caracteres. `null` se não preenchido: esconder a seção (D30) |
 | `leisure_area_capacity` | Pessoas na área de lazer; `null` se não informado ou sem área de lazer |
-| `images` | Todas as fotos, a capa primeiro. Fotos cujo arquivo não existe no servidor ficam de fora. Lista vazia se não há foto |
+| `images` | Todas as fotos (até 10), na ordem escolhida pelo dono, a capa primeiro (D46). Fotos cujo arquivo não existe no servidor ficam de fora. Lista vazia se não há foto |
 | `address.full` | Endereço pronto para exibir ou para abrir no app de mapas |
 | `opening_hours` | Só os dias em que abre. `weekday`: `0` = domingo ... `6` = sábado. Lista vazia = horário não cadastrado (D23): mostrar "Horário não informado" |
 | `owner.whatsapp` | Só dígitos, com DDI e DDD. **Pode ser `null`: nesse caso, esconder o botão "Falar com o dono"** (D24). Com valor, abrir `https://wa.me/<whatsapp>` |

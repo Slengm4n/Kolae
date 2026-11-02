@@ -13,6 +13,8 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Aba Visão geral da quadra** (D47): a quadra como aparece no app, com galeria (grade, carrossel no celular e tela cheia), esportes, estrutura, descrição, horário, endereço, o dia de hoje, o contato e a lista "Quadra completa". O card do painel abre nela.
+- **Aba Fotos da quadra** (D46): enviar fotos com prévia, escolher a capa, mudar a ordem e apagar, até 10 por quadra. A capa escolhida vale no painel, no mapa e na API. Aceita WebP. Precisa do patch 006.
 - **Proteção contra CSRF** (S5, D43): todos os formulários do site levam um token da sessão; envio sem ele mostra a página "Página expirada" (403), nos 7 idiomas.
 - **Limite de tentativas de login** (S5, D45), no site e na API: 5 erros seguidos na mesma conta em 15 minutos bloqueiam o login até vencer o prazo. A API responde `429 TOO_MANY_ATTEMPTS` com `Retry-After`. Precisa do patch 005.
 - **Termos de Uso e Política de Privacidade** (D42): páginas `/termos` e `/privacidade`, com índice, texto conforme a LGPD, tema claro/escuro e versão para celular. Ficam no rodapé do site e no cadastro, e o app abre as mesmas URLs. O texto é só em português; título e menu seguem o idioma, com um aviso nos outros idiomas.
