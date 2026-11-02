@@ -11,7 +11,7 @@ Critério: aparece bem na banca e mexe pouco no que já está pronto e testado.
 
 | # | Sugestão | Por quê | Esforço | Situação |
 | :---- | :---- | :---- | :---- | :---- |
-| 1 | **Página "Quadras" no site** (`/quadras`): lista e mapa lado a lado, filtros (esporte, disponível agora, coberta, iluminação, preço), cada quadra abrindo a página pública | Hoje o site só mostra as quadras em destaque na home; com ela, a banca vê o produto inteiro também pelo computador. A busca e os filtros já existem na API | M | Em andamento |
+| 1 | **Página "Quadras" no site** (`/quadras`): lista e mapa lado a lado, filtros (esporte, disponível agora, coberta, iluminação, preço), cada quadra abrindo a página pública | Hoje o site só mostra as quadras em destaque na home; com ela, a banca vê o produto inteiro também pelo computador. A busca e os filtros já existem na API | M | **Feita (D51)** |
 | 2 | **QR Code da quadra** na Visão geral, apontando para a página pública | O dono imprime e cola na quadra; na apresentação, dá para escanear e abrir na hora | P | Sugerida |
 | 3 | **Limite de envios no "esqueci a senha"** (site e API), como o do login (D45) | Hoje qualquer um pode disparar e-mails sem parar para um endereço: incomoda a pessoa e pode fazer a HostGator bloquear a conta de e-mail | P | Recomendada |
 | 4 | **Páginas de erro com o visual novo** (404, 403) | As atuais são do visual antigo, sem cabeçalho nem tema claro/escuro; a 404 aparece, por exemplo, em `/quadra/{id}` de quadra desativada | P | Sugerida |

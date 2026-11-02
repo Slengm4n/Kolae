@@ -13,6 +13,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Página Quadras** (D51): `kolae.online/quadras` com busca, filtros (esporte, disponível agora, coberta, iluminação, preço), "Perto de mim" e mapa com o status de cada quadra; no celular, lista e mapa alternados. O menu "Quadras" agora abre essa página.
 - **Guia passo a passo nas abas Horário e Agenda** (D50): abre sozinho na primeira visita e pelo botão "Como funciona?", destacando cada parte da tela com uma explicação curta, nos 7 idiomas.
 - **Página pública da quadra** (D49): `kolae.online/quadra/{id}`, sem login, com galeria, informações, status ao vivo, horários ocupados de hoje (sem nomes), "Falar com o dono" pelo WhatsApp e "Compartilhar". O link mostra foto e nome na prévia do WhatsApp. Os cards da home abrem nela.
 - **Fotos otimizadas** (D48): fotos novas viram JPEG de até 1600 px, giradas pelo celular (uma foto de 6 MB fica com ~250 KB). Botão "Otimizar fotos" no painel do admin para as antigas.

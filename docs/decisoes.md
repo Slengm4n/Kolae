@@ -253,3 +253,9 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **"Já viu" fica no navegador** (`localStorage`, chaves `kolae_tour_hours` e `kolae_tour_agenda`), não no banco: sem patch, e o pior caso é o guia aparecer de novo em outro aparelho.
 - **Onde:** `partials/tour.php` (componente, sem biblioteca), configurado em `venues/hours.php` e `venues/agenda.php`. Para outra tela: ids nos elementos, lista de passos e o include.
 - **Testes de clique de outras telas** precisam marcar o guia como visto depois do login, senão ele cobre os botões.
+
+### D51 · Página pública "Quadras" com mapa e filtros (02/11/2026)
+- **O quê:** `kolae.online/quadras`, sem login: busca pelo nome, filtros (esporte, "Disponível agora", coberta, com iluminação, preço máximo por hora), "Perto de mim" (localização do navegador; ordena por distância e mostra os km), lista de cards e mapa com um ponto por quadra colorido pelo status. No celular, botões "Lista" e "Mapa". Cada quadra abre a página pública (D49). O menu "Quadras" do cabeçalho e do rodapé e o "Ver todas as quadras" da home e da página da quadra levam para ela.
+- **Mesma lista da API:** o filtro e o cálculo do status saíram do `index` da API para `VenueApiController::listVenues`, usado pelos dois. A resposta da API não mudou.
+- **Mapa com Leaflet e OpenStreetMap**, sem chave: funciona igual no local e na produção e não depende da chave do Google Maps (que ainda precisa ser liberada para `kolae.online`). O mapa do admin continua no Google.
+- **Filtros na URL** (`?agora=1&coberta=1&preco=100...`): dá para compartilhar uma busca; valor inválido é ignorado em vez de dar erro.
