@@ -59,13 +59,13 @@ Como rodar o backend (site + `/api/v1`) no Windows com XAMPP e como o app mobile
    | `ENCRYPTION_IV` | 32 caracteres **hexadecimais** (ex: `php -r "echo bin2hex(random_bytes(16));"`) |
    | `JWT_SECRET` | string longa aleatória (ex: `php -r "echo bin2hex(random_bytes(32));"`) |
    | `GOOGLE_MAPS_API_KEY` | opcional; sem ela o mapa e a geocodificação não funcionam |
-   | `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | servidor e conta de e-mail do "esqueci a senha" (ex: `smtp.gmail.com`, o e-mail e uma senha de app) |
+   | `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | servidor e conta de e-mail do "esqueci a senha" e da confirmação de e-mail (na produção, o Titan: `smtp.titan.email`; para testar no PC, também serve o Gmail com senha de app) |
    | `SMTP_SECURE` / `SMTP_PORT` | `tls` / `587` (ou `ssl` / `465`) |
    | `SMTP_FROM_EMAIL` / `SMTP_FROM_NAME` | remetente dos e-mails (normalmente o mesmo de `SMTP_USER`) / `Kolae` |
 
    Para ler os CNPJs de um export da produção, `ENCRYPTION_KEY` e `ENCRYPTION_IV` precisam ser os mesmos da produção.
 
-   **E-mail (SMTP):** as constantes `SMTP_*` precisam existir no `config.php`, mesmo vazias; se faltar alguma, o "esqueci a senha" para com erro fatal. Com `SMTP_HOST` vazio o site funciona, mas o e-mail de recuperação não é enviado (o erro vai para o log do PHP). Para testar o reset de senha de verdade, use uma conta de e-mail com SMTP liberado. No Gmail: ativar a verificação em duas etapas, gerar uma "senha de app" em [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) e usá-la em `SMTP_PASS` (a senha normal da conta não funciona). Nunca commitar essas credenciais: o `config.php` fica fora do git.
+   **E-mail (SMTP):** o Kolae manda dois e-mails: redefinição de senha e confirmação de e-mail (D58). **Contas de teste nunca recebem e-mail de verdade:** endereços terminados em `.local`, `.test`, `.example` ou `.invalid` (como `dono@teste.local`) só geram uma linha no log (`Mailer::isTestAddress`). As constantes `SMTP_*` precisam existir no `config.php`, mesmo vazias; se faltar alguma, o "esqueci a senha" para com erro fatal. Com `SMTP_HOST` vazio o site funciona, mas o e-mail de recuperação não é enviado (o erro vai para o log do PHP). Para testar o reset de senha de verdade, use uma conta de e-mail com SMTP liberado. No Gmail: ativar a verificação em duas etapas, gerar uma "senha de app" em [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) e usá-la em `SMTP_PASS` (a senha normal da conta não funciona). Nunca commitar essas credenciais: o `config.php` fica fora do git.
 
 7. **Abrir** `http://localhost/kolae` (Apache na porta 80) ou `http://localhost:8080/kolae` (porta 8080). Qualquer porta funciona.
 
@@ -86,12 +86,14 @@ Rodar da raiz do projeto, com o PHP do XAMPP, antes de abrir um PR:
 C:\xampp\php\php.exe tests/venue_schedule_test.php   # regra do status e validações, sem banco
 C:\xampp\php\php.exe tests/whatsapp_test.php         # validação e formato do WhatsApp, sem banco
 C:\xampp\php\php.exe tests/agenda_db_test.php        # horário e partidas no banco local
-npm run test:e2e                                    # testes de clique no navegador (uns 10 minutos)
+npm run test:e2e                                    # testes de clique no navegador (19 roteiros, uns 12 minutos)
 ```
 
 O `agenda_db_test` precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o banco como encontrou. Os testes de clique preparam o banco sozinhos; como rodar e configurar está em [`tests/e2e/README.md`](../tests/e2e/README.md). A pasta `tests/` não vai para a produção.
 
 Os testes de PHP também rodam no GitHub Actions em todo PR para a `main` e antes de cada deploy: se algum falhar, a produção não muda (D56).
+
+**Antes de um PR:** rodar ao menos os testes de clique da área mexida (`node tests/e2e/rodar.js entrada avisos`, por exemplo). Teste novo de clique vai para `tests/e2e/testes/` e entra no mapa `TESTES` do `rodar.js`. Ao mudar CSS ou JS, rodar `npm run build` e incluir `assets/` no commit.
 
 ## 2. App mobile apontando para o notebook (só para testes locais)
 

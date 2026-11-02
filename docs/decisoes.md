@@ -314,3 +314,11 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Endereços de teste:** `Mailer::isTestAddress` não envia para `.local`, `.test`, `.example`, `.invalid` (só registra no log). Os testes criam contas como `dono@teste.local`; mandar pelo Titan só geraria devoluções e prejudicaria o remetente.
 - **Miniaturas:** cada foto de quadra ganha `thumb_<nome>.jpg` (até 640 px, qualidade 75) ao ser enviada; uma foto de 240 KB vira uma miniatura de ~10 KB. Home, `/quadras`, painel e as fotos pequenas da galeria usam a miniatura (`ImageHelper::thumbUrl`, que cai na foto inteira se a miniatura não existir); a foto grande, o carrossel do celular, a tela cheia e a API continuam com a foto inteira. Apagar a foto apaga a miniatura. **Fotos antigas:** o botão "Otimizar fotos" do admin cria as miniaturas que faltam, e o card mostra quantas fotos estão sem.
 - **Testes:** `tests/e2e/testes/confirmacao.js` (aviso, reenviar com espera, link válido, vencido e adulterado, selo, API) e as miniaturas em `fotos.js`. `tests/e2e/link_confirmacao.php` gera o link no banco local.
+
+## Versões
+
+### D59 · v1.6.0 como versão de entrega, juntando as S3 a S6 (02/11/2026)
+- **O quê:** as S3, S4, S5 e S6 e o polimento (D29–D58) saem juntos na **v1.6.0**, a versão de entrega, em vez de uma versão por sprint como pede a D18. O `[Não lançado]` do CHANGELOG virou a seção `[1.6.0]`, com um resumo no topo.
+- **Por quê:** o backend andou semanas adiantado e as releases de cada sprint não foram feitas na hora; marcar quatro versões retroativas exigiria separar os itens por sprint e marcar commits antigos, sem ganho para a entrega. Para a banca, o histórico fica "v1.6.0: versão de entrega" mais as correções.
+- **Daqui até a entrega:** correções viram **v1.6.1, v1.6.2…** (patch); funcionalidade nova só depois do congelamento, se for decidido, como v1.7.0. A D18 continua valendo para o Kolae 2.0.
+- **Passo a passo de cada release:** `docs/hospedagem.md`, "Checklist de cada release".

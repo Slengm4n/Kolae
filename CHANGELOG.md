@@ -12,6 +12,12 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+## [1.6.0] - 2026-11-02
+
+Versão de entrega: Sprints 3 a 6 e o polimento antes do congelamento. Quadras com status ao vivo na API, telas do dono no site (horário, agenda, dados, fotos e visão geral), página pública da quadra, página Quadras com mapa, QR Code, segurança essencial (CSRF, limite de login, "lembrar de mim"), Termos e Privacidade, produção na HostGator com e-mail pelo Titan, testes antes de cada deploy e, por fim, telas de entrada redesenhadas, avisos no visual do Kolae, confirmação de e-mail, miniaturas das fotos e ajustes de desempenho e acessibilidade.
+
+**Banco:** patches 004 a 007 (`database/patches/`). **Depois do deploy:** apertar "Otimizar fotos" no painel do admin para criar as miniaturas das fotos antigas.
+
 ### Adicionado
 - **Confirmação de e-mail** (D58): e-mail "Confirme seu e-mail" no cadastro (site e app), aviso no painel com "Reenviar" e selo no perfil. Não bloqueia nada. A API devolve `email_verified`. Aplicar o patch 007 antes (só garante a coluna; normalmente não muda nada).
 - **Miniaturas das fotos** (D58): cards e grades usam uma versão de até 640 px (~10 KB no lugar de ~240 KB). Depois do deploy, apertar "Otimizar fotos" no admin para criar as miniaturas das fotos antigas.
@@ -92,6 +98,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - API na produção: números decimais (coordenadas, distância) saíam com dígitos demais (`-23.565065499999999…`) por causa da configuração do PHP do InfinityFree. Agora saem com o menor número de dígitos (`-23.5650655`).
 
 ### Documentação
+- README, `docs/README.md` (cronograma), `docs/CLAUDE.md`, `docs/setup.md`, `docs/hospedagem.md` (checklist de cada release), `docs/api.md` e `tests/e2e/README.md` atualizados para a v1.6.0; D59 registra a v1.6.0 como versão de entrega.
 - Contrato da S3 em `docs/api.md`, revisado pelo Rafael (D29–D33), e D34 (quadra desativada fora da API).
 
 ## [1.5.0] - 2026-10-28
@@ -208,7 +215,8 @@ Sprint 1: correções críticas de segurança, banco alinhado ao código e API p
 
 - Lançamento inicial.
 
-[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.5.0...HEAD
+[Não lançado]: https://github.com/Slengm4n/Kolae/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/Slengm4n/Kolae/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Slengm4n/Kolae/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Slengm4n/Kolae/compare/v1.3...v1.4.0
 [1.3.0]: https://github.com/Slengm4n/Kolae/compare/v1.2.2...v1.3
