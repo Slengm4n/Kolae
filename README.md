@@ -10,7 +10,11 @@ Projeto Integrador da FATEC Ferraz de Vasconcelos: este repositório é o **site
 
 🔗 **[Acesse o projeto ao vivo](https://kolae.online)**
 
-![Screenshot do Dashboard](https://i.postimg.cc/GmV2qBBF/print-dashboard.png)
+![Página inicial do Kolae: "Cole com quem ama esporte", com a prévia do app mostrando quadras no mapa e o status de cada uma](docs/img/home.jpg)
+
+| Painel do dono, com o status de cada quadra ao vivo | Entrada no Kolae |
+| :---: | :---: |
+| ![Painel do dono com quadras Em uso, Disponível e Fechada](docs/img/painel-dono.jpg) | ![Tela de login com a foto da marca e o formulário](docs/img/login.jpg) |
 
 ---
 
