@@ -10,6 +10,10 @@ on:
         branches:
             - main
 
+# Os jobs só leem o código (testes e envio por FTP): a chave do GitHub fica só com leitura
+permissions:
+    contents: read
+
 jobs:
     testes:
         runs-on: ubuntu-latest
