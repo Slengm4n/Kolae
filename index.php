@@ -139,6 +139,7 @@ $router = new Router();
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/termos', [LegalController::class, 'terms']);
 $router->get('/privacidade', [LegalController::class, 'privacy']);
+$router->get('/quadras', [PublicVenueController::class, 'index']);
 $router->get('/quadra/{id}', [PublicVenueController::class, 'show']);
 $router->get('/login', [AuthController::class, 'index']);
 $router->post('/login/authenticate', [AuthController::class, 'authenticate']);

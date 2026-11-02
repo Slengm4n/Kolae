@@ -33,7 +33,29 @@ class VenueApiController extends BaseApiController
     public function index()
     {
         $f = $this->parseListFilters($_GET);
+        $venues = self::listVenues($f);
 
+        $total = count($venues);
+        $perPage = $f['per_page'];
+        $page = array_slice($venues, ($f['page'] - 1) * $perPage, $perPage);
+
+        $this->sendSuccess($page, 200, [
+            'current_page' => $f['page'],
+            'last_page' => max(1, (int)ceil($total / $perPage)),
+            'per_page' => $perPage,
+            'total' => $total
+        ]);
+    }
+
+    /**
+     * Quadras filtradas, com status e distância, já ordenadas e sem paginar.
+     * Usado pela API e pela página Quadras do site (D51), para os dois mostrarem o mesmo.
+     * @param array $f filtros já validados (formato de parseListFilters; 'sort' padrão 'name')
+     * @return array quadras no formato do resumo da API
+     */
+    public static function listVenues(array $f): array
+    {
+        $f += ['sort' => 'name'];
         $rows = Venue::searchForApi($f);
         $ids = array_map(fn($r) => (int)$r['id'], $rows);
         $now = VenueSchedule::now();
@@ -58,7 +80,7 @@ class VenueApiController extends BaseApiController
                 continue;
             }
 
-            $venues[] = $this->summary($row, $status, $sports[$id] ?? [], $distance);
+            $venues[] = self::summary($row, $status, $sports[$id] ?? [], $distance);
         }
 
         // As linhas já vêm em ordem alfabética; o usort do PHP 8 é estável, então empates mantêm o nome
@@ -67,17 +89,7 @@ class VenueApiController extends BaseApiController
         } elseif ($f['sort'] === 'distance') {
             usort($venues, fn($a, $b) => self::nullsLast($a['distance_km'], $b['distance_km']));
         }
-
-        $total = count($venues);
-        $perPage = $f['per_page'];
-        $page = array_slice($venues, ($f['page'] - 1) * $perPage, $perPage);
-
-        $this->sendSuccess($page, 200, [
-            'current_page' => $f['page'],
-            'last_page' => max(1, (int)ceil($total / $perPage)),
-            'per_page' => $perPage,
-            'total' => $total
-        ]);
+        return $venues;
     }
 
     /**
@@ -97,7 +109,7 @@ class VenueApiController extends BaseApiController
         $status = VenueSchedule::status($row['status'], $hours, $matches, $now);
         $sports = VenueSport::findByVenueIds([$id])[$id] ?? [];
 
-        $venue = $this->summary($row, $status, $sports, null);
+        $venue = self::summary($row, $status, $sports, null);
         unset($venue['distance_km']); // no detalhe, o app calcula (D33)
 
         // Fotos na ordem escolhida pelo dono (aba Fotos, D46): a primeira é a capa, igual ao cover_image_url
@@ -279,7 +291,7 @@ class VenueApiController extends BaseApiController
     /**
      * Objeto "venue" resumido do contrato.
      */
-    private function summary(array $row, array $status, array $sports, ?float $distance): array
+    private static function summary(array $row, array $status, array $sports, ?float $distance): array
     {
         $id = (int)$row['id'];
         return [

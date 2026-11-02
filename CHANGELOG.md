@@ -13,6 +13,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **QR Code da quadra** (D54): cartaz pronto para imprimir na Visão geral, com o QR para a página pública e o botão de baixar em PNG.
+- **Páginas de erro novas** (D53): 404, 403 e "Página expirada" no visual do site, com tema claro/escuro e botões para seguir.
+- **Página Quadras** (D51): `kolae.online/quadras` com busca, filtros (esporte, disponível agora, coberta, iluminação, preço), "Perto de mim" e mapa com o status de cada quadra; no celular, lista e mapa alternados. O menu "Quadras" agora abre essa página.
 - **Guia passo a passo nas abas Horário e Agenda** (D50): abre sozinho na primeira visita e pelo botão "Como funciona?", destacando cada parte da tela com uma explicação curta, nos 7 idiomas.
 - **Página pública da quadra** (D49): `kolae.online/quadra/{id}`, sem login, com galeria, informações, status ao vivo, horários ocupados de hoje (sem nomes), "Falar com o dono" pelo WhatsApp e "Compartilhar". O link mostra foto e nome na prévia do WhatsApp. Os cards da home abrem nela.
 - **Fotos otimizadas** (D48): fotos novas viram JPEG de até 1600 px, giradas pelo celular (uma foto de 6 MB fica com ~250 KB). Botão "Otimizar fotos" no painel do admin para as antigas.
@@ -49,6 +52,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
 ### Corrigido
+- **"Esqueci a senha" sem limite** (D52): agora sai no máximo um e-mail a cada 5 minutos por conta, com a mesma resposta em todos os casos.
 - **Avatar não era reduzido** (D48): o código calculava a imagem menor e gravava a original.
 - **Piso na Visão geral** aparecia só em português; agora segue o idioma, como na home.
 - **"Lembrar de mim" não funcionava** (S5, D44): o login gravava o token num lugar e a leitura procurava em outro. Agora usa `user_tokens` (selector e hash do validator), o cookie é HttpOnly e Secure no HTTPS, e o logout apaga o token.

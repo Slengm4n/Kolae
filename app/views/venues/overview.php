@@ -55,9 +55,14 @@ $editLinks = ['editar' => $tabUrl['editar'], 'horario' => $tabUrl['horario']];
         <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-content-secondary">
             <p class="flex items-center gap-2"><span><i class="fas fa-mobile-screen"></i></span><?php echo $lang['overview_preview_note']; ?></p>
             <?php if ($venue['status'] !== 'unavailable'): ?>
-                <a href="<?php echo BASE_URL . '/quadra/' . $venueId; ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-                    <span><i class="fas fa-arrow-up-right-from-square"></i></span><?php echo $lang['overview_public_page']; ?>
-                </a>
+                <div class="flex items-center gap-4">
+                    <button type="button" data-qr-open class="inline-flex items-center gap-1.5 font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                        <span><i class="fas fa-qrcode"></i></span><?php echo $lang['qr_button']; ?>
+                    </button>
+                    <a href="<?php echo BASE_URL . '/quadra/' . $venueId; ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                        <span><i class="fas fa-arrow-up-right-from-square"></i></span><?php echo $lang['overview_public_page']; ?>
+                    </a>
+                </div>
             <?php endif; ?>
         </div>
 
@@ -145,5 +150,10 @@ $editLinks = ['editar' => $tabUrl['editar'], 'horario' => $tabUrl['horario']];
             </aside>
         </div>
     </main>
+
+    <?php if ($venue['status'] !== 'unavailable'):
+        $publicUrl = BASE_URL . '/quadra/' . $venueId;
+        include BASE_PATH . '/app/views/partials/venue_qr.php';
+    endif; ?>
 </body>
 </html>

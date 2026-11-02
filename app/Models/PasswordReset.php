@@ -21,6 +21,22 @@ class PasswordReset
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /** Espera entre dois e-mails de "esqueci a senha" para a mesma conta (D52). */
+    public const RESEND_MINUTES = 5;
+
+    /**
+     * Já foi enviado um link para este e-mail há menos de RESEND_MINUTES?
+     * A tabela guarda um token por e-mail (o último), com a hora do envio.
+     */
+    public static function sentRecently(string $email): bool
+    {
+        $stmt = Database::getConnection()->prepare(
+            "SELECT 1 FROM password_reset_tokens WHERE email = ? AND created_at > NOW() - INTERVAL " . self::RESEND_MINUTES . " MINUTE"
+        );
+        $stmt->execute([$email]);
+        return (bool)$stmt->fetchColumn();
+    }
+
     /**
      * Cria um novo registro de token de reset.
      * Agora recebe apenas email e token, já que o created_at é automático no banco.

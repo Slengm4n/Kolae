@@ -5,7 +5,7 @@
 $anchorBase = $anchorBase ?? ''; // '' na home; BASE_URL . '/' nas outras páginas
 $footerLinks = [
     '#como-funciona' => $lang['home_nav_how'],
-    '#quadras'       => $lang['home_nav_venues'],
+    BASE_URL . '/quadras' => $lang['home_nav_venues'],
     '#para-donos'    => $lang['home_nav_owners'],
     '#sobre-nos'     => $lang['global_menu_about'],
 ];
@@ -21,7 +21,7 @@ $footerLinks = [
             <h2 class="text-sm font-semibold uppercase tracking-wider text-content-primary"><?php echo htmlspecialchars($lang['home_footer_nav']); ?></h2>
             <ul class="mt-4 space-y-2.5 text-sm">
                 <?php foreach ($footerLinks as $href => $label): ?>
-                    <li><a href="<?php echo $anchorBase . $href; ?>" class="text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($label); ?></a></li>
+                    <li><a href="<?php echo $href[0] === '#' ? $anchorBase . $href : $href; ?>" class="text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($label); ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </nav>

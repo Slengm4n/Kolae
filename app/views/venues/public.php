@@ -57,7 +57,7 @@ $editLinks = null;
 
     <section class="bg-neutral-950 text-white pt-28 pb-8">
         <div class="container mx-auto px-4 sm:px-6 max-w-5xl">
-            <a href="<?php echo BASE_URL; ?>/#quadras" class="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white transition-colors">
+            <a href="<?php echo BASE_URL; ?>/quadras" class="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white transition-colors">
                 <span><i class="fas fa-arrow-left"></i></span><?php echo $lang['public_back']; ?>
             </a>
             <div class="mt-4 flex flex-col md:flex-row md:items-end md:justify-between gap-4">

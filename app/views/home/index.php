@@ -190,8 +190,8 @@ $partners = [
                             <h2 class="text-3xl md:text-5xl font-semibold tracking-tight"><?php echo htmlspecialchars($lang['home_venues_title']); ?></h2>
                             <p class="mt-4 text-content-secondary"><?php echo htmlspecialchars($lang['home_venues_subtitle']); ?></p>
                         </div>
-                        <a href="<?php echo $startUrl; ?>" class="group inline-flex items-center gap-2 self-start md:self-auto font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-                            <?php echo htmlspecialchars($isLoggedIn ? $lang['global_home_panel'] : $lang['home_venues_cta']); ?>
+                        <a href="<?php echo BASE_URL; ?>/quadras" class="group inline-flex items-center gap-2 self-start md:self-auto font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                            <?php echo htmlspecialchars($lang['public_back']); ?>
                             <span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"><i class="fas fa-arrow-right text-sm"></i></span>
                         </a>
                     </div>
