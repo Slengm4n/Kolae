@@ -48,6 +48,9 @@ $upsert = $pdo->prepare("INSERT INTO users (name, email, password, role, status,
                          ON DUPLICATE KEY UPDATE password = VALUES(password), role = VALUES(role), status = 'active', deleted_at = NULL");
 $upsert->execute(['Admin Teste', 'admin@teste.local', $hash, 'admin']);
 $upsert->execute(['Outro Dono Teste', 'dono@teste.local', $hash, 'owner']);
+// O segundo dono também tem CNPJ (outro, válido): assim os testes de "quadra de outro dono" não caem na regra do CNPJ
+$cnpj2 = openssl_encrypt('11444777000161', 'aes-256-cbc', ENCRYPTION_KEY, 0, hex2bin(ENCRYPTION_IV));
+$pdo->prepare("UPDATE users SET cnpj = ? WHERE email = 'dono@teste.local'")->execute([$cnpj2]);
 
 // Limites de login e de "esqueci a senha" zerados, para um teste não atrapalhar o outro
 $pdo->exec("DELETE FROM login_attempts");

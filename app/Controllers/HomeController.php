@@ -48,7 +48,7 @@ class HomeController
                 'name' => $v['name'],
                 'city' => $v['city'] ?? '',
                 'neighborhood' => $v['neighborhood'] ?? '',
-                'image_url' => $hasImage ? BASE_URL . $imagePath : null,
+                'image_url' => $hasImage ? \App\Core\ImageHelper::thumbUrl(BASE_URL . $imagePath) : null, // miniatura do card (D57)
                 'floor_lang_key' => Venue::FLOOR_LANG_KEYS[$v['floor_type'] ?? ''] ?? null,
                 'price' => $price > 0 ? number_format($price, 2, ',', '.') : null,
                 'is_covered' => !empty($v['is_covered']),

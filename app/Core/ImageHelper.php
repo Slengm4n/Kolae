@@ -158,6 +158,65 @@ class ImageHelper
         return \imagejpeg($canvas, $destinationPath, self::PHOTO_QUALITY);
     }
 
+    /** Miniatura das fotos de quadra (D57): para cards e grades, onde a foto aparece pequena. */
+    public const THUMB_MAX_SIDE = 640;
+    public const THUMB_QUALITY = 75;
+    private const THUMB_PREFIX = 'thumb_';
+
+    /** Caminho da miniatura de uma foto (mesma pasta, "thumb_" + nome, sempre .jpg). */
+    public static function thumbPath(string $photoPath): string
+    {
+        return \dirname($photoPath) . '/' . self::THUMB_PREFIX . pathinfo($photoPath, PATHINFO_FILENAME) . '.jpg';
+    }
+
+    /**
+     * Gera a miniatura de uma foto já salva. Não falha o envio: sem GD ou com arquivo
+     * estranho, devolve false e as páginas continuam usando a foto inteira.
+     */
+    public static function makeThumb(string $photoPath): bool
+    {
+        $info = @\getimagesize($photoPath);
+        if ($info === false || !\extension_loaded('gd')) {
+            return false;
+        }
+        $image = self::load($photoPath, $info['mime']);
+        if (!$image) {
+            return false;
+        }
+        $image = self::resizeToFit($image, self::THUMB_MAX_SIDE, false);
+        $canvas = \imagecreatetruecolor(\imagesx($image), \imagesy($image));
+        \imagefill($canvas, 0, 0, \imagecolorallocate($canvas, 255, 255, 255));
+        \imagecopy($canvas, $image, 0, 0, 0, 0, \imagesx($image), \imagesy($image));
+        \imageinterlace($canvas, true);
+        return \imagejpeg($canvas, self::thumbPath($photoPath), self::THUMB_QUALITY);
+    }
+
+    /**
+     * Endereço da miniatura de uma foto de quadra (URL em BASE_URL/uploads/venues/...),
+     * ou o da própria foto se a miniatura ainda não existir (fotos antigas: botão "Otimizar fotos").
+     */
+    public static function thumbUrl(?string $url): ?string
+    {
+        if (!$url || !str_starts_with($url, BASE_URL . '/uploads/venues/')) {
+            return $url;
+        }
+        $relative = rawurldecode(substr($url, strlen(BASE_URL)));
+        $thumb = self::thumbPath(BASE_PATH . $relative);
+        if (!is_file($thumb)) {
+            return $url;
+        }
+        return \dirname($url) . '/' . rawurlencode(basename($thumb));
+    }
+
+    /** Apaga a miniatura de uma foto, se existir. */
+    public static function deleteThumb(string $photoPath): void
+    {
+        $thumb = self::thumbPath($photoPath);
+        if (is_file($thumb)) {
+            unlink($thumb);
+        }
+    }
+
     /** Abre a imagem no GD já na orientação certa (EXIF de foto de celular). */
     private static function load(string $path, string $mime): ?\GdImage
     {

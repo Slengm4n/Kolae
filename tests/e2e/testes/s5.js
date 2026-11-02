@@ -87,7 +87,7 @@ const errCount = () => sql(`SELECT COUNT(*) FROM login_attempts WHERE email_hash
   // --- Senha mínima no cadastro ---
   await p.goto(BASE + '/register', { waitUntil: 'networkidle2' });
   check('campo de senha com minlength 8', await p.$eval('#password', e => e.minLength), 8);
-  check('dica diz 8 caracteres', await p.$eval('#password', e => e.placeholder), 'Mínimo de 8 caracteres');
+  check('dica diz 8 caracteres', await p.$eval('#password-hint', e => e.textContent.trim()), 'Pelo menos 8 caracteres');
   const email = `s5-${Date.now()}@kolae.test`;
   await p.$eval('#password', e => e.removeAttribute('minlength'));
   await p.$eval('#password_confirmation', e => e.removeAttribute('minlength'));

@@ -11,7 +11,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
+    <title><?php echo htmlspecialchars($lang['global_home_panel'] . ' · Kolae'); ?></title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
 
@@ -57,61 +57,9 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
 
 <body class="bg-surface-base text-content-primary font-poppins antialiased min-h-screen flex flex-col transition-colors duration-500">
 
-    <header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-40 py-4 transition-all">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
-                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto filter dark:filter-none invert dark:invert-0 opacity-90 group-hover:opacity-100 transition-opacity">
-            </a>
-
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
-                    <?php echo $lang['global_home_panel']; ?>
-                </a>
-            </nav>
-
-            <div class="relative">
-                <button id="user-menu-button" class="flex items-center gap-3 p-1.5 pr-3 border border-content-secondary/20 rounded-full cursor-pointer transition-all hover:bg-surface-secondary hover:border-content-secondary/40">
-                    <?php if (!empty($_SESSION['user_avatar'])): ?>
-                        <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
-                            class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
-                            alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
-                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
-                        </div>
-                    <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
-                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
-                        </div>
-                    <?php endif; ?>
-                    <i class="fas fa-chevron-down text-xs text-content-secondary"></i>
-                </button>
-
-                <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50 overflow-hidden">
-                    <div class="p-4 border-b border-content-secondary/10 bg-surface-secondary/30">
-                        <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($userName); ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-brand-600 dark:text-brand-400 hover:underline">
-                            <?php echo $lang['dashboard_view_profile']; ?>
-                        </a>
-                    </div>
-                    <ul class="py-2 text-sm text-content-secondary">
-                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-cog w-4 text-center"></i> <?php echo $lang['global_menu_config']; ?></a></li>
-                        <li><a href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-question-circle w-4 text-center"></i> <?php echo $lang['global_menu_help']; ?></a></li>
-                        <li class="border-t border-content-secondary/10 my-2"></li>
-
-                        <li>
-                            <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
-                                <i class="fas fa-moon w-4 text-center"></i>
-                                <span class="dark:hidden">Modo Escuro</span>
-                                <span class="hidden dark:inline">Modo Claro</span>
-                            </button>
-                        </li>
-
-                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-500 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> <?php echo $lang['global_menu_exit']; ?></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
+    <?php $backUrl = '/dashboard';
+    $toastContext = 'dashboard';
+    include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
 
     <main class="container mx-auto px-4 py-8 md:py-12 max-w-7xl flex-grow">
 
@@ -133,12 +81,25 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                 </div>
             <?php endif; ?>
 
-            <?php if (isset($_GET['status']) && $_GET['status'] === 'cnpj_success'): ?>
-                <div class="bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-300 p-4 rounded-2xl flex items-center gap-3 shadow-sm">
-                    <i class="fas fa-check-circle text-xl"></i>
-                    <span><?php echo $lang['dashboard_cnpj_success']; ?></span>
+            <?php if (!empty($data['emailPending'])): ?>
+                <!-- Confirmação de e-mail (D58): só um aviso, não bloqueia nada -->
+                <div id="email-verify" class="<?php echo $showCnpjModal ? 'mt-4 ' : ''; ?>bg-brand-500/5 border border-brand-500/20 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                    <div class="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+                        <span class="w-10 h-10 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0" aria-hidden="true"><i class="fas fa-envelope-circle-check"></i></span>
+                        <p class="text-sm text-content-primary">
+                            <span class="font-semibold"><?php echo htmlspecialchars($lang['verify_title']); ?></span>
+                            <span class="text-content-secondary"><?php echo htmlspecialchars(strtr($lang['verify_text'], ['{email}' => $data['userEmail']])); ?></span>
+                        </p>
+                    </div>
+                    <form method="POST" action="<?php echo BASE_URL; ?>/dashboard/verificar-email/reenviar" class="shrink-0">
+                        <?php echo \App\Core\Csrf::field(); ?>
+                        <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-brand-600 dark:text-brand-400 border border-brand-500/30 hover:bg-brand-500/10 transition-colors">
+                            <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i><?php echo htmlspecialchars($lang['verify_resend']); ?>
+                        </button>
+                    </form>
                 </div>
             <?php endif; ?>
+
         </div>
 
         <section class="mb-12 animate-up delay-100">
@@ -153,7 +114,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="group bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all duration-300 hover:-translate-y-1 flex items-center gap-5">
-                    <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 dark:text-brand-400 group-hover:bg-brand-700 group-hover:text-white transition-colors">
                         <i class="fas fa-plus text-2xl"></i>
                     </div>
                     <div>
@@ -185,9 +146,9 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                 <?php if (!empty($userVenues)): ?>
                     <?php foreach ($userVenues as $venue): ?>
                         <?php
-                        $placeholder = 'https://placehold.co/600x400/f1f5f9/94a3b8?text=Sem+Imagem';
+                        $placeholder = BASE_URL . '/assets/img/venue_placeholder.svg';
                         $imageSrc = !empty($venue['image_path'])
-                            ? BASE_URL . '/uploads/venues/' . $venue['id'] . '/' . htmlspecialchars($venue['image_path'])
+                            ? htmlspecialchars(\App\Core\ImageHelper::thumbUrl(BASE_URL . '/uploads/venues/' . (int)$venue['id'] . '/' . rawurlencode(basename($venue['image_path']))))
                             : $placeholder;
                         ?>
                         <?php
@@ -235,7 +196,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         </div>
                         <h3 class="text-xl font-bold text-content-primary"><?php echo $lang['dashboard_venue_register_title']; ?></h3>
                         <p class="text-content-secondary mt-2 mb-6 max-w-sm"><?php echo $lang['dashboard_venue_register_subtitle']; ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all hover:-translate-y-0.5">
+                        <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all hover:-translate-y-0.5">
                             <i class="fas fa-plus mr-2"></i> <?php echo $lang['dashboard_venue_register_btn']; ?>
                         </a>
                     </div>

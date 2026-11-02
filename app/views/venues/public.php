@@ -131,7 +131,7 @@ $editLinks = null;
                         <?php if ($ownerAvatarUrl): ?>
                             <img src="<?php echo $e($ownerAvatarUrl); ?>" alt="" class="w-12 h-12 rounded-full object-cover">
                         <?php else: ?>
-                            <span class="w-12 h-12 rounded-full bg-brand-500 text-white flex items-center justify-center font-semibold text-lg"><?php echo $e(mb_strtoupper(mb_substr($ownerName ?: 'K', 0, 1))); ?></span>
+                            <span class="w-12 h-12 rounded-full bg-brand-600 text-white flex items-center justify-center font-semibold text-lg"><?php echo $e(mb_strtoupper(mb_substr($ownerName ?: 'K', 0, 1))); ?></span>
                         <?php endif; ?>
                         <div class="min-w-0">
                             <p class="text-xs text-content-secondary"><?php echo $lang['public_owner_title']; ?></p>

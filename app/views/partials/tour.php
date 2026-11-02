@@ -33,7 +33,7 @@ $tourConfig = [
             <button type="button" id="tour-skip" class="text-sm font-semibold text-content-secondary hover:text-content-primary px-2 py-2 -ml-2"></button>
             <span class="flex-1"></span>
             <button type="button" id="tour-back" class="text-sm font-semibold px-3 py-2 rounded-lg border border-content-secondary/20 hover:border-content-secondary/40"></button>
-            <button type="button" id="tour-next" class="text-sm font-semibold px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white"></button>
+            <button type="button" id="tour-next" class="text-sm font-semibold px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white"></button>
         </div>
     </div>
 </div>

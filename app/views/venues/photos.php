@@ -76,7 +76,7 @@ $flashOk = ['cover' => $lang['photos_cover_saved'], 'deleted' => $lang['photos_d
                         <div id="chosen-list" class="grid grid-cols-4 sm:grid-cols-6 gap-2"></div>
                         <p id="chosen-warning" class="hidden mt-3 text-sm text-amber-700 dark:text-amber-300" role="alert"></p>
                         <div class="mt-4 flex flex-wrap items-center gap-3">
-                            <button type="submit" id="upload-btn" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors"><span><i class="fas fa-upload"></i></span><span id="upload-label"><?php echo $lang['photos_send']; ?></span></button>
+                            <button type="submit" id="upload-btn" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors"><span><i class="fas fa-upload"></i></span><span id="upload-label"><?php echo $lang['photos_send']; ?></span></button>
                             <button type="button" id="clear-btn" class="text-sm font-semibold text-content-secondary hover:text-content-primary px-3 py-2"><?php echo $lang['global_cancel']; ?></button>
                         </div>
                     </div>
@@ -101,7 +101,7 @@ $flashOk = ['cover' => $lang['photos_cover_saved'], 'deleted' => $lang['photos_d
                     <li id="foto-<?php echo $imageId; ?>" class="scroll-mt-28 bg-surface-elevated border <?php echo $isCover ? 'border-brand-500/60 ring-1 ring-brand-500/30' : 'border-content-secondary/10'; ?> rounded-2xl overflow-hidden shadow-sm flex flex-col">
                         <div class="relative aspect-[4/3] bg-surface-secondary">
                             <img src="<?php echo $imgUrl($img); ?>" alt="<?php echo htmlspecialchars(strtr($lang['photos_alt'], ['{n}' => $i + 1])); ?>" class="w-full h-full object-cover" loading="lazy">
-                            <span class="absolute left-2 top-2 text-xs font-bold rounded-lg px-2 py-1 <?php echo $isCover ? 'bg-brand-500 text-white' : 'bg-black/55 text-white'; ?>">
+                            <span class="absolute left-2 top-2 text-xs font-bold rounded-lg px-2 py-1 <?php echo $isCover ? 'bg-brand-600 text-white' : 'bg-black/55 text-white'; ?>">
                                 <?php echo $isCover ? '<i class="fas fa-star mr-1"></i>' . $lang['photos_cover'] : $i + 1; ?>
                             </span>
                         </div>
@@ -124,7 +124,7 @@ $flashOk = ['cover' => $lang['photos_cover_saved'], 'deleted' => $lang['photos_d
                             <?php else: ?>
                                 <span class="flex-1 text-center text-xs text-content-secondary"><?php echo $lang['photos_cover_hint']; ?></span>
                             <?php endif; ?>
-                            <form method="POST" action="<?php echo $base; ?>/excluir" class="delete-form">
+                            <form method="POST" action="<?php echo $base; ?>/excluir" class="delete-form" data-confirm="<?php echo htmlspecialchars($lang['photos_delete_confirm']); ?>" data-confirm-danger data-confirm-ok="<?php echo htmlspecialchars($lang['flash_delete']); ?>">
                                 <?php echo \App\Core\Csrf::field(); ?>
                                 <button type="submit" class="w-10 h-10 rounded-lg text-content-secondary hover:text-red-600 hover:bg-red-500/10 transition-colors" aria-label="<?php echo htmlspecialchars($lang['photos_delete']); ?>" title="<?php echo htmlspecialchars($lang['photos_delete']); ?>"><i class="fas fa-trash-can"></i></button>
                             </form>
@@ -137,10 +137,6 @@ $flashOk = ['cover' => $lang['photos_cover_saved'], 'deleted' => $lang['photos_d
 
     <script>
         (function () {
-            document.querySelectorAll('.delete-form').forEach(f => f.addEventListener('submit', e => {
-                if (!confirm(<?php echo json_encode($lang['photos_delete_confirm'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE); ?>)) e.preventDefault();
-            }));
-
             const form = document.getElementById('upload-form');
             if (!form) return;
             const input = document.getElementById('images');
@@ -202,5 +198,7 @@ $flashOk = ['cover' => $lang['photos_cover_saved'], 'deleted' => $lang['photos_d
             });
         })();
     </script>
+    <?php // Menu do usuário e botão de tema do cabeçalho (initNavbar, initTheme) ?>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
 </body>
 </html>

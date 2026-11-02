@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Models\Game;
+use App\Models\User;
 use App\Models\Venue;
 use App\Models\VenueHour;
 
@@ -38,12 +39,31 @@ class VenueAccess
     public static function findManageableOrRedirect($id): array
     {
         AuthHelper::check();
+        self::requireCnpjOrRedirect();
         $venue = ctype_digit((string)$id) ? Venue::findById((int)$id) : false;
         if (!$venue || ((int)$venue['user_id'] !== (int)$_SESSION['user_id'] && !AuthHelper::isAdmin())) {
             header('Location: ' . BASE_URL . self::panelUrl() . '?error=not_found');
             exit;
         }
         return $venue;
+    }
+
+    /**
+     * Dono sem CNPJ validado não cria nem gerencia quadra (criar, editar, excluir, horário,
+     * agenda, fotos, visão geral); volta ao painel com o aviso. O admin não precisa de CNPJ.
+     * Um CNPJ salvo que não abre mais com a chave atual conta como ausente.
+     */
+    public static function requireCnpjOrRedirect(): void
+    {
+        AuthHelper::check();
+        if (AuthHelper::isAdmin()) {
+            return;
+        }
+        $user = User::findById($_SESSION['user_id']);
+        if (empty($user['cnpj'])) {
+            header('Location: ' . BASE_URL . '/dashboard?error=cnpj_required');
+            exit;
+        }
     }
 
     /**

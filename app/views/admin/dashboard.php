@@ -13,7 +13,7 @@ $recentUsers = $data['recentUsers'] ?? [];
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae</title>
+    <title>Painel do admin · Kolae</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,12 +141,13 @@ $recentUsers = $data['recentUsers'] ?? [];
                         <p class="text-sm text-content-secondary mt-1">
                             <?php echo (int)$photoStats['count']; ?> fotos · <?php echo $mb($photoStats['bytes']); ?> no total
                             <?php if ($photoStats['heavy'] > 0): ?>· <span class="text-amber-700 dark:text-amber-300 font-semibold"><?php echo (int)$photoStats['heavy']; ?> pesada(s), acima de 600 KB</span><?php endif; ?>
+                            <?php if ($photoStats['no_thumb'] > 0): ?>· <span class="text-amber-700 dark:text-amber-300 font-semibold"><?php echo (int)$photoStats['no_thumb']; ?> sem miniatura</span><?php endif; ?>
                         </p>
                         <p class="text-xs text-content-secondary mt-1">Fotos novas já são otimizadas no envio. Este botão reduz as antigas para no máximo 1600 px em JPEG, o que deixa o app mais rápido no 4G.</p>
                     </div>
                     <form method="POST" action="<?php echo BASE_URL; ?>/admin/fotos/otimizar" onsubmit="this.querySelector('button').disabled = true; this.querySelector('button span:last-child').textContent = 'Otimizando...';">
                         <?php echo \App\Core\Csrf::field(); ?>
-                        <button type="submit" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
+                        <button type="submit" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
                             <span><i class="fas fa-wand-magic-sparkles"></i></span><span>Otimizar fotos</span>
                         </button>
                     </form>
@@ -155,6 +156,7 @@ $recentUsers = $data['recentUsers'] ?? [];
                     <p class="mt-4 p-3 rounded-xl text-sm <?php echo $photoReport['failed'] ? 'bg-amber-500/10 text-amber-800 dark:text-amber-300' : 'bg-green-500/10 text-green-700 dark:text-green-400'; ?>" role="status">
                         <?php echo (int)$photoReport['optimized']; ?> otimizada(s), <?php echo (int)$photoReport['skipped']; ?> já estavam boas<?php echo $photoReport['failed'] ? ', ' . (int)$photoReport['failed'] . ' não deu para processar' : ''; ?>.
                         <?php if ($photoReport['saved_bytes'] > 0): ?>Economia de <?php echo $mb($photoReport['saved_bytes']); ?>.<?php endif; ?>
+                        <?php if (!empty($photoReport['thumbs'])): ?><?php echo (int)$photoReport['thumbs']; ?> miniatura(s) criada(s) para os cards.<?php endif; ?>
                     </p>
                 <?php endif; ?>
             </section>

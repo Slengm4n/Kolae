@@ -112,6 +112,7 @@ O token é um JWT (HS256) e vale **30 dias**. Não existe renovação: ao recebe
   "id": 1,
   "name": "João",
   "email": "joao@exemplo.com",
+  "email_verified": false,
   "birthdate": "2005-12-20",
   "role": "player",
   "avatar_url": "https://.../uploads/avatars/1/avatar_abc.jpg",
@@ -121,6 +122,7 @@ O token é um JWT (HS256) e vale **30 dias**. Não existe renovação: ao recebe
 
 - `role`: `admin` (administra o Kolae), `owner` (responsável por quadra: quem cadastrou CNPJ no site) ou `player`.
 - `avatar_url`: `null` quando não há foto ou o arquivo não existe no servidor.
+- `email_verified` (D58): `true` depois que a pessoa abre o link do e-mail de confirmação, enviado no cadastro (site e `POST /auth/register`). É só informativo: nada fica bloqueado sem confirmar, e o app pode ignorar o campo ou mostrar um aviso. O reenvio do link é pelo painel do site.
 
 ---
 

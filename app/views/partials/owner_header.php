@@ -3,7 +3,8 @@
  * Cabeçalho das páginas do painel (dono e admin): logo, link "Painel" e menu do usuário.
  * O menu e o botão de tema são ligados pelo bundle.js (initNavbar e initTheme).
  *
- * Variáveis: $lang, $backUrl (página do painel, ex: '/dashboard' ou '/admin/quadras').
+ * Variáveis: $lang, $backUrl (página do painel, ex: '/dashboard' ou '/admin/quadras') e, opcional,
+ * $toastContext (avisos da URL como pop-up, ver App\Core\Flash e partials/toasts.php).
  */
 $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
 ?>
@@ -53,3 +54,4 @@ $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
         </div>
     </div>
 </header>
+<?php include BASE_PATH . '/app/views/partials/toasts.php'; ?>

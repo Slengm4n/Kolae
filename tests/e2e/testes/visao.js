@@ -117,7 +117,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await o.type('#email', 'dono@teste.local'); await o.type('#password', 'teste123');
   await Promise.all([o.waitForNavigation({ waitUntil: 'networkidle2' }), o.$eval('#login-form', f => f.submit())]);
   await o.goto(`${BASE}/dashboard/quadras/${ARENA}/visao-geral`, { waitUntil: 'networkidle2' });
-  check('outro dono é mandado de volta', o.url().replace(BASE, ''), '/dashboard?error=not_found');
+  // Volta ao painel com o aviso (a URL fica limpa depois de mostrar, ui.js)
+  await o.waitForSelector('.kolae-toast', { timeout: 3000 }).catch(() => {});
+  check('outro dono é mandado de volta, com aviso', [new URL(o.url()).pathname, await o.$eval('.kolae-toast-text', e => e.textContent).catch(() => '')], [lib.BASE_PATH + '/dashboard', 'Não encontramos essa quadra na sua conta.']);
 
   // Celular: carrossel de arrastar
   await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });

@@ -164,7 +164,7 @@ $dayLabel = function (array $days) use ($lang): string {
 
             <!-- Salvar: fixo embaixo no celular -->
             <div class="fixed md:static bottom-0 inset-x-0 z-30 p-4 md:p-0 md:mt-6 bg-surface-elevated/95 md:bg-transparent backdrop-blur md:backdrop-blur-none border-t md:border-0 border-content-secondary/10 flex justify-end">
-                <button type="submit" id="hours-save" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-brand-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
+                <button type="submit" id="hours-save" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-brand-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
                     <span><i class="fas fa-check"></i></span><?php echo $lang['hours_save']; ?>
                 </button>
             </div>

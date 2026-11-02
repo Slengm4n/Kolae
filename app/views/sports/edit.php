@@ -1,122 +1,150 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="transition-colors duration-500">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
-
+    <title>Editar esporte · Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
-    <noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    </noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
 
+    <?php include 'app/views/partials/theme_script.php'; ?>
+
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        .animate-up {
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        .delay-100 {
-            animation-delay: 100ms;
-        }
+        body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        
+        .animate-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .delay-100 { animation-delay: 100ms; }
+        
+        /* Custom Scrollbar for Icon Selector */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 20px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(156, 163, 175, 0.8); }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
-<body class="bg-[#0D1117] text-gray-200">
+<body class="bg-surface-base text-content-primary transition-colors duration-500">
 
     <div class="flex min-h-screen w-full overflow-hidden">
 
-        <aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-[#161B22] border-r border-gray-800 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
-            <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"><i class="fas fa-times text-2xl"></i></button>
-            <div class="p-8 text-center border-b border-gray-800/50">
-                <div class="w-20 h-20 rounded-full bg-gray-800 border border-gray-700 mx-auto flex items-center justify-center mb-4 shadow-inner"><i class="fas fa-user-shield text-3xl text-brand-400"></i></div>
-                <h2 class="text-lg font-bold text-white tracking-wide"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?></h2>
-                <p class="text-xs text-gray-500 uppercase tracking-wider mt-1">Admin Kolae</p>
+        <aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-surface-elevated border-r border-content-secondary/10 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
+            <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-content-secondary hover:text-content-primary transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <div class="p-8 text-center border-b border-content-secondary/10">
+                <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
+                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-content-primary tracking-wide">
+                    <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
+                </h2>
+                <p class="text-xs text-content-secondary uppercase tracking-wider mt-1">Admin Kolae</p>
             </div>
+
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-home w-5 text-center group-hover:text-brand-400"></i><span>Início</span></a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-users w-5 text-center group-hover:text-brand-400"></i><span>Usuários</span></a>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-400 border-l-4 border-brand-400 rounded-r-lg transition-all shadow-md"><i class="fas fa-running w-5 text-center"></i><span>Esportes</span></a>
-                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-400"></i><span>Mapa</span></a>
-                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white hover:translate-x-1 rounded-lg transition-all duration-200 group"><i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-400"></i><span>Quadras</span></a>
+                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-home w-5 text-center group-hover:text-brand-500"></i><span>Início</span>
+                </a>
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-users w-5 text-center group-hover:text-brand-500"></i><span>Usuários</span>
+                </a>
+                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all shadow-sm">
+                    <i class="fas fa-running w-5 text-center"></i><span>Esportes</span>
+                </a>
+                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-500"></i><span>Mapa</span>
+                </a>
+                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
+                    <i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-500"></i><span>Quadras</span>
+                </a>
             </nav>
-            <div class="p-4 border-t border-gray-800/50">
-                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><i class="fas fa-sign-out-alt w-5 text-center"></i><span>Sair</span></a>
+
+            <div class="p-4 border-t border-content-secondary/10 space-y-2">
+                <button id="theme-toggle" class="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary rounded-lg transition-colors group text-left cursor-pointer">
+                    <i class="fas fa-moon w-5 text-center group-hover:text-yellow-400 transition-colors"></i>
+                    <span class="dark:hidden">Modo Escuro</span>
+                    <span class="hidden dark:inline">Modo Claro</span>
+                </button>
+                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i><span>Sair</span>
+                </a>
             </div>
         </aside>
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
         <main class="md:ml-64 flex-1 p-4 md:p-10 relative z-10 w-full max-w-[100vw]">
 
             <div class="flex items-center gap-3 md:hidden mb-6 animate-up">
-                <button id="sidebar-toggle" class="p-2.5 bg-gray-800 rounded-lg text-brand-400 border border-gray-700 active:bg-gray-700"><i class="fas fa-bars text-lg"></i></button>
+                <button id="sidebar-toggle" class="p-2.5 bg-surface-elevated rounded-lg text-content-secondary border border-content-secondary/10 active:bg-surface-base">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
                 <div>
-                    <h1 class="text-xl font-bold text-white leading-tight">Editar Esporte</h1>
+                    <h1 class="text-xl font-bold text-content-primary leading-tight">Editar Esporte</h1>
                 </div>
             </div>
 
-            <h1 class="hidden md:block text-3xl font-bold mb-8 animate-up">Editar Esporte</h1>
+            <h1 class="hidden md:block text-3xl font-bold mb-8 animate-up text-content-primary">Editar Esporte</h1>
 
-            <div class="bg-[#161B22] p-6 md:p-8 rounded-2xl border border-gray-800 max-w-4xl mx-auto shadow-xl animate-up delay-100">
+            <div class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 max-w-4xl mx-auto shadow-xl animate-up delay-100">
 
-                <?php if (!isset($data['sport']) || !$data['sport']): ?>
-                    <div class="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-center text-sm flex flex-col items-center">
+                <?php if (empty($data['sport'])): ?>
+                    <div class="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 px-4 py-3 rounded-xl text-center text-sm flex flex-col items-center">
                         <i class="fas fa-times-circle text-2xl mb-2"></i>
                         <span class="font-medium">Esporte não encontrado.</span>
-                        <a href="<?php echo BASE_URL; ?>/admin/esportes" class="mt-3 text-white underline">Voltar para lista</a>
+                        <a href="<?php echo BASE_URL; ?>/admin/esportes" class="mt-3 underline">Voltar para lista</a>
                     </div>
                 <?php else: $sport = $data['sport']; ?>
+                <form action="<?php echo BASE_URL; ?>/admin/esportes/atualizar" method="POST" class="space-y-6">
+                    <?php echo \App\Core\Csrf::field(); ?>
+                    <input type="hidden" name="id" value="<?php echo (int)$sport['id']; ?>">
 
-                    <form action="<?php echo BASE_URL; ?>/admin/esportes/atualizar" method="POST" class="space-y-6">
-                        <?php echo \App\Core\Csrf::field(); ?>
-                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($sport['id']); ?>">
-
-                        <div>
-                            <label for="name" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Nome do Esporte</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fas fa-trophy text-gray-500 text-sm"></i></div>
-                                <input id="name" name="name" type="text" value="<?php echo htmlspecialchars($sport['name']); ?>" required
-                                    class="w-full bg-gray-900/50 border border-gray-700 rounded-xl pl-9 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                    <div>
+                        <label for="name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1">Nome do Esporte</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-trophy text-content-secondary text-sm"></i>
                             </div>
+                            <input id="name" name="name" type="text" value="<?php echo htmlspecialchars($sport['name']); ?>" required
+                                class="w-full bg-input-base border border-content-secondary/20 rounded-xl pl-9 pr-4 py-3 text-sm text-content-primary placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
                         </div>
+                    </div>
 
-                        <div>
-                            <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 ml-1">Ícone Representativo</span>
-                            <input type="hidden" name="icon" id="selected-icon-input" value="<?php echo htmlspecialchars($sport['icon'] ?? ''); ?>" required>
+                    <div>
+                        <span class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-3 ml-1">Selecione um Ícone</span>
+                        <input type="hidden" name="icon" id="selected-icon-input" value="<?php echo htmlspecialchars($sport['icon_path'] ?? ''); ?>" required>
 
-                            <div id="icon-selector" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-3 bg-gray-900/30 p-4 rounded-xl border border-gray-700/50 max-h-64 overflow-y-auto">
+                        <div id="icon-selector" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-3 bg-surface-base p-4 rounded-xl border border-content-secondary/10 max-h-64 overflow-y-auto custom-scrollbar">
                             </div>
-                            <p id="icon-error" class="text-red-400 text-xs mt-2 hidden flex items-center"><i class="fas fa-exclamation-circle mr-1"></i> Por favor, selecione um ícone.</p>
-                        </div>
+                        <p id="icon-error" class="text-red-500 text-xs mt-2 hidden flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i> Por favor, selecione um ícone.
+                        </p>
+                    </div>
 
-                        <div class="pt-4 flex gap-3 md:justify-end">
-                            <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex-1 md:flex-none text-center bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-3 px-6 rounded-xl transition-colors border border-gray-700 text-sm">Cancelar</a>
-                            <button type="submit" class="flex-1 md:flex-none text-center bg-brand-500 hover:bg-brand-400 text-black font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 text-sm">Salvar Alterações</button>
-                        </div>
-                    </form>
+                    <div class="pt-4 flex gap-3 md:justify-end">
+                        <a href="<?php echo BASE_URL; ?>/admin/esportes"
+                            class="flex-1 md:flex-none text-center bg-surface-base hover:bg-content-secondary/10 text-content-secondary font-semibold py-3 px-6 rounded-xl transition-colors border border-content-secondary/20 text-sm">
+                            Cancelar
+                        </a>
+                        <button type="submit"
+                            class="flex-1 md:flex-none text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5 text-sm">
+                            Salvar Alterações
+                        </button>
+                    </div>
+
+                </form>
                 <?php endif; ?>
             </div>
         </main>
@@ -144,48 +172,74 @@
             closeBtn?.addEventListener('click', closeSidebar);
             overlay?.addEventListener('click', closeSidebar);
 
-            // Icon Selector Logic
+            // Theme Toggle Logic
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.theme = 'light';
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.theme = 'dark';
+                    }
+                });
+            }
+
+            // === LÓGICA DO SELETOR DE ÍCONES (ADAPTADA PARA TEMAS) ===
             const iconSelector = document.getElementById('icon-selector');
             if (iconSelector) {
                 const selectedIconInput = document.getElementById('selected-icon-input');
                 const iconError = document.getElementById('icon-error');
-                const currentIcon = selectedIconInput.value;
 
                 const icons = [
                     'fa-futbol', 'fa-basketball-ball', 'fa-volleyball-ball', 'fa-table-tennis-paddle-ball',
                     'fa-person-running', 'fa-skating', 'fa-biking', 'fa-swimmer', 'fa-dumbbell',
                     'fa-hiking', 'fa-bowling-ball', 'fa-football-ball', 'fa-golf-ball-tee',
-                    'fa-snowboarding', 'fa-skiing', 'fa-person-snowboarding', 'fa-water', 'fa-fish'
+                    'fa-snowboarding', 'fa-skiing', 'fa-person-snowboarding', 'fa-water', 'fa-fish',
+                    'fa-medal', 'fa-trophy', 'fa-stopwatch', 'fa-heart-pulse', 'fa-flag-checkered'
                 ];
 
+                // Classes Padrão (Sem seleção) - Adaptadas
+                const defaultClasses = 'p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 bg-surface-elevated border-transparent text-content-secondary hover:bg-surface-base hover:text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-500';
+                
+                // Classes Selecionado - Adaptadas
+                const selectedClasses = 'p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 bg-brand-500/10 border-brand-500 text-brand-500 shadow-sm scale-105 focus:outline-none focus:ring-2 focus:ring-brand-500';
+
+                // 1. Cria os botões, com o ícone atual do esporte já marcado (mesmo se não estiver na lista)
+                const currentIcon = selectedIconInput.value;
+                if (currentIcon && !icons.includes(currentIcon)) icons.unshift(currentIcon);
                 icons.forEach(iconClass => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = `p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 ${iconClass === currentIcon ? 'bg-brand-500/20 border-brand-500 text-brand-400 shadow-[0_0_10px_rgba(51, 157, 255,0.2)]' : 'bg-gray-800 border-transparent text-gray-500 hover:bg-gray-700 hover:text-gray-300'}`;
+                    btn.className = iconClass === currentIcon ? selectedClasses : defaultClasses;
                     btn.dataset.icon = iconClass;
-                    btn.innerHTML = `<i class="fas ${iconClass} text-xl"></i>`;
-
+                    btn.setAttribute('aria-label', 'Ícone ' + iconClass.replace('fa-', ''));
+                    btn.innerHTML = `<i class="fas ${iconClass} text-xl pointer-events-none"></i>`;
                     iconSelector.appendChild(btn);
                 });
 
+                // 2. Event Delegation
                 iconSelector.addEventListener('click', (e) => {
                     const btn = e.target.closest('button');
                     if (!btn) return;
 
-                    // Reset all
-                    iconSelector.querySelectorAll('button').forEach(b => {
-                        b.className = 'p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 bg-gray-800 border-transparent text-gray-500 hover:bg-gray-700 hover:text-gray-300';
-                    });
+                    // Limpa seleção anterior
+                    const prevSelected = iconSelector.querySelector('.border-brand-500');
+                    if (prevSelected) {
+                        prevSelected.className = defaultClasses;
+                    }
 
-                    // Activate clicked
-                    btn.className = 'p-3 rounded-lg flex items-center justify-center aspect-square border transition-all duration-200 bg-brand-500/20 border-brand-500 text-brand-400 shadow-[0_0_10px_rgba(51, 157, 255,0.2)] scale-105';
+                    // Ativa o novo
+                    btn.className = selectedClasses;
 
                     selectedIconInput.value = btn.dataset.icon;
                     iconError.classList.add('hidden');
                 });
 
-                // Form validation
-                document.querySelector('form')?.addEventListener('submit', (e) => {
+                // 3. Validação
+                document.querySelector('form').addEventListener('submit', (e) => {
                     if (!selectedIconInput.value) {
                         e.preventDefault();
                         iconError.classList.remove('hidden');
@@ -194,6 +248,6 @@
             }
         });
     </script>
-</body>
 
+</body>
 </html>

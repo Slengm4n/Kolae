@@ -42,6 +42,7 @@ class ApiFormat
             'id' => (int)$user['id'],
             'name' => $user['name'],
             'email' => $user['email'],
+            'email_verified' => !empty($user['email_verified_at']), // D58; o app pode ignorar
             'birthdate' => $user['birthdate'] ?: null,
             'role' => $user['role'],
             'avatar_url' => self::uploadUrl('avatars/' . $user['id'], $user['avatar_path'] ?? null),

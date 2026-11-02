@@ -11,9 +11,13 @@ export default defineConfig({
         // Sem "watch" aqui: senão o "npm run build" fica vigiando e nunca termina.
         // Para vigiar durante o desenvolvimento, use "npm run watch" (vite build --watch).
         rollupOptions: {
-            input: path.resolve(__dirname, 'src/js/main.js'),
+            // bundle.js: páginas do site; ui.js: avisos e confirmação, também nas páginas do admin (D57)
+            input: {
+                bundle: path.resolve(__dirname, 'src/js/main.js'),
+                ui: path.resolve(__dirname, 'src/js/ui.js'),
+            },
             output: {
-                entryFileNames: 'js/bundle.js',
+                entryFileNames: 'js/[name].js',
                 assetFileNames: (assetInfo) => {
                     if (assetInfo.name.endsWith('.css')) {
                         return 'css/style.css';

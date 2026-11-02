@@ -24,6 +24,10 @@ const TESTES = {
     legal: [],
     quadras: ['A'],
     erros: [],
+    entrada: [],
+    preferencias: ['A'],
+    avisos: ['A'],
+    confirmacao: [],
     qr: ['A', 'E'],
 };
 

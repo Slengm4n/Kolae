@@ -14,15 +14,6 @@ $navLinks = [
     '#para-donos'    => $lang['home_nav_owners'],
     '#sobre-nos'     => $lang['global_menu_about'],
 ];
-$languages = [
-    'pt-br' => ['🇧🇷', 'Português'],
-    'en-us' => ['🇺🇸', 'English'],
-    'es-es' => ['🇪🇸', 'Español'],
-    'it-it' => ['🇮🇹', 'Italiano'],
-    'ja-jp' => ['🇯🇵', '日本語'],
-    'zh-cn' => ['🇨🇳', '中文'],
-    'hi-in' => ['🇮🇳', 'हिन्दी'],
-];
 $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-white/90 bg-white/10 border border-white/15 backdrop-blur-md hover:bg-white/20 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300';
 ?>
 <?php // Fixo no topo; ganha fundo escuro ao rolar (src/js/pages/home_motion.js) ?>
@@ -51,14 +42,14 @@ $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-whit
             </button>
 
             <?php if ($isLoggedIn): ?>
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="hidden sm:inline-flex items-center rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 hover:bg-brand-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="hidden sm:inline-flex items-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 hover:bg-brand-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
                     <?php echo htmlspecialchars($lang['global_home_panel']); ?>
                 </a>
             <?php else: ?>
                 <a href="<?php echo BASE_URL; ?>/login" class="hidden sm:inline-flex items-center rounded-full px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
                     <?php echo htmlspecialchars($lang['global_menu_login']); ?>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/register" class="hidden sm:inline-flex items-center rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 hover:bg-brand-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
+                <a href="<?php echo BASE_URL; ?>/register" class="hidden sm:inline-flex items-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 hover:bg-brand-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
                     <?php echo htmlspecialchars($lang['global_menu_register']); ?>
                 </a>
             <?php endif; ?>
@@ -72,9 +63,9 @@ $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-whit
                         <?php if (!empty($_SESSION['user_avatar'])): ?>
                             <!-- Se a foto não carregar, mostra a inicial que está escondida logo depois -->
                             <img src="<?php echo BASE_URL . '/uploads/avatars/' . (int)$_SESSION['user_id'] . '/' . htmlspecialchars(basename($_SESSION['user_avatar'])); ?>" alt="" class="w-8 h-8 rounded-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <span class="w-8 h-8 rounded-full bg-brand-500 items-center justify-center text-sm font-bold text-white" style="display:none"><?php echo $initial; ?></span>
+                            <span class="w-8 h-8 rounded-full bg-brand-600 items-center justify-center text-sm font-bold text-white" style="display:none"><?php echo $initial; ?></span>
                         <?php else: ?>
-                            <span class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-sm font-bold text-white"><?php echo $initial; ?></span>
+                            <span class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-sm font-bold text-white"><?php echo $initial; ?></span>
                         <?php endif; ?>
                     <?php endif; ?>
                 </button>
@@ -105,26 +96,4 @@ $iconButton = 'flex items-center justify-center w-10 h-10 rounded-full text-whit
     </div>
 </header>
 
-<!-- Seletor de idioma (aberto pelo #lang-btn; ver src/js/modules/language_switcher.js) -->
-<div id="lang-modal" role="dialog" aria-modal="true" aria-labelledby="lang-modal-title" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 invisible transition-all duration-300">
-    <div id="lang-box" class="w-full max-w-xs rounded-2xl bg-surface-elevated text-content-primary border border-content-secondary/15 shadow-2xl p-6 transform scale-95 opacity-0 transition-all duration-300">
-        <div class="flex items-center justify-between mb-4">
-            <h2 id="lang-modal-title" class="text-lg font-semibold"><?php echo htmlspecialchars($lang['home_lang_title']); ?></h2>
-            <button id="close-lang-btn" type="button" aria-label="×" class="w-8 h-8 rounded-full flex items-center justify-center text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors">
-                <i class="fas fa-xmark" aria-hidden="true"></i>
-            </button>
-        </div>
-        <ul class="space-y-1">
-            <?php foreach ($languages as $code => [$flag, $label]): ?>
-                <?php $active = ($_SESSION['idioma'] ?? 'pt-br') === $code; ?>
-                <li>
-                    <a href="?lang=<?php echo $code; ?>" lang="<?php echo $code; ?>" <?php echo $active ? 'aria-current="true"' : ''; ?>
-                        class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-colors <?php echo $active ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold' : 'hover:bg-surface-secondary'; ?>">
-                        <span class="text-xl" aria-hidden="true"><?php echo $flag; ?></span><?php echo $label; ?>
-                        <?php if ($active): ?><i class="fas fa-check ml-auto" aria-hidden="true"></i><?php endif; ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
+<?php include BASE_PATH . "/app/views/partials/lang_modal.php"; ?>

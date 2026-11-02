@@ -155,5 +155,7 @@ $editLinks = ['editar' => $tabUrl['editar'], 'horario' => $tabUrl['horario']];
         $publicUrl = BASE_URL . '/quadra/' . $venueId;
         include BASE_PATH . '/app/views/partials/venue_qr.php';
     endif; ?>
+    <?php // Menu do usuário e botão de tema do cabeçalho (initNavbar, initTheme) ?>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
 </body>
 </html>

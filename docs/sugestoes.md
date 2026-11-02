@@ -31,6 +31,8 @@ Critério: aparece bem na banca e mexe pouco no que já está pronto e testado.
 
 | Sugestão | Por quê | Esforço |
 | :---- | :---- | :---- |
+| **Confirmação de e-mail completa** (bloquear ações até confirmar, trocar e-mail com código) | A versão leve (D58) só avisa; bloquear exige mudar o app e o fluxo de cadastro | M |
+| **Mais comodidades** (Wi-Fi, estacionamento, vestiário, bar, coletes, bola) | O assistente antigo oferecia, mas o banco só guarda iluminação, coberta e área de lazer (D57). Pede colunas novas, a API e o app mostrarem | M |
 | **Partidas que se repetem** ("toda terça às 19h") | Pedido natural do dono; ficou de fora pela D39 porque mexe na agenda e no status | M |
 | **Arrastar para reordenar fotos** | Os botões de mover já resolvem e funcionam melhor no celular e com leitor de tela (D46) | P |
 | **Comunidade, avaliações e favoritos de verdade** | Hoje são vitrine (D04); precisam de banco, moderação e telas | G |

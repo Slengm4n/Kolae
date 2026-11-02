@@ -219,4 +219,206 @@
             transition: none;
         }
     }
+
+    /* ---------- Telas de entrada (login, cadastro, esqueci e nova senha) ---------- */
+    .auth-label {
+        @apply block text-sm font-medium text-content-primary mb-1.5;
+    }
+    .auth-field {
+        @apply relative;
+    }
+    .auth-field > .auth-icon {
+        @apply absolute left-3.5 top-1/2 -translate-y-1/2 text-content-secondary pointer-events-none transition-colors;
+    }
+    .auth-field:focus-within > .auth-icon {
+        @apply text-brand-600 dark:text-brand-400;
+    }
+    .auth-input {
+        @apply w-full h-12 rounded-xl border border-content-secondary/25 bg-surface-elevated pl-11 pr-4 text-[15px] text-content-primary placeholder:text-content-secondary/70 shadow-sm transition-[border-color,box-shadow] outline-none;
+    }
+    .auth-input:hover {
+        @apply border-content-secondary/45;
+    }
+    .auth-input:focus {
+        @apply border-brand-500 ring-4 ring-brand-500/15;
+    }
+    .auth-input.has-toggle {
+        @apply pr-12;
+    }
+    .auth-input[aria-invalid='true'] {
+        @apply border-red-500 ring-4 ring-red-500/10;
+    }
+    /* Checkbox e calendário nativos no tema escuro */
+    .dark .auth-input,
+    .dark .auth-check {
+        color-scheme: dark;
+    }
+    /* Listas da data de nascimento: mesma caixa do campo, com a setinha própria */
+    .auth-select {
+        @apply w-full h-12 appearance-none rounded-xl border border-content-secondary/25 bg-surface-elevated pl-3.5 pr-8 text-[15px] text-content-primary shadow-sm transition-[border-color,box-shadow] outline-none cursor-pointer truncate;
+    }
+    .auth-select:hover {
+        @apply border-content-secondary/45;
+    }
+    .auth-select:focus {
+        @apply border-brand-500 ring-4 ring-brand-500/15;
+    }
+    .auth-select:invalid:not([aria-invalid='true']) {
+        @apply text-content-secondary;
+    }
+    .auth-select[aria-invalid='true'] {
+        @apply border-red-500 ring-4 ring-red-500/10;
+    }
+    .dark .auth-select {
+        color-scheme: dark;
+    }
+    .auth-select-icon {
+        @apply absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-content-secondary pointer-events-none;
+    }
+    .auth-toggle {
+        @apply absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg flex items-center justify-center text-content-secondary hover:text-content-primary hover:bg-content-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 transition-colors;
+    }
+    .auth-hint {
+        @apply mt-1.5 text-xs text-content-secondary flex items-center gap-1.5;
+    }
+    .auth-hint.is-ok {
+        @apply text-emerald-600 dark:text-emerald-400;
+    }
+    .auth-hint.is-bad {
+        @apply text-red-600 dark:text-red-400;
+    }
+    .auth-btn {
+        @apply w-full h-12 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 text-white font-semibold shadow-lg shadow-brand-600/25 hover:bg-brand-700 hover:shadow-brand-600/35 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/30 transition disabled:opacity-70 disabled:cursor-wait disabled:active:scale-100;
+    }
+    .auth-link {
+        @apply font-semibold text-brand-600 dark:text-brand-400 hover:underline underline-offset-4 decoration-2;
+    }
+    .auth-check {
+        @apply w-[18px] h-[18px] shrink-0 rounded accent-brand-500 cursor-pointer;
+    }
+
+    /* ---------- Avisos (toast) e confirmação: src/js/ui.js ---------- */
+    .kolae-toast-stack {
+        @apply fixed z-[80] top-[4.75rem] inset-x-3 sm:inset-x-auto sm:right-5 sm:w-[380px] flex flex-col gap-3 pointer-events-none;
+    }
+    .kolae-toast {
+        @apply relative overflow-hidden pointer-events-auto flex items-start gap-3 rounded-2xl border border-content-secondary/10 bg-surface-elevated/95 backdrop-blur-md p-4 pr-3 shadow-2xl shadow-black/10 text-content-primary;
+        animation: kolae-toast-in 0.45s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+    }
+    .kolae-toast.is-leaving {
+        animation: kolae-toast-out 0.3s ease-in both;
+    }
+    .kolae-toast-icon {
+        @apply w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-base;
+        animation: kolae-pop 0.5s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .kolae-toast--success .kolae-toast-icon {
+        @apply bg-emerald-500/15 text-emerald-600 dark:text-emerald-400;
+    }
+    .kolae-toast--error .kolae-toast-icon {
+        @apply bg-red-500/15 text-red-600 dark:text-red-400;
+    }
+    .kolae-toast--info .kolae-toast-icon {
+        @apply bg-brand-500/15 text-brand-600 dark:text-brand-400;
+    }
+    .kolae-toast-text {
+        @apply flex-1 pt-1.5 text-sm font-medium leading-snug;
+    }
+    .kolae-toast-close {
+        @apply w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-content-secondary hover:text-content-primary hover:bg-content-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 transition-colors;
+    }
+    .kolae-toast-bar {
+        @apply absolute left-0 bottom-0 h-[3px] w-full origin-left;
+        animation: kolae-progress linear both;
+    }
+    .kolae-toast:hover .kolae-toast-bar,
+    .kolae-toast:focus-within .kolae-toast-bar {
+        animation-play-state: paused;
+    }
+    .kolae-toast--success .kolae-toast-bar {
+        @apply bg-emerald-500;
+    }
+    .kolae-toast--error .kolae-toast-bar {
+        @apply bg-red-500;
+    }
+    .kolae-toast--info .kolae-toast-bar {
+        @apply bg-brand-500;
+    }
+
+    .kolae-modal {
+        @apply fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-4;
+    }
+    .kolae-modal-backdrop {
+        @apply absolute inset-0 bg-black/50 backdrop-blur-sm;
+        animation: kolae-fade 0.2s ease-out both;
+    }
+    .kolae-modal-panel {
+        @apply relative w-full max-w-sm rounded-2xl bg-surface-elevated border border-content-secondary/10 shadow-2xl p-6 text-center text-content-primary;
+        animation: kolae-modal-in 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+    }
+    .kolae-modal.is-leaving .kolae-modal-backdrop {
+        animation: kolae-fade 0.2s ease-in reverse both;
+    }
+    .kolae-modal.is-leaving .kolae-modal-panel {
+        animation: kolae-modal-in 0.2s ease-in reverse both;
+    }
+    .kolae-modal-icon {
+        @apply mx-auto w-12 h-12 rounded-full flex items-center justify-center text-xl bg-brand-500/10 text-brand-600 dark:text-brand-400;
+        animation: kolae-pop 0.5s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .kolae-modal-icon.is-danger {
+        @apply bg-red-500/10 text-red-600 dark:text-red-400;
+    }
+    .kolae-modal-title {
+        @apply mt-4 text-lg font-semibold;
+    }
+    .kolae-modal-text {
+        @apply mt-2 text-sm text-content-secondary leading-relaxed;
+    }
+    .kolae-modal-actions {
+        @apply mt-6 grid grid-cols-2 gap-3;
+    }
+    .kolae-modal-btn {
+        @apply h-11 rounded-xl font-semibold text-sm border border-content-secondary/20 hover:bg-content-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 transition-colors;
+    }
+    .kolae-modal-btn.is-primary {
+        @apply border-transparent bg-brand-600 text-white hover:bg-brand-700;
+    }
+    .kolae-modal-btn.is-danger {
+        @apply border-transparent bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500;
+    }
+
+    @keyframes kolae-toast-in {
+        from { opacity: 0; transform: translateY(-14px) scale(0.96); }
+        to { opacity: 1; transform: none; }
+    }
+    @keyframes kolae-toast-out {
+        to { opacity: 0; transform: translateX(24px) scale(0.96); }
+    }
+    @keyframes kolae-progress {
+        from { transform: scaleX(1); }
+        to { transform: scaleX(0); }
+    }
+    @keyframes kolae-pop {
+        from { transform: scale(0.4); opacity: 0; }
+        to { transform: none; opacity: 1; }
+    }
+    @keyframes kolae-fade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes kolae-modal-in {
+        from { opacity: 0; transform: translateY(16px) scale(0.96); }
+        to { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .kolae-toast,
+        .kolae-toast.is-leaving,
+        .kolae-toast-icon,
+        .kolae-modal-panel,
+        .kolae-modal-icon,
+        .kolae-modal-backdrop {
+            animation: none;
+        }
+    }
 }

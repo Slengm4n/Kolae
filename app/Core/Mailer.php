@@ -33,6 +33,10 @@ class Mailer
             $token = bin2hex(random_bytes(32));
             PasswordReset::deleteTokensForEmail($email);
             PasswordReset::createToken($email, $token);
+            if (self::isTestAddress($email)) {
+                error_log('Esqueci a senha: endereço de teste, e-mail não enviado (o token foi criado).');
+                return true;
+            }
 
             $mail = self::create();
             $mail->addAddress($email, $name);
@@ -71,6 +75,63 @@ class Mailer
             . "Não foi você? Pode ignorar este e-mail: sua senha continua a mesma.\n\n"
             . "Kolae · " . preg_replace('#^https?://#', '', BASE_URL);
         return [$html, $text];
+    }
+
+    /**
+     * E-mail de confirmação do endereço (D58). O link vem pronto de EmailVerification::link.
+     * @return bool true se foi enviado; falhas vão para o log
+     */
+    public static function sendEmailVerification(string $email, string $name, string $link): bool
+    {
+        if (self::isTestAddress($email)) {
+            error_log('Confirmação de e-mail: endereço de teste, não enviado.');
+            return true;
+        }
+        try {
+            $mail = self::create();
+            $mail->addAddress($email, $name);
+            [$html, $text] = self::verifyEmailMessage($name, $link);
+            $mail->isHTML(true);
+            $mail->Subject = 'Confirme seu e-mail no Kolae';
+            $mail->Body = $html;
+            $mail->AltBody = $text;
+            return $mail->send();
+        } catch (MailException $e) {
+            error_log("PHPMailer Error: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            error_log("Erro ao preparar o e-mail de confirmação: " . $e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * E-mail de confirmação (D58): HTML no visual do Kolae e a versão em texto puro.
+     * @return array [html, texto]
+     */
+    public static function verifyEmailMessage(string $name, string $link): array
+    {
+        $hours = EmailVerification::HOURS;
+        ob_start();
+        include BASE_PATH . '/app/views/emails/verify_email.php';
+        $html = ob_get_clean();
+
+        $firstName = explode(' ', trim($name))[0] ?: 'olá';
+        $text = "Olá, $firstName!\n\n"
+            . "Boas-vindas ao Kolae. Para confirmar que este e-mail é seu, abra este link:\n\n$link\n\n"
+            . "O link vale por $hours horas. Se vencer, peça outro no seu painel.\n"
+            . "Não criou uma conta no Kolae? Pode ignorar este e-mail.\n\n"
+            . "Kolae · " . preg_replace('#^https?://#', '', BASE_URL);
+        return [$html, $text];
+    }
+
+    /**
+     * Domínios reservados para testes (RFC 2606/6761): nunca recebem e-mail de verdade.
+     * Os testes criam contas como dono@teste.local; mandar para elas pelo Titan só geraria
+     * devoluções e prejudicaria a reputação do remetente.
+     */
+    public static function isTestAddress(string $email): bool
+    {
+        return (bool)preg_match('/\.(local|test|example|invalid|localhost)$/i', trim($email));
     }
 
     /**

@@ -66,7 +66,7 @@ $select = 'rounded-full border border-white/20 bg-neutral-900 text-white/90 px-3
                         <input id="q" name="q" type="search" maxlength="100" value="<?php echo $e($form['q']); ?>" placeholder="<?php echo $e($lang['list_search_ph']); ?>"
                             class="w-full rounded-xl bg-white/10 border border-white/15 pl-11 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-400">
                     </div>
-                    <button type="submit" class="rounded-xl bg-brand-500 hover:bg-brand-600 px-5 font-semibold"><?php echo $lang['list_search_btn']; ?></button>
+                    <button type="submit" class="rounded-xl bg-brand-600 hover:bg-brand-700 px-5 font-semibold"><?php echo $lang['list_search_btn']; ?></button>
                 </div>
 
                 <fieldset class="mt-4 flex flex-wrap items-center gap-2">
@@ -132,7 +132,7 @@ $select = 'rounded-full border border-white/20 bg-neutral-900 text-white/90 px-3
                             <li class="venue-card group relative overflow-hidden rounded-2xl border border-content-secondary/15 bg-surface-elevated shadow-sm hover:shadow-lg hover:border-brand-500/40 transition focus-within:ring-2 focus-within:ring-brand-500" data-venue-id="<?php echo (int)$v['id']; ?>">
                                 <div class="relative aspect-[16/10] bg-gradient-to-br from-brand-500 to-brand-800 overflow-hidden">
                                     <?php if ($v['cover_image_url']): ?>
-                                        <img src="<?php echo $e($v['cover_image_url']); ?>" alt="" loading="lazy" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                                        <img src="<?php echo $e(\App\Core\ImageHelper::thumbUrl($v['cover_image_url'])); ?>" alt="" loading="lazy" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
                                     <?php else: ?>
                                         <div class="w-full h-full flex items-center justify-center text-white/80 text-4xl"><i class="fas fa-volleyball"></i></div>
                                     <?php endif; ?>
