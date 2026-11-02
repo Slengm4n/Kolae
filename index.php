@@ -4,6 +4,7 @@
 use App\Core\Router;
 use App\Controllers\HomeController;
 use App\Controllers\LegalController;
+use App\Controllers\PublicVenueController;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\VenueController;
@@ -138,6 +139,7 @@ $router = new Router();
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/termos', [LegalController::class, 'terms']);
 $router->get('/privacidade', [LegalController::class, 'privacy']);
+$router->get('/quadra/{id}', [PublicVenueController::class, 'show']);
 $router->get('/login', [AuthController::class, 'index']);
 $router->post('/login/authenticate', [AuthController::class, 'authenticate']);
 $router->get('/register', [AuthController::class, 'register']);

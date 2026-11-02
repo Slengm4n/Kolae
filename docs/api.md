@@ -27,6 +27,7 @@ Não são endpoints da API: são páginas HTML do site, para o app abrir no nave
 | Termos de Uso | `https://kolae.online/termos` |
 | Política de Privacidade | `https://kolae.online/privacidade` |
 | Esqueci a senha (site) | `https://kolae.online/forgot-password` |
+| Página pública da quadra (D49) | `https://kolae.online/quadra/{id}` (o mesmo `id` da API). Serve para um botão "Compartilhar" no detalhe da quadra: o link abre no navegador de quem recebe e mostra a prévia com foto |
 
 O texto é só em português. Para abrir com título e menu em outro idioma, acrescente `?lang=` (ex: `?lang=en-us`).
 
@@ -366,7 +367,7 @@ Detalhe de uma quadra: tudo do resumo, mais:
 | `distance_km` | Não vem no detalhe: o app calcula com a posição da pessoa e as coordenadas da quadra (D33) |
 | `description` | Texto livre do dono para a seção "Sobre a quadra", até 1000 caracteres. `null` se não preenchido: esconder a seção (D30) |
 | `leisure_area_capacity` | Pessoas na área de lazer; `null` se não informado ou sem área de lazer |
-| `images` | Todas as fotos (até 10), na ordem escolhida pelo dono, a capa primeiro (D46). Fotos cujo arquivo não existe no servidor ficam de fora. Lista vazia se não há foto |
+| `images` | Todas as fotos (até 10), na ordem escolhida pelo dono, a capa primeiro (D46). Fotos novas chegam em JPEG de até 1600 px (D48). Fotos cujo arquivo não existe no servidor ficam de fora. Lista vazia se não há foto |
 | `address.full` | Endereço pronto para exibir ou para abrir no app de mapas |
 | `opening_hours` | Só os dias em que abre. `weekday`: `0` = domingo ... `6` = sábado. Lista vazia = horário não cadastrado (D23): mostrar "Horário não informado" |
 | `owner.whatsapp` | Só dígitos, com DDI e DDD. **Pode ser `null`: nesse caso, esconder o botão "Falar com o dono"** (D24). Com valor, abrir `https://wa.me/<whatsapp>` |

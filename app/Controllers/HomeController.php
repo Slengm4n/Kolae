@@ -12,15 +12,6 @@ class HomeController
     private const FEATURED_VENUES = 3;
 
     /** Chave de piso (Venue::FLOOR_TYPES) → chave de tradução já existente em lang/*.php */
-    private const FLOOR_LANG_KEYS = [
-        'synthetic' => 'venue_floor_answer_1',
-        'court'     => 'venue_floor_answer_2',
-        'sand'      => 'venue_floor_answer_3',
-        'clay'      => 'venue_floor_answer_4',
-        'grass'     => 'venue_floor_answer_5',
-        'wood'      => 'venue_floor_answer_6',
-    ];
-
     public function index()
     {
         //Tenta restaurar a sessão silenciosamente
@@ -53,11 +44,12 @@ class HomeController
             $price = (float)($v['average_price_per_hour'] ?? 0);
 
             return [
+                'id' => (int)$v['id'],
                 'name' => $v['name'],
                 'city' => $v['city'] ?? '',
                 'neighborhood' => $v['neighborhood'] ?? '',
                 'image_url' => $hasImage ? BASE_URL . $imagePath : null,
-                'floor_lang_key' => self::FLOOR_LANG_KEYS[$v['floor_type'] ?? ''] ?? null,
+                'floor_lang_key' => Venue::FLOOR_LANG_KEYS[$v['floor_type'] ?? ''] ?? null,
                 'price' => $price > 0 ? number_format($price, 2, ',', '.') : null,
                 'is_covered' => !empty($v['is_covered']),
                 'has_lighting' => !empty($v['has_lighting']),
