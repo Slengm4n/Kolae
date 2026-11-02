@@ -223,3 +223,15 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **O quê:** numa janela de 15 minutos, 5 erros na mesma conta a partir do mesmo IP, ou 20 erros do mesmo IP em qualquer conta, bloqueiam o login até o erro mais antigo vencer. Bloqueado, nem a senha certa entra. Login certo zera os erros daquela conta e IP. Site: mensagem com os minutos e a sugestão de "Esqueci a senha". API: `429 TOO_MANY_ATTEMPTS` com o cabeçalho `Retry-After` (segundos).
 - **Onde:** `App\Core\LoginThrottle`, tabela `login_attempts` (patch 005; o e-mail fica só como hash). Sem a tabela, o login funciona sem limite, então o deploy não quebra se o patch atrasar.
 - **Por quê por conta + IP, e não só por conta:** bloquear só pela conta deixaria qualquer pessoa trancar a conta de outra errando a senha de propósito.
+
+## Página da quadra no painel
+
+### D46 · Aba Fotos: ordem, capa e limite de 10 (02/11/2026)
+- **O quê:** as fotos ganham ordem (`venues_images.position`, patch 006) e a **primeira é a capa** em todo lugar: painel, mapa do admin, home e API (`cover_image_url` e a ordem de `images`). Na aba Fotos o dono (ou o admin) envia fotos (prévia, arrastar, JPG/PNG/WebP até 10 MB), escolhe "Tornar capa", move para a esquerda/direita e apaga. Máximo de **10 fotos por quadra**, conferido no navegador e no servidor (`VenueImage::MAX_PER_VENUE`).
+- **Por quê:** antes a capa era sempre a primeira enviada, sem como trocar, e o upload ficava no meio da aba Dados (onde remover uma foto nova antes de salvar não funcionava). A aba Dados agora só mostra a prévia e o atalho.
+- **Mover com botões, não arrastar:** funciona igual no celular, com teclado e leitor de tela, e sem biblioteca. Arrastar para reordenar fica como melhoria.
+
+### D47 · Aba Visão geral: a quadra como o atleta vê (02/11/2026)
+- **O quê:** primeira aba da quadra e destino do card no painel. Galeria (grade com uma foto grande e quatro menores no computador, carrossel de arrastar no celular, tela cheia com setas, teclado e Esc), esportes, estrutura, "Sobre a quadra", horário da semana, endereço com link para o Google Maps e, na lateral, preço, o dia de hoje (horário e partidas, com "Agora"), o WhatsApp que aparece no app e a lista **Quadra completa** (3 fotos, horário, esportes, descrição, preço, WhatsApp), cada item pendente levando à aba que resolve.
+- **Por quê:** o dono confere o que está publicado sem abrir o app, e a lista mostra o que falta para a quadra ficar boa na apresentação.
+- **Abas:** Visão geral, Dados, Fotos, Horário e Agenda. No celular cada aba mostra o ícone em cima do nome, para as cinco caberem sem rolagem.

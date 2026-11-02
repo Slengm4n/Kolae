@@ -200,7 +200,7 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                         $venueBase = BASE_URL . '/dashboard/quadras';
                         ?>
                         <article class="venue-card group bg-surface-elevated rounded-2xl overflow-hidden border border-content-secondary/10 hover:border-content-secondary/30 hover:shadow-xl transition-all duration-300 flex flex-col" data-venue-id="<?php echo (int)$venue['id']; ?>">
-                            <a href="<?php echo $venueBase; ?>/editar/<?php echo (int)$venue['id']; ?>" class="block">
+                            <a href="<?php echo $venueBase . '/' . (int)$venue['id']; ?>/visao-geral" class="block">
                                 <div class="relative aspect-video overflow-hidden">
                                     <img src="<?php echo $imageSrc; ?>" alt="<?php echo htmlspecialchars($venue['name']); ?>"
                                         class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"

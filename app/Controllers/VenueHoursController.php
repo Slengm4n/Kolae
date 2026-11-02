@@ -113,7 +113,7 @@ class VenueHoursController
      * Ex: Seg a Sex 08:00–22:00 · Sáb 09:00–18:00 · Dom fechado.
      * @return array lista de ['days' => int[], 'opens_at' => ?'HH:MM', 'closes_at' => ?'HH:MM']
      */
-    private static function weekSummary(array $hours): array
+    public static function weekSummary(array $hours): array
     {
         $groups = [];
         foreach (self::DISPLAY_ORDER as $w) {

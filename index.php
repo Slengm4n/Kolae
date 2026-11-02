@@ -10,6 +10,7 @@ use App\Controllers\VenueController;
 use App\Controllers\VenueHoursController;
 use App\Controllers\VenueAgendaController;
 use App\Controllers\VenuePhotosController;
+use App\Controllers\VenueOverviewController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
 use App\Controllers\AuthApiController;
@@ -170,6 +171,7 @@ $router->group('/dashboard', function ($router) {
         $router->get('/{id}/agenda', [VenueAgendaController::class, 'show']);
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
+        $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
@@ -218,6 +220,7 @@ $router->group('/admin', function ($router) {
         $router->get('/{id}/agenda', [VenueAgendaController::class, 'show']);
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
+        $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
