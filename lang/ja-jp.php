@@ -601,4 +601,13 @@ return[
     'list_distance' => '{km} km',
     'list_see_venue' => 'コートを見る',
     'list_you_are_here' => '現在地',
+    'error_404_title' => 'ページが見つかりません',
+    'error_404_text' => 'アドレスが間違っているか、ページが削除された可能性があります。コートを探してみませんか？',
+    'error_venue_not_found' => 'コートが見つかりません',
+    'error_403_title' => 'アクセスできません',
+    'error_403_text' => 'このページを開く権限がありません。',
+    'error_home' => 'ホームへ',
+    'error_venues' => 'コートを見る',
+    'error_panel' => 'ダッシュボードに戻る',
+    'error_login' => 'ログイン',
 ];

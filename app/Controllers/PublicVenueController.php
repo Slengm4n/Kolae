@@ -78,7 +78,7 @@ class PublicVenueController
         $row = ctype_digit((string)$id) ? Venue::findForApi((int)$id) : false;
         if (!$row) {
             http_response_code(404);
-            ViewHelper::render('errors/404', ['message' => 'Quadra não encontrada.']);
+            ViewHelper::render('errors/404', ['messageKey' => 'error_venue_not_found']);
             return;
         }
 

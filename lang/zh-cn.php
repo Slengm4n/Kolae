@@ -574,4 +574,13 @@ return[
     'list_distance' => '{km} 公里',
     'list_see_venue' => '查看场地',
     'list_you_are_here' => '你在这里',
+    'error_404_title' => '页面未找到',
+    'error_404_text' => '地址可能有误，或页面已被删除。要不要找找场地？',
+    'error_venue_not_found' => '场地未找到',
+    'error_403_title' => '无权访问',
+    'error_403_text' => '你没有权限打开此页面。',
+    'error_home' => '返回首页',
+    'error_venues' => '查看场地',
+    'error_panel' => '返回面板',
+    'error_login' => '登录',
 ];

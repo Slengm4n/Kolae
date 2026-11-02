@@ -559,4 +559,13 @@ return[
     'list_distance' => '{km} km',
     'list_see_venue' => 'Vedi campo',
     'list_you_are_here' => 'Sei qui',
+    'error_404_title' => 'Pagina non trovata',
+    'error_404_text' => 'L\'indirizzo potrebbe essere sbagliato o la pagina è stata rimossa. Che ne dici di cercare un campo?',
+    'error_venue_not_found' => 'Campo non trovato',
+    'error_403_title' => 'Accesso negato',
+    'error_403_text' => 'Non hai il permesso di aprire questa pagina.',
+    'error_home' => 'Vai alla home',
+    'error_venues' => 'Vedi campi',
+    'error_panel' => 'Torna alla dashboard',
+    'error_login' => 'Accedi',
 ];

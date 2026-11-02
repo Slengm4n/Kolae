@@ -641,4 +641,13 @@ return [
     'list_see_venue' => 'Ver quadra',
     'list_you_are_here' => 'Você está aqui',
     'forgot_resend_hint' => 'Não chegou? Confira o spam. Um novo link só pode ser enviado depois de {n} minutos.',
+    'error_404_title' => 'Página não encontrada',
+    'error_404_text' => 'O endereço pode estar errado ou a página foi removida. Que tal procurar uma quadra?',
+    'error_venue_not_found' => 'Quadra não encontrada',
+    'error_403_title' => 'Acesso negado',
+    'error_403_text' => 'Você não tem permissão para abrir esta página.',
+    'error_home' => 'Ir para o início',
+    'error_venues' => 'Ver quadras',
+    'error_panel' => 'Voltar ao painel',
+    'error_login' => 'Entrar',
 ];

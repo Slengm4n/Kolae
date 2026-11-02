@@ -576,4 +576,13 @@ return[
     'list_distance' => '{km} किमी',
     'list_see_venue' => 'कोर्ट देखें',
     'list_you_are_here' => 'आप यहाँ हैं',
+    'error_404_title' => 'पेज नहीं मिला',
+    'error_404_text' => 'पता गलत हो सकता है या पेज हटा दिया गया है। क्यों न कोई कोर्ट खोजें?',
+    'error_venue_not_found' => 'कोर्ट नहीं मिला',
+    'error_403_title' => 'पहुँच नहीं है',
+    'error_403_text' => 'आपको यह पेज खोलने की अनुमति नहीं है।',
+    'error_home' => 'होम पर जाएँ',
+    'error_venues' => 'कोर्ट देखें',
+    'error_panel' => 'डैशबोर्ड पर लौटें',
+    'error_login' => 'लॉग इन करें',
 ];

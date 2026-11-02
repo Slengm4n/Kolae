@@ -584,4 +584,13 @@ return[
     'list_see_venue' => 'See venue',
     'list_you_are_here' => 'You are here',
     'forgot_resend_hint' => 'Didn\'t get it? Check your spam folder. A new link can only be sent after {n} minutes.',
+    'error_404_title' => 'Page not found',
+    'error_404_text' => 'The address may be wrong or the page was removed. How about looking for a venue?',
+    'error_venue_not_found' => 'Venue not found',
+    'error_403_title' => 'Access denied',
+    'error_403_text' => 'You do not have permission to open this page.',
+    'error_home' => 'Go to home',
+    'error_venues' => 'See venues',
+    'error_panel' => 'Back to dashboard',
+    'error_login' => 'Log in',
 ];

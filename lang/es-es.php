@@ -576,4 +576,13 @@ return[
     'list_distance' => '{km} km',
     'list_see_venue' => 'Ver cancha',
     'list_you_are_here' => 'Estás aquí',
+    'error_404_title' => 'Página no encontrada',
+    'error_404_text' => 'La dirección puede estar mal o la página fue eliminada. ¿Qué tal buscar una cancha?',
+    'error_venue_not_found' => 'Cancha no encontrada',
+    'error_403_title' => 'Acceso denegado',
+    'error_403_text' => 'No tienes permiso para abrir esta página.',
+    'error_home' => 'Ir al inicio',
+    'error_venues' => 'Ver canchas',
+    'error_panel' => 'Volver al panel',
+    'error_login' => 'Iniciar sesión',
 ];  
