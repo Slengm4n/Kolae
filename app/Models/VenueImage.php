@@ -72,6 +72,19 @@ class VenueImage
         return $stmt->execute();
     }
 
+    /** Todas as fotos (otimização das antigas, D48). */
+    public static function findAll(): array
+    {
+        return Database::getConnection()->query("SELECT * FROM venues_images ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /** Troca o arquivo de uma foto (mesma posição na galeria). */
+    public static function updateFilePath(int $imageId, string $filePath): bool
+    {
+        $stmt = Database::getConnection()->prepare("UPDATE venues_images SET file_path = :file_path WHERE id = :id");
+        return $stmt->execute([':file_path' => $filePath, ':id' => $imageId]);
+    }
+
     /**
      * Põe a foto no começo da galeria (vira a capa). As outras mantêm a ordem.
      * @return bool false se a foto não for desta quadra.

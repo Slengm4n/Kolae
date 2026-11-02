@@ -13,6 +13,8 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Página pública da quadra** (D49): `kolae.online/quadra/{id}`, sem login, com galeria, informações, status ao vivo, horários ocupados de hoje (sem nomes), "Falar com o dono" pelo WhatsApp e "Compartilhar". O link mostra foto e nome na prévia do WhatsApp. Os cards da home abrem nela.
+- **Fotos otimizadas** (D48): fotos novas viram JPEG de até 1600 px, giradas pelo celular (uma foto de 6 MB fica com ~250 KB). Botão "Otimizar fotos" no painel do admin para as antigas.
 - **Aba Visão geral da quadra** (D47): a quadra como aparece no app, com galeria (grade, carrossel no celular e tela cheia), esportes, estrutura, descrição, horário, endereço, o dia de hoje, o contato e a lista "Quadra completa". O card do painel abre nela.
 - **Aba Fotos da quadra** (D46): enviar fotos com prévia, escolher a capa, mudar a ordem e apagar, até 10 por quadra. A capa escolhida vale no painel, no mapa e na API. Aceita WebP. Precisa do patch 006.
 - **Proteção contra CSRF** (S5, D43): todos os formulários do site levam um token da sessão; envio sem ele mostra a página "Página expirada" (403), nos 7 idiomas.
@@ -46,6 +48,8 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
 ### Corrigido
+- **Avatar não era reduzido** (D48): o código calculava a imagem menor e gravava a original.
+- **Piso na Visão geral** aparecia só em português; agora segue o idioma, como na home.
 - **"Lembrar de mim" não funcionava** (S5, D44): o login gravava o token num lugar e a leitura procurava em outro. Agora usa `user_tokens` (selector e hash do validator), o cookie é HttpOnly e Secure no HTTPS, e o logout apaga o token.
 - **Senha mínima de 8 caracteres no site** (S5, D08): cadastro e redefinição de senha aceitavam qualquer tamanho e a dica dizia 6. Agora conferem no navegador e no servidor, como a API e o perfil.
 - **XSS no mapa do admin** (S5): os dados das quadras entravam no `<script>` sem escapar `</script>`, e a busca montava o nome da quadra como HTML. Agora o JSON sai escapado e o nome entra como texto. O mesmo escape foi aplicado na senha gerada mostrada em Usuários.

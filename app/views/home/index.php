@@ -198,7 +198,7 @@ $partners = [
 
                     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <?php foreach ($featuredVenues as $i => $venue): ?>
-                            <article class="reveal group overflow-hidden rounded-3xl border border-content-secondary/15 bg-surface-elevated shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-brand-500/30" style="--reveal-delay: <?php echo $i * 120; ?>ms">
+                            <article class="reveal group relative overflow-hidden rounded-3xl border border-content-secondary/15 bg-surface-elevated shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-brand-500/30 focus-within:ring-2 focus-within:ring-brand-500" style="--reveal-delay: <?php echo $i * 120; ?>ms">
                                 <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-brand-500 to-brand-800">
                                     <?php if ($venue['image_url']): ?>
                                         <img src="<?php echo htmlspecialchars($venue['image_url']); ?>" alt="<?php echo htmlspecialchars($venue['name']); ?>" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
@@ -209,7 +209,7 @@ $partners = [
                                     <?php endif; ?>
                                 </div>
                                 <div class="p-6">
-                                    <h3 class="text-xl font-semibold leading-snug"><?php echo htmlspecialchars($venue['name']); ?></h3>
+                                    <h3 class="text-xl font-semibold leading-snug"><a href="<?php echo BASE_URL . '/quadra/' . $venue['id']; ?>" class="after:absolute after:inset-0 focus:outline-none"><?php echo htmlspecialchars($venue['name']); ?></a></h3>
                                     <?php if ($venue['city']): ?>
                                         <p class="mt-1 flex items-center gap-1.5 text-sm text-content-secondary">
                                             <i class="fas fa-location-dot text-brand-500" aria-hidden="true"></i>

@@ -235,3 +235,15 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **O quê:** primeira aba da quadra e destino do card no painel. Galeria (grade com uma foto grande e quatro menores no computador, carrossel de arrastar no celular, tela cheia com setas, teclado e Esc), esportes, estrutura, "Sobre a quadra", horário da semana, endereço com link para o Google Maps e, na lateral, preço, o dia de hoje (horário e partidas, com "Agora"), o WhatsApp que aparece no app e a lista **Quadra completa** (3 fotos, horário, esportes, descrição, preço, WhatsApp), cada item pendente levando à aba que resolve.
 - **Por quê:** o dono confere o que está publicado sem abrir o app, e a lista mostra o que falta para a quadra ficar boa na apresentação.
 - **Abas:** Visão geral, Dados, Fotos, Horário e Agenda. No celular cada aba mostra o ícone em cima do nome, para as cinco caberem sem rolagem.
+
+### D48 · Fotos otimizadas no servidor (02/11/2026)
+- **O quê:** toda foto de quadra enviada vira **JPEG de até 1600 px** no lado maior (qualidade 82, carregamento progressivo), girada pela orientação do celular (EXIF). Uma foto de celular de ~6 MB fica com ~250 KB. Se o servidor não conseguir processar (sem GD, memória), guarda a original para o envio não falhar. As fotos que já estavam no servidor são otimizadas pelo botão **"Otimizar fotos"** no painel do admin, que pula as que já estão boas, mantém ordem e capa e pode rodar mais de uma vez.
+- **Por quê:** o app carrega as fotos pelo 4G; 10 fotos de 4 MB eram 40 MB por quadra.
+- **Avatar:** o redimensionamento dele nunca funcionava (o código calculava a imagem menor e gravava a original). Corrigido, e com a rotação do EXIF.
+- **Onde:** `ImageHelper::savePhotoAsJpeg`, `VenuePhotosController::storeUploads` e `optimizeExisting`, card "Fotos das quadras" em `admin/dashboard.php`.
+
+### D49 · Página pública da quadra (02/11/2026)
+- **O quê:** `kolae.online/quadra/{id}`, aberta sem login: galeria, as mesmas informações do app, selo de status ao vivo, horários ocupados de hoje (só os horários, **nunca quem alugou**), "Falar com o dono" (WhatsApp com mensagem pronta citando a quadra), responsável pela quadra e "Compartilhar" (menu do celular ou cópia do link). O link compartilhado mostra nome, descrição e capa na prévia (Open Graph). Os cards da home abrem nela, e a Visão geral tem "Ver página pública".
+- **Regra de visibilidade:** a mesma da API (D34): quadra desativada ou excluída dá 404.
+- **Por quê:** o site não tinha como ver uma quadra; agora dá para mostrar no computador na apresentação, e o dono pode divulgar o link.
+- **Onde:** `PublicVenueController`, `views/venues/public.php`. Galeria e informações são os partials `venue_gallery.php` e `venue_details.php`, os mesmos da Visão geral.

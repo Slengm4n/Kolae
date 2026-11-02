@@ -124,8 +124,16 @@ class VenuePhotosController
                 continue;
             }
 
-            $fileName = uniqid('venue_', true) . '.' . $extension;
-            if (move_uploaded_file($files['tmp_name'][$i], $uploadDir . $fileName) && VenueImage::create($venueId, $fileName)) {
+            // Otimiza para o app (D48); se não der, guarda a original para o upload não falhar
+            $baseName = uniqid('venue_', true);
+            if (ImageHelper::savePhotoAsJpeg($files['tmp_name'][$i], $uploadDir . $baseName . '.jpg')) {
+                $fileName = $baseName . '.jpg';
+                $stored = true;
+            } else {
+                $fileName = $baseName . '.' . $extension;
+                $stored = move_uploaded_file($files['tmp_name'][$i], $uploadDir . $fileName);
+            }
+            if ($stored && VenueImage::create($venueId, $fileName)) {
                 $result['saved']++;
                 $room--;
             } else {
@@ -133,6 +141,55 @@ class VenuePhotosController
             }
         }
         return $result;
+    }
+
+    /**
+     * Otimiza as fotos que já estavam no servidor antes da D48 (botão no painel do admin).
+     * Pula as que já são JPEG pequenos; pode rodar mais de uma vez. Troca o arquivo e o
+     * file_path só depois que o JPEG novo foi gravado.
+     * @return array ['optimized' => n, 'skipped' => n, 'failed' => n, 'saved_bytes' => n]
+     */
+    public static function optimizeExisting(): array
+    {
+        @set_time_limit(300);
+        $report = ['optimized' => 0, 'skipped' => 0, 'failed' => 0, 'saved_bytes' => 0];
+
+        foreach (VenueImage::findAll() as $img) {
+            $dir = BASE_PATH . '/uploads/venues/' . (int)$img['venue_id'] . '/';
+            $old = $dir . basename($img['file_path']);
+            if (!is_file($old)) {
+                $report['skipped']++;
+                continue;
+            }
+            $size = filesize($old);
+            $dims = @getimagesize($old);
+            $isJpeg = $dims && $dims['mime'] === 'image/jpeg';
+            if ($dims && $isJpeg && max($dims[0], $dims[1]) <= ImageHelper::PHOTO_MAX_SIDE && $size <= 600 * 1024) {
+                $report['skipped']++;
+                continue;
+            }
+
+            $newName = uniqid('venue_', true) . '.jpg';
+            if (!ImageHelper::savePhotoAsJpeg($old, $dir . $newName)) {
+                $report['failed']++;
+                continue;
+            }
+            // Ficou maior (foto que já era leve): mantém a original
+            if (filesize($dir . $newName) >= $size) {
+                unlink($dir . $newName);
+                $report['skipped']++;
+                continue;
+            }
+            if (!VenueImage::updateFilePath((int)$img['id'], $newName)) {
+                unlink($dir . $newName);
+                $report['failed']++;
+                continue;
+            }
+            $report['saved_bytes'] += $size - filesize($dir . $newName);
+            unlink($old);
+            $report['optimized']++;
+        }
+        return $report;
     }
 
     /** Apaga o arquivo da foto, se existir. */

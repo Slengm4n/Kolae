@@ -3,7 +3,8 @@
  * <head> comum das páginas: fontes da marca (Kanit nos títulos, Poppins no texto),
  * ícones, CSS compilado e o script que aplica o tema antes de desenhar a página.
  *
- * Variáveis opcionais: $pageTitle (título da aba), $pageDescription (meta description).
+ * Variáveis opcionais: $pageTitle (título da aba), $pageDescription (meta description),
+ * $ogImage (prévia de link no WhatsApp e redes, D49: URL absoluta da imagem, ou '' para só título e descrição).
  */
 $pageTitle = $pageTitle ?? 'Kolae';
 ?>
@@ -12,6 +13,16 @@ $pageTitle = $pageTitle ?? 'Kolae';
 <title><?php echo htmlspecialchars($pageTitle); ?></title>
 <?php if (!empty($pageDescription)): ?>
 <meta name="description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+<?php endif; ?>
+<?php if (isset($ogImage)): ?>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kolae">
+<meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
+<?php if (!empty($pageDescription)): ?><meta property="og:description" content="<?php echo htmlspecialchars($pageDescription); ?>"><?php endif; ?>
+<?php if ($ogImage !== ''): ?>
+<meta property="og:image" content="<?php echo htmlspecialchars($ogImage); ?>">
+<meta name="twitter:card" content="summary_large_image">
+<?php endif; ?>
 <?php endif; ?>
 <meta name="theme-color" content="#0084FF">
 <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">

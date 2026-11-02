@@ -15,6 +15,16 @@ class Venue
      * Tipos de piso aceitos (chave gravada no banco => rótulo exibido).
      * Fonte da verdade: database/kolae.dbml (venues.floor_type).
      */
+    /** Piso → chave de tradução (home, Visão geral e página pública). */
+    public const FLOOR_LANG_KEYS = [
+        'synthetic' => 'venue_floor_answer_1',
+        'court'     => 'venue_floor_answer_2',
+        'sand'      => 'venue_floor_answer_3',
+        'clay'      => 'venue_floor_answer_4',
+        'grass'     => 'venue_floor_answer_5',
+        'wood'      => 'venue_floor_answer_6',
+    ];
+
     public const FLOOR_TYPES = [
         'synthetic' => 'Grama Sintética',
         'court'     => 'Cimento / Poliesportivo',
