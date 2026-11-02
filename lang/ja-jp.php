@@ -610,4 +610,9 @@ return[
     'error_venues' => 'コートを見る',
     'error_panel' => 'ダッシュボードに戻る',
     'error_login' => 'ログイン',
+    'qr_button' => 'QRコード',
+    'qr_title' => 'コートのQRコード',
+    'qr_text' => '印刷してコートに貼りましょう。読み取ると、写真・営業時間・WhatsAppボタンのあるページが開きます。',
+    'qr_download' => '画像をダウンロード',
+    'qr_poster_cta' => '読み取って営業時間を確認し、オーナーに連絡',
 ];

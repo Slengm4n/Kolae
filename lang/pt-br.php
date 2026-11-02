@@ -650,4 +650,9 @@ return [
     'error_venues' => 'Ver quadras',
     'error_panel' => 'Voltar ao painel',
     'error_login' => 'Entrar',
+    'qr_button' => 'QR Code',
+    'qr_title' => 'QR Code da quadra',
+    'qr_text' => 'Imprima e cole na quadra. Quem escanear abre a página com fotos, horário e o botão do WhatsApp.',
+    'qr_download' => 'Baixar imagem',
+    'qr_poster_cta' => 'Escaneie para ver os horários e falar com o dono',
 ];

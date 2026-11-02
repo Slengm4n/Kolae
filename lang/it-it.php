@@ -568,4 +568,9 @@ return[
     'error_venues' => 'Vedi campi',
     'error_panel' => 'Torna alla dashboard',
     'error_login' => 'Accedi',
+    'qr_button' => 'Codice QR',
+    'qr_title' => 'Codice QR del campo',
+    'qr_text' => 'Stampalo e appendilo al campo. Chi lo scansiona apre la pagina con foto, orari e il pulsante WhatsApp.',
+    'qr_download' => 'Scarica immagine',
+    'qr_poster_cta' => 'Scansiona per vedere gli orari e parlare con il proprietario',
 ];

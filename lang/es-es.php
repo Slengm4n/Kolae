@@ -585,4 +585,9 @@ return[
     'error_venues' => 'Ver canchas',
     'error_panel' => 'Volver al panel',
     'error_login' => 'Iniciar sesión',
+    'qr_button' => 'Código QR',
+    'qr_title' => 'Código QR de la cancha',
+    'qr_text' => 'Imprímelo y pégalo en la cancha. Quien lo escanee abre la página con fotos, horario y el botón de WhatsApp.',
+    'qr_download' => 'Descargar imagen',
+    'qr_poster_cta' => 'Escanea para ver los horarios y hablar con el dueño',
 ];  

@@ -593,4 +593,9 @@ return[
     'error_venues' => 'See venues',
     'error_panel' => 'Back to dashboard',
     'error_login' => 'Log in',
+    'qr_button' => 'QR code',
+    'qr_title' => 'Venue QR code',
+    'qr_text' => 'Print it and put it up at the venue. Anyone who scans it opens the page with photos, hours and the WhatsApp button.',
+    'qr_download' => 'Download image',
+    'qr_poster_cta' => 'Scan to see the hours and talk to the owner',
 ];

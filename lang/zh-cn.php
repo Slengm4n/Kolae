@@ -583,4 +583,9 @@ return[
     'error_venues' => '查看场地',
     'error_panel' => '返回面板',
     'error_login' => '登录',
+    'qr_button' => '二维码',
+    'qr_title' => '场地二维码',
+    'qr_text' => '打印后贴在场地。扫码即可打开包含照片、营业时间和 WhatsApp 按钮的页面。',
+    'qr_download' => '下载图片',
+    'qr_poster_cta' => '扫码查看时段并联系场主',
 ];
