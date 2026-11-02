@@ -185,6 +185,7 @@ $router->group('/dashboard', function ($router) {
 $router->group('/admin', function ($router) {
     $router->get('/', [AdminController::class, 'dashboard']);
     $router->get('/mapa', [AdminController::class, 'showMap']);
+    $router->post('/fotos/otimizar', [AdminController::class, 'optimizePhotos']);
 
     // Gerenciamento de Usuarios
     $router->group('/usuarios', function ($router) {

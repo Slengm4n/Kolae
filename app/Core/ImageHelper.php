@@ -88,8 +88,12 @@ class ImageHelper
         return false; // Retorna false se algo falhar
     }
 
+    /** Fotos das quadras (D48): lado maior em pixels e qualidade do JPEG. */
+    public const PHOTO_MAX_SIDE = 1600;
+    public const PHOTO_QUALITY = 82;
+
     /**
-     * Otimiza uma imagem (redimensiona e comprime).
+     * Otimiza uma imagem (redimensiona e comprime), mantendo o formato. Usado no avatar.
      * Requer a extensão GD do PHP; sem ela, mantém a imagem como veio (já validada
      * pelo conteúdo em validateUpload) em vez de quebrar o upload.
      */
@@ -104,55 +108,109 @@ class ImageHelper
         }
 
         $mime = $imageInfo['mime'];
+        $image = self::load($sourcePath, $mime);
+        if (!$image) return false;
+        $image = self::resizeToFit($image, $maxWidth, $mime !== 'image/jpeg');
+
         switch ($mime) {
             case 'image/jpeg':
-                $image = \imagecreatefromjpeg($sourcePath); 
-                break;
+                return \imagejpeg($image, $destinationPath, $quality);
             case 'image/png':
-                $image = \imagecreatefrompng($sourcePath);
-                break;
-            case 'image/gif': // Suporte para GIF (sem otimização de qualidade, apenas redimensionamento)
-                $image = \imagecreatefromgif($sourcePath);
-                break;
-            default:
-                return false; // Formato não suportado
+                \imagesavealpha($image, true);
+                return \imagepng($image, $destinationPath, 6);
+            case 'image/gif':
+                return \imagegif($image, $destinationPath);
+            case 'image/webp':
+                return \imagewebp($image, $destinationPath, $quality);
+        }
+        return false;
+    }
+
+    /**
+     * Foto de quadra (D48): gira pela orientação do celular, reduz para caber em
+     * PHOTO_MAX_SIDE e grava como JPEG. Transparência vira fundo branco.
+     * @return bool false se não deu para processar (sem GD, memória, arquivo estranho):
+     *              quem chama guarda o arquivo original para o upload não falhar.
+     */
+    public static function savePhotoAsJpeg(string $sourcePath, string $destinationPath): bool
+    {
+        $info = @\getimagesize($sourcePath);
+        if ($info === false || !\extension_loaded('gd')) {
+            return false;
+        }
+        // Foto de 12 MP aberta no GD ocupa uns 50 MB
+        $limit = ini_get('memory_limit');
+        if ($limit !== '-1' && self::bytes($limit) < 256 * 1024 * 1024) {
+            @ini_set('memory_limit', '256M');
         }
 
+        $image = self::load($sourcePath, $info['mime']);
+        if (!$image) {
+            return false;
+        }
+        $image = self::resizeToFit($image, self::PHOTO_MAX_SIDE, false);
+
+        // JPEG não tem transparência: pinta o fundo de branco
+        $canvas = \imagecreatetruecolor(\imagesx($image), \imagesy($image));
+        \imagefill($canvas, 0, 0, \imagecolorallocate($canvas, 255, 255, 255));
+        \imagecopy($canvas, $image, 0, 0, 0, 0, \imagesx($image), \imagesy($image));
+        \imageinterlace($canvas, true); // carrega aos poucos no 4G
+        return \imagejpeg($canvas, $destinationPath, self::PHOTO_QUALITY);
+    }
+
+    /** Abre a imagem no GD já na orientação certa (EXIF de foto de celular). */
+    private static function load(string $path, string $mime): ?\GdImage
+    {
+        $image = match ($mime) {
+            'image/jpeg' => @\imagecreatefromjpeg($path),
+            'image/png' => @\imagecreatefrompng($path),
+            'image/gif' => @\imagecreatefromgif($path),
+            'image/webp' => @\imagecreatefromwebp($path),
+            default => false,
+        };
+        if (!$image) {
+            return null;
+        }
+        if ($mime === 'image/jpeg' && \function_exists('exif_read_data')) {
+            $orientation = (int)(@\exif_read_data($path)['Orientation'] ?? 1);
+            $angle = [3 => 180, 6 => -90, 8 => 90][$orientation] ?? 0;
+            if ($angle !== 0) {
+                $image = \imagerotate($image, $angle, 0);
+            }
+        }
+        return $image;
+    }
+
+    /** Reduz para o lado maior caber em $maxSide (nunca aumenta). */
+    private static function resizeToFit(\GdImage $image, int $maxSide, bool $keepAlpha): \GdImage
+    {
         $width = \imagesx($image);
         $height = \imagesy($image);
-
-        if ($width > $maxWidth) {
-            $newHeight = ($height / $width) * $maxWidth;
-            $newImage = \imagecreatetruecolor($maxWidth, $newHeight);
-
-            // Preserva a transparência para PNG e GIF
-            if ($mime == 'image/png' || $mime == 'image/gif') {
-                \imagealphablending($newImage, false);
-                \imagesavealpha($newImage, true);
-                $transparent = \imagecolorallocatealpha($newImage, 255, 255, 255, 127);
-                \imagefilledrectangle($newImage, 0, 0, $maxWidth, $newHeight, $transparent);
-            }
-
-            \imagecopyresampled($newImage, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height);
-            \imagedestroy($image);
+        $scale = $maxSide / max($width, $height);
+        if ($scale >= 1) {
+            return $image;
         }
-
-        $success = false;
-        switch ($mime) {
-            case 'image/jpeg':
-                $success = \imagejpeg($image, $destinationPath, $quality);
-                break;
-            case 'image/png':
-                $pngQuality = round(($quality / 100) * 9);
-                \imagesavealpha($image, true);
-                $success = \imagepng($image, $destinationPath, $pngQuality);
-                break;
-            case 'image/gif':
-                $success = \imagegif($image, $destinationPath);
-                break;
+        $newWidth = max(1, (int)round($width * $scale));
+        $newHeight = max(1, (int)round($height * $scale));
+        $resized = \imagecreatetruecolor($newWidth, $newHeight);
+        if ($keepAlpha) {
+            \imagealphablending($resized, false);
+            \imagesavealpha($resized, true);
+            \imagefilledrectangle($resized, 0, 0, $newWidth, $newHeight, \imagecolorallocatealpha($resized, 255, 255, 255, 127));
         }
+        \imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        return $resized;
+    }
 
-        \imagedestroy($image);
-        return $success;
+    /** "256M" → bytes. */
+    private static function bytes(string $value): int
+    {
+        $number = (int)$value;
+        return match (strtoupper(substr(trim($value), -1))) {
+            'G' => $number * 1024 ** 3,
+            'M' => $number * 1024 ** 2,
+            'K' => $number * 1024,
+            default => $number,
+        };
     }
 }
