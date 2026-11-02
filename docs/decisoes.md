@@ -259,3 +259,17 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Mesma lista da API:** o filtro e o cálculo do status saíram do `index` da API para `VenueApiController::listVenues`, usado pelos dois. A resposta da API não mudou.
 - **Mapa com Leaflet e OpenStreetMap**, sem chave: funciona igual no local e na produção e não depende da chave do Google Maps (que ainda precisa ser liberada para `kolae.online`). O mapa do admin continua no Google.
 - **Filtros na URL** (`?agora=1&coberta=1&preco=100...`): dá para compartilhar uma busca; valor inválido é ignorado em vez de dar erro.
+
+### D52 · Limite no "esqueci a senha" (02/11/2026)
+- **O quê:** no máximo **um e-mail a cada 5 minutos por conta** (`PasswordReset::RESEND_MINUTES`), no site e na API. Pedido repetido dentro do prazo não envia nada e vai para o log.
+- **Como:** usa a hora do token em `password_reset_tokens`, que guarda um token por e-mail (o último). Sem patch de banco.
+- **A resposta é sempre a mesma** (site: "se o e-mail existir, um link foi enviado"; API: `200`), exista a conta ou não, enviado ou não: o limite não revela quem tem cadastro. O site avisa para conferir o spam e esperar 5 minutos.
+- **Por quê:** sem limite, qualquer pessoa disparava e-mails sem parar para um endereço, o que incomoda o dono da conta e pode fazer a HostGator bloquear a conta de e-mail do Kolae.
+
+### D53 · Páginas de erro no visual novo (02/11/2026)
+- **O quê:** 404 ("Página não encontrada", com "Ir para o início" e "Ver quadras"; quadra inexistente com o título "Quadra não encontrada"), 403 ("Acesso negado", com "Voltar ao painel" ou "Entrar") e a "Página expirada" do CSRF usam a mesma base, `partials/error_page.php`: cartão com tema claro/escuro, o nome Kolae levando à home, textos nos 7 idiomas e `noindex`. A API continua respondendo JSON nos erros.
+
+### D54 · QR Code da quadra (02/11/2026)
+- **O quê:** na Visão geral, o botão "QR Code" abre um cartaz pronto para imprimir (faixa azul do Kolae, nome da quadra, QR para a página pública, "Escaneie para ver os horários e falar com o dono" e o endereço) e o botão "Baixar imagem" (PNG). Só para quadra com página pública.
+- **Como:** o QR é gerado no navegador (`qrcode-generator`, cdnjs) e desenhado num canvas, sem biblioteca no servidor. Desenhar em pixel inteiro importa: com meio pixel apareciam linhas brancas entre os quadradinhos e o leitor não reconhecia o código.
+- **Onde:** `partials/venue_qr.php`.
