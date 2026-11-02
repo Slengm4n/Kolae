@@ -73,23 +73,23 @@ Hoje `http://kolae.online` abre sem ir para `https://`.
 - Conferir: abrir `http://kolae.online` e ver o endereço virar `https://`.
 - Feito pelo painel, e não no `.htaccess`, para não afetar o XAMPP local (que não tem HTTPS).
 
-### b) E-mail próprio para o "esqueci a senha"
-O plano inclui contas de e-mail. Um remetente `@kolae.online` chega mais na caixa de entrada que um Gmail (o domínio do remetente bate com o do site) e não depende da senha de app do Google.
-1. cPanel → **Contas de e-mail** → **Criar**: `nao-responda@kolae.online`, senha gerada pelo cPanel.
-2. Na lista, ao lado da conta: **Conectar dispositivos** (ou "Configurar cliente de e-mail"). Anotar o **servidor de saída (SMTP)** e a porta **SSL/TLS** (normalmente `mail.kolae.online`, porta **465**).
+### b) E-mail próprio para o "esqueci a senha" ✔ (02/11/2026)
+Feito: o "esqueci a senha" envia por `nao-responda@kolae.online`. **O e-mail da HostGator neste plano é o Titan** (painel "powered by Titan"), não o e-mail do cPanel: o servidor é `smtp.titan.email`, e não `mail.kolae.online`.
+1. Painel de e-mail → **Criar conta de e-mail**: `nao-responda@kolae.online` (envio) e `contato@kolae.online` (citado nos Termos e na Privacidade).
+2. **Ligar o acesso de outros aplicativos** (sem isso o login SMTP é recusado): entrar no webmail do Titan com a conta `nao-responda` → **Configurações** (engrenagem) → **Enable Titan on Other Apps** → confirmar. Se aparecer "Configure 3rd party apps", já está ligado. Com verificação em duas etapas ligada na conta, é preciso senha de aplicativo.
 3. Gerenciador de Arquivos → `public_html/config.php` → **Editar** e trocar só o bloco de e-mail:
    ```php
-   define('SMTP_HOST', 'mail.kolae.online');      // o servidor de saída anotado
+   define('SMTP_HOST', 'smtp.titan.email');
    define('SMTP_USER', 'nao-responda@kolae.online');
-   define('SMTP_PASS', 'a senha da conta de e-mail');
-   define('SMTP_SECURE', 'ssl');                  // porta 465 = ssl; porta 587 = tls
+   define('SMTP_PASS', 'a senha da conta nao-responda');
+   define('SMTP_SECURE', 'ssl');
    define('SMTP_PORT', 465);
    define('SMTP_FROM_EMAIL', 'nao-responda@kolae.online');
    define('SMTP_FROM_NAME', 'Kolae');
    ```
    `SMTP_FROM_EMAIL` precisa ser a mesma conta do `SMTP_USER`, senão o servidor recusa ou o e-mail cai no spam.
-4. Testar: no site, "Esqueci a senha" com um e-mail cadastrado; ver se chega (olhar o spam na primeira vez).
-5. Se der erro, voltar ao Gmail (`smtp.gmail.com`, `tls`, 587, senha de app), que já está configurado.
+4. No painel do Titan, o card **Conectar domínio** precisa estar todo verde (MX, SPF, DKIM).
+5. Testar: "Esqueci a senha" no site com um e-mail cadastrado (esperar 5 minutos entre dois pedidos, D52). Se precisar voltar: Gmail (`smtp.gmail.com`, `tls`, 587, senha de app).
 
 ### c) Entregabilidade (SPF e DKIM)
 - cPanel → **Entregabilidade de e-mail** (Email Deliverability) → no `kolae.online`, se aparecer "Problemas", clicar em **Reparar** em SPF e DKIM.
