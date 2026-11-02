@@ -81,6 +81,7 @@ $message = null;
                 if (isset($_GET['status']) && $_GET['status'] === 'sent') {
                     echo '<div class="bg-green-500/20 border border-green-500/50 text-green-600 dark:text-green-300 px-4 py-3 rounded-lg text-center mb-6 text-sm backdrop-blur-sm animate-fadeInUp">'
                         . ($lang['email_exists'] ?? 'Email enviado com sucesso!')
+                        . '<span class="block mt-1 text-xs opacity-80">' . htmlspecialchars(strtr($lang['forgot_resend_hint'], ['{n}' => \App\Models\PasswordReset::RESEND_MINUTES])) . '</span>'
                         . '</div>';
                 }
                 if (isset($_GET['error']) && $_GET['error'] === 'invalid_email') {

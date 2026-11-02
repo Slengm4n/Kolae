@@ -583,4 +583,5 @@ return[
     'list_distance' => '{km} km',
     'list_see_venue' => 'See venue',
     'list_you_are_here' => 'You are here',
+    'forgot_resend_hint' => 'Didn\'t get it? Check your spam folder. A new link can only be sent after {n} minutes.',
 ];

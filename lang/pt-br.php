@@ -640,4 +640,5 @@ return [
     'list_distance' => '{km} km',
     'list_see_venue' => 'Ver quadra',
     'list_you_are_here' => 'Você está aqui',
+    'forgot_resend_hint' => 'Não chegou? Confira o spam. Um novo link só pode ser enviado depois de {n} minutos.',
 ];

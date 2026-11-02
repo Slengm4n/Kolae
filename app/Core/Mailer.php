@@ -22,6 +22,13 @@ class Mailer
      */
     public static function sendPasswordReset(string $email, string $name): bool
     {
+        // Limite (D52): um e-mail a cada PasswordReset::RESEND_MINUTES por conta. Quem chama
+        // responde igual de qualquer jeito, para não revelar quem tem cadastro.
+        if (PasswordReset::sentRecently($email)) {
+            error_log('Esqueci a senha: pedido repetido em menos de ' . PasswordReset::RESEND_MINUTES . ' min; e-mail não reenviado.');
+            return true;
+        }
+
         try {
             $token = bin2hex(random_bytes(32));
             PasswordReset::deleteTokensForEmail($email);
