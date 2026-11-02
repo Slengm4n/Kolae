@@ -149,6 +149,7 @@ $router->get('/logout', [AuthController::class, 'logout']);
 $router->get('/forgot-password', [AuthController::class, 'showForgotPasswordForm']);
 $router->post('/forgot-password', [AuthController::class, 'handleForgotPassword']);
 $router->get('/reset-password', [AuthController::class, 'showResetForm']);
+$router->get('/verificar-email', [AuthController::class, 'verifyEmail']);
 $router->post('/reset-password', [AuthController::class, 'handleResetPassword']);
 
 // --- ROTAS DO PAINEL DO UTILIZADOR ---
@@ -160,6 +161,8 @@ $router->group('/dashboard', function ($router) {
     $router->post('/perfil/atualizar', [UserController::class, 'updateProfile']);
     $router->get('/perfil/seguranca', [UserController::class, 'showSecurityPage']);
     $router->post('/perfil/seguranca/atualizar', [UserController::class, 'updatePasswordFromProfile']);
+    $router->get('/perfil/preferencias', [UserController::class, 'preferences']);
+    $router->post('/verificar-email/reenviar', [AuthController::class, 'resendVerification']);
 
     // --- ROTAS DE QUADRAS DO UTILIZADOR ---
     $router->group('/quadras', function ($router) {

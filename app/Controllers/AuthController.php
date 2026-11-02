@@ -3,12 +3,11 @@
 namespace App\Controllers;
 
 use App\Core\AuthHelper;
+use App\Core\EmailVerification;
 use App\Core\LoginThrottle;
 use App\Core\Mailer;
 use App\Core\ViewHelper;
 use App\Models\User;
-use DateTime;
-use Exception;
 use App\Models\PasswordReset;
 
 class AuthController
@@ -86,7 +85,13 @@ class AuthController
                 exit;
             }
 
-            if (!$this->isOver18($_POST['birthdate'])) {
+            // Data de nascimento: o JS manda "birthdate" pronto; sem JS, vem nas três listas (dia, mês, ano)
+            $birthdate = trim((string)($_POST['birthdate'] ?? ''));
+            if ($birthdate === '' && !empty($_POST['birth_year']) && !empty($_POST['birth_month']) && !empty($_POST['birth_day'])) {
+                $birthdate = sprintf('%04d-%02d-%02d', (int)$_POST['birth_year'], (int)$_POST['birth_month'], (int)$_POST['birth_day']);
+            }
+            // Mesma regra da API: data que existe, não futura e com idade mínima
+            if (!User::isValidAdultBirthdate($birthdate)) {
                 header('Location: ' . BASE_URL . '/register?error=underage');
                 exit;
             }
@@ -101,12 +106,16 @@ class AuthController
             $userData = [
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
-                'birthdate' => $_POST['birthdate'],
+                'birthdate' => $birthdate,
                 'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
                 'role' => 'player' 
             ];
 
-            if (User::create($userData)) {
+            $newId = User::create($userData);
+            if ($newId) {
+                // Confirmação de e-mail (D58): não bloqueia; se o envio falhar, dá para reenviar pelo painel
+                Mailer::sendEmailVerification($userData['email'], $userData['name'],
+                    EmailVerification::link(['id' => $newId, 'email' => $userData['email']]));
                 header('Location: ' . BASE_URL . '/login?status=registered');
                 exit;
             } else {
@@ -202,6 +211,31 @@ class AuthController
     }
 
     // Processa o logout do usuário
+    // Link do e-mail de confirmação (D58). Funciona logado ou não.
+    public function verifyEmail()
+    {
+        $result = EmailVerification::verify($_GET['u'] ?? '', $_GET['e'] ?? '', $_GET['s'] ?? '');
+        $query = in_array($result, ['ok', 'already'], true) ? 'status=email_verified' : 'error=verify_' . $result;
+        $target = isset($_SESSION['user_id']) ? '/dashboard' : '/login';
+        header('Location: ' . BASE_URL . $target . '?' . $query);
+        exit;
+    }
+
+    // "Reenviar" do aviso no painel (D58)
+    public function resendVerification()
+    {
+        AuthHelper::check();
+        $user = User::findById($_SESSION['user_id']);
+        if (!$user || !empty($user['email_verified_at'])) {
+            header('Location: ' . BASE_URL . '/dashboard');
+            exit;
+        }
+        $result = EmailVerification::send($user);
+        $query = ['sent' => 'status=verify_sent', 'wait' => 'error=verify_wait'][$result] ?? 'error=verify_failed';
+        header('Location: ' . BASE_URL . '/dashboard?' . $query);
+        exit;
+    }
+
     public function logout()
     {
         AuthHelper::forgetRememberToken();
@@ -224,19 +258,5 @@ class AuthController
         session_destroy();
         header('Location: ' . BASE_URL . '/login');
         exit;
-    }
-
-    // Função para verificar maioridade
-    private function isOver18($birthdate): bool
-    {
-        if (empty($birthdate)) return false;
-        try {
-            $birthDateObj = new DateTime($birthdate);
-            $today = new DateTime();
-            $age = $today->diff($birthDateObj);
-            return $age->y >= 18;
-        } catch (Exception $e) {
-            return false;
-        }
     }
 }

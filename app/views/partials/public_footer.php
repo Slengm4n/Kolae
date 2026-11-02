@@ -29,7 +29,7 @@ $footerLinks = [
         <div>
             <h2 class="text-sm font-semibold uppercase tracking-wider text-content-primary"><?php echo htmlspecialchars($lang['global_contact_kolae']); ?></h2>
             <ul class="mt-4 space-y-2.5 text-sm text-content-secondary">
-                <li class="flex items-center gap-2"><i class="fas fa-envelope w-4 text-brand-500" aria-hidden="true"></i><a href="mailto:kolae.gg@gmail.com" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">kolae.gg@gmail.com</a></li>
+                <li class="flex items-center gap-2"><i class="fas fa-envelope w-4 text-brand-500" aria-hidden="true"></i><a href="mailto:<?php echo \App\Controllers\LegalController::CONTACT_EMAIL; ?>" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><?php echo \App\Controllers\LegalController::CONTACT_EMAIL; ?></a></li>
                 <li class="flex items-center gap-2"><i class="fas fa-phone w-4 text-brand-500" aria-hidden="true"></i>+55 (11) 99860-0253</li>
             </ul>
         </div>

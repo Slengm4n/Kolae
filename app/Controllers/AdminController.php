@@ -56,6 +56,7 @@ class AdminController
         $count = 0;
         $bytes = 0;
         $heavy = 0;
+        $noThumb = 0;
         foreach (VenueImage::findAll() as $img) {
             $path = BASE_PATH . '/uploads/venues/' . (int)$img['venue_id'] . '/' . basename($img['file_path']);
             if (!is_file($path)) {
@@ -67,8 +68,11 @@ class AdminController
             if ($size > 600 * 1024) {
                 $heavy++;
             }
+            if (!is_file(\App\Core\ImageHelper::thumbPath($path))) {
+                $noThumb++;
+            }
         }
-        return ['count' => $count, 'bytes' => $bytes, 'heavy' => $heavy];
+        return ['count' => $count, 'bytes' => $bytes, 'heavy' => $heavy, 'no_thumb' => $noThumb];
     }
 
     //Exibe o mapa com a localização de todas as quadras

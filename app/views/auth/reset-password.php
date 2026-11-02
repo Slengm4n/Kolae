@@ -1,141 +1,62 @@
 <?php
 $lang = require BASE_PATH . '/includes/i18n.php';
-$token = $data['token'] ?? '';
+$token = $token ?? '';
 
-// Lógica para exibir mensagens de erro
-$errorMessage = null;
+$authAlert = null;
 if (isset($_GET['error'])) {
     switch ($_GET['error']) {
         case 'password_mismatch':
-            $errorMessage = $lang['reset_password_mismatch'];
+            $authAlert = ['error', $lang['reset_password_mismatch']];
             break;
         case 'weak_password':
-            $errorMessage = $lang['register_password_character'];
+            $authAlert = ['error', $lang['register_password_character']];
             break;
         case 'invalid_token':
-            $errorMessage = $lang['reset_invalid'];
+            $authAlert = ['error', $lang['reset_invalid']];
             break;
         case 'generic':
-            $errorMessage = $lang['reset_unknown_error'];
+            $authAlert = ['error', $lang['reset_unknown_error']];
             break;
     }
 }
+
+ob_start();
 ?>
+<form id="reset-form" action="<?php echo BASE_URL; ?>/reset-password" method="POST" class="space-y-5" data-auth-form>
+    <?php echo \App\Core\Csrf::field(); ?>
+    <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
 
-<!DOCTYPE html>
-<html lang="<?php echo $_SESSION['idioma']; ?>">
+    <?php
+    $field = ['id' => 'password', 'type' => 'password', 'icon' => 'fa-lock', 'label' => $lang['reset_passoword_one'],
+        'autocomplete' => 'new-password', 'hint' => $lang['auth_password_min'],
+        'attrs' => 'required minlength="8" autofocus data-min-hint="password-hint"'];
+    include BASE_PATH . '/app/views/partials/auth_field.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae</title>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
+    $field = ['id' => 'password_confirmation', 'type' => 'password', 'icon' => 'fa-lock', 'label' => $lang['reset_passoword_two'],
+        'autocomplete' => 'new-password', 'attrs' => 'required minlength="8" data-match="password"'];
+    include BASE_PATH . '/app/views/partials/auth_field.php';
+    ?>
+    <p id="password_confirmation-match" class="auth-hint hidden -mt-3" role="status"
+        data-ok="<?php echo htmlspecialchars($lang['auth_password_match']); ?>" data-bad="<?php echo htmlspecialchars($lang['auth_password_nomatch']); ?>">
+        <i class="fas fa-circle-check" aria-hidden="true"></i><span></span>
+    </p>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <button id="reset-button" type="submit" class="auth-btn mt-7" data-loading-text="<?php echo htmlspecialchars($lang['auth_wait']); ?>">
+        <i class="fas fa-check text-sm" aria-hidden="true"></i>
+        <?php echo htmlspecialchars($lang['reset_password_btn']); ?>
+    </button>
+</form>
+<?php
+$authContent = ob_get_clean();
 
-    <!-- Tailwind CSS -->
-    <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
+$pageTitle = $lang['reset_title'] . ' · Kolae';
+$authImage = 'forgot_bg.webp';
+$authSideTitle = $lang['auth_reset_side_title'];
+$authSideText = $lang['auth_reset_side_text'];
+$authBack = [BASE_URL . '/login', $lang['auth_back_login']];
+$authTitle = $lang['reset_title'];
+$authSubtitle = $lang['auth_reset_subtitle'];
+$authFooter = htmlspecialchars($lang['remember_passoword_text'])
+    . ' <a href="' . BASE_URL . '/login" class="auth-link">' . htmlspecialchars($lang['remember_password_btn']) . '</a>';
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Classe simples para a animação */
-        .animate-fadeInUp {
-            animation: fadeInUp 0.5s ease-out both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-</head>
-
-<body class="bg-[#0D1117] text-white min-h-screen flex items-center justify-center p-4 sm:p-8">
-
-    <!-- === Mensagem de Erro (Se houver) === -->
-    <?php if ($errorMessage): ?>
-        <div class="bg-red-600 text-white p-4 text-center fixed top-5 left-1/2 -translate-x-1/2 rounded-md shadow-lg z-50 animate-fadeInUp" role="alert">
-            <?= htmlspecialchars($errorMessage) ?>
-        </div>
-    <?php endif; ?>
-    <!-- === Fim Mensagem de Erro === -->
-
-
-    <!-- Layout de Formulário Centralizado -->
-    <div class="w-full max-w-md animate-fadeInUp">
-        <!-- Logo -->
-        <a href="<?= BASE_URL ?>/index" class="mb-6 inline-block w-full text-center">
-            <img src="<?= BASE_URL ?>/assets/img/kolae_branca.png" alt="Logo Kolae" class="h-10 mx-auto">
-        </a>
-
-        <!-- Card do Formulário -->
-        <div class="bg-[#161B22] p-8 rounded-2xl border border-gray-800">
-
-            <h2 class="text-3xl font-bold text-center mb-8"><?php echo $lang['reset_title']; ?> </h2>
-
-            <!-- Action aponta para a rota POST de reset -->
-            <form id="reset-form" action="<?= BASE_URL ?>/reset-password" method="POST" class="space-y-6">
-                <?php echo \App\Core\Csrf::field(); ?>
-
-                <!-- Campo Oculto com o Token -->
-                <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
-
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_one']; ?> </label>
-                    <div class="mt-1">
-                        <input id="password" name="password" type="password" minlength="8" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-300"><?php echo $lang['reset_passoword_two']; ?></label>
-                    <div class="mt-1">
-                        <input id="password_confirmation" name="password_confirmation" type="password" minlength="8" required class="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-400">
-                    </div>
-                </div>
-
-                <div>
-                    <button id='reset-button' type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-black bg-brand-400 hover:bg-brand-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-brand-400 transition-colors">
-                        <?php echo $lang['reset_password_btn']; ?>
-                    </button>
-                </div>
-            </form>
-
-            <p class="mt-8 text-center text-sm text-gray-400">
-                <?php echo $lang['remember_passoword_text']; ?>
-                <a href="<?= BASE_URL ?>/login" class="font-medium text-brand-400 hover:text-brand-300"><?php echo $lang['remember_password_btn']; ?> </a>
-            </p>
-        </div>
-    </div>
-    <script>
-        const resetForm = document.getElementById('reset-form');
-        const resetButton = document.getElementById('reset-button');
-
-        if (resetForm && resetButton) {
-            resetForm.addEventListener('submit', function() {
-                resetButton.disabled = true;
-                resetButton.innerHTML = `
-                    <i class="fas fa-spinner fa-spin mr-2"></i>
-                    Aguarde...
-                `;
-            });
-        }
-    </script>
-
-</body>
-
-</html>
+include BASE_PATH . '/app/views/partials/auth_layout.php';

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Perfil sem foto: silhueta neutra, sem texto -->
+  <rect width="256" height="256" fill="#cbd5e1"/>
+  <circle cx="128" cy="100" r="46" fill="#f8fafc"/>
+  <path d="M40 236c8-48 46-78 88-78s80 30 88 78" fill="#f8fafc"/>
+</svg>

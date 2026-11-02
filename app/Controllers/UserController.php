@@ -36,7 +36,10 @@ class UserController
         $data = [
             'userName' => $_SESSION['user_name'] ?? 'Usuario',
             'userVenues' => $venues,
-            'showCnpjModal' => empty($user['cnpj'])
+            'showCnpjModal' => empty($user['cnpj']),
+            // Confirmação de e-mail (D58): aviso no painel enquanto não confirmar
+            'emailPending' => empty($user['email_verified_at']),
+            'userEmail' => $user['email'] ?? '',
         ];
 
         ViewHelper::render('users/dashboard', $data);
@@ -127,6 +130,13 @@ class UserController
             header('Location: ' . BASE_URL . '/dashboard/perfil?error=update_failed');
         }
         exit;
+    }
+
+    // Configurações > Preferências: tema e idioma (os dois ficam no navegador e na sessão, sem banco)
+    public function preferences()
+    {
+        AuthHelper::check();
+        ViewHelper::render('users/preferences');
     }
 
     public function showSecurityPage()

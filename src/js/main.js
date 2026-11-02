@@ -4,9 +4,7 @@ import '../input.css';
 // 2. Importa os módulos JS
 import { initTheme } from './modules/toggle_theme.js';
 import { initNavbar } from './modules/dropdown.js';
-import { initHomeCarousel } from './pages/home.js';
-import { initLogin } from './pages/login.js';
-import { initRegister } from './pages/register.js';
+import { initAuthForms } from './pages/auth_form.js';
 import { initCnpjMask } from './pages/cnpj.js';
 import { initLanguageSwitcher } from './modules/language_switcher.js';
 import { initHomeMotion } from './pages/home_motion.js';
@@ -14,9 +12,7 @@ import { initHomeMotion } from './pages/home_motion.js';
 document.addEventListener('DOMContentLoaded', () => {
     initTheme(); // Roda em todas as páginas
     initNavbar(); // Roda em todas as páginas (se tiver navbar)
-    initHomeCarousel(); // Só vai ativar se estiver na Home
-    initLogin(); // Só vai ativar se estiver na página de login
-    initRegister(); // Só vai ativar se estiver na página de registro
+    initAuthForms(); // Só vai ativar nas telas de entrada (login, cadastro, esqueci e nova senha)
     initCnpjMask(); // Só vai ativar se estiver na página com campo CNPJ
     initLanguageSwitcher(); // Roda em todas as páginas
     initHomeMotion(); // Só vai ativar se estiver na Home (cabeçalho, seções ao rolar, prévia do app)

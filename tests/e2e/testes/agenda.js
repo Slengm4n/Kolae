@@ -88,7 +88,11 @@ const post = (p, url, fields) => p.evaluate(async (url, fields) => {
   check('API não mostra quem alugou', JSON.stringify(api(`/venues/${ARENA}/schedule?date=${ymd(tomorrow)}`)).includes('Clique'), false);
 
   // Cancelar
-  await Promise.all([p.waitForNavigation({ waitUntil: 'networkidle2' }), p.$eval('.match-row .cancel-form button', b => b.click())]);
+  // Confirmação no visual do Kolae (ui.js), com botões sem ambiguidade
+  await p.$eval('.match-row .cancel-form button', b => b.click());
+  await p.waitForSelector('.kolae-modal [data-ok]');
+  check('cancelar: janela com "Voltar" e "Sim, cancelar partida"', await p.$$eval('.kolae-modal button', bs => bs.map(b => b.textContent.trim())), ['Voltar', 'Sim, cancelar partida']);
+  await Promise.all([p.waitForNavigation({ waitUntil: 'networkidle2' }), p.click('.kolae-modal [data-ok]')]);
   check('cancela e confirma', (await text(p)).includes('Partida cancelada'), true);
   check('banco: status cancelled', sql(`SELECT status FROM matches WHERE renter_name='Clique Teste'`), 'cancelled');
   check('API: horário livre de novo', api(`/venues/${ARENA}/schedule?date=${ymd(tomorrow)}`).slots.map(s => s.status), ['available']);
@@ -124,7 +128,9 @@ const post = (p, url, fields) => p.evaluate(async (url, fields) => {
   // Outro dono não vê nem cancela
   const o = await login(b, 'dono@teste.local');
   await o.goto(agenda, { waitUntil: 'networkidle2' });
-  check('outro dono é mandado de volta', o.url().replace(BASE, ''), '/dashboard?error=not_found');
+  // Volta ao painel com o aviso (a URL fica limpa depois de mostrar, ui.js)
+  await o.waitForSelector('.kolae-toast', { timeout: 3000 }).catch(() => {});
+  check('outro dono é mandado de volta, com aviso', [new URL(o.url()).pathname, await o.$eval('.kolae-toast-text', e => e.textContent).catch(() => '')], [lib.BASE_PATH + '/dashboard', 'Não encontramos essa quadra na sua conta.']);
   const matchId = sql(`SELECT id FROM matches WHERE venue_id=${ARENA} AND renter_name='Time do Carlos'`);
   await post(o, `${agenda}/cancelar/${matchId}`, { data: ymd(today) });
   check('outro dono não cancela', sql(`SELECT status FROM matches WHERE id=${matchId}`), 'scheduled');

@@ -59,7 +59,19 @@ function initLiveStatus() {
     }, 3200);
 }
 
+// Vídeo de fundo da abertura: só em tela grande, sem economia de dados e sem "reduzir movimento"
+function initHeroVideo() {
+    const video = document.querySelector('video[data-hero-video]');
+    if (!video) return;
+    const saveData = navigator.connection && navigator.connection.saveData;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (saveData || reduce || !window.matchMedia('(min-width: 1024px)').matches) return;
+    video.src = video.dataset.heroVideo;
+    video.play().catch(() => {});
+}
+
 export function initHomeMotion() {
+    initHeroVideo();
     initStickyHeader();
     initReveal();
     initLiveStatus();

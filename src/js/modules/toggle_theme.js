@@ -1,39 +1,54 @@
-function applyTheme(themeName) {
-    const html = document.documentElement;
-    html.classList.add('transition-colors', 'duration-500');
+// Tema claro/escuro. A escolha fica em localStorage.theme: 'light', 'dark' ou nada (automático:
+// segue o sistema). O partials/theme_script.php aplica a mesma regra antes de desenhar a página.
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-    if (themeName === 'dark') {
-        html.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        html.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
+function savedTheme() {
+    try {
+        return localStorage.getItem('theme');
+    } catch {
+        return null;
     }
 }
 
-// 2. Função principal exportada
+// Aplica 'light', 'dark' ou 'system'; save = false só redesenha (ao carregar a página)
+function applyTheme(choice, save = true) {
+    const html = document.documentElement;
+    html.classList.add('transition-colors', 'duration-500');
+    const dark = choice === 'dark' || (choice === 'system' && systemDark.matches);
+    html.classList.toggle('dark', dark);
+    if (!save) return;
+    try {
+        if (choice === 'system') localStorage.removeItem('theme');
+        else localStorage.setItem('theme', choice);
+    } catch {
+        // Sem localStorage: vale só nesta página
+    }
+}
+
 export function initTheme() {
+    const current = savedTheme() || 'system';
+    applyTheme(current, false);
+
+    // No automático, acompanha a troca do sistema com a página aberta
+    systemDark.addEventListener('change', () => {
+        if (!savedTheme()) applyTheme('system', false);
+    });
+
+    // Botão de alternar (cabeçalhos e telas de entrada)
     const themeToggle = document.getElementById('theme-toggle');
-
-    // Descobre qual tema usar ao carregar
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    // Define o tema inicial (se tiver salvo usa ele, se não usa do sistema)
-    let currentTheme = savedTheme ? savedTheme : systemPrefersDark ? 'dark' : 'light';
-
-    // Aplica o tema inicial
-    applyTheme(currentTheme);
-
-    // Se o botão existir, adiciona o evento de clique
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            // Verifica como está AGORA para poder inverter
-            const isDarkNow = document.documentElement.classList.contains('dark');
-            const newTheme = isDarkNow ? 'light' : 'dark';
-
-            // Aplica o novo tema
-            applyTheme(newTheme);
+            applyTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark');
+            syncChoice();
         });
     }
+
+    // Escolha Claro / Escuro / Automático (Configurações > Preferências)
+    const choices = document.querySelectorAll('input[name="theme-choice"]');
+    function syncChoice() {
+        const now = savedTheme() || 'system';
+        choices.forEach((input) => (input.checked = input.value === now));
+    }
+    choices.forEach((input) => input.addEventListener('change', () => applyTheme(input.value)));
+    syncChoice();
 }

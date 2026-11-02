@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
+    <title>Esportes · Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,13 +113,13 @@
                     <h1 class="text-3xl font-bold mb-1 text-content-primary">Gerir Esportes</h1>
                     <p class="text-content-secondary text-sm">Adicione ou edite modalidades disponíveis.</p>
                 </div>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
+                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
                     <i class="fas fa-plus mr-2"></i> Novo Esporte
                 </a>
             </div>
 
             <div class="md:hidden mb-6 animate-up delay-100">
-                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-2.5 px-4 rounded-lg flex justify-center items-center shadow-md text-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/esportes/criar" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-lg flex justify-center items-center shadow-md text-sm">
                     <i class="fas fa-plus mr-2"></i> Novo Esporte
                 </a>
             </div>
@@ -146,7 +146,7 @@
                                     <i class="fas fa-pencil-alt text-xs"></i>
                                 </a>
 
-                                <form action="<?php echo BASE_URL; ?>/admin/esportes/excluir/<?php echo $sport['id']; ?>" method="POST" onsubmit="return confirm('Tem a certeza?');">
+                                <form action="<?php echo BASE_URL; ?>/admin/esportes/excluir/<?php echo $sport['id']; ?>" method="POST" data-confirm="Tem a certeza?" data-confirm-danger data-confirm-ok="Excluir">
                                     <?php echo \App\Core\Csrf::field(); ?>
                                     <button type="submit" class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-surface-base rounded-full text-content-secondary border border-content-secondary/10 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors shadow-sm" title="Excluir">
                                         <i class="fas fa-trash-alt text-xs"></i>
@@ -204,5 +204,6 @@
         }
     </script>
 
+    <?php include BASE_PATH . '/app/views/partials/toasts.php'; ?>
 </body>
 </html>

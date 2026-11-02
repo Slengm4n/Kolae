@@ -12,7 +12,7 @@ $userId = $_SESSION['user_id'] ?? 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
+    <title><?php echo htmlspecialchars($lang['global_menu_profile'] . ' · Kolae'); ?></title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,101 +38,20 @@ $userId = $_SESSION['user_id'] ?? 0;
 
 <body class="bg-surface-base text-content-primary transition-colors duration-500">
 
-    <header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-30 py-4 transition-all">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
-                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto filter dark:filter-none invert dark:invert-0 opacity-90 group-hover:opacity-100 transition-opacity">
-            </a>
-
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
-                    <?php echo $lang['global_home_panel'] ?></a>
-            </nav>
-
-            <div class="relative">
-                <button id="user-menu-button" class="flex items-center gap-3 p-2 px-3 border border-content-secondary/20 rounded-full cursor-pointer transition-all hover:bg-surface-secondary">
-                    <?php if (!empty($userAvatar)): ?>
-                        <img src="<?php echo BASE_URL . '/uploads/avatars/' . $userId . '/' . $userAvatar; ?>"
-                            class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
-                            alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
-                            <?php echo strtoupper(substr($userName, 0, 1)); ?>
-                        </div>
-                    <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
-                            <?php echo strtoupper(substr($userName, 0, 1)); ?>
-                        </div>
-                    <?php endif; ?>
-                    <i class="fas fa-chevron-down text-xs text-content-secondary"></i>
-                </button>
-
-                <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
-                    <div class="p-4 border-b border-content-secondary/10">
-                        <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($userName); ?></p>
-                    </div>
-                    <ul class="py-2 text-sm">
-                        <li><a href="<?php echo BASE_URL; ?>/dashboard" class="flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-home w-4 text-center"></i><?php echo $lang['global_back'] ?></a></li>
-                        
-                        <li>
-                            <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
-                                <i class="fas fa-adjust w-4 text-center"></i>
-                                <span class="dark:hidden">Modo Escuro</span>
-                                <span class="hidden dark:inline">Modo Claro</span>
-                            </button>
-                        </li>
-
-                        <li class="border-t border-content-secondary/10 my-2"></li>
-                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-500 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i> <?php echo $lang['global_menu_exit'] ?></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
+    <?php $backUrl = '/dashboard';
+    $toastContext = 'profile';
+    include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
     <main class="container mx-auto px-4 py-10 max-w-6xl">
         <div class="flex flex-col md:flex-row items-start gap-8">
 
             <aside class="w-full md:w-64 flex-shrink-0 animate-up">
                 <h1 class="text-2xl font-bold text-content-primary mb-6 px-2"><?php echo $lang['global_menu_config'] ?></h1>
-                <nav class="bg-surface-elevated p-2 rounded-2xl border border-content-secondary/10 shadow-lg">
-                    <ul class="space-y-1">
-                        <li>
-                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl border-l-4 border-brand-500 transition-all">
-                                <i class="fas fa-user-edit w-5 text-center"></i>
-                                <span><?php echo $lang['config_custom_profile'] ?></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?php echo BASE_URL; ?>/dashboard/perfil/seguranca" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-secondary hover:text-content-primary rounded-xl transition-all group">
-                                <i class="fas fa-shield-alt w-5 text-center group-hover:text-brand-500 transition-colors"></i>
-                                <span><?php echo $lang['config_security'] ?></span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                <?php $configActive = 'profile'; include BASE_PATH . '/app/views/partials/config_nav.php'; ?>
             </aside>
 
             <section class="flex-1 w-full animate-up delay-100">
 
-                <?php if (isset($_GET['status']) && $_GET['status'] === 'updated'): ?>
-                    <div class="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-300 flex items-center animate-up">
-                        <i class="fas fa-check-circle mr-3 text-xl"></i>
-                        <span><?php echo $lang['profile_update_success'] ?></span>
-                    </div>
-                <?php endif; ?>
 
-                <?php if (isset($_GET['error'])): ?>
-                    <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-300 flex items-center animate-up">
-                        <i class="fas fa-times-circle mr-3 text-xl"></i>
-                        <span>
-                            <?php
-                            if ($_GET['error'] === 'avatar_upload') echo $lang['profile_error_upload'];
-                            elseif ($_GET['error'] === 'update_failed') echo $lang['profile_error_update'];
-                            elseif ($_GET['error'] === 'whatsapp_invalid') echo $lang['profile_error_whatsapp'];
-                            else echo $lang['unknown_error'];
-                            ?>
-                        </span>
-                    </div>
-                <?php endif; ?>
 
                 <div class="bg-surface-elevated p-6 md:p-10 rounded-2xl border border-content-secondary/10 shadow-xl relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-brand-700"></div>
@@ -144,11 +63,11 @@ $userId = $_SESSION['user_id'] ?? 0;
 
                             <div class="flex flex-col lg:flex-row gap-10 mb-10">
                                 <div class="flex flex-col items-center lg:items-start">
-                                    <h2 class="text-lg font-bold text-content-primary mb-4 lg:hidden">Foto de Perfil</h2>
+                                    <h2 class="text-lg font-bold text-content-primary mb-4 lg:hidden"><?php echo $lang['profile_photo_title']; ?></h2>
 
                                     <div class="relative group w-40 h-40 rounded-full overflow-hidden border-4 border-surface-base shadow-2xl cursor-pointer">
                                         <?php
-                                        $placeholder = 'https://placehold.co/256x256/1f2937/9ca3af?text=Foto';
+                                        $placeholder = BASE_URL . '/assets/img/avatar_placeholder.svg';
                                         $avatarFormPath = !empty($user['avatar_path'])
                                             ? BASE_URL . '/uploads/avatars/' . $user['id'] . '/' . $user['avatar_path']
                                             : $placeholder;
@@ -193,6 +112,12 @@ $userId = $_SESSION['user_id'] ?? 0;
                                                 <input id="email" type="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" disabled
                                                     class="w-full bg-surface-secondary border border-content-secondary/20 rounded-xl pl-10 pr-4 py-3 text-sm text-content-secondary cursor-not-allowed">
                                             </div>
+                                            <?php // Selo da confirmação de e-mail (D58) ?>
+                                            <?php if (!empty($user['email_verified_at'])): ?>
+                                                <p class="mt-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5"><i class="fas fa-circle-check" aria-hidden="true"></i><?php echo htmlspecialchars($lang['verify_badge_ok']); ?></p>
+                                            <?php else: ?>
+                                                <p class="mt-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300 flex items-center gap-1.5"><i class="fas fa-circle-exclamation" aria-hidden="true"></i><?php echo htmlspecialchars($lang['verify_badge_pending']); ?> <a href="<?php echo BASE_URL; ?>/dashboard#email-verify" class="underline underline-offset-2"><?php echo htmlspecialchars($lang['verify_resend']); ?></a></p>
+                                            <?php endif; ?>
                                         </div>
 
                                         <div>
@@ -228,7 +153,7 @@ $userId = $_SESSION['user_id'] ?? 0;
                                 <a href="<?php echo BASE_URL; ?>/dashboard" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors">
                                     <?php echo $lang['global_cancel'] ?>
                                 </a>
-                                <button type="submit" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all transform hover:-translate-y-0.5">
+                                <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all transform hover:-translate-y-0.5">
                                     <?php echo $lang['profile_btn_save'] ?>
                                 </button>
                             </div>

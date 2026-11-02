@@ -63,7 +63,10 @@ const check = (label, got, want) => {
   check('última: seta direita desativada', await p.$eval('ol > li:last-child button[aria-label="Mover para a direita"]', e => e.disabled), true);
   let ids = order();
   check('banco: posições 0, 1, 2', sql(`SELECT GROUP_CONCAT(position ORDER BY position) FROM venues_images WHERE venue_id=${ARENA}`), '0,1,2');
-  check('arquivos salvos na pasta', fs.readdirSync(UPLOADS).length, 3);
+  const pasta = () => fs.readdirSync(UPLOADS);
+  check('arquivos salvos na pasta: 3 fotos e 3 miniaturas (D57)', [pasta().filter(n => !n.startsWith('thumb_')).length, pasta().filter(n => n.startsWith('thumb_')).length], [3, 3]);
+  const thumbOf = name => `thumb_${name.replace(/\.[^.]+$/, '')}.jpg`;
+  check('miniatura com no máximo 640 px', (() => { const b = fs.readFileSync(`${UPLOADS}/${thumbOf(file(ids[0]))}`); let i = 2; while (i < b.length) { if (b[i] === 0xFF && b[i + 1] >= 0xC0 && b[i + 1] <= 0xC2) return Math.max(b.readUInt16BE(i + 5), b.readUInt16BE(i + 7)) <= 640; i += 2 + b.readUInt16BE(i + 2); } return false; })(), true);
   check('API: images na ordem de envio', apiImages(), ids.map(file));
   check('API: capa é a primeira', api(`/venues/${ARENA}`).cover_image_url.split('/').pop(), file(ids[0]));
   await p.screenshot({ path: lib.OUT + '/fotos-galeria.png', fullPage: true });
@@ -85,9 +88,14 @@ const check = (label, got, want) => {
   // Apagar
   await go(page);
   const gone = file(ids[0]);
-  await clickNav(`#foto-${ids[0]} .delete-form button`);
+  // Confirmação no visual do Kolae (ui.js): abre a janela, confere o texto e confirma
+  await p.click(`#foto-${ids[0]} .delete-form button`);
+  await p.waitForSelector('.kolae-modal [data-ok]');
+  check('apagar: pede confirmação na janela do Kolae', await p.$eval('.kolae-modal-text', e => e.textContent), 'Apagar esta foto? Não dá para desfazer.');
+  await clickNav('.kolae-modal [data-ok]');
   check('apagar: some da galeria', [order().length, await p.$eval('[role=status]', e => e.textContent.trim())], [2, 'Foto apagada.']);
   check('apagar: arquivo sai do disco', fs.existsSync(`${UPLOADS}/${gone}`), false);
+  check('apagar: a miniatura sai junto', fs.existsSync(`${UPLOADS}/${thumbOf(gone)}`), false);
 
   // Limite: tem 2, cabem 8. Escolhe 9 + 1 arquivo falso
   await go(page);
@@ -120,7 +128,9 @@ const check = (label, got, want) => {
   await o.type('#email', 'dono@teste.local'); await o.type('#password', 'teste123');
   await Promise.all([o.waitForNavigation({ waitUntil: 'networkidle2' }), o.$eval('#login-form', f => f.submit())]);
   await o.goto(page, { waitUntil: 'networkidle2' });
-  check('outro dono é mandado de volta', o.url().replace(BASE, ''), '/dashboard?error=not_found');
+  // Volta ao painel com o aviso (a URL fica limpa depois de mostrar, ui.js)
+  await o.waitForSelector('.kolae-toast', { timeout: 3000 }).catch(() => {});
+  check('outro dono é mandado de volta, com aviso', [new URL(o.url()).pathname, await o.$eval('.kolae-toast-text', e => e.textContent).catch(() => '')], [lib.BASE_PATH + '/dashboard', 'Não encontramos essa quadra na sua conta.']);
   const before = order();
   await o.evaluate(async (url) => {
     const html = await (await fetch(document.querySelector('link[href*="/assets/css/"]').href.split('/assets/')[0] + '/dashboard/perfil')).text();

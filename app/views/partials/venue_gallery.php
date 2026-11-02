@@ -39,7 +39,7 @@ $ge = fn($s) => htmlspecialchars((string)$s);
             </button>
             <?php foreach ($small as $j => $img): ?>
                 <button type="button" class="open-photo group relative <?php echo $smallSpan[$j]; ?> bg-surface-secondary overflow-hidden" data-index="<?php echo $j + 1; ?>" aria-label="<?php echo $ge(strtr($lang['photos_alt'], ['{n}' => $j + 2])); ?>">
-                    <img src="<?php echo $galleryUrl($img); ?>" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy">
+                    <img src="<?php echo \App\Core\ImageHelper::thumbUrl($galleryUrl($img)); ?>" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy">
                 </button>
             <?php endforeach; ?>
         </div>

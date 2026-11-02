@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\BaseApiController;
+use App\Core\EmailVerification;
 use App\Core\Mailer;
 use App\Models\User;
 use Exception;
@@ -110,6 +111,8 @@ class AuthApiController extends BaseApiController
             if (!$userId) {
                 throw new Exception('User::create retornou false.');
             }
+            // Confirmação de e-mail (D58), igual ao cadastro pelo site: não bloqueia nada
+            Mailer::sendEmailVerification($email, $name, EmailVerification::link(['id' => $userId, 'email' => $email]));
 
             $this->sendSuccess($this->tokenResponse(User::findById($userId)), 201);
         } catch (Exception $e) {

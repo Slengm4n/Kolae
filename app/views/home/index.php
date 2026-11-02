@@ -63,9 +63,8 @@ $partners = [
     <main>
         <!-- ===================== Abertura ===================== -->
         <section class="relative isolate overflow-hidden bg-neutral-950 text-white">
-            <video autoplay muted loop playsinline aria-hidden="true" class="absolute inset-0 -z-20 h-full w-full object-cover opacity-35">
-                <source src="<?php echo BASE_URL; ?>/assets/img/hero-bg.mp4" type="video/mp4">
-            </video>
+            <?php // Vídeo só no computador (1,8 MB): o JS põe o src (home_motion.js, initHeroVideo); no celular fica o degradê ?>
+            <video muted loop playsinline preload="none" aria-hidden="true" data-hero-video="<?php echo BASE_URL; ?>/assets/img/hero-bg.mp4" class="absolute inset-0 -z-20 h-full w-full object-cover opacity-35"></video>
             <div class="absolute inset-0 -z-10 bg-gradient-to-br from-black via-black/80 to-brand-900/70" aria-hidden="true"></div>
             <div class="absolute -right-32 top-1/3 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
 
@@ -82,7 +81,7 @@ $partners = [
                         <?php echo htmlspecialchars($lang['home_hero_subtitle']); ?>
                     </p>
                     <div class="hero-rise mt-10 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start" style="--rise-delay: 360ms">
-                        <a href="<?php echo $startUrl; ?>" class="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-500 px-8 py-3.5 font-semibold text-white shadow-xl shadow-brand-500/30 hover:bg-brand-400 hover:shadow-brand-500/50 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
+                        <a href="<?php echo $startUrl; ?>" class="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 px-8 py-3.5 font-semibold text-white shadow-xl shadow-brand-500/30 hover:bg-brand-700 hover:shadow-brand-500/50 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
                             <?php echo htmlspecialchars($isLoggedIn ? $lang['global_home_panel'] : $lang['home_start_free']); ?>
                             <span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"><i class="fas fa-arrow-right text-sm"></i></span>
                         </a>
@@ -152,7 +151,7 @@ $partners = [
                     <?php foreach ($steps as $i => $step): ?>
                         <li class="reveal group relative rounded-3xl border border-content-secondary/15 bg-surface-elevated p-8 shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-brand-500/30" style="--reveal-delay: <?php echo $i * 120; ?>ms">
                             <span class="font-display absolute right-7 top-6 text-6xl font-semibold text-content-secondary/15 transition-colors duration-300 group-hover:text-brand-500/25" aria-hidden="true"><?php echo $i + 1; ?></span>
-                            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-white shadow-lg shadow-brand-500/25 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6" aria-hidden="true">
+                            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-500/25 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6" aria-hidden="true">
                                 <i class="fas <?php echo $step['icon']; ?>"></i>
                             </span>
                             <h3 class="mt-6 text-xl font-semibold"><?php echo htmlspecialchars($step['title']); ?></h3>
@@ -245,7 +244,7 @@ $partners = [
         <!-- ===================== Para donos ===================== -->
         <section id="para-donos" class="scroll-mt-20 pb-20 md:pb-28 <?php echo $featuredVenues ? '' : 'pt-20 md:pt-28'; ?>">
             <div class="container mx-auto px-4 sm:px-6">
-                <div class="reveal relative isolate overflow-hidden rounded-[2rem] bg-brand-500 px-6 py-14 sm:px-12 md:py-16 text-white">
+                <div class="reveal relative isolate overflow-hidden rounded-[2rem] bg-brand-600 px-6 py-14 sm:px-12 md:py-16 text-white">
                     <div class="kolae-drift absolute -right-24 -top-24 -z-10 h-80 w-80 rounded-full bg-white/10" aria-hidden="true"></div>
                     <div class="kolae-drift absolute -bottom-32 left-1/3 -z-10 h-80 w-80 rounded-full bg-brand-700/40" style="animation-delay: -6s" aria-hidden="true"></div>
                     <div class="grid gap-10 lg:grid-cols-2 items-center">

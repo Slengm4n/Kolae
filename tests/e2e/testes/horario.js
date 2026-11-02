@@ -119,7 +119,9 @@ const text = p => p.$eval('main', m => m.innerText);
   // Outro dono não acessa
   const o = await login(b, 'dono@teste.local');
   await o.goto(`${BASE}/dashboard/quadras/${DUDA}/horario`, { waitUntil: 'networkidle2' });
-  check('outro dono é mandado de volta', o.url().replace(BASE, ''), '/dashboard?error=not_found');
+  // Volta ao painel com o aviso (a URL fica limpa depois de mostrar, ui.js)
+  await o.waitForSelector('.kolae-toast', { timeout: 3000 }).catch(() => {});
+  check('outro dono é mandado de volta, com aviso', [new URL(o.url()).pathname, await o.$eval('.kolae-toast-text', e => e.textContent).catch(() => '')], [lib.BASE_PATH + '/dashboard', 'Não encontramos essa quadra na sua conta.']);
   const post = await o.evaluate(async (url) => { const fd = new FormData(); fd.append('hours[1][open]', '1'); fd.append('hours[1][opens_at]', '01:00'); fd.append('hours[1][closes_at]', '02:00'); const r = await fetch(url, { method: 'POST', body: (fd.has('_csrf') || fd.append('_csrf', document.querySelector('input[name=_csrf]')?.value || ''), fd), redirect: 'manual' }); return r.type; }, `${BASE}/dashboard/quadras/${DUDA}/horario`);
   check('outro dono não consegue gravar', sql(`SELECT COUNT(*) FROM venue_hours WHERE venue_id=${DUDA} AND opens_at='01:00:00'`), '0');
 

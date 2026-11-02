@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
+    <title>Mapa · Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,7 +125,7 @@
                 </div>
                 
                 <div class="pt-4 border-t border-content-secondary/10 mt-auto">
-                    <a id="venue-details-link" href="#" class="w-full flex items-center justify-center bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5">
+                    <a id="venue-details-link" href="#" class="w-full flex items-center justify-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5">
                         Ver Detalhes Completos <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -217,7 +217,7 @@
                     marker.addListener('click', () => {
                         const imgPath = venue.image_path ?
                             `<?php echo BASE_URL; ?>/uploads/venues/${venue.id}/${venue.image_path}` :
-                            'https://placehold.co/600x400/f3f4f6/94a3b8?text=Sem+Imagem';
+                            '<?php echo BASE_URL; ?>/assets/img/venue_placeholder.svg';
 
                         document.getElementById('venue-image').src = imgPath;
                         document.getElementById('venue-name').textContent = venue.name;

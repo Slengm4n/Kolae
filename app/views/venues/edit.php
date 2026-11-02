@@ -10,7 +10,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae - Editar Quadra</title>
+    <title><?php echo htmlspecialchars($lang['venue_tab_data'] . ($venue ? ' · ' . $venue['name'] : '') . ' · Kolae'); ?></title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,59 +65,9 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
 
 <body class="bg-surface-base text-content-primary transition-colors duration-500">
 
-    <header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-40 py-4 transition-all">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
-                <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Logo" class="h-8 w-auto filter dark:filter-none invert dark:invert-0 opacity-90 group-hover:opacity-100 transition-opacity">
-            </a>
+    <?php include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
 
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-brand-600 dark:text-brand-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-brand-600 dark:after:bg-brand-400 after:scale-x-100 transition-transform">
-                    <?php echo $lang['global_home_panel'] ?></a>
-            </nav>
-
-            <div class="relative">
-                <button id="user-menu-button" class="flex items-center gap-3 p-2 px-3 border border-content-secondary/20 rounded-full cursor-pointer transition-all hover:bg-surface-secondary">
-                    <?php if (!empty($_SESSION['user_avatar'])): ?>
-                        <img src="<?php echo BASE_URL . '/uploads/avatars/' . $_SESSION['user_id'] . '/' . $_SESSION['user_avatar']; ?>"
-                            class="w-8 h-8 rounded-full object-cover border border-content-secondary/20"
-                            alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm" style="display:none;">
-                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
-                        </div>
-                    <?php else: ?>
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
-                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
-                        </div>
-                    <?php endif; ?>
-                    <i class="fas fa-chevron-down text-xs text-content-secondary"></i>
-                </button>
-
-                <div id="profile-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-surface-elevated border border-content-secondary/10 rounded-xl shadow-2xl opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-50">
-                    <div class="p-4 border-b border-content-secondary/10">
-                        <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuário'); ?></p>
-                        <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="text-xs text-brand-600 dark:text-brand-400 hover:underline"><?php echo $lang['dashboard_view_profile']; ?></a>
-                    </div>
-                    <ul class="py-2 text-sm text-content-secondary">
-                        <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><i class="fas fa-cog w-4 text-center"></i> <?php echo $lang['global_menu_config']; ?></a></li>
-                        
-                        <li>
-                            <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
-                                <i class="fas fa-adjust w-4 text-center"></i>
-                                <span class="dark:hidden">Modo Escuro</span>
-                                <span class="hidden dark:inline">Modo Claro</span>
-                            </button>
-                        </li>
-
-                        <li class="border-t border-content-secondary/10 my-2"></li>
-                        <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-500 hover:bg-red-500/10 transition-colors"><i class="fas fa-sign-out-alt w-4 text-center"></i><?php echo $lang['global_menu_exit']; ?></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 py-8 max-w-4xl">
+    <main class="container mx-auto px-4 py-6 md:py-10 max-w-4xl">
 
         <?php if (!$venue): ?>
             <div class="text-center py-12 bg-surface-elevated rounded-2xl border border-red-500/20">
@@ -189,7 +139,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                                 <?php foreach (['value' => $lang['data_price_value'], 'free' => $lang['data_price_free'], 'none' => $lang['data_price_none']] as $mode => $label): ?>
                                     <label class="price-mode">
                                         <input type="radio" name="price_mode" value="<?php echo $mode; ?>" class="sr-only peer" <?php echo $priceMode === $mode ? 'checked' : ''; ?>>
-                                        <span class="peer-checked:bg-brand-500 peer-checked:text-white peer-checked:border-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500"><?php echo $label; ?></span>
+                                        <span class="peer-checked:bg-brand-600 peer-checked:text-white peer-checked:border-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500"><?php echo $label; ?></span>
                                     </label>
                                 <?php endforeach; ?>
                             </div>
@@ -246,7 +196,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                                 $checked = in_array((int)$sport['id'], array_map('intval', $data['selectedSports']), true); ?>
                                 <label class="cursor-pointer">
                                     <input type="checkbox" name="sports[]" value="<?php echo (int)$sport['id']; ?>" class="sr-only peer" <?php echo $checked ? 'checked' : ''; ?>>
-                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-content-secondary/25 text-sm font-semibold text-content-primary transition-colors peer-checked:bg-brand-500 peer-checked:border-brand-500 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
+                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-content-secondary/25 text-sm font-semibold text-content-primary transition-colors peer-checked:bg-brand-600 peer-checked:border-brand-500 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
                                         <?php if (!empty($sport['icon_path'])): ?><span><i class="fas <?php echo htmlspecialchars($sport['icon_path']); ?>"></i></span><?php endif; ?>
                                         <?php echo htmlspecialchars($sport['name']); ?>
                                     </span>
@@ -356,7 +306,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                             <?php foreach (array_slice($venue['images'], 0, 4) as $i => $image): ?>
                                 <div class="relative aspect-square rounded-xl overflow-hidden border border-content-secondary/10 bg-surface-base">
                                     <img src="<?php echo BASE_URL . '/uploads/venues/' . (int)$venue['id'] . '/' . htmlspecialchars(basename($image['file_path'])); ?>" alt="" class="w-full h-full object-cover" loading="lazy">
-                                    <?php if ($i === 0): ?><span class="absolute left-1.5 top-1.5 text-[10px] font-bold uppercase tracking-wide bg-brand-500 text-white rounded px-1.5 py-0.5"><?php echo $lang['photos_cover']; ?></span><?php endif; ?>
+                                    <?php if ($i === 0): ?><span class="absolute left-1.5 top-1.5 text-[10px] font-bold uppercase tracking-wide bg-brand-600 text-white rounded px-1.5 py-0.5"><?php echo $lang['photos_cover']; ?></span><?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -366,7 +316,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                     <a href="<?php echo BASE_URL . $backUrl; ?>" class="text-content-secondary hover:text-content-primary text-sm font-semibold px-4 py-2 transition-colors">
                         <?php echo $lang['global_cancel'] ?>
                     </a>
-                    <button type="submit" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5"><?php echo $lang['profile_btn_save'] ?></button>
+                    <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5"><?php echo $lang['profile_btn_save'] ?></button>
                 </div>
             </form>
 
@@ -385,7 +335,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
     </main>
 
     <div class="fixed bottom-0 left-0 w-full p-4 bg-surface-elevated/90 backdrop-blur-md border-t border-content-secondary/10 flex justify-center z-40 md:hidden">
-        <button type="submit" form="venue-form" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl shadow-xl transition-transform active:scale-95"><?php echo $lang['profile_btn_save'] ?></button>
+        <button type="submit" form="venue-form" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl shadow-xl transition-transform active:scale-95"><?php echo $lang['profile_btn_save'] ?></button>
     </div>
 
     <div id="delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
@@ -408,41 +358,10 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
         </div>
     </div>
 
+    <?php // Menu do usuário e botão de tema do cabeçalho (initNavbar, initTheme) ?>
+    <script type="module" src="<?php echo \App\Core\ViewHelper::asset('assets/js/bundle.js'); ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // Dropdown & Theme Logic
-            const userBtn = document.getElementById('user-menu-button');
-            const userDropdown = document.getElementById('profile-dropdown');
-            const themeToggleBtn = document.getElementById('theme-toggle');
-
-            if (userBtn && userDropdown) {
-                userBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('opacity-0');
-                    userDropdown.classList.toggle('invisible');
-                    userDropdown.classList.toggle('-translate-y-2');
-                });
-                window.addEventListener('click', (e) => {
-                    if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-                        userDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
-                    }
-                });
-            }
-
-            if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.theme = 'light';
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.theme = 'dark';
-                    }
-                });
-            }
-
             const venueData = <?php echo json_encode($venue ?? null, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
             if (!venueData) return;
 

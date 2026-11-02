@@ -138,7 +138,7 @@ class VenueController
      */
     public function edit(int $id)
     {
-        AuthHelper::check();
+        $this->checkCnpjStatus();
         $venue = Venue::findById($id);
 
         $isAdmin = AuthHelper::isAdmin(); //Verifica se é admin
@@ -173,7 +173,7 @@ class VenueController
      */
     public function update(int $id)
     {
-        AuthHelper::check();
+        $this->checkCnpjStatus();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $venue = Venue::findById($id);
@@ -250,7 +250,7 @@ class VenueController
      */
     public function delete(int $id)
     {
-        AuthHelper::check();
+        $this->checkCnpjStatus();
         //Validação de segurança
         $venue = Venue::findById($id);
 
@@ -266,7 +266,7 @@ class VenueController
         if (Venue::delete($id)) {
             header("Location: " . BASE_URL . $redirectUrl . "?status=deleted");
         } else {
-            header("Location: " . BASE_URL . $redirectUrl . "?status=error");
+            header("Location: " . BASE_URL . $redirectUrl . "?error=generic");
         }
         exit;
     }
@@ -298,22 +298,11 @@ class VenueController
     }
 
     /**
-     * Verifica se o usuário tem um CNPJ cadastrado.
+     * Dono sem CNPJ não cria nem gerencia quadra (VenueAccess::requireCnpjOrRedirect).
      */
     private function checkCnpjStatus()
     {
-        AuthHelper::check();
-
-        // Admin não precisa de CNPJ para criar/editar quadras
-        if (AuthHelper::isAdmin()) {
-            return;
-        }
-
-        $user = User::findById($_SESSION['user_id']);
-        if (empty($user['cnpj'])) {
-            header('Location: ' . BASE_URL . '/dashboard?error=cnpj_required');
-            exit;
-        }
+        VenueAccess::requireCnpjOrRedirect();
     }
 
     /**

@@ -13,3 +13,31 @@
     # Manda tudo para o index.php
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Cache no navegador (Lighthouse, D57). CSS e JS mudam de endereço a cada deploy (?v=data, ViewHelper::asset),
+# então podem ficar guardados por um ano; imagens, vídeo e fotos das quadras, por 30 dias.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType video/mp4 "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(webp|jpe?g|png|svg|mp4)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+</IfModule>
+
+# Compressão dos textos (HTML, CSS, JS, JSON, SVG). A HostGator já comprime; isto garante o mesmo em outro servidor.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>

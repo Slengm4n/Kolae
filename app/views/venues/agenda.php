@@ -155,7 +155,7 @@ $canSchedule = $hasHours && $opens && !$isPast;
                                 </p>
                             </div>
                             <?php if (!$finished): ?>
-                                <form method="POST" action="<?php echo $base . '/cancelar/' . (int)$m['id']; ?>" class="cancel-form">
+                                <form method="POST" action="<?php echo $base . '/cancelar/' . (int)$m['id']; ?>" class="cancel-form" data-confirm="<?php echo $e($lang['agenda_cancel_confirm']); ?>" data-confirm-danger data-confirm-ok="<?php echo $e($lang['agenda_cancel_yes']); ?>" data-confirm-cancel="<?php echo $e($lang['global_back']); ?>">
                                     <?php echo \App\Core\Csrf::field(); ?>
                                     <input type="hidden" name="data" value="<?php echo $date; ?>">
                                     <button type="submit" class="text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-lg px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"><?php echo $lang['agenda_cancel']; ?></button>
@@ -226,7 +226,7 @@ $canSchedule = $hasHours && $opens && !$isPast;
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-brand-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
+                        <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-brand-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
                             <span><i class="fas fa-plus"></i></span><?php echo $lang['agenda_submit']; ?>
                         </button>
                     </div>
@@ -272,9 +272,6 @@ $canSchedule = $hasHours && $opens && !$isPast;
                 picker.closest('label').addEventListener('click', () => { try { picker.showPicker(); } catch (e) { picker.focus(); } });
                 picker.addEventListener('change', () => { if (picker.value) location.href = base + '?data=' + picker.value; });
             }
-
-            // Confirmar antes de cancelar
-            document.querySelectorAll('.cancel-form').forEach(f => f.addEventListener('submit', e => { if (!confirm(msg.confirm)) e.preventDefault(); }));
 
             const form = document.getElementById('schedule-form');
             if (!form) return;

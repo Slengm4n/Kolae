@@ -12,7 +12,7 @@ $error = $error ?? null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolae</title>
+    <title><?php echo htmlspecialchars($lang['dashboard_cnpj_add'] . ' · Kolae'); ?></title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
 

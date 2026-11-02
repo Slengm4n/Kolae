@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae - Criar Esporte</title>
+    <title>Criar esporte · Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -131,7 +131,7 @@
                             Cancelar
                         </a>
                         <button type="submit"
-                            class="flex-1 md:flex-none text-center bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5 text-sm">
+                            class="flex-1 md:flex-none text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5 text-sm">
                             Criar Esporte
                         </button>
                     </div>

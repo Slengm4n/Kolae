@@ -14,7 +14,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
+    <title><?php echo htmlspecialchars($lang['dashboard_user_location_title'] . ' · Kolae'); ?></title>
 
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,11 +101,6 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
 <body class="bg-surface-base text-content-primary flex flex-col min-h-screen transition-colors duration-500">
 
-    <div id="toast" style="position: fixed; bottom: 6rem; right: 1.25rem; z-index: 60;" class="bg-red-500 text-white px-6 py-4 rounded-xl shadow-xl transform transition-all duration-300 translate-x-full opacity-0 flex items-center gap-3">
-        <i class="fas fa-exclamation-circle text-xl"></i>
-        <span id="toast-message" class="font-medium">Erro na validação</span>
-    </div>
-
     <header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-30 py-4 transition-all">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group">
@@ -147,8 +142,8 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             <li>
                                 <button id="theme-toggle" class="w-full flex items-center gap-3 px-5 py-3 text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">
                                     <i class="fas fa-adjust w-4 text-center"></i>
-                                    <span class="dark:hidden">Modo Escuro</span>
-                                    <span class="hidden dark:inline">Modo Claro</span>
+                                    <span class="dark:hidden"><?php echo $lang['theme_dark']; ?></span>
+                                    <span class="hidden dark:inline"><?php echo $lang['theme_light']; ?></span>
                                 </button>
                             </li>
 
@@ -174,15 +169,15 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             <?php endif; ?>
 
             <div id="step-1" class="step active w-full max-w-3xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Tipo de Piso</h2>
-                <p class="text-content-secondary text-center mb-8">Qual o revestimento principal da sua quadra?</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center"><?php echo $lang['wiz_floor_title']; ?></h2>
+                <p class="text-content-secondary text-center mb-8"><?php echo $lang['venue_floor_question']; ?></p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" data-input-name="floor_type">
                     <?php
                     foreach (\App\Models\Venue::FLOOR_TYPES as $pisoValue => $piso):
                     ?>
                         <div class="option-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 cursor-pointer hover:border-brand-500 group flex items-center justify-between" data-value="<?php echo htmlspecialchars($pisoValue); ?>">
-                            <span class="font-semibold text-lg text-content-primary group-hover:text-brand-600 dark:group-hover:text-brand-400"><?php echo htmlspecialchars($piso); ?></span>
+                            <span class="font-semibold text-lg text-content-primary group-hover:text-brand-600 dark:group-hover:text-brand-400"><?php echo htmlspecialchars($lang[\App\Models\Venue::FLOOR_LANG_KEYS[$pisoValue]] ?? $piso); ?></span>
                             <div class="w-5 h-5 rounded-full border-2 border-content-secondary/30 group-hover:border-brand-500 flex items-center justify-center">
                                 <div class="w-2.5 h-2.5 rounded-full bg-brand-500 opacity-0 transition-opacity check-dot"></div>
                             </div>
@@ -192,8 +187,8 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             </div>
 
             <div id="step-2" class="step w-full max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Capacidade</h2>
-                <p class="text-content-secondary text-center mb-10">Quantos jogadores cabem na quadra simultaneamente?</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center"><?php echo $lang['edit_venue_capacity_title']; ?></h2>
+                <p class="text-content-secondary text-center mb-10"><?php echo $lang['venue_max_capacity_desc']; ?></p>
 
                 <div class="bg-surface-elevated border border-content-secondary/10 rounded-3xl p-8 md:p-12 shadow-lg">
                     <div class="flex flex-col items-center gap-6">
@@ -203,34 +198,29 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             <span class="counter-value text-5xl font-bold text-content-primary w-20 text-center">2</span>
                             <button type="button" class="counter-btn plus w-14 h-14 rounded-2xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-brand-500 hover:border-brand-500 text-2xl transition-all font-bold">+</button>
                         </div>
-                        <span class="text-sm font-semibold uppercase tracking-widest text-content-secondary">Jogadores</span>
+                        <span class="text-sm font-semibold uppercase tracking-widest text-content-secondary"><?php echo $lang['venue_quantity_players']; ?></span>
                     </div>
                 </div>
             </div>
 
             <div id="step-3" class="step w-full max-w-4xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Comodidades</h2>
-                <p class="text-content-secondary text-center mb-8">O que o seu espaço oferece aos atletas?</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center"><?php echo $lang['edit_venues_additional_title']; ?></h2>
+                <p class="text-content-secondary text-center mb-8"><?php echo $lang['venue_additional_title']; ?></p>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <?php
                     $comodidades = [
-                        ['icon' => 'lightbulb', 'label' => 'Iluminação', 'name' => 'has_lighting'],
-                        ['icon' => 'cloud-sun', 'label' => 'Coberta', 'name' => 'is_covered'],
-                        ['icon' => 'wifi', 'label' => 'Wi-fi', 'name' => 'has_wifi'],
-                        ['icon' => 'parking', 'label' => 'Estacionamento', 'name' => 'has_parking'],
-                        ['icon' => 'shower', 'label' => 'Vestiário', 'name' => 'has_locker_room'],
-                        ['icon' => 'glass-cheers', 'label' => 'Bar/Lanchonete', 'name' => 'has_bar'],
-                        ['icon' => 'utensils', 'label' => 'Área de Lazer', 'name' => 'has_leisure_area', 'id' => 'leisure-area-card'],
-                        ['icon' => 'tshirt', 'label' => 'Coletes', 'name' => 'has_vests'],
-                        ['icon' => 'futbol', 'label' => 'Bola', 'name' => 'has_ball']
+                        // Só o que o banco guarda (venues.has_lighting, is_covered, has_leisure_area)
+                        ['icon' => 'lightbulb', 'label' => $lang['venue_additional_1'], 'name' => 'has_lighting'],
+                        ['icon' => 'cloud-sun', 'label' => $lang['venue_additional_2'], 'name' => 'is_covered'],
+                        ['icon' => 'utensils', 'label' => $lang['overview_leisure'], 'name' => 'has_leisure_area', 'id' => 'leisure-area-card'],
                     ];
                     foreach ($comodidades as $com):
                     ?>
                         <label <?php echo isset($com['id']) ? 'id="' . $com['id'] . '"' : ''; ?> class="checkbox-card bg-surface-elevated border border-content-secondary/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-brand-500 transition-all text-center h-32 relative overflow-hidden group">
                             <input type="checkbox" name="<?php echo $com['name']; ?>" value="1" class="hidden peer">
                             <div class="absolute inset-0 bg-brand-500/5 opacity-0 peer-checked:opacity-100 transition-opacity"></div>
-                            <div class="absolute top-3 right-3 w-5 h-5 rounded-full bg-brand-500 text-white text-xs flex items-center justify-center opacity-0 transform scale-0 peer-checked:opacity-100 peer-checked:scale-100 transition-all">
+                            <div class="absolute top-3 right-3 w-5 h-5 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center opacity-0 transform scale-0 peer-checked:opacity-100 peer-checked:scale-100 transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
 
@@ -243,8 +233,8 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 <div id="leisure-capacity-container" class="hidden mt-8 animate-fadeIn bg-surface-elevated border border-content-secondary/10 rounded-2xl p-6">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="text-center md:text-left">
-                            <h3 class="text-lg font-bold text-content-primary">Capacidade da Área de Lazer</h3>
-                            <p class="text-sm text-content-secondary">Quantas pessoas a churrasqueira/área suporta?</p>
+                            <h3 class="text-lg font-bold text-content-primary"><?php echo $lang['venue_leisure_title']; ?></h3>
+                            <p class="text-sm text-content-secondary"><?php echo $lang['venue_leisure_capacity']; ?></p>
                         </div>
                         <div class="counter-input flex items-center gap-4" data-input-name="leisure_area_capacity" data-min-value="0">
                             <button type="button" class="counter-btn minus w-10 h-10 rounded-xl bg-surface-base border border-content-secondary/20 text-content-secondary hover:text-brand-500">-</button>
@@ -265,7 +255,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             <?php foreach ($data['sports'] as $sport): ?>
                                 <label class="cursor-pointer">
                                     <input type="checkbox" name="sports[]" value="<?php echo (int)$sport['id']; ?>" class="sr-only peer">
-                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-content-secondary/25 text-sm font-semibold text-content-primary transition-colors peer-checked:bg-brand-500 peer-checked:border-brand-500 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
+                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-content-secondary/25 text-sm font-semibold text-content-primary transition-colors peer-checked:bg-brand-600 peer-checked:border-brand-500 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">
                                         <?php if (!empty($sport['icon_path'])): ?><span><i class="fas <?php echo htmlspecialchars($sport['icon_path']); ?>"></i></span><?php endif; ?>
                                         <?php echo htmlspecialchars($sport['name']); ?>
                                     </span>
@@ -277,13 +267,13 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             </div>
 
             <div id="step-4" class="step w-full max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Detalhes Finais</h2>
-                <p class="text-content-secondary text-center mb-8">Defina o nome e o valor para começar.</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center"><?php echo $lang['wiz_details_title']; ?></h2>
+                <p class="text-content-secondary text-center mb-8"><?php echo $lang['venue_name_price_title']; ?></p>
 
                 <div class="space-y-6">
                     <div>
-                        <label for="name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Nome do Local <span class="text-red-500">*</span></label>
-                        <input type="text" id="name" name="name" class="w-full px-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Arena Kolaê">
+                        <label for="name" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_name']; ?> <span class="text-red-500">*</span></label>
+                        <input type="text" id="name" name="name" class="w-full px-4 py-4 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="<?php echo htmlspecialchars($lang['venue_name_ph']); ?>">
                     </div>
                     <!-- Preço (D31): valor, grátis ou não informado -->
                     <fieldset>
@@ -292,7 +282,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             <?php foreach (['value' => $lang['data_price_value'], 'free' => $lang['data_price_free'], 'none' => $lang['data_price_none']] as $mode => $label): ?>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="price_mode" value="<?php echo $mode; ?>" class="sr-only peer" <?php echo $mode === 'value' ? 'checked' : ''; ?>>
-                                    <span class="inline-block px-4 py-2 rounded-full border border-content-secondary/30 text-sm font-semibold transition-colors peer-checked:bg-brand-500 peer-checked:text-white peer-checked:border-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500"><?php echo $label; ?></span>
+                                    <span class="inline-block px-4 py-2 rounded-full border border-content-secondary/30 text-sm font-semibold transition-colors peer-checked:bg-brand-600 peer-checked:text-white peer-checked:border-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500"><?php echo $label; ?></span>
                                 </label>
                             <?php endforeach; ?>
                         </div>
@@ -326,12 +316,12 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             </div>
 
             <div id="step-5" class="step w-full max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Localização</h2>
-                <p class="text-content-secondary text-center mb-8">Onde os jogadores vão te encontrar?</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center"><?php echo $lang['edit_venue_location']; ?></h2>
+                <p class="text-content-secondary text-center mb-8"><?php echo $lang['venue_adress_title']; ?></p>
 
                 <div class="space-y-4">
                     <div>
-                        <label for="cep" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">CEP <span class="text-red-500">*</span></label>
+                        <label for="cep" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_cep']; ?> <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <input type="text" id="cep" name="cep" placeholder="00000-000" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                             <div id="cep-loading" class="absolute right-4 top-3.5 hidden">
@@ -342,33 +332,33 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
                     <div class="grid grid-cols-3 gap-4">
                         <div class="col-span-2">
-                            <label for="street" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Rua <span class="text-red-500">*</span></label>
+                            <label for="street" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_street']; ?> <span class="text-red-500">*</span></label>
                             <input type="text" id="street" name="street" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                         <div>
-                            <label for="number" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Número <span class="text-red-500">*</span></label>
+                            <label for="number" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_number']; ?> <span class="text-red-500">*</span></label>
                             <input type="text" id="number" name="number" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="neighborhood" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Bairro <span class="text-red-500">*</span></label>
+                            <label for="neighborhood" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_neighborhood']; ?> <span class="text-red-500">*</span></label>
                             <input type="text" id="neighborhood" name="neighborhood" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                         <div>
-                            <label for="complement" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Complemento</label>
-                            <input type="text" id="complement" name="complement" placeholder="Ex: Apto 101" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
+                            <label for="complement" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_complement']; ?></label>
+                            <input type="text" id="complement" name="complement" placeholder="<?php echo htmlspecialchars($lang['wiz_complement_ph']); ?>" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-4">
                         <div class="col-span-2">
-                            <label for="city" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Cidade <span class="text-red-500">*</span></label>
+                            <label for="city" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_city']; ?> <span class="text-red-500">*</span></label>
                             <input type="text" id="city" name="city" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                         <div>
-                            <label for="state" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2">Estado <span class="text-red-500">*</span></label>
+                            <label for="state" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-2"><?php echo $lang['venue_state']; ?> <span class="text-red-500">*</span></label>
                             <input type="text" id="state" name="state" class="w-full px-4 py-3 bg-input-base border border-content-secondary/20 rounded-xl text-content-primary focus:outline-none focus:border-brand-500 transition-all">
                         </div>
                     </div>
@@ -376,17 +366,17 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             </div>
 
             <div id="step-6" class="step w-full max-w-3xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center">Fotos da Quadra</h2>
-                <p class="text-content-secondary text-center mb-8">Boas fotos aumentam em 80% as chances de reserva.</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-content-primary mb-2 text-center"><?php echo $lang['photos_title']; ?></h2>
+                <p class="text-content-secondary text-center mb-8"><?php echo $lang['venue_image_title']; ?></p>
 
                 <div id="drop-area" class="border-2 border-dashed border-content-secondary/30 rounded-2xl p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-500/5 transition-all group bg-surface-elevated">
                     <label for="images" class="cursor-pointer flex flex-col items-center">
                         <div class="w-16 h-16 rounded-full bg-surface-base flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                             <i class="fas fa-cloud-upload-alt text-3xl text-content-secondary group-hover:text-brand-500"></i>
                         </div>
-                        <p class="font-bold text-lg text-content-primary">Arraste e solte ou clique para selecionar</p>
-                        <p class="text-sm text-content-secondary mt-1">JPG ou PNG (Máx 5MB)</p>
-                        <input type="file" id="images" name="images[]" multiple accept="image/jpeg, image/png" class="hidden">
+                        <p class="font-bold text-lg text-content-primary"><?php echo $lang['photos_drop']; ?></p>
+                        <p class="text-sm text-content-secondary mt-1"><?php echo htmlspecialchars(strtr($lang['photos_rules'], ['{n}' => \App\Models\VenueImage::MAX_PER_VENUE])); ?></p>
+                        <input type="file" id="images" name="images[]" multiple accept="image/jpeg, image/png, image/webp" class="hidden">
                     </label>
                 </div>
 
@@ -404,11 +394,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
             <div class="flex justify-between items-center">
                 <button id="prev-btn" class="font-semibold text-content-secondary hover:text-content-primary py-2 px-4 rounded-xl hover:bg-surface-base transition-colors invisible">
-                    <i class="fas fa-arrow-left mr-2"></i> Voltar
+                    <i class="fas fa-arrow-left mr-2"></i> <?php echo $lang['global_back']; ?>
                 </button>
 
-                <button id="next-btn" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all transform hover:-translate-y-0.5 flex items-center">
-                    Avançar <i class="fas fa-arrow-right ml-2"></i>
+                <button id="next-btn" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-brand-500/20 transition-all transform hover:-translate-y-0.5 flex items-center">
+                    <?php echo $lang['venue_btn_continue']; ?> <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
         </div>
@@ -474,11 +464,11 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
 
                 // Botão Avançar/Concluir
                 if (currentStep === totalSteps - 1) {
-                    nextBtn.innerHTML = 'Concluir <i class="fas fa-check ml-2"></i>';
+                    nextBtn.innerHTML = <?php echo json_encode($lang['venue_btn_finish']); ?> + ' <i class="fas fa-check ml-2"></i>';
                     nextBtn.classList.remove('bg-brand-500', 'hover:bg-brand-400');
                     nextBtn.classList.add('bg-green-500', 'hover:bg-green-400');
                 } else {
-                    nextBtn.innerHTML = 'Avançar <i class="fas fa-arrow-right ml-2"></i>';
+                    nextBtn.innerHTML = <?php echo json_encode($lang['venue_btn_continue']); ?> + ' <i class="fas fa-arrow-right ml-2"></i>';
                     nextBtn.classList.add('bg-brand-500', 'hover:bg-brand-400');
                     nextBtn.classList.remove('bg-green-500', 'hover:bg-green-400');
                 }
@@ -493,14 +483,9 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 });
             }
 
+            // Aviso no padrão do site (src/js/ui.js)
             function showToast(message) {
-                const toast = document.getElementById('toast');
-                const toastMsg = document.getElementById('toast-message');
-                toastMsg.textContent = message;
-                toast.classList.remove('translate-x-full', 'opacity-0');
-                setTimeout(() => {
-                    toast.classList.add('translate-x-full', 'opacity-0');
-                }, 3000);
+                if (window.Kolae && Kolae.toast) Kolae.toast(message, 'error');
             }
 
             function highlightError(element) {
@@ -523,7 +508,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                 if (index === 0) {
                     const selected = currentStepEl.querySelector('.option-card.border-brand-500'); // Verifica classe de ativo
                     if (!selected) {
-                        showToast('Selecione um tipo de piso.');
+                        showToast(<?php echo json_encode($lang['venue_floor_incomplete']); ?>);
                         return false;
                     }
                 }
@@ -553,7 +538,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             isValid = false;
                         }
                     }
-                    if (!isValid) showToast('Preencha os campos obrigatórios.');
+                    if (!isValid) showToast(<?php echo json_encode($lang['venue_requirement']); ?>);
                 }
 
                 // Validação Endereço (Step 4)
@@ -565,7 +550,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             isValid = false;
                         }
                     });
-                    if (!isValid) showToast('Preencha o endereço completo.');
+                    if (!isValid) showToast(<?php echo json_encode($lang['venue_adress_incomplete']); ?>);
                 }
 
                 return isValid;
@@ -721,7 +706,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
                             });
                             document.getElementById('number').focus();
                         } else {
-                            showToast('CEP não encontrado.');
+                            showToast(<?php echo json_encode($lang['wiz_cep_not_found']); ?>);
                         }
                     } catch (error) {
                         console.error(error);
@@ -823,6 +808,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
             updateUI();
         });
     </script>
+    <?php include BASE_PATH . '/app/views/partials/toasts.php'; ?>
 </body>
 
 </html>

@@ -134,6 +134,7 @@ class VenuePhotosController
                 $stored = move_uploaded_file($files['tmp_name'][$i], $uploadDir . $fileName);
             }
             if ($stored && VenueImage::create($venueId, $fileName)) {
+                ImageHelper::makeThumb($uploadDir . $fileName);
                 $result['saved']++;
                 $room--;
             } else {
@@ -146,13 +147,14 @@ class VenuePhotosController
     /**
      * Otimiza as fotos que já estavam no servidor antes da D48 (botão no painel do admin).
      * Pula as que já são JPEG pequenos; pode rodar mais de uma vez. Troca o arquivo e o
-     * file_path só depois que o JPEG novo foi gravado.
-     * @return array ['optimized' => n, 'skipped' => n, 'failed' => n, 'saved_bytes' => n]
+     * file_path só depois que o JPEG novo foi gravado. Também cria a miniatura (D57) das
+     * fotos que ainda não têm.
+     * @return array ['optimized' => n, 'skipped' => n, 'failed' => n, 'saved_bytes' => n, 'thumbs' => n]
      */
     public static function optimizeExisting(): array
     {
         @set_time_limit(300);
-        $report = ['optimized' => 0, 'skipped' => 0, 'failed' => 0, 'saved_bytes' => 0];
+        $report = ['optimized' => 0, 'skipped' => 0, 'failed' => 0, 'saved_bytes' => 0, 'thumbs' => 0];
 
         foreach (VenueImage::findAll() as $img) {
             $dir = BASE_PATH . '/uploads/venues/' . (int)$img['venue_id'] . '/';
@@ -161,35 +163,49 @@ class VenuePhotosController
                 $report['skipped']++;
                 continue;
             }
-            $size = filesize($old);
-            $dims = @getimagesize($old);
-            $isJpeg = $dims && $dims['mime'] === 'image/jpeg';
-            if ($dims && $isJpeg && max($dims[0], $dims[1]) <= ImageHelper::PHOTO_MAX_SIDE && $size <= 600 * 1024) {
-                $report['skipped']++;
-                continue;
+            $current = self::optimizeOne($img, $old, $dir, $report);
+            if (!is_file(ImageHelper::thumbPath($current)) && ImageHelper::makeThumb($current)) {
+                $report['thumbs']++;
             }
-
-            $newName = uniqid('venue_', true) . '.jpg';
-            if (!ImageHelper::savePhotoAsJpeg($old, $dir . $newName)) {
-                $report['failed']++;
-                continue;
-            }
-            // Ficou maior (foto que já era leve): mantém a original
-            if (filesize($dir . $newName) >= $size) {
-                unlink($dir . $newName);
-                $report['skipped']++;
-                continue;
-            }
-            if (!VenueImage::updateFilePath((int)$img['id'], $newName)) {
-                unlink($dir . $newName);
-                $report['failed']++;
-                continue;
-            }
-            $report['saved_bytes'] += $size - filesize($dir . $newName);
-            unlink($old);
-            $report['optimized']++;
         }
         return $report;
+    }
+
+    /**
+     * Otimiza uma foto (se precisar) e devolve o caminho da foto que ficou valendo.
+     * Conta o resultado em $report.
+     */
+    private static function optimizeOne(array $img, string $old, string $dir, array &$report): string
+    {
+        $size = filesize($old);
+        $dims = @getimagesize($old);
+        $isJpeg = $dims && $dims['mime'] === 'image/jpeg';
+        if ($dims && $isJpeg && max($dims[0], $dims[1]) <= ImageHelper::PHOTO_MAX_SIDE && $size <= 600 * 1024) {
+            $report['skipped']++;
+            return $old;
+        }
+
+        $newName = uniqid('venue_', true) . '.jpg';
+        if (!ImageHelper::savePhotoAsJpeg($old, $dir . $newName)) {
+            $report['failed']++;
+            return $old;
+        }
+        // Ficou maior (foto que já era leve): mantém a original
+        if (filesize($dir . $newName) >= $size) {
+            unlink($dir . $newName);
+            $report['skipped']++;
+            return $old;
+        }
+        if (!VenueImage::updateFilePath((int)$img['id'], $newName)) {
+            unlink($dir . $newName);
+            $report['failed']++;
+            return $old;
+        }
+        $report['saved_bytes'] += $size - filesize($dir . $newName);
+        unlink($old);
+        ImageHelper::deleteThumb($old);
+        $report['optimized']++;
+        return $dir . $newName;
     }
 
     /** Apaga o arquivo da foto, se existir. */
@@ -199,6 +215,7 @@ class VenuePhotosController
         if (is_file($path)) {
             unlink($path);
         }
+        ImageHelper::deleteThumb($path);
     }
 
     private function redirect(array $venue, array $query, string $anchor = ''): void

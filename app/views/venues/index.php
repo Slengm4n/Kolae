@@ -9,7 +9,7 @@ $venues = $data['venues'] ?? [];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kolae</title>
+    <title>Quadras · Kolae</title>
     <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -110,13 +110,13 @@ $venues = $data['venues'] ?? [];
                     <h1 class="text-3xl font-bold mb-1 text-content-primary">Gerenciar Quadras</h1>
                     <p class="text-content-secondary text-sm">Cadastre e monitore os locais esportivos.</p>
                 </div>
-                <a href="<?php echo BASE_URL; ?>/admin/quadras/criar" class="bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
+                <a href="<?php echo BASE_URL; ?>/admin/quadras/criar" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
                     <i class="fas fa-plus mr-2"></i> Adicionar Quadra
                 </a>
             </div>
 
             <div class="md:hidden mb-4 animate-up delay-100">
-                <a href="<?php echo BASE_URL; ?>/admin/quadras/criar" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-2.5 px-4 rounded-lg flex justify-center items-center shadow-md text-sm">
+                <a href="<?php echo BASE_URL; ?>/admin/quadras/criar" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-lg flex justify-center items-center shadow-md text-sm">
                     <i class="fas fa-plus mr-2"></i> Adicionar Quadra
                 </a>
             </div>
@@ -216,7 +216,7 @@ $venues = $data['venues'] ?? [];
                                                 <a href="<?php echo BASE_URL; ?>/admin/quadras/editar/<?php echo $venue['id']; ?>" class="text-content-secondary hover:text-brand-500 p-1 transition-colors" title="Editar">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
-                                                <form action="<?php echo BASE_URL; ?>/admin/quadras/excluir/<?php echo $venue['id']; ?>" method="POST" class="inline" onsubmit="return confirm('Tem a certeza que deseja excluir esta quadra?');">
+                                                <form action="<?php echo BASE_URL; ?>/admin/quadras/excluir/<?php echo $venue['id']; ?>" method="POST" class="inline" data-confirm="Tem a certeza que deseja excluir esta quadra?" data-confirm-danger data-confirm-ok="Excluir">
                                                     <?php echo \App\Core\Csrf::field(); ?>
                                                     <button type="submit" class="link-button text-content-secondary hover:text-red-500 p-1 transition-colors" title="Excluir">
                                                         <i class="fas fa-trash-alt"></i>
@@ -290,5 +290,6 @@ $venues = $data['venues'] ?? [];
             });
         }
     </script>
+    <?php include BASE_PATH . '/app/views/partials/toasts.php'; ?>
 </body>
 </html>

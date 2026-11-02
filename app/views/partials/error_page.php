@@ -31,7 +31,7 @@ $pageTitle = $errorTitle . ' · Kolae';
                 [$url, $label] = $action;
                 $primary = $action[2] ?? false;
                 $icon = $action[3] ?? null; ?>
-                <a href="<?php echo $ee($url); ?>" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold whitespace-nowrap transition-colors <?php echo $primary ? 'bg-brand-500 hover:bg-brand-600 text-white' : 'border border-content-secondary/20 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400'; ?>">
+                <a href="<?php echo $ee($url); ?>" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold whitespace-nowrap transition-colors <?php echo $primary ? 'bg-brand-600 hover:bg-brand-700 text-white' : 'border border-content-secondary/20 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400'; ?>">
                     <?php if ($icon): ?><i class="fas <?php echo $ee($icon); ?>"></i><?php endif; ?><?php echo $ee($label); ?>
                 </a>
             <?php endforeach; ?>

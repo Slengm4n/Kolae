@@ -23,7 +23,7 @@ return [
 
 
     //global Forms
-    'global_email' => 'Email',
+    'global_email' => 'E-mail',
     'global_senha' => 'Senha',
 
     //Home
@@ -54,7 +54,7 @@ return [
 
     //Forms do login
     'login_email_ph' => 'Email',
-    'login_senha_ph' => 'Senha',
+    'login_senha_ph' => 'Sua senha',
     'login_remember' => 'Lembrar de mim',
     'login_forget' => 'Esqueceu a senha?',
     'login_btn_entry' => 'Entrar',
@@ -79,10 +79,10 @@ return [
     'forget_title_password' => 'Esqueceu a senha?',
     'forget_subtitle_password' => 'Sem problemas! Digite seu e-mail e enviaremos um link para você criar uma nova.',
 
-    'forget_email_registred' => 'Digite o seu E-mail cadastrado',
+    'forget_email_registred' => 'seu@email.com',
 
     //Botão para recuperar a senha
-    'forget_btn_recover' => 'Enviar Link de recuperação',
+    'forget_btn_recover' => 'Enviar link de recuperação',
 
     'remember_passoword_text' => 'Lembrou da senha?',
 
@@ -99,7 +99,7 @@ return [
     //Reset password
     'reset_title' => 'Crie sua nova senha',
     'reset_passoword_one' => 'Nova senha',
-    'reset_passoword_two' => 'Confirme a Nova senha',
+    'reset_passoword_two' => 'Confirme a nova senha',
     'reset_password_btn' => 'Salvar nova senha',
 
     //Erros
@@ -117,7 +117,7 @@ return [
     'register_subtitle_forms' => 'Preencha seus dados para começar',
 
     //Cadastro (forms)
-    'register_name' => 'Nome Completo',
+    'register_name' => 'Nome completo',
     'register_name_ph' => 'Como quer ser chamado?',
     'register_email_ph' => 'seu@email.com',
     'register_birthday' => 'Data de nascimento',
@@ -134,7 +134,7 @@ return [
     'register_create_btn' => 'Criar conta',
 
     'register_confirm_answer' => 'Já tem uma conta?',
-    'register_answer_btn' => 'Fazer Login',
+    'register_answer_btn' => 'Fazer login',
 
 
     //Cadastro (Erros)
@@ -257,7 +257,7 @@ return [
     'venue_additional_title' => 'Informe aos jogadores o que seu espaço tem a oferecer',
     'venue_additional_1' => 'Iluminação',
     'venue_additional_2' => 'Quadra coberta',
-    'venue_additional_3' => 'Area de lazer',
+    'venue_additional_3' => 'Área de lazer',
     'venue_additional_4' => 'Wi-Fi',
     'venue_additional_5' => 'Estacionamento',
     'venue_additional_6' => 'Vestiário',
@@ -655,4 +655,72 @@ return [
     'qr_text' => 'Imprima e cole na quadra. Quem escanear abre a página com fotos, horário e o botão do WhatsApp.',
     'qr_download' => 'Baixar imagem',
     'qr_poster_cta' => 'Escaneie para ver os horários e falar com o dono',
+    'auth_back_home' => 'Voltar ao início',
+    'auth_back_login' => 'Voltar ao login',
+    'auth_show_password' => 'Mostrar senha',
+    'auth_hide_password' => 'Esconder senha',
+    'auth_wait' => 'Aguarde...',
+    'auth_creating' => 'Criando conta...',
+    'auth_sending' => 'Enviando...',
+    'auth_password_min' => 'Pelo menos 8 caracteres',
+    'auth_password_match' => 'As senhas coincidem',
+    'auth_password_nomatch' => 'As senhas ainda não coincidem',
+    'auth_caps_lock' => 'Caps Lock ligado',
+    'auth_feature_map' => 'Quadras perto de você no mapa',
+    'auth_feature_status' => 'Veja na hora se está livre ou em uso',
+    'auth_feature_free' => 'Gratuito para atletas e donos de quadra',
+    'auth_reset_subtitle' => 'Escolha uma senha nova com pelo menos 8 caracteres.',
+    'auth_reset_side_title' => 'Quase lá.',
+    'auth_reset_side_text' => 'Crie a senha nova e volte a encontrar quadras e partidas.',
+    'auth_terms_text' => 'Li e aceito os {terms} e a {privacy}.',
+    'auth_terms_link' => 'Termos de uso',
+    'auth_privacy_link' => 'Política de privacidade',
+    'wiz_floor_title' => 'Tipo de piso',
+    'wiz_details_title' => 'Detalhes finais',
+    'wiz_cep_not_found' => 'CEP não encontrado.',
+    'wiz_complement_ph' => 'Ex: fundos, sala 2',
+    'theme_dark' => 'Modo escuro',
+    'theme_light' => 'Modo claro',
+    'profile_photo_title' => 'Foto de perfil',
+    'auth_day' => 'Dia',
+    'auth_month' => 'Mês',
+    'auth_year' => 'Ano',
+    'auth_months' => 'Janeiro,Fevereiro,Março,Abril,Maio,Junho,Julho,Agosto,Setembro,Outubro,Novembro,Dezembro',
+    'auth_birth_hint' => 'É preciso ter 18 anos ou mais.',
+    'auth_birth_underage' => 'Com essa data você ainda não tem 18 anos. O Kolae é para maiores de idade.',
+    'auth_birth_invalid' => 'Essa data não existe. Confira o dia.',
+    'config_preferences' => 'Preferências',
+    'pref_theme_title' => 'Aparência',
+    'pref_theme_hint' => 'Vale para todo o site neste aparelho.',
+    'pref_theme_light_text' => 'Fundo claro',
+    'pref_theme_dark_text' => 'Fundo escuro, melhor à noite',
+    'pref_theme_system' => 'Automático',
+    'pref_theme_system_text' => 'Igual ao celular ou computador',
+    'pref_lang_title' => 'Idioma',
+    'pref_lang_hint' => 'Os textos do site e do painel mudam na hora.',
+    'flash_close' => 'Fechar aviso',
+    'flash_cancel' => 'Cancelar',
+    'flash_confirm' => 'Confirmar',
+    'flash_confirm_title' => 'Tem certeza?',
+    'flash_delete' => 'Apagar',
+    'flash_venue_deleted' => 'Quadra desativada.',
+    'flash_cnpj_required' => 'Valide seu CNPJ para cadastrar e gerenciar quadras.',
+    'flash_cnpj_invalid' => 'CNPJ inválido. Confira os números e tente de novo.',
+    'flash_cnpj_in_use' => 'Este CNPJ já está em outra conta.',
+    'flash_venue_not_found' => 'Não encontramos essa quadra na sua conta.',
+    'flash_unauthorized' => 'Você não tem permissão para isso.',
+    'flash_password_changed' => 'Senha alterada com sucesso.',
+    'agenda_cancel_yes' => 'Sim, cancelar partida',
+    'verify_title' => 'Confirme seu e-mail.',
+    'verify_text' => 'Enviamos um link para {email}.',
+    'verify_resend' => 'Reenviar',
+    'verify_sent' => 'Link enviado. Confira sua caixa de entrada e o spam.',
+    'verify_wait' => 'Acabamos de enviar um link. Espere alguns minutos para pedir outro.',
+    'verify_failed' => 'Não foi possível enviar o e-mail agora. Tente de novo em instantes.',
+    'verify_done' => 'E-mail confirmado. Obrigado!',
+    'verify_expired' => 'Esse link de confirmação venceu. Peça outro no seu painel.',
+    'verify_invalid' => 'Link de confirmação inválido. Use o link mais recente que enviamos.',
+    'verify_badge_ok' => 'E-mail confirmado',
+    'verify_badge_pending' => 'Ainda não confirmado.',
+    'verify_after_register' => 'Enviamos um link para confirmar seu e-mail. Você já pode entrar.',
 ];

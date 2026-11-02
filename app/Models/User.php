@@ -130,6 +130,13 @@ class User
         return $stmt->execute($data) ? (int)$pdo->lastInsertId() : false;
     }
 
+    /** Marca o e-mail da conta como confirmado (D58). */
+    public static function markEmailVerified(int $id): bool
+    {
+        $stmt = Database::getConnection()->prepare("UPDATE users SET email_verified_at = NOW() WHERE id = ? AND email_verified_at IS NULL");
+        return $stmt->execute([$id]);
+    }
+
     public static function update(int $id, array $data): bool
     {
         if (isset($data['cnpj'])) {
