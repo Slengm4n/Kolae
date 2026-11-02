@@ -200,10 +200,12 @@ CREATE TABLE `venues_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `venue_id` int(11) NOT NULL,
   `file_path` varchar(255) NOT NULL,
+  `position` int(11) NOT NULL DEFAULT 0 COMMENT 'Ordem na galeria; a menor é a capa',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `fk_venues_images_venue` (`venue_id`),
+  KEY `idx_venues_images_order` (`venue_id`,`position`),
   CONSTRAINT `fk_venues_images_venue` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SET FOREIGN_KEY_CHECKS = 1;

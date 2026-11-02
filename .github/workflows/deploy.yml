@@ -1,12 +1,91 @@
-name: Deploy (FTP)
+name: Testes e deploy (FTP)
 
+# Em PR para a main: só os testes (o PR mostra ✓ ou ✗ antes do merge).
+# Em push na main: os testes e, se passarem, o deploy na produção (D56).
 on:
     push:
         branches:
             - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
+    testes:
+        runs-on: ubuntu-latest
+
+        # Banco descartável só para os testes (mesma versão do XAMPP do projeto)
+        services:
+            mysql:
+                image: mariadb:10.4
+                env:
+                    MARIADB_ROOT_PASSWORD: teste
+                    MARIADB_DATABASE: kolae_teste
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pteste"
+                    --health-interval=5s
+                    --health-timeout=5s
+                    --health-retries=20
+
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  extensions: pdo_mysql, gd, mbstring, openssl
+
+            - name: Install Dependencies
+              run: composer install --no-progress --optimize-autoloader
+
+            - name: Sintaxe de todos os arquivos PHP
+              run: |
+                  find app includes lang index.php -name '*.php' -print0 \
+                    | xargs -0 -n1 php -l > /dev/null
+
+            - name: config.php de teste (sem nenhum dado da produção)
+              run: |
+                  cat > config.php <<'PHP'
+                  <?php
+                  date_default_timezone_set('America/Sao_Paulo');
+                  define('DB_HOST', '127.0.0.1');
+                  define('DB_PORT', '3306');
+                  define('DB_NAME', 'kolae_teste');
+                  define('DB_USER', 'root');
+                  define('DB_PASS', 'teste');
+                  define('ENCRYPTION_KEY', 'chave-so-para-os-testes-do-github');
+                  define('ENCRYPTION_IV', '00112233445566778899aabbccddeeff');
+                  define('GOOGLE_MAPS_API_KEY', '');
+                  define('JWT_SECRET', 'segredo-so-para-os-testes-do-github');
+                  define('SMTP_HOST', '');
+                  define('SMTP_USER', '');
+                  define('SMTP_PASS', '');
+                  define('SMTP_SECURE', 'tls');
+                  define('SMTP_PORT', 587);
+                  define('SMTP_FROM_EMAIL', '');
+                  define('SMTP_FROM_NAME', 'Kolae');
+                  PHP
+
+            - name: Banco de teste (schema.sql + seed de teste)
+              run: |
+                  mysql -h 127.0.0.1 -uroot -pteste --default-character-set=utf8mb4 kolae_teste < database/schema.sql
+                  mysql -h 127.0.0.1 -uroot -pteste --default-character-set=utf8mb4 kolae_teste < database/seeds/teste_status.sql
+
+            - name: Testes PHP
+              run: |
+                  for t in tests/*_test.php; do
+                    echo "== $t"
+                    php "$t"
+                  done
+
     ftp-deploy:
+        # Só publica se os testes passarem, e só em push na main (nunca em PR)
+        needs: testes
+        if: github.event_name == 'push'
         runs-on: ubuntu-latest
 
         steps:
