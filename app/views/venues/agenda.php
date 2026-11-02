@@ -70,7 +70,13 @@ $canSchedule = $hasHours && $opens && !$isPast;
         <?php endif; ?>
 
         <!-- Dia -->
-        <section class="bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm p-4 md:p-6">
+        <div class="mb-3 flex justify-end">
+            <button type="button" data-tour-start="agenda" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                <span><i class="fas fa-circle-question"></i></span><?php echo $lang['tour_how']; ?>
+            </button>
+        </div>
+
+        <section id="agenda-day" class="bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm p-4 md:p-6">
             <div class="flex items-center gap-2">
                 <a href="<?php echo "$base?data=$prev"; ?>" class="day-nav" aria-label="<?php echo $e($lang['agenda_prev_day']); ?>" title="<?php echo $e($lang['agenda_prev_day']); ?>"><span><i class="fas fa-chevron-left"></i></span></a>
                 <div class="flex-1 text-center min-w-0">
@@ -101,7 +107,7 @@ $canSchedule = $hasHours && $opens && !$isPast;
                         <a class="font-semibold text-brand-600 dark:text-brand-400 hover:underline" href="<?php echo BASE_URL . $routePrefix . '/quadras/' . $venueId . '/horario'; ?>"><?php echo $lang['agenda_go_hours']; ?></a></p>
                 <?php else: ?>
                     <p class="text-sm text-content-secondary"><?php echo $e(strtr($lang['agenda_open_from'], ['{opens}' => $opens, '{closes}' => $closes])); ?></p>
-                    <div class="mt-3 relative" role="img" aria-label="<?php echo $e($lang['agenda_timeline_label']); ?>">
+                    <div id="agenda-timeline" class="mt-3 relative" role="img" aria-label="<?php echo $e($lang['agenda_timeline_label']); ?>">
                         <div class="flex h-11 rounded-xl overflow-hidden border border-content-secondary/15">
                             <?php foreach ($segments as $seg):
                                 $busy = $seg['status'] === 'in_use'; ?>
@@ -126,7 +132,7 @@ $canSchedule = $hasHours && $opens && !$isPast;
         </section>
 
         <!-- Partidas do dia -->
-        <section class="mt-6 bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm">
+        <section id="agenda-matches" class="mt-6 bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm">
             <h2 class="px-5 md:px-6 pt-5 text-lg font-bold text-content-primary"><?php echo $lang['agenda_matches_title']; ?></h2>
             <?php if (!$matches): ?>
                 <p class="px-5 md:px-6 py-5 text-content-secondary flex items-center gap-2"><span><i class="far fa-calendar"></i></span><?php echo $lang['agenda_empty']; ?></p>
@@ -315,5 +321,17 @@ $canSchedule = $hasHours && $opens && !$isPast;
             <?php if ($error): ?>document.getElementById('nova-partida').scrollIntoView({ block: 'start' });<?php endif; ?>
         })();
     </script>
+    <?php
+    // Guia da aba Agenda (D50): abre sozinho na primeira visita
+    $tourId = 'agenda';
+    $tourAuto = true;
+    $tourSteps = [
+        ['#agenda-day', $lang['agenda_tour_1_title'], $lang['agenda_tour_1_text']],
+        ['#agenda-timeline || #agenda-day', $lang['agenda_tour_2_title'], $lang['agenda_tour_2_text']],
+        ['#nova-partida', $lang['agenda_tour_3_title'], $lang['agenda_tour_3_text']],
+        ['#agenda-matches', $lang['agenda_tour_4_title'], $lang['agenda_tour_4_text']],
+    ];
+    include BASE_PATH . '/app/views/partials/tour.php';
+    ?>
 </body>
 </html>

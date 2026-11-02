@@ -82,6 +82,12 @@ $dayLabel = function (array $days) use ($lang): string {
             </div>
         <?php endif; ?>
 
+        <div class="mb-3 flex justify-end">
+            <button type="button" data-tour-start="hours" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                <span><i class="fas fa-circle-question"></i></span><?php echo $lang['tour_how']; ?>
+            </button>
+        </div>
+
         <form id="hours-form" method="POST" action="<?php echo $action; ?>" novalidate>
             <?php echo \App\Core\Csrf::field(); ?>
             <section class="bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm">
@@ -91,7 +97,7 @@ $dayLabel = function (array $days) use ($lang): string {
                 </div>
 
                 <!-- Preencher rápido -->
-                <div class="p-5 md:p-6 border-b border-content-secondary/10 bg-surface-base/60">
+                <div id="hours-quick" class="p-5 md:p-6 border-b border-content-secondary/10 bg-surface-base/60">
                     <p class="text-sm font-semibold text-content-primary"><?php echo $lang['hours_quick_title']; ?></p>
                     <p class="text-xs text-content-secondary mt-0.5"><?php echo $lang['hours_quick_text']; ?></p>
                     <div class="mt-3 flex flex-wrap items-center gap-2">
@@ -140,7 +146,7 @@ $dayLabel = function (array $days) use ($lang): string {
             </section>
 
             <!-- Como aparece no app -->
-            <section class="mt-6 bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm p-5 md:p-6">
+            <section id="hours-summary" class="mt-6 bg-surface-elevated border border-content-secondary/10 rounded-2xl shadow-sm p-5 md:p-6">
                 <h2 class="text-sm font-semibold uppercase tracking-wide text-content-secondary"><?php echo $lang['hours_summary_title']; ?></h2>
                 <?php if (!$hasHours): ?>
                     <p class="mt-2 text-content-secondary"><?php echo $lang['hours_summary_empty']; ?></p>
@@ -158,7 +164,7 @@ $dayLabel = function (array $days) use ($lang): string {
 
             <!-- Salvar: fixo embaixo no celular -->
             <div class="fixed md:static bottom-0 inset-x-0 z-30 p-4 md:p-0 md:mt-6 bg-surface-elevated/95 md:bg-transparent backdrop-blur md:backdrop-blur-none border-t md:border-0 border-content-secondary/10 flex justify-end">
-                <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-brand-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
+                <button type="submit" id="hours-save" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-brand-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
                     <span><i class="fas fa-check"></i></span><?php echo $lang['hours_save']; ?>
                 </button>
             </div>
@@ -281,5 +287,18 @@ $dayLabel = function (array $days) use ($lang): string {
             window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
         })();
     </script>
+    <?php
+    // Guia da aba Horário (D50): abre sozinho na primeira visita
+    $tourId = 'hours';
+    $tourAuto = true;
+    $tourSteps = [
+        ['.day-row[data-weekday="1"] label', $lang['hours_tour_1_title'], $lang['hours_tour_1_text']],
+        ['.day-row[data-weekday="1"] .day-times || .day-row[data-weekday="1"]', $lang['hours_tour_2_title'], $lang['hours_tour_2_text']],
+        ['#hours-quick', $lang['hours_tour_3_title'], $lang['hours_tour_3_text']],
+        ['#hours-summary', $lang['hours_tour_4_title'], $lang['hours_tour_4_text']],
+        ['#hours-save', $lang['hours_tour_5_title'], $lang['hours_tour_5_text']],
+    ];
+    include BASE_PATH . '/app/views/partials/tour.php';
+    ?>
 </body>
 </html>
