@@ -279,3 +279,11 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Modelo:** o e-mail de redefinição de senha passa a ter o visual do Kolae (faixa azul, botão "Criar nova senha", validade de 60 minutos, uso único, "não foi você?", link escrito para copiar, rodapé) e uma **versão em texto puro** junto, que ajuda a não cair no spam. Feito com tabelas e estilos inline, porque clientes de e-mail ignoram CSS moderno.
 - **Onde:** base reutilizável `views/emails/layout.php` e o e-mail em `views/emails/password_reset.php`, montados por `Mailer::passwordResetMessage`. Um e-mail novo no futuro usa a mesma base.
 - **Idioma:** o e-mail sai em português, como as mensagens da API.
+
+## Testes
+
+### D56 · Testes antes do deploy e testes de clique no repositório (02/11/2026)
+- **No GitHub Actions:** o workflow passa a ter o job `testes`, com um banco MariaDB descartável: confere a sintaxe de todo o PHP, carrega `database/schema.sql` e o seed de teste e roda os testes de `tests/*_test.php`. **O deploy só roda se os testes passarem.** Em PR para a `main`, roda só os testes (o PR mostra ✓ ou ✗ antes do merge). O `config.php` dos testes é criado na hora, sem nenhum dado da produção.
+- **Testes de clique em `tests/e2e/`:** os 15 roteiros que conferiram as S4, S5 e o que veio depois (cerca de 390 passos) saíram do ambiente do Claude e entraram no repositório, com `npm run test:e2e`. O `rodar.js` recria os dados de teste antes de cada um (`preparar_banco.php`, que recusa banco que não seja local) e mostra um resumo. Caminhos configuráveis por variáveis de ambiente, para rodar em outro PC.
+- **Por que os de clique não rodam no Actions:** precisam do site inteiro no ar (Apache, PHP, MySQL, navegador) e levam uns 10 minutos; ficam para antes de cada PR, no PC de quem mexeu.
+- **Achado no caminho:** o `schema.sql` não tinha a coluna `position` do patch 006; uma instalação nova ficaria quebrada nas fotos. Corrigido, e agora o Actions carrega o `schema.sql` a cada PR, então isso não passa de novo.

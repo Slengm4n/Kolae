@@ -95,6 +95,20 @@ Table users {
   deleted_at timestamp
 }
 
+Table login_attempts {
+  id int [pk, increment]
+  email_hash char(64) [not null, note: 'SHA-256 do e-mail em minúsculas']
+  ip varchar(45) [not null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (email_hash, ip, created_at) [name: 'idx_login_attempts_account']
+    (ip, created_at) [name: 'idx_login_attempts_ip']
+  }
+
+  Note: 'Logins errados, para o limite de tentativas (D45, patch 005). Lida por LoginThrottle.'
+}
+
 Table user_tokens {
   id int [pk, increment]
   user_id int [not null]
@@ -150,8 +164,13 @@ Table venues_images {
   id int [pk, increment]
   venue_id int [not null]
   file_path varchar(255) [not null, note: 'Nome do arquivo em uploads/venues/{venue_id}/']
+  position int [not null, default: 0, note: 'Ordem na galeria; a menor é a capa (D46, patch 006)']
   created_at timestamp [default: `CURRENT_TIMESTAMP`]
   updated_at timestamp [default: `CURRENT_TIMESTAMP`, note: 'ON UPDATE CURRENT_TIMESTAMP']
+
+  indexes {
+    (venue_id, position) [name: 'idx_venues_images_order']
+  }
 }
 
 Table sports {

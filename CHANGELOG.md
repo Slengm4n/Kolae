@@ -13,6 +13,8 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Testes antes do deploy** (D56): o GitHub Actions confere a sintaxe do PHP e roda os testes de PHP num banco de teste em todo PR e antes de publicar; se algum falhar, a produção não muda.
+- **Testes de clique no repositório** (D56): `npm run test:e2e` roda os 15 roteiros de navegador em `tests/e2e/`, com o banco de teste preparado automaticamente.
 - **E-mail de redefinição de senha no visual do Kolae** (D55), enviado por `nao-responda@kolae.online` (Titan), com botão, validade do link e versão em texto puro.
 - **QR Code da quadra** (D54): cartaz pronto para imprimir na Visão geral, com o QR para a página pública e o botão de baixar em PNG.
 - **Páginas de erro novas** (D53): 404, 403 e "Página expirada" no visual do site, com tema claro/escuro e botões para seguir.
@@ -53,6 +55,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
 ### Corrigido
+- **`schema.sql` sem a ordem das fotos:** faltava a coluna `position` do patch 006 (instalação nova quebrava as fotos).
 - **"Esqueci a senha" sem limite** (D52): agora sai no máximo um e-mail a cada 5 minutos por conta, com a mesma resposta em todos os casos.
 - **Avatar não era reduzido** (D48): o código calculava a imagem menor e gravava a original.
 - **Piso na Visão geral** aparecia só em português; agora segue o idioma, como na home.
