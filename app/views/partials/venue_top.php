@@ -1,9 +1,9 @@
 <?php
 /**
  * Topo das páginas de gerenciar uma quadra (D35): voltar ao painel, nome, selo de status
- * ao vivo (mesma regra da API, D40) e as abas Dados, Horário e Agenda.
+ * ao vivo (mesma regra da API, D40) e as abas Dados, Fotos, Horário e Agenda.
  *
- * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('data' | 'hours' | 'agenda'),
+ * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('data' | 'photos' | 'hours' | 'agenda'),
  *            $routePrefix ('/dashboard' | '/admin'), $backUrl.
  */
 use App\Core\VenueAccess;
@@ -17,6 +17,7 @@ $topVenueId = (int)$venue['id'];
 $topBase = BASE_URL . $routePrefix . '/quadras'; // nomes próprios: o include divide variáveis com a página
 $tabs = [
     'data' => ['label' => $lang['venue_tab_data'], 'icon' => 'fa-pen', 'url' => "$topBase/editar/$topVenueId"],
+    'photos' => ['label' => $lang['venue_tab_photos'], 'icon' => 'fa-images', 'url' => "$topBase/$topVenueId/fotos"],
     'hours' => ['label' => $lang['venue_tab_hours'], 'icon' => 'fa-clock', 'url' => "$topBase/$topVenueId/horario"],
     'agenda' => ['label' => $lang['venue_tab_agenda'], 'icon' => 'fa-calendar-days', 'url' => "$topBase/$topVenueId/agenda"],
 ];

@@ -9,6 +9,7 @@ class ImageHelper
         'image/jpeg' => 'jpg',
         'image/png'  => 'png',
         'image/gif'  => 'gif',
+        'image/webp' => 'webp',
     ];
 
     private const MAX_SIZE = 10 * 1024 * 1024; // 10MB
