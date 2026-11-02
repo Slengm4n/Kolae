@@ -5,3 +5,7 @@ config.php
 /node_modules
 
 .env
+
+# Testes de clique: imagens e capturas geradas na hora
+tests/e2e/.fotos/
+tests/e2e/.capturas/

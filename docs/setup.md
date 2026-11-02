@@ -84,10 +84,14 @@ Rodar da raiz do projeto, com o PHP do XAMPP, antes de abrir um PR:
 
 ```
 C:\xampp\php\php.exe tests/venue_schedule_test.php   # regra do status e validações, sem banco
+C:\xampp\php\php.exe tests/whatsapp_test.php         # validação e formato do WhatsApp, sem banco
 C:\xampp\php\php.exe tests/agenda_db_test.php        # horário e partidas no banco local
+npm run test:e2e                                    # testes de clique no navegador (uns 10 minutos)
 ```
 
-O segundo precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o banco como encontrou. A pasta `tests/` não vai para a produção.
+O `agenda_db_test` precisa do seed `database/seeds/teste_status.sql` aplicado e devolve o banco como encontrou. Os testes de clique preparam o banco sozinhos; como rodar e configurar está em [`tests/e2e/README.md`](../tests/e2e/README.md). A pasta `tests/` não vai para a produção.
+
+Os testes de PHP também rodam no GitHub Actions em todo PR para a `main` e antes de cada deploy: se algum falhar, a produção não muda (D56).
 
 ## 2. App mobile apontando para o notebook (só para testes locais)
 
