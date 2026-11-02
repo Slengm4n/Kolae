@@ -247,3 +247,9 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Regra de visibilidade:** a mesma da API (D34): quadra desativada ou excluída dá 404.
 - **Por quê:** o site não tinha como ver uma quadra; agora dá para mostrar no computador na apresentação, e o dono pode divulgar o link.
 - **Onde:** `PublicVenueController`, `views/venues/public.php`. Galeria e informações são os partials `venue_gallery.php` e `venue_details.php`, os mesmos da Visão geral.
+
+### D50 · Guia passo a passo nas abas Horário e Agenda (02/11/2026)
+- **O quê:** um guia que escurece a página, destaca um elemento por vez e explica em um balão ("Passo 1 de 5", Pular / Voltar / Próximo / Entendi). **Horário** (5 passos): ligar os dias, abre e fecha (um horário por dia, sem passar da meia-noite), preencher rápido, como aparece no app, salvar. **Agenda** (4 passos): um dia por vez, linha do tempo, agendar partida, partidas do dia e cancelar. Abre sozinho na primeira visita (inclusive logo depois de cadastrar a quadra) e pelo botão **"Como funciona?"**. Esc ou clicar fora fecha; setas do teclado mudam de passo; respeita "reduzir movimento".
+- **"Já viu" fica no navegador** (`localStorage`, chaves `kolae_tour_hours` e `kolae_tour_agenda`), não no banco: sem patch, e o pior caso é o guia aparecer de novo em outro aparelho.
+- **Onde:** `partials/tour.php` (componente, sem biblioteca), configurado em `venues/hours.php` e `venues/agenda.php`. Para outra tela: ids nos elementos, lista de passos e o include.
+- **Testes de clique de outras telas** precisam marcar o guia como visto depois do login, senão ele cobre os botões.
