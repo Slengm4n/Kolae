@@ -13,6 +13,10 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **Confirmação de e-mail** (D58): e-mail "Confirme seu e-mail" no cadastro (site e app), aviso no painel com "Reenviar" e selo no perfil. Não bloqueia nada. A API devolve `email_verified`. Aplicar o patch 007 antes (só garante a coluna; normalmente não muda nada).
+- **Miniaturas das fotos** (D58): cards e grades usam uma versão de até 640 px (~10 KB no lugar de ~240 KB). Depois do deploy, apertar "Otimizar fotos" no admin para criar as miniaturas das fotos antigas.
+- **Avisos e confirmações no visual do Kolae** (D57): os avisos depois de salvar ou de um erro aparecem como pop-up animado (ícone, barra de tempo que pausa com o mouse, botão de fechar, lido por leitores de tela) e somem da URL, então recarregar não repete. As janelas cinzas do navegador (apagar foto, cancelar partida, excluir no admin) viraram uma janela do Kolae, com o foco no "Voltar" em ação perigosa. Base em `src/js/ui.js`, `App\Core\Flash` e `partials/toasts.php`.
+- **Configurações > Preferências** (D57): tema Claro, Escuro ou Automático (segue o celular ou o computador, inclusive se mudar com a página aberta) e idioma, sem precisar do seletor da home.
 - **Testes antes do deploy** (D56): o GitHub Actions confere a sintaxe do PHP e roda os testes de PHP num banco de teste em todo PR e antes de publicar; se algum falhar, a produção não muda.
 - **Testes de clique no repositório** (D56): `npm run test:e2e` roda os 15 roteiros de navegador em `tests/e2e/`, com o banco de teste preparado automaticamente.
 - **E-mail de redefinição de senha no visual do Kolae** (D55), enviado por `nao-responda@kolae.online` (Titan), com botão, validade do link e versão em texto puro.
@@ -41,6 +45,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - **WhatsApp no perfil** (D24), para donos e admins: aceita o número digitado de qualquer jeito e grava só os dígitos com 55 (`User::normalizeWhatsapp`); avisa o dono sem número de que o "Falar com o dono" não aparece no app. Nos 7 idiomas. Teste em `tests/whatsapp_test.php`.
 
 ### Alterado
+- Painel, perfil, segurança e a aba Dados da quadra usam o mesmo cabeçalho das outras páginas do painel (`partials/owner_header.php`); o menu das Configurações virou `partials/config_nav.php`. E-mail de contato do rodapé: `contato@kolae.online`.
+- **Desempenho e acessibilidade (Lighthouse):** o JS do site caiu de 161 KB para 7,5 KB (tirado o carrossel Swiper, que nenhuma página usava); o navegador passa a guardar CSS e JS por um ano e imagens por 30 dias; o vídeo da home (1,8 MB) só carrega no computador; botões azuis com texto branco ficaram num tom mais escuro (`brand-600`) para atingir o contraste mínimo; telas de entrada com descrição para buscadores. Acessibilidade da home e do login foi a 100.
+- **Telas de entrada redesenhadas** (D57): login, cadastro, esqueci a senha e nova senha com o mesmo visual, foto da marca no computador e faixa no topo no celular, tema e idioma em todas, mostrar senha, aviso de Caps Lock, confirmação de senha ao digitar e o e-mail devolvido depois de um erro. Data de nascimento em três listas (dia, mês pelo nome e ano, na ordem de cada idioma), com aviso na hora de data inexistente ou de menor de 18.
 - **Produção na HostGator, com domínio próprio: `https://kolae.online`** (D41, substitui a D13). A API de produção (`https://kolae.online/api/v1`) responde JSON direto, então o app passa a usar a produção, sem depender do notebook. Banco, fotos e configuração migrados do InfinityFree, mantendo as chaves (CNPJs e logins continuam valendo); e-mail do "esqueci a senha" corrigido (`smtp.gmail.com`, `tls`, 587).
 - **Preparação para a HostGator**: o `.htaccess` deixa de fixar `RewriteBase /kolae/`, então o mesmo arquivo funciona no XAMPP (`/kolae`) e na raiz do domínio; a pasta do deploy por FTP vem do secret `FTP_SERVER_DIR` (sem ele, `/`, a raiz da conta de deploy). Passo a passo da migração e o que falta configurar em `docs/hospedagem.md`.
 - **API: fotos que não existem no servidor saem como `null`** (`cover_image_url`, `avatar_url`, `owner.avatar_url`) ou ficam fora de `images`, em vez de um link quebrado. Acontece quando o banco é copiado sem a pasta `uploads/` (ex: o notebook) ou se um arquivo some. `ApiFormat::uploadUrl`.
@@ -55,6 +62,18 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - Tabela `match_participants` e coluna `matches.max_players`, do modelo antigo de entrar e sair de partida (vazias).
 
 ### Corrigido
+- O painel não mostrava vários avisos (CNPJ obrigatório, inválido ou já usado, quadra não encontrada, sem permissão, quadra desativada): a pessoa voltava sem explicação. Trocar a senha mostrava o subtítulo da página no lugar de "Senha alterada".
+- **CNPJ:** só "criar quadra" conferia o CNPJ; editar, excluir e as abas Horário, Agenda, Fotos e Visão geral abriam para um dono sem CNPJ. A regra agora vale em todas (`VenueAccess::requireCnpjOrRedirect`).
+- Menu do perfil e botão de tema não funcionavam na Visão geral e na aba Fotos da quadra (a página não carregava o `bundle.js`).
+- **Cadastro no site:** aceitava data de nascimento no futuro (o ano de 2050 contava como "mais de 18") e, para menor de idade, mostrava "erro desconhecido". Agora usa a mesma regra da API (`User::isValidAdultBirthdate`) e mostra a mensagem certa.
+- **Assistente de nova quadra:** oferecia 9 comodidades, mas só iluminação, coberta e área de lazer eram salvas; Wi-Fi, estacionamento, vestiário, bar, coletes e bola sumiam sem aviso. Ficaram só as 3 que o banco guarda. O assistente também estava todo em português, fixo no HTML (passos, piso, endereço, botões e avisos): agora segue o idioma, e o limite de foto mostrado passou de "5MB" para o real (10 MB, com WebP).
+- **Editar esporte (admin):** a tela ficava escura no tema claro, com o título invisível, e não marcava o ícone atual (lia `icon` em vez de `icon_path`), obrigando a escolher o ícone de novo para mudar só o nome.
+- Quadra sem foto e perfil sem foto mostravam imagens de um serviço externo (placehold.co) com "Sem Imagem" e "Foto" em português; agora são desenhos locais, sem texto.
+- Títulos de aba: 15 páginas do painel e do admin mostravam só "Kolae"; agora têm o nome da página.
+- "Modo escuro/claro" e "Foto de perfil" fixos em português nos menus do dono.
+- Cadastro: senhas com ícone de calendário, um `>` sobrando no celular, logo invisível no tema claro e o ✓ do checkbox que não aparecia; textos em pt-BR com maiúsculas fora do lugar ("Enviar Link", "Nome Completo", "Email").
+- Traduções que faltavam: a dica de "e-mail enviado" do esqueci a senha em 5 idiomas e "Toque para escolher fotos" em 3.
+- Trocar o idioma apagava os outros parâmetros da página (filtros de `/quadras` e o token da nova senha) (D57).
 - **`schema.sql` sem a ordem das fotos:** faltava a coluna `position` do patch 006 (instalação nova quebrava as fotos).
 - **"Esqueci a senha" sem limite** (D52): agora sai no máximo um e-mail a cada 5 minutos por conta, com a mesma resposta em todos os casos.
 - **Avatar não era reduzido** (D48): o código calculava a imagem menor e gravava a original.
