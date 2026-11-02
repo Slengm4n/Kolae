@@ -30,12 +30,16 @@ export function toast(message, type = 'info', { duration = 5500 } = {}) {
     const el = document.createElement('div');
     el.className = `kolae-toast kolae-toast--${type}`;
     el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+    // HTML fixo; textos e valores entram depois por textContent/setAttribute/style (nunca no HTML)
     el.innerHTML = `
-        <span class="kolae-toast-icon" aria-hidden="true"><i class="fas ${ICONS[type]}"></i></span>
+        <span class="kolae-toast-icon" aria-hidden="true"><i class="fas"></i></span>
         <p class="kolae-toast-text"></p>
-        <button type="button" class="kolae-toast-close" aria-label="${labels.close}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
-        <span class="kolae-toast-bar" style="animation-duration:${duration}ms"></span>`;
+        <button type="button" class="kolae-toast-close"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+        <span class="kolae-toast-bar"></span>`;
+    el.querySelector('.kolae-toast-icon i').classList.add(ICONS[type]);
     el.querySelector('.kolae-toast-text').textContent = message;
+    el.querySelector('.kolae-toast-close').setAttribute('aria-label', labels.close);
+    el.querySelector('.kolae-toast-bar').style.animationDuration = `${Math.max(1000, Number(duration) || 5500)}ms`;
     const close = () => {
         if (el.classList.contains('is-leaving')) return;
         el.classList.add('is-leaving');
