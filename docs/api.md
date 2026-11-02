@@ -6,7 +6,8 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 
 > **Estado:**
 > - **S2 (v1.5.0):** revisado e aprovado pelo João e pelo Rafael em 28/10/2026, implementado e em produção.
-> - **S3 (v1.6.0, até 08/11):** revisado pelo Rafael em 28/10/2026 (D29–D33), implementado e **em produção** desde 28/10.
+> - **S3 (v1.6.0):** revisado pelo Rafael em 28/10/2026 (D29–D33), em produção desde 28/10 e lançado na **v1.6.0** (02/11/2026).
+> - **Depois da S3 (v1.6.0):** `429 TOO_MANY_ATTEMPTS` no login (D45), limite de envios no `forgot-password` (D52), fotos na ordem do dono e otimizadas (D46, D48) e `email_verified` no objeto `user` (D58). Nenhuma mudança quebrou o app.
 
 ## Base URL
 
@@ -417,7 +418,7 @@ Agenda de um dia: o horário de funcionamento dividido em faixas livres e ocupad
 
 ---
 
-## Endpoints atuais que mudam
+## Mudanças da v1.6.0 em endpoints antigos
 
 ### `GET /sports`
 
@@ -429,9 +430,9 @@ Público. Lista os esportes ativos, em ordem alfabética. Sem mudança na S3.
 
 - `icon_path`: classe do Font Awesome (ex: `fa-futbol`). No app, mapear para o ícone equivalente.
 
-### `GET /venues` (formato legado, só na produção até a v1.6.0)
+### `GET /venues` (formato legado, substituído na v1.6.0)
 
-Até o deploy da S3, a produção responde no formato antigo: lista sem paginação, preço como string `"10.00"`, coordenadas como string, booleanos `0/1`. Na v1.6.0 é substituído pelo formato descrito acima (**mudança que quebra quem usa o legado**; o app usa mock até lá, então não há impacto).
+Antes da S3, a produção respondia no formato antigo: lista sem paginação, preço como string `"10.00"`, coordenadas como string, booleanos `0/1`. Desde 28/10 (lançado na v1.6.0) vale só o formato descrito acima. O app usava mock até lá, então não houve impacto.
 
 ### `POST /games`
 

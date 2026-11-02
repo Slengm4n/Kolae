@@ -3,7 +3,7 @@
 Lista viva de ideias para o Kolae, com o motivo e quando faz sentido fazer. **Não é decisão**: quando uma sugestão for aprovada e feita, ela vira uma decisão em [`decisoes.md`](decisoes.md) e sai daqui (ou fica marcada como feita).
 
 Esforço: **P** (até meio dia), **M** (1 a 2 dias), **G** (mais que isso).
-Última revisão: 02/11/2026.
+Última revisão: 02/11/2026 (v1.6.0).
 
 ## Até a entrega (cabe antes do congelamento, 21/11)
 
@@ -16,8 +16,10 @@ Critério: aparece bem na banca e mexe pouco no que já está pronto e testado.
 | 3 | **Limite de envios no "esqueci a senha"** (site e API), como o do login (D45) | Hoje qualquer um pode disparar e-mails sem parar para um endereço: incomoda a pessoa e pode fazer a HostGator bloquear a conta de e-mail | P | **Feita (D52)** |
 | 4 | **Páginas de erro com o visual novo** (404, 403) | As atuais são do visual antigo, sem cabeçalho nem tema claro/escuro; a 404 aparece, por exemplo, em `/quadra/{id}` de quadra desativada | P | **Feita (D53)** |
 | 5 | **Números no painel do dono**: partidas na semana, horas ocupadas, dia mais movimentado | Mostra que o produto ajuda a gerenciar, não só a aparecer no mapa. Só lê dados que já existem | M | Sugerida |
-| 6 | **Testes no repositório e no deploy** (S6): os testes de clique em `tests/e2e/` e o GitHub Actions rodando os testes PHP antes do FTP | Hoje o merge na `main` publica sem conferir nada; esses testes pegaram bugs reais nas S4 e S5 | M | Planejada (S6) |
+| 6 | **Testes no repositório e no deploy** (S6): os testes de clique em `tests/e2e/` e o GitHub Actions rodando os testes PHP antes do FTP | Hoje o merge na `main` publica sem conferir nada; esses testes pegaram bugs reais nas S4 e S5 | M | **Feita (D56)** |
 | 7 | **`robots.txt` e `sitemap.xml`** com as páginas públicas (home, quadras, termos) | O Google passa a encontrar as quadras; quase sem custo | P | Sugerida |
+| 8 | **Telas de entrada, avisos e confirmações no visual do Kolae** | Primeira impressão da banca; as telas antigas tinham erros visíveis | M | **Feita (D57)** |
+| 9 | **Confirmação de e-mail (versão leve)** e **miniaturas das fotos** | Conta mais confiável sem travar ninguém; cards leves no 4G | M | **Feita (D58)** |
 
 ## Para o app (Rafael)
 

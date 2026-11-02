@@ -2,7 +2,7 @@
 
 Passo a passo para trocar a produção do InfinityFree para a HostGator (Plano Start, hospedagem compartilhada com cPanel). Motivo: o InfinityFree responde ao app com um desafio JavaScript em vez do JSON (D13).
 
-> **Estado (29/10/2026): migração feita, produção em `https://kolae.online` (D41).** Passos 1 a 6 concluídos e conferidos: DNS e SSL, PHP 8.2, banco `joao5502_kolae` importado (7 quadras, 8 usuários), fotos, `config.php` (mesmas chaves, banco com senha nova, SMTP corrigido para `smtp.gmail.com` / `tls` / 587) e deploy por FTP com a conta `deploy@kolae.online` (`FTP_SERVER_DIR = /`). Site e API testados: home e login sem erro de JavaScript, `GET /venues`, detalhe, agenda, login com erro 401 e rota protegida, todos em JSON direto. **O que falta está em [O que falta](#o-que-falta-depois-da-migração), no fim.**
+> **Estado (02/11/2026): produção em `https://kolae.online` (D41), na versão v1.6.0.** Migração feita em 29/10: Passos 1 a 6 concluídos e conferidos: DNS e SSL, PHP 8.2, banco `joao5502_kolae` importado (7 quadras, 8 usuários), fotos, `config.php` (mesmas chaves, banco com senha nova; o SMTP passou depois para o Titan, ver [b](#b-e-mail-próprio-para-o-esqueci-a-senha--02112026)) e deploy por FTP com a conta `deploy@kolae.online` (`FTP_SERVER_DIR = /`). Site e API testados: home e login sem erro de JavaScript, `GET /venues`, detalhe, agenda, login com erro 401 e rota protegida, todos em JSON direto. **O que falta está em [O que falta](#o-que-falta-depois-da-migração), no fim.**
 
 **Não cancele o InfinityFree** até o passo 8 dar certo: ele continua no ar e é de onde saem o banco, as fotos e as chaves.
 
@@ -118,10 +118,26 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 ### h) Cancelar o InfinityFree
 - Depois de alguns dias sem problema na HostGator. Antes, conferir que nada aponta mais para `kolae.gamer.gd` (app, README, documentos).
 
-### i) Patch 005 junto com o deploy da S5
+### i) Patch 005 junto com o deploy da S5 ✔
 - phpMyAdmin → banco `joao5502_kolae` → aba **SQL** → colar e executar `database/patches/005_login_attempts.sql`. Cria a tabela do limite de tentativas de login (D45).
 - Pode ser antes ou logo depois do merge: sem a tabela o login funciona, só fica sem o limite.
 
-### j) Patch 006 ANTES do merge da aba Fotos
+### j) Patch 006 ANTES do merge da aba Fotos ✔
 - phpMyAdmin → banco `joao5502_kolae` → aba **SQL** → colar e executar `database/patches/006_ordem_das_fotos.sql`. Cria a ordem das fotos (D46) mantendo a capa atual de cada quadra.
 - **Precisa ser antes do merge:** o código novo ordena por essa coluna e quebra sem ela. O código atual ignora a coluna, então aplicar antes não afeta nada.
+
+### k) Patch 007 ANTES do merge da confirmação de e-mail
+- phpMyAdmin → **clicar no banco `joao5502_kolae` na lista da esquerda** → aba **SQL** desse banco → colar e executar `database/patches/007_confirmacao_de_email.sql`. Só garante a coluna `users.email_verified_at` (D58); o normal é responder "coluna email_verified_at já existe".
+- Na aba SQL da tela inicial do phpMyAdmin (sem banco escolhido), o patch só avisa "Nenhum banco selecionado" e não muda nada.
+
+### l) Miniaturas das fotos depois do deploy da v1.6.0
+- Painel do admin → card **Fotos das quadras** → **Otimizar fotos**. Cria a miniatura (`thumb_*.jpg`, até 640 px) das fotos enviadas antes da D58; o card mostra quantas ainda estão "sem miniatura". Pode apertar mais de uma vez.
+- Sem isso o site funciona igual, só que os cards usam a foto inteira.
+
+## Checklist de cada release
+1. Patches novos de `database/patches/` aplicados no phpMyAdmin **antes** do merge (com o banco selecionado), seguindo o que cada patch diz.
+2. Merge do PR na `main`: o GitHub Actions roda os testes e só então publica por FTP.
+3. Passos manuais da versão (no CHANGELOG, logo abaixo do título dela).
+4. Conferir a produção: home, `/quadras`, login, painel do dono, uma página pública de quadra e a API (`/api/v1/venues`).
+5. Tag `vX.Y.Z` no commit do merge e release no GitHub com o texto da versão no CHANGELOG.
+6. `develop` avançada até a `main`.

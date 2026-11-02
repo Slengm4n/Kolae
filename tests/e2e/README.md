@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (uns 10 minutos)
+npm run test:e2e                     # todos (19 roteiros, uns 12 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -37,7 +37,7 @@ No fim mostra uma tabela com cada teste e o total de passos. Sai com erro (códi
 | D · Duda Teste S3 | Sem horário e sem coordenadas |
 | E · Excluida Teste S3 | Desativada (fora da API e da página pública) |
 
-Contas (senha `teste123`): `dono-s3@kolae.test` (dono das quadras acima), `dono@teste.local` (outro dono, para testar que um não mexe na quadra do outro) e `admin@teste.local`.
+Contas (senha `teste123`): `dono-s3@kolae.test` (dono das quadras acima, com CNPJ), `dono@teste.local` (outro dono, também com CNPJ, para testar que um não mexe na quadra do outro) e `admin@teste.local`. Nenhuma recebe e-mail de verdade: o Kolae não envia para `.local` e `.test` (D58).
 
 ## Configurar outro PC
 
@@ -59,6 +59,9 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 - Os testes de clique das abas Horário e Agenda marcam o guia passo a passo (D50) como visto depois do login; um teste novo que abra essas abas precisa fazer o mesmo, senão o guia cobre os botões.
 - O teste `fotos`, o `otimizar` e o `publica` apagam e recriam as fotos das quadras de teste em `uploads/venues/`.
 - O teste `qr` usa o `jsQR` (jsDelivr) para ler o QR desenhado; precisa de internet. O `quadras` também, para os mapas do OpenStreetMap.
+- O `avisos` tira o CNPJ do `dono-s3` para testar a regra do CNPJ; o `rodar.js` devolve antes do teste seguinte. Rodando o arquivo sozinho (sem o `rodar.js`), rode `php tests/e2e/preparar_banco.php` depois.
+- O `confirmacao` gera os links de confirmação de e-mail com `tests/e2e/link_confirmacao.php` (só no banco local; imprime só o link).
+- Avisos (pop-ups) e confirmações são do `src/js/ui.js`: para clicar em "apagar" ou "cancelar", o teste espera `.kolae-modal [data-ok]` e clica nele (não existe mais janela do navegador).
 
 ## Testes
 
@@ -70,7 +73,7 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `cadastro` | Cadastro de quadra em passos, até cair na aba Horário |
 | `painel` | Painel do dono com status ao vivo |
 | `s5` | CSRF, "lembrar de mim", senha mínima, limite de login (site e API), XSS do mapa |
-| `fotos` | Aba Fotos: enviar, capa, ordem, apagar, limite de 10 |
+| `fotos` | Aba Fotos: enviar, miniaturas, capa, ordem, apagar (com a confirmação do Kolae), limite de 10 |
 | `visao` | Visão geral: galeria, tela cheia, informações, "Quadra completa" |
 | `otimizar` | Fotos otimizadas no envio, rotação pelo EXIF, botão do admin |
 | `publica` | Página pública `/quadra/{id}`: WhatsApp, compartilhar, 404, prévia de link |
@@ -79,3 +82,7 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `quadras` | Página `/quadras`: filtros iguais aos da API, "Perto de mim", mapa |
 | `erros` | Páginas 404, 403 e "Página expirada" |
 | `qr` | QR Code da quadra (lê o código e confere o endereço) |
+| `entrada` | Telas de entrada: mostrar senha, confirmação, data de nascimento em listas, menor de 18 e data no futuro, idioma mantendo o token |
+| `preferencias` | Menu e tema em todas as páginas do dono; Preferências (tema automático e idioma) |
+| `avisos` | Avisos (toast) e URL limpa; CNPJ exigido em todas as páginas de gerenciar quadra |
+| `confirmacao` | Confirmação de e-mail: aviso, reenviar com espera, link válido, vencido e adulterado, selo, API |
