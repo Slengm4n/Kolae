@@ -13,6 +13,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 ## [Não lançado]
 
 ### Adicionado
+- **E-mail de redefinição de senha no visual do Kolae** (D55), enviado por `nao-responda@kolae.online` (Titan), com botão, validade do link e versão em texto puro.
 - **QR Code da quadra** (D54): cartaz pronto para imprimir na Visão geral, com o QR para a página pública e o botão de baixar em PNG.
 - **Páginas de erro novas** (D53): 404, 403 e "Página expirada" no visual do site, com tema claro/escuro e botões para seguir.
 - **Página Quadras** (D51): `kolae.online/quadras` com busca, filtros (esporte, disponível agora, coberta, iluminação, preço), "Perto de mim" e mapa com o status de cada quadra; no celular, lista e mapa alternados. O menu "Quadras" agora abre essa página.

@@ -36,15 +36,11 @@ class Mailer
 
             $mail = self::create();
             $mail->addAddress($email, $name);
+            [$html, $text] = self::passwordResetMessage($name, BASE_URL . '/reset-password?token=' . $token);
             $mail->isHTML(true);
-            $mail->Subject = 'Recuperação de Senha - Kolae';
-
-            $resetLink = BASE_URL . '/reset-password?token=' . $token;
-            $mail->Body = "Olá " . htmlspecialchars($name) . ",<br><br>"
-                . "Recebemos uma solicitação para redefinir sua senha no Kolae.<br>"
-                . "Clique no link abaixo para criar uma nova senha:<br><br>"
-                . "<a href='$resetLink' style='color: #06b6d4; text-decoration: none; font-weight: bold;'>Redefinir Minha Senha</a><br><br>"
-                . "Este link expira em 1 hora.";
+            $mail->Subject = 'Redefinir sua senha no Kolae';
+            $mail->Body = $html;
+            $mail->AltBody = $text;
 
             return $mail->send();
         } catch (MailException $e) {
@@ -53,6 +49,28 @@ class Mailer
             error_log("Erro ao preparar o e-mail de redefinição de senha: " . $e->getMessage());
         }
         return false;
+    }
+
+    /**
+     * E-mail de redefinição de senha (D55): HTML no visual do Kolae e a versão em texto puro
+     * (ajuda a não cair no spam e serve para quem lê e-mail sem HTML).
+     * @return array [html, texto]
+     */
+    public static function passwordResetMessage(string $name, string $link): array
+    {
+        $minutes = 60; // validade do token (PasswordReset::findValidToken)
+        ob_start();
+        include BASE_PATH . '/app/views/emails/password_reset.php';
+        $html = ob_get_clean();
+
+        $firstName = explode(' ', trim($name))[0] ?: 'olá';
+        $text = "Olá, $firstName!\n\n"
+            . "Recebemos um pedido para redefinir a senha da sua conta no Kolae.\n"
+            . "Para criar uma nova, abra este link:\n\n$link\n\n"
+            . "O link vale por $minutes minutos e só pode ser usado uma vez.\n"
+            . "Não foi você? Pode ignorar este e-mail: sua senha continua a mesma.\n\n"
+            . "Kolae · " . preg_replace('#^https?://#', '', BASE_URL);
+        return [$html, $text];
     }
 
     /**

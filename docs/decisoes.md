@@ -273,3 +273,9 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **O quê:** na Visão geral, o botão "QR Code" abre um cartaz pronto para imprimir (faixa azul do Kolae, nome da quadra, QR para a página pública, "Escaneie para ver os horários e falar com o dono" e o endereço) e o botão "Baixar imagem" (PNG). Só para quadra com página pública.
 - **Como:** o QR é gerado no navegador (`qrcode-generator`, cdnjs) e desenhado num canvas, sem biblioteca no servidor. Desenhar em pixel inteiro importa: com meio pixel apareciam linhas brancas entre os quadradinhos e o leitor não reconhecia o código.
 - **Onde:** `partials/venue_qr.php`.
+
+### D55 · E-mail do Kolae pelo Titan, com modelo próprio (02/11/2026)
+- **Envio:** `nao-responda@kolae.online` pelo Titan (`smtp.titan.email`, porta 465, SSL), o e-mail que vem com o plano da HostGator. Precisou ligar "Enable Titan on Other Apps" no webmail. Passo a passo em `docs/hospedagem.md`.
+- **Modelo:** o e-mail de redefinição de senha passa a ter o visual do Kolae (faixa azul, botão "Criar nova senha", validade de 60 minutos, uso único, "não foi você?", link escrito para copiar, rodapé) e uma **versão em texto puro** junto, que ajuda a não cair no spam. Feito com tabelas e estilos inline, porque clientes de e-mail ignoram CSS moderno.
+- **Onde:** base reutilizável `views/emails/layout.php` e o e-mail em `views/emails/password_reset.php`, montados por `Mailer::passwordResetMessage`. Um e-mail novo no futuro usa a mesma base.
+- **Idioma:** o e-mail sai em português, como as mensagens da API.
