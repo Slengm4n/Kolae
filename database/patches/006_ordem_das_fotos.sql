@@ -9,11 +9,21 @@
 -- por essa coluna e dá erro sem ela; o código atual simplesmente ignora a coluna.
 --
 -- Como aplicar: phpMyAdmin > banco > aba SQL > colar e executar.
+-- Funciona no MySQL e no MariaDB (a HostGator usa MySQL, que não aceita
+-- "ADD COLUMN IF NOT EXISTS"): a coluna e o índice só são criados se ainda
+-- não existirem, conferindo no information_schema.
 -- Pode ser executado mais de uma vez (só renumera na ordem atual).
 -- =====================================================================
 
-ALTER TABLE `venues_images`
-  ADD COLUMN IF NOT EXISTS `position` int(11) NOT NULL DEFAULT 0 COMMENT 'Ordem na galeria; a menor é a capa' AFTER `file_path`;
+-- Coluna position, se ainda não existir
+SET @tem_coluna := (SELECT COUNT(*) FROM information_schema.COLUMNS
+                    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'venues_images' AND COLUMN_NAME = 'position');
+SET @sql := IF(@tem_coluna = 0,
+  'ALTER TABLE `venues_images` ADD COLUMN `position` int(11) NOT NULL DEFAULT 0 COMMENT ''Ordem na galeria; a menor é a capa'' AFTER `file_path`',
+  'SELECT ''coluna position já existe''');
+PREPARE passo FROM @sql;
+EXECUTE passo;
+DEALLOCATE PREPARE passo;
 
 -- Numera 0, 1, 2... por quadra, mantendo a ordem atual (posição e depois envio)
 UPDATE `venues_images` vi
@@ -27,5 +37,12 @@ JOIN (
 ) t ON t.id = vi.id
 SET vi.position = t.pos;
 
-ALTER TABLE `venues_images` DROP INDEX IF EXISTS `idx_venues_images_order`;
-ALTER TABLE `venues_images` ADD INDEX `idx_venues_images_order` (`venue_id`, `position`);
+-- Índice da galeria, se ainda não existir
+SET @tem_indice := (SELECT COUNT(*) FROM information_schema.STATISTICS
+                    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'venues_images' AND INDEX_NAME = 'idx_venues_images_order');
+SET @sql := IF(@tem_indice = 0,
+  'ALTER TABLE `venues_images` ADD INDEX `idx_venues_images_order` (`venue_id`, `position`)',
+  'SELECT ''índice já existe''');
+PREPARE passo FROM @sql;
+EXECUTE passo;
+DEALLOCATE PREPARE passo;
