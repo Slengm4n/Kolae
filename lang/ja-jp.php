@@ -525,6 +525,7 @@ return[
     'overview_leisure' => 'くつろぎスペース',
     'overview_leisure_capacity' => '{n}人用のくつろぎスペース',
     'overview_no_description' => '説明がありません。コートの魅力を書きましょう。',
+    'overview_no_socials' => 'SNSが未入力です。',
     'overview_hours_title' => '営業時間',
     'overview_address_title' => '住所',
     'overview_open_maps' => 'Google マップで開く',

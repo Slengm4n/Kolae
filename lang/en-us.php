@@ -507,6 +507,7 @@ return[
     'overview_leisure' => 'Leisure area',
     'overview_leisure_capacity' => 'Leisure area for {n} people',
     'overview_no_description' => 'No description. Tell people what makes your venue special.',
+    'overview_no_socials' => 'No social media added.',
     'overview_hours_title' => 'Opening hours',
     'overview_address_title' => 'Address',
     'overview_open_maps' => 'Open in Google Maps',

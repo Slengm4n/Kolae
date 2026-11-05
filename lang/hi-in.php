@@ -500,6 +500,7 @@ return[
     'overview_leisure' => 'मनोरंजन क्षेत्र',
     'overview_leisure_capacity' => '{n} लोगों के लिए मनोरंजन क्षेत्र',
     'overview_no_description' => 'कोई विवरण नहीं। बताइए आपका कोर्ट खास क्यों है।',
+    'overview_no_socials' => 'कोई सोशल मीडिया नहीं दिया गया।',
     'overview_hours_title' => 'खुलने का समय',
     'overview_address_title' => 'पता',
     'overview_open_maps' => 'Google Maps में खोलें',

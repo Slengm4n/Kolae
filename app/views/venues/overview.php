@@ -40,7 +40,7 @@ $galleryEmpty = '<a href="' . $tabUrl['fotos'] . '" class="flex flex-col items-c
     . '<span class="font-semibold">' . $lang['overview_no_photos_title'] . '</span>'
     . '<span class="text-sm text-content-secondary">' . $lang['overview_no_photos_text'] . '</span>'
     . '<span class="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400"><i class="fas fa-plus"></i>' . $lang['overview_add_photos'] . '</span></a>';
-$editLinks = ['editar' => $tabUrl['editar'], 'horario' => $tabUrl['horario']];
+$editLinks = ['editar' => $tabUrl['editar'], 'horario' => $tabUrl['horario'], 'redes' => $tabUrl['redes']];
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $e($_SESSION['idioma'] ?? 'pt-br'); ?>">

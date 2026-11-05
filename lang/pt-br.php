@@ -564,6 +564,7 @@ return [
     'overview_leisure' => 'Área de lazer',
     'overview_leisure_capacity' => 'Área de lazer para {n} pessoas',
     'overview_no_description' => 'Sem descrição. Conte o que a quadra tem de especial.',
+    'overview_no_socials' => 'Nenhuma rede social informada.',
     'overview_hours_title' => 'Horário de funcionamento',
     'overview_address_title' => 'Endereço',
     'overview_open_maps' => 'Abrir no Google Maps',

@@ -498,6 +498,7 @@ return[
     'overview_leisure' => '休闲区',
     'overview_leisure_capacity' => '可容纳 {n} 人的休闲区',
     'overview_no_description' => '暂无介绍。说说你的场地有什么特别之处。',
+    'overview_no_socials' => '未填写社交媒体。',
     'overview_hours_title' => '营业时间',
     'overview_address_title' => '地址',
     'overview_open_maps' => '在 Google 地图中打开',
