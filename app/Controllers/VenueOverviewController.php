@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\VenueAccess;
 use App\Core\VenueSchedule;
+use App\Core\VenueSocials;
 use App\Core\ViewHelper;
 use App\Models\Game;
 use App\Models\User;
@@ -51,17 +52,19 @@ class VenueOverviewController
     }
 
     /**
-     * O que deixa a quadra completa no app. Cada item: [chave, feito?, aba que resolve].
+     * O que deixa a quadra completa no app. Cada item: [chave, feito?, aba que resolve, opcional?].
+     * Item opcional aparece na lista, mas não conta no "x de y" nem impede a quadra de ficar completa.
      */
     private static function checklist(array $venue, array $images, array $hours, array $sports, ?string $whatsapp): array
     {
         return [
-            ['photos', count($images) >= 3, 'fotos'],
-            ['hours', !empty($hours), 'horario'],
-            ['sports', !empty($sports), 'editar'],
-            ['description', trim((string)$venue['description']) !== '', 'editar'],
-            ['price', $venue['average_price_per_hour'] !== null, 'editar'],
-            ['whatsapp', !empty($whatsapp), 'editar'],
+            ['photos', count($images) >= 3, 'fotos', false],
+            ['hours', !empty($hours), 'horario', false],
+            ['sports', !empty($sports), 'editar', false],
+            ['description', trim((string)$venue['description']) !== '', 'editar', false],
+            ['price', $venue['average_price_per_hour'] !== null, 'editar', false],
+            ['whatsapp', !empty($whatsapp), 'editar', false],
+            ['socials', VenueSocials::links($venue) !== [], 'redes', true],
         ];
     }
 }

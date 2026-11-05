@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (19 roteiros, uns 12 minutos)
+npm run test:e2e                     # todos (20 roteiros, uns 12 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -82,6 +82,7 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `quadras` | Página `/quadras`: filtros iguais aos da API, "Perto de mim", mapa |
 | `erros` | Páginas 404, 403 e "Página expirada" |
 | `qr` | QR Code da quadra (lê o código e confere o endereço) |
+| `redes` | Redes sociais na aba Dados (D60): aceita @, usuário ou link, prévia, erros no navegador e no servidor, item opcional da Visão geral, celular, inglês e admin |
 | `entrada` | Telas de entrada: mostrar senha, confirmação, data de nascimento em listas, menor de 18 e data no futuro, idioma mantendo o token |
 | `preferencias` | Menu e tema em todas as páginas do dono; Preferências (tema automático e idioma) |
 | `avisos` | Avisos (toast) e URL limpa; CNPJ exigido em todas as páginas de gerenciar quadra |

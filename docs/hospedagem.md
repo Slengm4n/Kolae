@@ -134,7 +134,7 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 - Painel do admin → card **Fotos das quadras** → **Otimizar fotos**. Cria a miniatura (`thumb_*.jpg`, até 640 px) das fotos enviadas antes da D58; o card mostra quantas ainda estão "sem miniatura". Pode apertar mais de uma vez.
 - Sem isso o site funciona igual, só que os cards usam a foto inteira.
 
-### m) Patch 008 ANTES do merge das redes sociais (v1.7.0)
+### m) Patch 008 ANTES do merge das redes sociais (v1.7.0) ✔ (05/11/2026)
 - phpMyAdmin → **clicar no banco `joao5502_kolae` na lista da esquerda** → aba **SQL** desse banco → colar e executar `database/patches/008_redes_sociais_da_quadra.sql`. Cria as quatro colunas das redes sociais em `venues` (D60), todas vazias.
 - **Precisa ser antes do merge:** o código novo lê e grava essas colunas e quebra sem elas. O código atual ignora as colunas, então aplicar antes não afeta nada. Rodar de novo só avisa "coluna ... já existe".
 
