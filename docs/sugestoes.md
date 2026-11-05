@@ -3,7 +3,7 @@
 Lista viva de ideias para o Kolae, com o motivo e quando faz sentido fazer. **Não é decisão**: quando uma sugestão for aprovada e feita, ela vira uma decisão em [`decisoes.md`](decisoes.md) e sai daqui (ou fica marcada como feita).
 
 Esforço: **P** (até meio dia), **M** (1 a 2 dias), **G** (mais que isso).
-Última revisão: 02/11/2026 (v1.6.0).
+Última revisão: 05/11/2026 (redes sociais da quadra, sugestões do app e proposta de partidas).
 
 ## Até a entrega (cabe antes do congelamento, 21/11)
 
@@ -20,14 +20,23 @@ Critério: aparece bem na banca e mexe pouco no que já está pronto e testado.
 | 7 | **`robots.txt` e `sitemap.xml`** com as páginas públicas (home, quadras, termos) | O Google passa a encontrar as quadras; quase sem custo | P | Sugerida |
 | 8 | **Telas de entrada, avisos e confirmações no visual do Kolae** | Primeira impressão da banca; as telas antigas tinham erros visíveis | M | **Feita (D57)** |
 | 9 | **Confirmação de e-mail (versão leve)** e **miniaturas das fotos** | Conta mais confiável sem travar ninguém; cards leves no 4G | M | **Feita (D58)** |
+| 10 | **Redes sociais da quadra** (Instagram, TikTok, Facebook, site) no painel, na página pública e no app. Proposta de banco e contrato em [`proposta-redes-sociais.md`](proposta-redes-sociais.md) | A pessoa confere fotos e eventos antes de alugar; para o dono é divulgação de graça; na banca, a quadra parece um negócio de verdade | M | Proposta (05/11) |
 
 ## Para o app (Rafael)
 
-| Sugestão | Por quê | Esforço |
-| :---- | :---- | :---- |
-| Botão **"Compartilhar"** no detalhe da quadra, com o link `https://kolae.online/quadra/{id}` | Quem recebe abre no navegador, com foto e nome na prévia do WhatsApp (D49) | P |
-| **Galeria em tela cheia** no detalhe da quadra | A API já manda as fotos na ordem do dono (D46) e leves (D48) | P |
-| Tratar **`429 TOO_MANY_ATTEMPTS`** com uma mensagem própria (hoje mostra a `message` da API, que já funciona) | Fica mais caprichado; opcional | P |
+Nenhuma destas muda o contrato, exceto as redes sociais (#10 acima). As branches e notas ficam
+no repositório do app (`changelog/<branch>.md`).
+
+| Sugestão | Por quê | Esforço | Situação |
+| :---- | :---- | :---- | :---- |
+| Botão **"Compartilhar"** no detalhe da quadra, com o link `https://kolae.online/quadra/{id}` | Quem recebe abre no navegador, com foto e nome na prévia do WhatsApp (D49) | P | Sugerida |
+| **Galeria em tela cheia** no detalhe da quadra | A API já manda as fotos na ordem do dono (D46) e leves (D48) | P | Sugerida |
+| Tratar **`429 TOO_MANY_ATTEMPTS`** com uma mensagem própria (hoje mostra a `message` da API, que já funciona) | Fica mais caprichado; opcional | P | Sugerida |
+| **Telas de entrada novas**: linhas de quadra animadas, cartão "ao vivo" com quadras de exemplo, cadastro em duas etapas, data de nascimento em roleta, abertura sem pisca | A proposta do app aparece logo no login; primeira impressão da banca | M | Feita (branch `feat/auth-redesign`, falta o PR) |
+| **Status e distância no card da quadra** (Pesquisar e Favoritos), atualizando sozinho quando o status vence | O app promete "ver se está livre", mas o card só mostrava foto, nome e preço; os dados já vinham na API | P | Feita (branch `feat/venue-card-status`, falta o PR) |
+| **Pesquisar nova**: cabeçalho com "quadras livres agora", buscas recentes, filtros em chips (livre agora, grátis, coberta, iluminação) e carregamento em esqueleto | A tela principal estava simples demais; os filtros já existem na API | M | Próxima |
+| **Vibração e animações no app todo**, com a opção "Vibração" nas Configurações (ao lado de "reduzir movimento") | Acabamento que aparece na hora; a opção mantém o controle com quem usa | P | Sugerida |
+| **Redes sociais da quadra** no detalhe (ícones abaixo do "Falar com o dono") | Ver #10; começa com mock seguindo a proposta | P | Espera o contrato |
 
 ## Depois da entrega (Kolae 2.0)
 
@@ -37,10 +46,14 @@ Critério: aparece bem na banca e mexe pouco no que já está pronto e testado.
 | **Mais comodidades** (Wi-Fi, estacionamento, vestiário, bar, coletes, bola) | O assistente antigo oferecia, mas o banco só guarda iluminação, coberta e área de lazer (D57). Pede colunas novas, a API e o app mostrarem | M |
 | **Partidas que se repetem** ("toda terça às 19h") | Pedido natural do dono; ficou de fora pela D39 porque mexe na agenda e no status | M |
 | **Arrastar para reordenar fotos** | Os botões de mover já resolvem e funcionam melhor no celular e com leitor de tela (D46) | P |
-| **Comunidade, avaliações e favoritos de verdade** | Hoje são vitrine (D04); precisam de banco, moderação e telas | G |
+| **Partidas com jogadores**: partida aberta com vagas e lista de espera, pedido de horário aprovado pelo dono, presença, avaliações e ranking de participação. Proposta completa em [`proposta-partidas.md`](proposta-partidas.md) | Resolve "achar gente para jogar" sem tirar a agenda do dono; muda a D02 em parte, por isso fica para depois | G |
+| **Comunidade de verdade** (posts, comentários, seguidores) | Hoje é vitrine (D04). Conteúdo de usuário aberto exige moderação (denúncia, remoção, bloqueio) antes de ir ao ar, também pela LGPD | G |
+| **Chat de verdade com o dono** | Hoje é vitrine (D04) e o WhatsApp resolve. A HostGator compartilhada não tem WebSocket: seria por consulta periódica, ou num servidor próprio no Laravel | G |
+| **Favoritos na conta** (hoje ficam no aparelho, D04) | Trocou de celular, os favoritos vão junto; pede `GET/PUT /me/favorites` | P |
+| **Avaliações de verdade** | Entram na fase 3 da proposta de partidas: só quem jogou avalia | M |
 | **Reserva e pagamento pela plataforma** | Hoje o aluguel é combinado direto com o dono; é praticamente outro produto | G |
 | **API respondendo no idioma do app** (`Accept-Language`) | O app já envia o idioma; as mensagens ainda saem em português | M |
-| **Notificações** (ex.: lembrete de partida para o dono) | Precisa de push no app e de tarefas agendadas no servidor | G |
+| **Notificações** (ex.: lembrete de partida, vaga aberta, mensagem nova) | Precisa de push e de tarefas agendadas no servidor. O push não funciona no Expo Go no Android, só no APK, e pede um projeto Firebase (grátis) | G |
 | **Planos Plus e Pro** (hoje vitrine no app) | Possível modelo de receita: descontos em quadras parceiras, eventos, torneios | G |
 | **Migração para Laravel** (D01, branch `v2.0-laravel`) | O contrato da API já segue o formato do Laravel, então o app quase não muda | G |
 
