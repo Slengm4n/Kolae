@@ -12,7 +12,9 @@ Comece por aqui. Cada assunto tem **um** lugar; se a informação estiver em doi
 | [`setup.md`](setup.md) | Montar o ambiente local (XAMPP), rodar os testes e testar o app contra o notebook antes do deploy | Quem for rodar o projeto |
 | [`../tests/e2e/README.md`](../tests/e2e/README.md) | Testes de clique: como rodar, dados de teste e o que cada um cobre | Quem mexer no site |
 | [`sugestoes.md`](sugestoes.md) | Ideias de funcionalidades e melhorias, com o porquê e quando fazer (ainda não são decisões) | João e Rafael |
-| [`proposta-redes-sociais.md`](proposta-redes-sociais.md) | Proposta de banco e contrato para as redes sociais da quadra (antes de 21/11; vira a D60 se aprovada) | João e Rafael |
+| [`proposta-redes-sociais.md`](proposta-redes-sociais.md) | Proposta das redes sociais da quadra (aprovada: virou a D60) | João e Rafael |
+| [`proposta-login-google.md`](proposta-login-google.md) | Proposta de "Entrar com Google": fluxo, contrato do `POST /auth/google`, configuração no Google Cloud, datas, plano B e registro do andamento (vira a D61 se aprovada) | João e Rafael |
+| [`proposta-chat.md`](proposta-chat.md) | Proposta do chat com o responsável pela quadra: banco, contrato, painel, app, push opcional, datas, plano B e registro do andamento (vira a D62 se aprovada) | João e Rafael |
 | [`proposta-partidas.md`](proposta-partidas.md) | Proposta das partidas com jogadores para o Kolae 2.0: fases, banco, endpoints, telas e o que decidir | João e Rafael |
 | [`hospedagem.md`](hospedagem.md) | Produção na HostGator (`https://kolae.online`, D41): como foi montada, e-mail pelo Titan, patches e o que falta no cPanel | João |
 | [`../database/kolae.dbml`](../database/kolae.dbml) | Desenho do banco como ele é hoje (abrir no dbdiagram.io) | João |
