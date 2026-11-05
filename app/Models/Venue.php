@@ -252,7 +252,8 @@ class Venue
     {
         $sql = str_replace(
             "FROM venues v",
-            ", u.name AS owner_name, u.avatar_path AS owner_avatar_path, u.created_at AS owner_created_at, u.whatsapp AS owner_whatsapp
+            ", v.instagram, v.tiktok, v.facebook_url, v.website_url,
+               u.name AS owner_name, u.avatar_path AS owner_avatar_path, u.created_at AS owner_created_at, u.whatsapp AS owner_whatsapp
              FROM venues v JOIN users u ON u.id = v.user_id",
             self::API_SELECT
         ) . " AND v.id = :id";

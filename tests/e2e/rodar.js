@@ -29,7 +29,7 @@ const TESTES = {
     avisos: ['A'],
     confirmacao: [],
     qr: ['A', 'E'],
-    redes: ['D'],
+    redes: ['D', 'A'],
 };
 
 const pedidos = process.argv.slice(2);
