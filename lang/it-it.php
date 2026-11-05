@@ -483,6 +483,7 @@ return[
     'overview_leisure' => 'Area relax',
     'overview_leisure_capacity' => 'Area relax per {n} persone',
     'overview_no_description' => 'Nessuna descrizione. Racconta cosa rende speciale il tuo campo.',
+    'overview_no_socials' => 'Nessun social indicato.',
     'overview_hours_title' => 'Orari di apertura',
     'overview_address_title' => 'Indirizzo',
     'overview_open_maps' => 'Apri in Google Maps',

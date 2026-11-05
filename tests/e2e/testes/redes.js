@@ -113,6 +113,30 @@ const row = () => sql(`SELECT CONCAT_WS('|', IFNULL(instagram,'NULL'), IFNULL(ti
   const progress = await p.$eval('[role=progressbar]', e => e.getAttribute('aria-valuemax'));
   check('Visão geral: o opcional não entra no total', progress, '6');
 
+  // Visão geral e página pública mostram os links, como no app (mesmo bloco venue_details)
+  const LINKS = [
+    ['instagram', 'https://instagram.com/arenadoxuxa', '@arenadoxuxa'],
+    ['tiktok', 'https://www.tiktok.com/@arena.tk', '@arena.tk'],
+    ['facebook', 'https://facebook.com/arenadoxuxa', 'Facebook'],
+    ['website', 'https://arenadoxuxa.com.br/', 'Site'],
+  ];
+  const socialsBlock = pg => pg.$$eval('#venue-socials a[data-network]', els => els.map(a => [a.dataset.network, a.href, a.textContent.trim()]));
+  check('Visão geral: links das redes no bloco da quadra', await socialsBlock(p), LINKS);
+  check('Visão geral: abrem em outra aba, com nome para o leitor de tela', await p.$$eval('#venue-socials a[data-network]', els => els.map(a => [a.target, a.getAttribute('aria-label')])), [
+    ['_blank', 'Instagram da quadra (abre em outra aba)'], ['_blank', 'TikTok da quadra (abre em outra aba)'],
+    ['_blank', 'Facebook da quadra (abre em outra aba)'], ['_blank', 'Site da quadra (abre em outra aba)'],
+  ]);
+  check('Visão geral: "Editar" leva à seção na aba Dados', await p.$eval('#venue-socials h2 + a', (a, id) => a.href.endsWith(`/editar/${id}#redes`), DUDA), true);
+  await (await p.$('#venue-socials')).screenshot({ path: path.join(lib.OUT, 'redes_visao_geral.png') });
+  const pub = await (await b.createBrowserContext()).newPage();
+  await pub.setViewport({ width: 1366, height: 900 });
+  pub.jsErrors = [];
+  pub.on('pageerror', e => pub.jsErrors.push(e.message));
+  await pub.goto(`${BASE}/quadra/${DUDA}`, { waitUntil: 'networkidle2' });
+  check('página pública: mesmos links, sem login', await socialsBlock(pub), LINKS);
+  check('página pública: sem "Editar"', await pub.$('#venue-socials h2 + a'), null);
+  await (await pub.$('#venue-socials')).screenshot({ path: path.join(lib.OUT, 'redes_publica.png') });
+
   // Apagar os campos grava NULL
   await p.goto(edit, { waitUntil: 'networkidle2' });
   for (const f of ['instagram', 'tiktok', 'facebook_url', 'website_url']) await setValue(p, `#social-${f}`, '');
@@ -121,6 +145,10 @@ const row = () => sql(`SELECT CONCAT_WS('|', IFNULL(instagram,'NULL'), IFNULL(ti
   check('API: depois de apagar, as quatro voltam a null', api(`/venues/${DUDA}`).data.socials, NULLS);
   await p.goto(overview, { waitUntil: 'networkidle2' });
   check('Visão geral: sem redes, item opcional leva à seção', [await item(), await p.$eval('[data-check="socials"] a', (a, id) => a.href.endsWith(`/editar/${id}#redes`), DUDA)], [['Redes sociais (opcional)', false], true]);
+  check('Visão geral: sem redes, convida a adicionar', await p.$eval('#venue-socials', (s, id) => [s.querySelectorAll('a[data-network]').length, s.innerText.includes('Nenhuma rede social informada.'), s.querySelector('p a').href.endsWith(`/editar/${id}#redes`)], DUDA), [0, true, true]);
+  await pub.goto(`${BASE}/quadra/${DUDA}`, { waitUntil: 'networkidle2' });
+  check('página pública: sem redes, a seção some', await pub.$('#venue-socials'), null);
+  check('nenhum erro de JavaScript (página pública)', pub.jsErrors, []);
   check('nenhum erro de JavaScript (dono)', p.jsErrors, []);
 
   // Celular: sem rolagem para o lado

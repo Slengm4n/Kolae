@@ -500,6 +500,7 @@ return[
     'overview_leisure' => 'Área de ocio',
     'overview_leisure_capacity' => 'Área de ocio para {n} personas',
     'overview_no_description' => 'Sin descripción. Cuenta qué tiene de especial tu cancha.',
+    'overview_no_socials' => 'Ninguna red social indicada.',
     'overview_hours_title' => 'Horario de apertura',
     'overview_address_title' => 'Dirección',
     'overview_open_maps' => 'Abrir en Google Maps',

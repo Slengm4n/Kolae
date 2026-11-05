@@ -1,11 +1,12 @@
 <?php
 /**
  * Informações da quadra como no app (D47): esportes, estrutura, "Sobre a quadra", horário
- * da semana e endereço. Usada na Visão geral (painel) e na página pública da quadra.
+ * da semana, endereço e redes sociais (D60). Usada na Visão geral (painel) e na página pública da quadra.
  *
  * Variáveis: $lang, $venue, $sports, $summary (VenueHoursController::weekSummary),
- *            $editLinks (['editar' => url, 'horario' => url] no painel; null na página pública).
+ *            $editLinks (['editar' => url, 'horario' => url, 'redes' => url] no painel; null na página pública).
  */
+use App\Core\VenueSocials;
 use App\Models\Venue;
 
 $de = fn($s) => htmlspecialchars((string)$s);
@@ -45,6 +46,13 @@ $cityLine = implode(' · ', array_filter([$venue['neighborhood'] ?? null, trim((
 $mapsUrl = (!empty($venue['latitude']) && !empty($venue['longitude']))
     ? 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($venue['latitude'] . ',' . $venue['longitude'])
     : null;
+
+// Redes sociais (D60): Instagram e TikTok mostram o @; Facebook e site, o nome da rede
+$socialLinks = VenueSocials::links($venue);
+$socialNames = ['instagram' => 'Instagram', 'tiktok' => 'TikTok', 'facebook' => 'Facebook', 'website' => $lang['data_socials_website']];
+$socialText = fn(array $link) => in_array($link['network'], ['instagram', 'tiktok'], true)
+    ? '@' . ($link['network'] === 'instagram' ? $venue['instagram'] : $venue['tiktok'])
+    : $socialNames[$link['network']];
 ?>
 <div class="space-y-8">
     <section>
@@ -114,4 +122,33 @@ $mapsUrl = (!empty($venue['latitude']) && !empty($venue['longitude']))
             </a>
         <?php endif; ?>
     </section>
+
+    <?php if ($socialLinks || $editLinks): ?>
+        <!-- Sem redes, a seção some na página pública (como no app) e convida o dono a preencher no painel -->
+        <section id="venue-socials" class="pt-8 border-t border-content-secondary/10">
+            <div class="flex items-center justify-between gap-4">
+                <h2 class="text-lg font-bold"><?php echo $lang['data_socials_title']; ?></h2>
+                <?php if ($editLinks && $socialLinks): ?>
+                    <a href="<?php echo $editLinks['redes'] ?? $editLinks['editar']; ?>" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline"><?php echo $lang['overview_edit']; ?></a>
+                <?php endif; ?>
+            </div>
+            <?php if ($socialLinks): ?>
+                <ul class="mt-3 flex flex-wrap gap-3">
+                    <?php foreach ($socialLinks as $link): ?>
+                        <li>
+                            <a href="<?php echo $de($link['url']); ?>" target="_blank" rel="noopener noreferrer" data-network="<?php echo $link['network']; ?>"
+                                aria-label="<?php echo $de(strtr($lang['socials_open_label'], ['{network}' => $socialNames[$link['network']]])); ?>"
+                                class="inline-flex max-w-full items-center gap-2 pl-1.5 pr-4 py-1.5 rounded-full border border-content-secondary/20 text-sm font-semibold hover:border-brand-500 transition-colors">
+                                <span class="w-8 h-8 shrink-0 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center"><i class="<?php echo $link['icon']; ?>" aria-hidden="true"></i></span>
+                                <span class="truncate"><?php echo $de($socialText($link)); ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p class="mt-2 text-sm text-content-secondary"><?php echo $lang['overview_no_socials']; ?>
+                    <a href="<?php echo $editLinks['redes'] ?? $editLinks['editar']; ?>" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline"><?php echo $lang['overview_add']; ?></a></p>
+            <?php endif; ?>
+        </section>
+    <?php endif; ?>
 </div>
