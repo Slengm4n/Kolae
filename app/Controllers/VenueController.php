@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\AuthHelper;
 use App\Core\ImageHelper;
 use App\Core\VenueAccess;
+use App\Core\VenueSocials;
 use App\Core\ViewHelper;
 use App\Models\Venue;
 use App\Models\User;
@@ -194,6 +195,13 @@ class VenueController
                 exit;
             }
 
+            // Redes sociais (D60): aceita @usuario, usuario ou link; nada é gravado se uma for inválida
+            $socials = VenueSocials::fromInput($_POST);
+            if ($socials['error'] !== null) {
+                header('Location: ' . $editUrl . '?error=social_' . $socials['error'] . '#redes');
+                exit;
+            }
+
             // WhatsApp do dono (D38): pedido aqui se ainda não tiver
             if ($this->needsWhatsapp($venue)) {
                 $whatsapp = User::normalizeWhatsapp((string)($_POST['whatsapp'] ?? ''));
@@ -229,7 +237,7 @@ class VenueController
                 'has_lighting' => $_POST['has_lighting'] ?? 0,
                 'is_covered' => $_POST['is_covered'] ?? 0,
                 'status' => $this->parseStatus($_POST['status'] ?? null, $venue['status'])
-            ];
+            ] + $socials['values'];
             Venue::update($id, $venueData);
 
             // Esportes da quadra (D29); o formulário sempre manda a lista (mesmo vazia)

@@ -99,6 +99,10 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                     'updated' => ['green', 'fa-check-circle', $lang['data_saved']],
                     'price' => ['red', 'fa-exclamation-circle', $lang['data_price_invalid']],
                     'whatsapp' => ['red', 'fa-exclamation-circle', $lang['data_whatsapp_invalid']],
+                    'social_instagram' => ['red', 'fa-exclamation-circle', $lang['data_socials_error_instagram']],
+                    'social_tiktok' => ['red', 'fa-exclamation-circle', $lang['data_socials_error_tiktok']],
+                    'social_facebook_url' => ['red', 'fa-exclamation-circle', $lang['data_socials_error_facebook']],
+                    'social_website_url' => ['red', 'fa-exclamation-circle', $lang['data_socials_error_website']],
                 ];
                 $formMsgKey = ($_GET['status'] ?? null) === 'updated' ? 'updated' : ($_GET['error'] ?? null);
                 if (isset($formMessages[$formMsgKey])): [$c, $ic, $text] = $formMessages[$formMsgKey]; ?>
@@ -204,6 +208,45 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
+                </div>
+
+                <?php
+                // Redes sociais (D60): quatro campos opcionais e a prévia dos ícones, como no app
+                $socialError = substr((string)($_GET['error'] ?? ''), 0, 7) === 'social_' ? substr($_GET['error'], 7) : null;
+                $socialFields = [
+                    'instagram' => ['Instagram', 'fab fa-instagram', $lang['data_socials_handle_placeholder'], $lang['data_socials_error_instagram'], 'text'],
+                    'tiktok' => ['TikTok', 'fab fa-tiktok', $lang['data_socials_handle_placeholder'], $lang['data_socials_error_tiktok'], 'text'],
+                    'facebook_url' => ['Facebook', 'fab fa-facebook', $lang['data_socials_facebook_placeholder'], $lang['data_socials_error_facebook'], 'url'],
+                    'website_url' => [$lang['data_socials_website'], 'fas fa-globe', $lang['data_socials_website_placeholder'], $lang['data_socials_error_website'], 'url'],
+                ];
+                ?>
+                <div id="redes" class="bg-surface-elevated p-6 md:p-8 rounded-2xl border border-content-secondary/10 shadow-lg scroll-mt-24">
+                    <h2 class="text-xl font-bold text-content-primary mb-1 flex items-center gap-3"><span class="text-pink-500"><i class="fas fa-share-alt"></i></span><?php echo $lang['data_socials_title']; ?></h2>
+                    <p class="text-sm text-content-secondary mb-5"><?php echo $lang['data_socials_hint']; ?></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <?php foreach ($socialFields as $field => [$label, $icon, $placeholder, $error, $kind]):
+                            $hasError = $socialError === $field; ?>
+                            <div>
+                                <label for="social-<?php echo $field; ?>" class="block text-xs font-bold text-content-secondary uppercase tracking-wider mb-1.5 ml-1"><?php echo htmlspecialchars($label); ?></label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-3 text-content-secondary" aria-hidden="true"><i class="<?php echo $icon; ?>"></i></span>
+                                    <input type="text" id="social-<?php echo $field; ?>" name="<?php echo $field; ?>" data-social="<?php echo $field; ?>"
+                                        value="<?php echo htmlspecialchars((string)($venue[$field] ?? '')); ?>"
+                                        maxlength="<?php echo \App\Core\VenueSocials::URL_MAX; ?>" placeholder="<?php echo htmlspecialchars($placeholder); ?>"
+                                        inputmode="<?php echo $kind === 'url' ? 'url' : 'text'; ?>" autocomplete="off" autocapitalize="off" spellcheck="false"
+                                        aria-describedby="social-<?php echo $field; ?>-error" <?php echo $hasError ? 'aria-invalid="true"' : ''; ?>
+                                        class="w-full bg-input-base border <?php echo $hasError ? 'border-red-500' : 'border-content-secondary/20'; ?> rounded-xl pl-11 pr-4 py-3 text-content-primary focus:border-brand-500 outline-none transition-all">
+                                </div>
+                                <p id="social-<?php echo $field; ?>-error" class="<?php echo $hasError ? '' : 'hidden'; ?> mt-2 text-sm text-red-600 dark:text-red-400" role="alert"><?php echo $error; ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="mt-6 pt-5 border-t border-content-secondary/10">
+                        <p class="text-xs font-bold text-content-secondary uppercase tracking-wider mb-3 ml-1"><?php echo $lang['data_socials_preview']; ?></p>
+                        <div id="socials-preview" class="flex flex-wrap gap-3" aria-live="polite"></div>
+                        <p id="socials-preview-empty" class="hidden text-sm text-content-secondary ml-1"><?php echo $lang['data_socials_preview_empty']; ?></p>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -496,6 +539,102 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                 return /^55[1-9][1-9](9\d{8}|[2-8]\d{7})$/.test(d);
             };
 
+            // --- Redes sociais (D60): mesmas regras do servidor (App\Core\VenueSocials) ---
+            const socialMeta = <?php echo json_encode(array_map(fn($f) => ['label' => $f[0], 'icon' => $f[1]], $socialFields), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
+            const socialOpenLabel = <?php echo json_encode($lang['socials_open_label'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
+            const INSTAGRAM_RESERVED = ['p', 'reel', 'reels', 'stories', 'explore', 'tv', 'accounts', 'direct'];
+            const looksLikeUrl = v => v.includes('/') || /^https?:/i.test(v);
+            const validHandle = h => /^[A-Za-z0-9._]{1,30}$/.test(h) ? h : false;
+            const firstSegment = (v, hosts) => {
+                if (!/^https?:\/\//i.test(v)) v = 'https://' + v.replace(/^\/+/, '');
+                let u;
+                try { u = new URL(v); } catch (err) { return null; }
+                if (!hosts.includes(u.hostname.toLowerCase().replace(/^(www\.|m\.)/, ''))) return null;
+                return u.pathname.split('/').filter(Boolean)[0] || null;
+            };
+            const normalizeUrl = raw => {
+                let v = raw.trim();
+                if (v === '') return null;
+                if (/\s/.test(v)) return false;
+                if (/^https?:\/\//i.test(v)) v = 'https://' + v.replace(/^https?:\/\//i, '');
+                else if (v.includes('://') || /^[a-z][a-z0-9+.-]*:/i.test(v)) return false;
+                else v = 'https://' + v.replace(/^\/+/, '');
+                if (v.length > 255) return false;
+                let u;
+                try { u = new URL(v); } catch (err) { return false; }
+                return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(u.hostname) ? v : false;
+            };
+            const normalizeSocial = {
+                instagram: raw => {
+                    let v = raw.trim();
+                    if (v === '') return null;
+                    if (looksLikeUrl(v)) {
+                        const s = firstSegment(v, ['instagram.com', 'instagr.am']);
+                        if (!s || INSTAGRAM_RESERVED.includes(s.toLowerCase())) return false;
+                        v = s;
+                    }
+                    return validHandle(v.replace(/^@+/, ''));
+                },
+                tiktok: raw => {
+                    let v = raw.trim();
+                    if (v === '') return null;
+                    if (looksLikeUrl(v)) {
+                        const s = firstSegment(v, ['tiktok.com']);
+                        if (!s || s[0] !== '@') return false;
+                        v = s;
+                    }
+                    return validHandle(v.replace(/^@+/, ''));
+                },
+                facebook_url: raw => {
+                    const v = normalizeUrl(raw);
+                    if (typeof v !== 'string') return v;
+                    const u = new URL(v);
+                    const host = u.hostname.toLowerCase();
+                    const isFacebook = ['facebook.com', 'fb.com'].includes(host) || host.endsWith('.facebook.com') || host.endsWith('.fb.com');
+                    return isFacebook && (u.pathname.replace(/\//g, '') !== '' || u.search !== '') ? v : false;
+                },
+                website_url: normalizeUrl,
+            };
+            const socialUrl = (field, value) => field === 'instagram' ? 'https://instagram.com/' + encodeURIComponent(value)
+                : field === 'tiktok' ? 'https://www.tiktok.com/@' + encodeURIComponent(value) : value;
+
+            const socialInputs = venueForm.querySelectorAll('[data-social]');
+            const socialPreview = document.getElementById('socials-preview');
+            const socialPreviewEmpty = document.getElementById('socials-preview-empty');
+            const setSocialError = (input, bad) => {
+                document.getElementById(input.id + '-error').classList.toggle('hidden', !bad);
+                input.classList.toggle('border-red-500', bad);
+                input.classList.toggle('border-content-secondary/20', !bad);
+                if (bad) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+            };
+            const renderSocialPreview = () => {
+                socialPreview.replaceChildren();
+                socialInputs.forEach(input => {
+                    const field = input.dataset.social;
+                    const value = normalizeSocial[field](input.value);
+                    if (typeof value !== 'string') return;
+                    const meta = socialMeta[field];
+                    const a = document.createElement('a');
+                    a.href = socialUrl(field, value);
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.dataset.network = field;
+                    a.className = 'inline-flex items-center gap-2 pl-1.5 pr-4 py-1.5 rounded-full border border-content-secondary/20 text-sm font-semibold text-content-primary hover:border-brand-500 transition-colors';
+                    a.setAttribute('aria-label', socialOpenLabel.replace('{network}', meta.label));
+                    const icon = document.createElement('span');
+                    icon.className = 'w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center';
+                    icon.innerHTML = '<i class="' + meta.icon + '" aria-hidden="true"></i>';
+                    a.append(icon, document.createTextNode(field === 'instagram' || field === 'tiktok' ? '@' + value : meta.label));
+                    socialPreview.append(a);
+                });
+                socialPreviewEmpty.classList.toggle('hidden', socialPreview.children.length > 0);
+            };
+            socialInputs.forEach(input => {
+                input.addEventListener('input', () => { setSocialError(input, false); renderSocialPreview(); });
+                input.addEventListener('blur', () => setSocialError(input, normalizeSocial[input.dataset.social](input.value) === false));
+            });
+            renderSocialPreview();
+
             venueForm.addEventListener('submit', e => {
                 let firstError = null;
                 if (priceMode() === 'value') {
@@ -509,6 +648,12 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
                     whatsappError.classList.toggle('hidden', !bad);
                     if (bad) firstError = firstError || whatsapp;
                 }
+                // Redes sociais ficam abaixo do preço na página: entram depois na ordem do foco
+                socialInputs.forEach(input => {
+                    const bad = normalizeSocial[input.dataset.social](input.value) === false;
+                    setSocialError(input, bad);
+                    if (bad) firstError = firstError || input;
+                });
                 if (firstError) {
                     e.preventDefault();
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });

@@ -15,6 +15,7 @@ $tabUrl = [
     'fotos' => "$tabBase/$venueId/fotos",
     'horario' => "$tabBase/$venueId/horario",
     'agenda' => "$tabBase/$venueId/agenda",
+    'redes' => "$tabBase/editar/$venueId#redes",
 ];
 $e = fn($s) => htmlspecialchars((string)$s);
 
@@ -28,8 +29,10 @@ if ($price === null) {
     $priceText = 'R$ ' . number_format((float)$price, 2, ',', '.');
 }
 
-$done = count(array_filter($checklist, fn($item) => $item[1]));
-$total = count($checklist);
+// Itens opcionais (ex: redes sociais, D60) aparecem na lista, mas não entram no "x de y"
+$required = array_filter($checklist, fn($item) => empty($item[3]));
+$done = count(array_filter($required, fn($item) => $item[1]));
+$total = count($required);
 $nowTs = $now->getTimestamp();
 
 $galleryEmpty = '<a href="' . $tabUrl['fotos'] . '" class="flex flex-col items-center justify-center gap-2 text-center aspect-[16/7] rounded-2xl border-2 border-dashed border-content-secondary/25 hover:border-brand-500 hover:bg-brand-500/5 transition-colors px-6">'
@@ -134,14 +137,15 @@ $editLinks = ['editar' => $tabUrl['editar'], 'horario' => $tabUrl['horario']];
                             <p class="mt-3 text-sm text-green-700 dark:text-green-400"><?php echo $lang['overview_checklist_done']; ?></p>
                         <?php endif; ?>
                         <ul class="mt-4 space-y-2.5">
-                            <?php foreach ($checklist as [$key, $ok, $tab]): ?>
-                                <li class="flex items-center gap-3 text-sm">
-                                    <span class="w-5 h-5 shrink-0 rounded-full flex items-center justify-center text-[10px] <?php echo $ok ? 'bg-green-500 text-white' : 'border-2 border-content-secondary/30'; ?>"><?php echo $ok ? '<i class="fas fa-check"></i>' : ''; ?></span>
+                            <?php foreach ($checklist as [$key, $ok, $tab, $optional]): ?>
+                                <li class="flex items-center gap-3 text-sm" data-check="<?php echo $key; ?>">
+                                    <span class="w-5 h-5 shrink-0 rounded-full flex items-center justify-center text-[10px] <?php echo $ok ? 'bg-green-500 text-white' : ($optional ? 'border-2 border-dashed border-content-secondary/30' : 'border-2 border-content-secondary/30'); ?>"><?php echo $ok ? '<i class="fas fa-check"></i>' : ''; ?></span>
                                     <?php if ($ok): ?>
                                         <span class="text-content-secondary"><?php echo $lang['overview_check_' . $key]; ?></span>
                                     <?php else: ?>
                                         <a href="<?php echo $tabUrl[$tab]; ?>" class="font-medium hover:text-brand-600 dark:hover:text-brand-400 hover:underline"><?php echo $lang['overview_check_' . $key]; ?></a>
                                     <?php endif; ?>
+                                    <?php if ($optional): ?><span class="text-xs text-content-secondary">(<?php echo $lang['agenda_optional']; ?>)</span><?php endif; ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
