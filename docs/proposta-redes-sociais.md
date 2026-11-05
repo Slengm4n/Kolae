@@ -1,7 +1,8 @@
 # Proposta: redes sociais da quadra
 
-**Situação:** proposta (05/11/2026). Ainda não é decisão; aprovada, vira a D60 em
-[`decisoes.md`](decisoes.md) e o formato entra em [`api.md`](api.md).
+**Situação:** **aprovada** (05/11/2026), virou a [D60](decisoes.md#d60--redes-sociais-da-quadra-05112026);
+o formato está em [`api.md`](api.md), no `GET /venues/{id}`. O app já está pronto com dados de
+exemplo (PR #7 do `kolae-mobile`); falta o backend.
 **Esforço:** M (banco, painel do dono, API e app). **Cabe antes do congelamento (21/11).**
 
 ## O que é
@@ -73,8 +74,8 @@ Com os quatro `null`, a seção inteira some (mesma ideia do `description` `null
 3. App: mock com os quatro casos (todos, alguns, nenhum, só site), sem esperar a API.
 4. Backend: migração, painel, validação, API e página pública, com teste ponta a ponta.
 
-## Em aberto
+## Decidido na aprovação
 
-- Entram outras redes (YouTube, X, Kwai)? A sugestão é começar com as quatro e acrescentar
-  depois: o objeto `socials` aceita campos novos sem quebrar o app.
-- Mostrar os ícones também no card do mapa? A sugestão é não: o card já está cheio.
+- Outras redes (YouTube, X, Kwai): ficam para depois. Começa com as quatro; o objeto `socials`
+  aceita campos novos sem quebrar o app.
+- Ícones no card do mapa: não, o card já está cheio.
