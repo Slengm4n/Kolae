@@ -1,11 +1,14 @@
-// Teste de clique das redes sociais na aba Dados (D60). Uso: node tests/e2e/rodar.js redes
-// (ou direto: node tests/e2e/testes/redes.js <id Duda>)
+// Teste de clique das redes sociais (D60): aba Dados e o "socials" da API, de ponta a ponta.
+// Uso: node tests/e2e/rodar.js redes (ou direto: node tests/e2e/testes/redes.js <id Duda> <id Arena>)
 const lib = require('../lib');
 const puppeteer = require('puppeteer-core');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const BASE = lib.BASE;
-const [DUDA] = process.argv.slice(2);
+const [DUDA, ARENA] = process.argv.slice(2);
 const sql = lib.sql;
+const api = p => JSON.parse(execFileSync('curl', ['-s', BASE + '/api/v1' + p]).toString());
+const NULLS = { instagram: null, tiktok: null, facebook_url: null, website_url: null };
 
 let fail = 0;
 const check = (label, got, want) => {
@@ -74,6 +77,14 @@ const row = () => sql(`SELECT CONCAT_WS('|', IFNULL(instagram,'NULL'), IFNULL(ti
   check('salva e fica na aba Dados com a confirmação', [p.url().endsWith(`/editar/${DUDA}?status=updated`), (await p.$eval('main', m => m.innerText)).includes('Dados salvos')], [true, true]);
   check('banco: só o usuário no Instagram e no TikTok, https:// no Facebook e no site', row(), 'arenadoxuxa|arena.tk|https://facebook.com/arenadoxuxa|https://arenadoxuxa.com.br');
   check('campos voltam com o que foi gravado', await p.$$eval('#redes [data-social]', els => els.map(e => e.value)), ['arenadoxuxa', 'arena.tk', 'https://facebook.com/arenadoxuxa', 'https://arenadoxuxa.com.br']);
+
+  // API: o que o dono salvou chega no detalhe, no formato do contrato (docs/api.md)
+  check('API: socials no detalhe com o que foi salvo', api(`/venues/${DUDA}`).data.socials,
+    { instagram: 'arenadoxuxa', tiktok: 'arena.tk', facebook_url: 'https://facebook.com/arenadoxuxa', website_url: 'https://arenadoxuxa.com.br' });
+  check('API: socials vem depois do owner, como no contrato', Object.keys(api(`/venues/${DUDA}`).data).slice(-2), ['owner', 'socials']);
+  check('API: quadra sem redes manda as quatro chaves com null', api(`/venues/${ARENA}`).data.socials, NULLS);
+  const lista = api('/venues?per_page=50').data;
+  check('API: a lista (GET /venues) não tem socials', [lista.length > 0, lista.some(v => 'socials' in v)], [true, false]);
   check('prévia montada ao abrir a página', (await preview(p)).length, 4);
   await p.$eval('#redes', e => e.scrollIntoView());
   await (await p.$('#redes')).screenshot({ path: path.join(lib.OUT, 'redes_dados.png') });
@@ -107,6 +118,7 @@ const row = () => sql(`SELECT CONCAT_WS('|', IFNULL(instagram,'NULL'), IFNULL(ti
   for (const f of ['instagram', 'tiktok', 'facebook_url', 'website_url']) await setValue(p, `#social-${f}`, '');
   await submit(p);
   check('campos vazios gravam NULL', row(), 'NULL|NULL|NULL|NULL');
+  check('API: depois de apagar, as quatro voltam a null', api(`/venues/${DUDA}`).data.socials, NULLS);
   await p.goto(overview, { waitUntil: 'networkidle2' });
   check('Visão geral: sem redes, item opcional leva à seção', [await item(), await p.$eval('[data-check="socials"] a', (a, id) => a.href.endsWith(`/editar/${id}#redes`), DUDA)], [['Redes sociais (opcional)', false], true]);
   check('nenhum erro de JavaScript (dono)', p.jsErrors, []);
@@ -133,6 +145,7 @@ const row = () => sql(`SELECT CONCAT_WS('|', IFNULL(instagram,'NULL'), IFNULL(ti
   await setValue(a, '#social-instagram', '@pelo.admin');
   await submit(a);
   check('admin: salva e continua no admin', [a.url().replace(BASE, ''), row()], [`/admin/quadras/editar/${DUDA}?status=updated`, 'pelo.admin|NULL|NULL|NULL']);
+  check('API: o que o admin salvou também chega', api(`/venues/${DUDA}`).data.socials, { ...NULLS, instagram: 'pelo.admin' });
   check('nenhum erro de JavaScript (admin)', a.jsErrors, []);
 
   sql(`UPDATE venues SET instagram=NULL, tiktok=NULL, facebook_url=NULL, website_url=NULL WHERE id=${DUDA}`);

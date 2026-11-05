@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\ApiFormat;
 use App\Core\BaseApiController;
 use App\Core\VenueSchedule;
+use App\Core\VenueSocials;
 use App\Models\Game;
 use App\Models\Venue;
 use App\Models\VenueHour;
@@ -144,7 +145,9 @@ class VenueApiController extends BaseApiController
                 'avatar_url' => ApiFormat::uploadUrl('avatars/' . $row['user_id'], $row['owner_avatar_path']),
                 'member_since' => ApiFormat::datetime($row['owner_created_at']),
                 'whatsapp' => self::nullIfBlank($row['owner_whatsapp'])
-            ]
+            ],
+            // Redes sociais (D60): sempre as quatro chaves, null no que o dono não informou
+            'socials' => VenueSocials::forApi($row)
         ]);
     }
 
