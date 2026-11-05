@@ -322,3 +322,15 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Por quê:** o backend andou semanas adiantado e as releases de cada sprint não foram feitas na hora; marcar quatro versões retroativas exigiria separar os itens por sprint e marcar commits antigos, sem ganho para a entrega. Para a banca, o histórico fica "v1.6.0: versão de entrega" mais as correções.
 - **Daqui até a entrega:** correções viram **v1.6.1, v1.6.2…** (patch); funcionalidade nova só depois do congelamento, se for decidido, como v1.7.0. A D18 continua valendo para o Kolae 2.0.
 - **Passo a passo de cada release:** `docs/hospedagem.md`, "Checklist de cada release".
+
+## Depois da v1.6.0
+
+### D60 · Redes sociais da quadra (05/11/2026)
+- **O quê:** o dono informa até quatro perfis por quadra: Instagram, TikTok, Facebook e site. O app (no detalhe da quadra, abaixo do "Falar com o dono") e as páginas públicas mostram um ícone para cada perfil informado. Proposta em [`proposta-redes-sociais.md`](proposta-redes-sociais.md), aprovada pelo João e pelo Rafael.
+- **Na quadra, não no dono:** um dono pode ter várias quadras, cada uma com o seu perfil. São quatro colunas opcionais em `venues` (`NULL` = não informado): `instagram` e `tiktok` (só o usuário, sem `@`, até 30 caracteres), `facebook_url` e `website_url` (endereço completo com `https://`, até 255).
+- **O painel aceita o que a pessoa colar:** Instagram e TikTok aceitam `@usuario`, `usuario` ou o link do perfil e guardam só o usuário (letras, números, `.` e `_`). Facebook e site precisam de `https://`; sem ele, o site completa. O Facebook precisa ser de `facebook.com` ou `fb.com`.
+- **API:** `GET /venues/{id}` ganha o objeto `socials`, **sempre presente**, com `null` no que não foi informado; com os quatro `null`, o app esconde a seção (como o `description`, D30). Fica **fora** do resumo de `GET /venues`: a lista não precisa disso. O app monta os links do Instagram (`https://instagram.com/<usuario>`) e do TikTok (`https://www.tiktok.com/@<usuario>`) e abre o Facebook e o site como vieram.
+- **Por quê:** é como o atleta confere fotos recentes, eventos e a "cara" do lugar antes de alugar; para o dono, é divulgação de graça; na banca, mostra a quadra como um negócio de verdade.
+- **Fora, por enquanto:** outras redes (YouTube, X, Kwai) e os ícones no card do mapa (o card já está cheio). Uma rede nova é um campo a mais no `socials`, sem quebrar o app.
+- **Versão:** funcionalidade nova depois da v1.6.0, então sai na **v1.7.0** (D59).
+- **Onde:** `docs/api.md` (`GET /venues/{id}`); a seguir, o patch do banco, a seção "Redes sociais" na aba Dados (item opcional da "Quadra completa", D47), o `VenueApiController` e as páginas públicas (D49, D51). No app, já pronto com dados de exemplo (PR #7 do `kolae-mobile`).

@@ -360,6 +360,12 @@ Detalhe de uma quadra: tudo do resumo, mais:
       "avatar_url": "https://.../uploads/avatars/2/avatar_abc.jpg",
       "member_since": "2026-05-22T14:57:07-03:00",
       "whatsapp": "5511999999999"
+    },
+    "socials": {
+      "instagram": "arenadoxuxa",
+      "tiktok": null,
+      "facebook_url": "https://facebook.com/arenadoxuxa",
+      "website_url": null
     }
   }
 }
@@ -375,6 +381,11 @@ Detalhe de uma quadra: tudo do resumo, mais:
 | `opening_hours` | Só os dias em que abre. `weekday`: `0` = domingo ... `6` = sábado. Lista vazia = horário não cadastrado (D23): mostrar "Horário não informado" |
 | `owner.whatsapp` | Só dígitos, com DDI e DDD. **Pode ser `null`: nesse caso, esconder o botão "Falar com o dono"** (D24). Com valor, abrir `https://wa.me/<whatsapp>` |
 | `owner.avatar_url` | `null` quando o dono não tem foto ou o arquivo não existe no servidor |
+| `socials` | Redes sociais da quadra (D60, a partir da v1.7.0). **Sempre presente**, com `null` em cada rede não informada. Com as quatro `null`, esconder a seção. Não vem no resumo de `GET /venues` |
+| `socials.instagram` | Só o usuário, sem `@` (letras, números, `.` e `_`, até 30). Abrir `https://instagram.com/<instagram>`. `null` = sem ícone |
+| `socials.tiktok` | Só o usuário, sem `@` (letras, números, `.` e `_`, até 30). Abrir `https://www.tiktok.com/@<tiktok>`. `null` = sem ícone |
+| `socials.facebook_url` | Endereço completo, sempre `https://` e de `facebook.com` ou `fb.com`. Abrir como está. `null` = sem ícone |
+| `socials.website_url` | Endereço completo, sempre `https://`. Abrir como está. `null` = sem ícone |
 
 **Erros**: `404 NOT_FOUND` (quadra não existe ou foi excluída).
 
