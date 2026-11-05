@@ -12,6 +12,14 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
+**Banco:** patch 008 (`database/patches/008_redes_sociais_da_quadra.sql`), aplicado na produção em 05/11 antes do merge.
+
+### Adicionado
+- **Redes sociais da quadra** (D60): o dono informa Instagram, TikTok, Facebook e site na aba Dados, colando o `@`, o usuário ou o link do perfil; o site guarda só o usuário no Instagram e no TikTok e completa o `https://` no Facebook e no site. Prévia ao vivo de como aparece no app, a mesma validação no navegador e no servidor e textos nos 7 idiomas. Entra na "Quadra completa" da Visão geral como item opcional, sem contar no total.
+- **API:** `GET /venues/{id}` ganha o objeto `socials` (`instagram`, `tiktok`, `facebook_url`, `website_url`), sempre presente, com `null` no que não foi informado. A lista `GET /venues` não muda.
+- **Visão geral e página pública da quadra:** seção "Redes sociais" abaixo do endereço, com os links. Na página pública, sem redes, a seção some (como no app).
+- Testes: `tests/venue_socials_test.php` (53 casos, sem banco) e o de clique `tests/e2e/testes/redes.js` (40 passos: painel, API, Visão geral, página pública, celular, inglês e admin).
+
 ## [1.6.0] - 2026-11-02
 
 Versão de entrega: Sprints 3 a 6 e o polimento antes do congelamento. Quadras com status ao vivo na API, telas do dono no site (horário, agenda, dados, fotos e visão geral), página pública da quadra, página Quadras com mapa, QR Code, segurança essencial (CSRF, limite de login, "lembrar de mim"), Termos e Privacidade, produção na HostGator com e-mail pelo Titan, testes antes de cada deploy e, por fim, telas de entrada redesenhadas, avisos no visual do Kolae, confirmação de e-mail, miniaturas das fotos e ajustes de desempenho e acessibilidade.

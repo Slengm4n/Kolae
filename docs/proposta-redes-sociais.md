@@ -2,7 +2,8 @@
 
 **Situação:** **aprovada** (05/11/2026), virou a [D60](decisoes.md#d60--redes-sociais-da-quadra-05112026);
 o formato está em [`api.md`](api.md), no `GET /venues/{id}`. O app já está pronto com dados de
-exemplo (PR #7 do `kolae-mobile`); falta o backend.
+exemplo (PR #7 do `kolae-mobile`). Backend **pronto e na produção** em 05/11 (PRs #71 a #75):
+banco, painel, API, Visão geral e página pública.
 **Esforço:** M (banco, painel do dono, API e app). **Cabe antes do congelamento (21/11).**
 
 ## O que é
