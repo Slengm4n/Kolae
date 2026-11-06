@@ -498,7 +498,7 @@ as estatísticas do dono (D62). A visualização (`view`) **não** precisa ser e
 ```
 
 - `type`: `whatsapp`, `instagram`, `tiktok`, `facebook`, `website`, `share`, `ad_view`, `ad_click`.
-- `source`: `app` (padrão) ou `qr`.
+- `source`: `app` (padrão, para o app), `site` (usado pela página pública da quadra) ou `qr`.
 - Resposta: **`204`** sem corpo. Erros: `404 NOT_FOUND` (quadra inexistente ou desativada),
   `422 VALIDATION_ERROR` (`type` inválido), `429 TOO_MANY_ATTEMPTS` (cliques demais do mesmo aparelho).
 - Enviar sem esperar a resposta e **nunca** travar a abertura do WhatsApp ou da rede por causa dela.

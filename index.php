@@ -13,6 +13,7 @@ use App\Controllers\VenueAgendaController;
 use App\Controllers\VenuePhotosController;
 use App\Controllers\VenueOverviewController;
 use App\Controllers\PremiumController;
+use App\Controllers\VenueStatsController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
 use App\Controllers\AuthApiController;
@@ -182,6 +183,8 @@ $router->group('/dashboard', function ($router) {
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
         $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
+        // Aba Estatísticas (D62)
+        $router->get('/{id}/estatisticas', [VenueStatsController::class, 'show']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
@@ -235,6 +238,8 @@ $router->group('/admin', function ($router) {
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
         $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
+        // Aba Estatísticas (D62)
+        $router->get('/{id}/estatisticas', [VenueStatsController::class, 'show']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
@@ -259,6 +264,7 @@ $router->group('/api/v1', function ($router) {
     // Quadras (públicas): lista, detalhe e agenda do dia
     $router->get('/venues', [VenueApiController::class, 'index']);
     $router->get('/venues/{id}', [VenueApiController::class, 'show']);
+    $router->post('/venues/{id}/events', [VenueApiController::class, 'event']); // estatísticas (D62)
     $router->get('/venues/{id}/schedule', [VenueApiController::class, 'schedule']);
 
     // Esportes

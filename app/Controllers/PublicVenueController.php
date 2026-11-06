@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\ApiFormat;
 use App\Core\VenueSchedule;
+use App\Core\VenueStats;
 use App\Core\ViewHelper;
 use App\Models\Game;
 use App\Models\Sport;
@@ -83,6 +84,9 @@ class PublicVenueController
         }
 
         $venueId = (int)$row['id'];
+        // Visualização para as estatísticas do dono (D62); quem chega pelo QR Code vem com ?ref=qr
+        VenueStats::record($row, 'view', ($_GET['ref'] ?? '') === 'qr' ? 'qr' : 'site',
+            isset($_SESSION['user_id']) ? ['id' => $_SESSION['user_id'], 'role' => $_SESSION['user_role'] ?? ''] : null);
         $now = VenueSchedule::now();
         $hours = VenueHour::findByVenueId($venueId);
         $matches = Game::findScheduledOn([$venueId], $now->format('Y-m-d'))[$venueId] ?? [];

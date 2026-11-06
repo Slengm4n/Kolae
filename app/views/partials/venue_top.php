@@ -1,9 +1,9 @@
 <?php
 /**
  * Topo das páginas de gerenciar uma quadra (D35): voltar ao painel, nome, selo de status
- * ao vivo (mesma regra da API, D40) e as abas Visão geral, Dados, Fotos, Horário e Agenda.
+ * ao vivo (mesma regra da API, D40) e as abas Visão geral, Dados, Fotos, Horário, Agenda e Estatísticas (D62).
  *
- * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('overview' | 'data' | 'photos' | 'hours' | 'agenda'),
+ * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('overview' | 'data' | 'photos' | 'hours' | 'agenda' | 'stats'),
  *            $routePrefix ('/dashboard' | '/admin'), $backUrl.
  */
 use App\Core\VenueAccess;
@@ -21,6 +21,7 @@ $tabs = [
     'photos' => ['label' => $lang['venue_tab_photos'], 'icon' => 'fa-images', 'url' => "$topBase/$topVenueId/fotos"],
     'hours' => ['label' => $lang['venue_tab_hours'], 'icon' => 'fa-clock', 'url' => "$topBase/$topVenueId/horario"],
     'agenda' => ['label' => $lang['venue_tab_agenda'], 'icon' => 'fa-calendar-days', 'url' => "$topBase/$topVenueId/agenda"],
+    'stats' => ['label' => $lang['stats_tab'], 'icon' => 'fa-chart-line', 'url' => "$topBase/$topVenueId/estatisticas"],
 ];
 $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['city'] ?? null]));
 ?>
@@ -42,7 +43,7 @@ $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['c
         </div>
     </div>
 
-    <nav class="mt-5 flex gap-1 p-1 bg-surface-secondary border border-content-secondary/10 rounded-xl overflow-x-auto" aria-label="<?php echo htmlspecialchars($lang['venue_tabs_label']); ?>">
+    <nav id="venue-tabs" class="mt-5 flex gap-1 p-1 bg-surface-secondary border border-content-secondary/10 rounded-xl overflow-x-auto no-scrollbar" aria-label="<?php echo htmlspecialchars($lang['venue_tabs_label']); ?>">
         <?php foreach ($tabs as $key => $tab):
             $active = $key === $activeTab; ?>
             <?php if ($tab['url'] === null): ?>
@@ -52,11 +53,18 @@ $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['c
                 </span>
             <?php else: ?>
                 <a href="<?php echo $tab['url']; ?>"
-                    class="flex-1 min-w-0 sm:min-w-max flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-1 sm:px-4 py-2 sm:py-2.5 rounded-lg text-[11px] leading-tight sm:text-sm text-center font-semibold transition-colors <?php echo $active ? 'bg-surface-elevated text-brand-600 dark:text-brand-400 shadow-sm' : 'text-content-secondary hover:text-content-primary hover:bg-surface-elevated/60'; ?>"
+                    class="flex-1 shrink-0 min-w-[4.5rem] sm:min-w-max flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-1 sm:px-4 py-2 sm:py-2.5 rounded-lg text-[11px] leading-tight sm:text-sm text-center font-semibold transition-colors <?php echo $active ? 'bg-surface-elevated text-brand-600 dark:text-brand-400 shadow-sm' : 'text-content-secondary hover:text-content-primary hover:bg-surface-elevated/60'; ?>"
                     <?php echo $active ? 'aria-current="page"' : ''; ?>>
                     <span><i class="fas <?php echo $tab['icon']; ?>"></i></span><?php echo $tab['label']; ?>
                 </a>
             <?php endif; ?>
         <?php endforeach; ?>
     </nav>
+    <script>
+        // No celular as abas rolam para o lado: a aba aberta fica à vista
+        (function () {
+            const active = document.querySelector('#venue-tabs [aria-current=page]');
+            if (active) active.parentElement.scrollLeft = active.offsetLeft - (active.parentElement.clientWidth - active.offsetWidth) / 2;
+        })();
+    </script>
 </div>

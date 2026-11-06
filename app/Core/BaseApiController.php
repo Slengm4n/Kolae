@@ -98,6 +98,25 @@ abstract class BaseApiController
     }
 
     /**
+     * Usuário do token, quando a rota aceita login opcional (ex: estatísticas, D62).
+     * Sem token, ou com token inválido, devolve null em vez de responder 401.
+     */
+    protected function optionalUser(): ?array
+    {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null;
+        if (!$authHeader || !preg_match('/^Bearer\s+(\S+)$/', trim($authHeader), $matches) || !defined('JWT_SECRET') || JWT_SECRET === '') {
+            return null;
+        }
+        try {
+            $decoded = JWT::decode($matches[1], new Key(JWT_SECRET, 'HS256'));
+        } catch (\Throwable $e) {
+            return null;
+        }
+        $user = User::findById((int)($decoded->user_id ?? 0));
+        return $user && $user['status'] === 'active' ? $user : null;
+    }
+
+    /**
      * Verifica o token JWT enviado no cabeçalho Authorization.
      * Popula $this->user, $this->userId e $this->userRole se o token for válido.
      * Envia erro 401 e termina a execução se for inválido.
