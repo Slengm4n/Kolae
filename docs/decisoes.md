@@ -334,3 +334,30 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Fora, por enquanto:** outras redes (YouTube, X, Kwai) e os ícones no card do mapa (o card já está cheio). Uma rede nova é um campo a mais no `socials`, sem quebrar o app.
 - **Versão:** funcionalidade nova depois da v1.6.0, então sai na **v1.7.0** (D59).
 - **Onde:** `docs/api.md` (`GET /venues/{id}`); patch `database/patches/008_redes_sociais_da_quadra.sql`; regra em `App\Core\VenueSocials` (usada no painel, na API e nas páginas); seção "Redes sociais" na aba Dados (item opcional da "Quadra completa", D47); `socials` no `VenueApiController`; links no bloco `partials/venue_details.php`, que aparece na Visão geral e na página pública (D49). Os cards da página "Quadras" (D51) ficaram sem os ícones. No app, já pronto com dados de exemplo (PR #7 do `kolae-mobile`). Testes: `tests/venue_socials_test.php` e `tests/e2e/testes/redes.js`.
+
+### D61 · Kolae Premium por quadra, ativado pelo admin (05/11/2026)
+- **O quê:** cada quadra tem um plano, `free` (Grátis) ou `premium`. O dono pede o Premium numa aba nova da quadra ("Plano"); o admin ativa com uma data de validade (padrão: 30 dias; pode escolher outra ou "sem prazo") e desativa quando quiser. Vencida a data, a quadra volta a contar como Grátis sozinha. **Não há pagamento dentro do Kolae.**
+- **Grátis x Premium:** as duas têm mapa, status ao vivo, página pública, QR Code, solicitações e notificações. O Premium soma **anúncios** (D63) e **estatísticas completas** (D62). O selo "Premium" aparece só no painel do dono, nunca para o jogador, para não parecer "quadra melhor".
+- **Banco:** colunas `plan`, `plan_until` e `plan_requested_at` em `venues` (patch 009).
+- **Por quê:** ideia do Rafael, aprovada pelo João. Mostra o modelo de negócio (pergunta clássica da banca) sem integrar pagamento antes do congelamento.
+- **Onde:** `docs/proposta-premium.md`.
+
+### D62 · Estatísticas da quadra (05/11/2026)
+- **O quê:** tela "Estatísticas" na quadra, no estilo YouTube Analytics: visualizações, visitantes únicos, cliques no WhatsApp, nas redes e no compartilhar, taxa de contato, origem das visitas (site, app, QR Code), gráfico por dia, comparação com o período anterior e mapa de calor da ocupação (dia x hora, a partir da agenda). Grátis vê o resumo de 7 dias; Premium escolhe 7, 28 ou 90 dias com tudo.
+- **Registro:** tabela `venue_events` (`view`, `whatsapp`, `instagram`, `tiktok`, `facebook`, `website`, `share`, `ad_view`, `ad_click`). A visualização é contada na página pública e no `GET /venues/{id}`; os cliques pelo site e por `POST /venues/{id}/events` no app. Visitante único por hash do dia (IP + navegador + data, com segredo), **sem guardar IP**. Não contam robôs, o dono, o admin nem a mesma visita repetida em menos de 30 minutos.
+- **Privacidade:** só contagens; o dono nunca vê "quem visitou".
+- **Onde:** `docs/proposta-premium.md`; contrato em `docs/api.md`.
+
+### D63 · Anúncios das quadras Premium (05/11/2026)
+- **O quê:** a quadra Premium pode ter **um anúncio ativo por vez**: título (60), texto (140), foto opcional (sem foto, usa a capa) e período de até 30 dias. Aparece com a etiqueta **"Patrocinado"** no topo da home e da `/quadras` (até 3, sorteados por dia), numa faixa na página pública da quadra e no app (campo `ad` nas quadras e `GET /ads` para o carrossel "Destaques").
+- **Controle:** o dono pausa, edita e encerra; o admin pode remover com motivo (o dono é avisado). Só aparece com a quadra Premium, o anúncio ativo, dentro do período e a quadra não desativada (D34).
+- **Banco:** tabela `venue_ads` (patch 009). Vezes que apareceu e cliques entram nas estatísticas (D62).
+- **Onde:** `docs/proposta-premium.md`; contrato em `docs/api.md`.
+
+### D64 · Solicitações de horário e notificações (05/11/2026)
+- **O quê:** o jogador **pede um horário** pelo app; o dono aprova ou recusa no painel ("Notificações e solicitações", com sino e contador no cabeçalho). Aprovado, vira uma partida normal da agenda. **A agenda continua do dono (D02):** pedido pendente não bloqueia o horário.
+- **Regras:** jogador logado com e-mail confirmado (D58), nunca na própria quadra; horário no futuro (até 30 dias), dentro do funcionamento (D21), em blocos de 30 minutos, de 30 minutos a 4 horas, sem conflito; até 3 pendentes por jogador e 1 por quadra; expira no início do horário. Na aprovação, confere o conflito de novo e recusa os outros pendentes no mesmo horário. O jogador cancela enquanto pendente, ou aprovado até **2 horas** antes (a partida é cancelada e o dono avisado).
+- **Avisos:** notificação no painel e **e-mail** ao dono a cada pedido novo; notificação no app ao jogador quando o pedido é respondido. Push no celular fica para depois (Firebase, não funciona no Expo Go).
+- **Privacidade:** o dono vê o primeiro nome de quem pediu; o WhatsApp da pessoa só depois de aprovar e só se ela tiver cadastrado.
+- **Banco:** tabelas `match_requests` e `notifications` (patch 009). **Plano B:** se o app não ligar até 17/11, a demonstração usa a aprovação pelo site e as telas do app ficam para a v1.7.x.
+- **Versão:** D61–D64 saem na **v1.7.0**, antes do congelamento (21/11), cada parte numa PR. **Onde:** `docs/proposta-premium.md`; contrato em `docs/api.md`.

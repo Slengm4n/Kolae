@@ -8,6 +8,7 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 > - **S2 (v1.5.0):** revisado e aprovado pelo João e pelo Rafael em 28/10/2026, implementado e em produção.
 > - **S3 (v1.6.0):** revisado pelo Rafael em 28/10/2026 (D29–D33), em produção desde 28/10 e lançado na **v1.6.0** (02/11/2026).
 > - **Depois da S3 (v1.6.0):** `429 TOO_MANY_ATTEMPTS` no login (D45), limite de envios no `forgot-password` (D52), fotos na ordem do dono e otimizadas (D46, D48) e `email_verified` no objeto `user` (D58). Nenhuma mudança quebrou o app.
+> - **Kolae Premium (v1.7.0, D61–D64):** aprovado em 05/11/2026. Anúncios (`ad`, `GET /ads`), registro de cliques, pedidos de horário e notificações do jogador; só acréscimos, ver a seção [Kolae Premium](#kolae-premium-v170-d61d64).
 
 ## Base URL
 
@@ -72,9 +73,13 @@ Toda resposta é JSON (`Content-Type: application/json; charset=utf-8`), inclusi
 | 401 | `AUTH_INVALID_USER` | Usuário do token foi desativado |
 | 401 | `INVALID_CREDENTIALS` | Login com e-mail ou senha errados |
 | 429 | `TOO_MANY_ATTEMPTS` | Muitos logins errados (D45). O cabeçalho `Retry-After` diz em quantos segundos tentar de novo; `message` já traz os minutos |
+| 403 | `EMAIL_NOT_VERIFIED` | Ação que pede e-mail confirmado (D58), como pedir horário (D64) |
+| 403 | `OWN_VENUE` | O dono tentou pedir horário na própria quadra (D64) |
 | 404 | `NOT_FOUND` | Rota ou recurso não existe |
 | 405 | `METHOD_NOT_ALLOWED` | Rota existe, mas com outro método |
 | 413 | `FILE_TOO_LARGE` | Upload acima do limite |
+| 409 | `REQUEST_LIMIT` | Pedidos de horário pendentes demais (D64) |
+| 409 | `CANNOT_CANCEL` | Pedido fora do prazo de cancelamento ou já encerrado (D64) |
 | 422 | `VALIDATION_ERROR` | Campos inválidos; ver `errors` |
 | 500 | `INTERNAL_ERROR` e outros terminados em `_FAILED` | Erro inesperado no servidor; mostrar `message` e permitir tentar de novo |
 | 503 | `DATABASE_UNAVAILABLE` | Banco fora do ar (ex: XAMPP com MySQL desligado) |
@@ -386,6 +391,7 @@ Detalhe de uma quadra: tudo do resumo, mais:
 | `socials.tiktok` | Só o usuário, sem `@` (letras, números, `.` e `_`, até 30). Abrir `https://www.tiktok.com/@<tiktok>`. `null` = sem ícone |
 | `socials.facebook_url` | Endereço completo, sempre `https://` e de `facebook.com` ou `fb.com`. Abrir como está. `null` = sem ícone |
 | `socials.website_url` | Endereço completo, sempre `https://`. Abrir como está. `null` = sem ícone |
+| `ad` | Anúncio ativo da quadra (D63, a partir da v1.7.0) ou `null`. Formato na seção [Kolae Premium](#kolae-premium-v170-d61d64). Também vem em cada item do `GET /venues` |
 
 **Erros**: `404 NOT_FOUND` (quadra não existe ou foi excluída).
 
@@ -426,6 +432,164 @@ Agenda de um dia: o horário de funcionamento dividido em faixas livres e ocupad
 | D31 | Preço `0` = grátis, `null` = não informado; `max_price_cents` inclui as grátis |
 | D32 | `has_leisure_area` no resumo e como filtro |
 | D33 | Resolvido no app, sem mudar o contrato: a seção "Mais avaliadas" vira "Disponíveis agora" (`status=available`), e a distância no detalhe é calculada pelo app |
+
+---
+
+## Kolae Premium (v1.7.0, D61–D64)
+
+Aprovado em 05/11/2026 (ideia do Rafael). Proposta completa, regras e telas do site em
+[`proposta-premium.md`](proposta-premium.md). Tudo abaixo é **acréscimo**: nada muda no que o app
+já usa. O app pode começar com mock a partir daqui.
+
+### Anúncio da quadra (`ad`)
+
+`GET /venues` (cada item) e `GET /venues/{id}` ganham o campo **`ad`**, sempre presente: o
+anúncio ativo da quadra ou `null`.
+
+```json
+"ad": {
+  "id": 7,
+  "title": "Terça com 20% off",
+  "body": "Reserve pelo WhatsApp e ganhe desconto às terças.",
+  "image_url": "https://kolae.online/uploads/ads/7/ad_abc.jpg",
+  "ends_on": "2026-11-30"
+}
+```
+
+| Campo | Regra |
+| :---- | :---- |
+| `title` | Até 60 caracteres |
+| `body` | Até 140 caracteres |
+| `image_url` | Foto do anúncio; sem foto, a capa da quadra; `null` se a quadra também não tiver foto |
+| `ends_on` | Último dia do anúncio (`YYYY-MM-DD`) |
+
+Mostrar sempre com a etiqueta **"Patrocinado"**. Só vem com a quadra Premium, o anúncio ativo
+e dentro do período (D63).
+
+### `GET /ads`
+
+Público. Até 5 anúncios ativos para o carrossel "Destaques", em ordem sorteada a cada dia.
+
+```json
+{
+  "data": [
+    {
+      "id": 7,
+      "title": "Terça com 20% off",
+      "body": "Reserve pelo WhatsApp e ganhe desconto às terças.",
+      "image_url": "https://kolae.online/uploads/ads/7/ad_abc.jpg",
+      "ends_on": "2026-11-30",
+      "venue": { "...": "mesmo formato do objeto venue da lista" }
+    }
+  ]
+}
+```
+
+Lista vazia (`"data": []`) quando não há anúncio: esconder o carrossel.
+
+### `POST /venues/{id}/events`
+
+Público (o token é opcional; com token do dono da quadra, não é contado). Registra um clique para
+as estatísticas do dono (D62). A visualização (`view`) **não** precisa ser enviada: o próprio
+`GET /venues/{id}` já conta.
+
+```json
+{ "type": "whatsapp", "source": "app" }
+```
+
+- `type`: `whatsapp`, `instagram`, `tiktok`, `facebook`, `website`, `share`, `ad_view`, `ad_click`.
+- `source`: `app` (padrão) ou `qr`.
+- Resposta: **`204`** sem corpo. Erros: `404 NOT_FOUND` (quadra inexistente ou desativada),
+  `422 VALIDATION_ERROR` (`type` inválido), `429 TOO_MANY_ATTEMPTS` (cliques demais do mesmo aparelho).
+- Enviar sem esperar a resposta e **nunca** travar a abertura do WhatsApp ou da rede por causa dela.
+
+### `POST /venues/{id}/requests`
+
+Jogador logado. Pede um horário na quadra (D64). Não bloqueia a agenda até o dono aprovar.
+
+```json
+{
+  "start_time": "2026-11-12T19:00:00-03:00",
+  "end_time": "2026-11-12T20:00:00-03:00",
+  "sport_id": 1,
+  "message": "Somos 10, futebol society"
+}
+```
+
+- `sport_id` e `message` (até 200) são opcionais.
+- Resposta: **`201`** com o objeto `request` (abaixo).
+- Erros:
+  - `422 VALIDATION_ERROR`, com `errors` por campo: horário no passado ou a mais de 30 dias, fora
+    do funcionamento, fora dos blocos de 30 minutos, duração fora de 30 min a 4 h, horário já ocupado,
+    esporte que a quadra não tem;
+  - `403 EMAIL_NOT_VERIFIED`: a conta ainda não confirmou o e-mail (D58);
+  - `403 OWN_VENUE`: o dono não pede horário na própria quadra;
+  - `409 REQUEST_LIMIT`: já tem 3 pedidos pendentes, ou 1 pendente nesta quadra;
+  - `404 NOT_FOUND`: quadra inexistente ou desativada.
+
+### Objeto `request`
+
+```json
+{
+  "id": 31,
+  "venue": { "id": 2, "name": "Arena Central", "cover_image_url": "https://kolae.online/uploads/venues/2/thumb_x.jpg" },
+  "sport_id": 1,
+  "start_time": "2026-11-12T19:00:00-03:00",
+  "end_time": "2026-11-12T20:00:00-03:00",
+  "message": "Somos 10, futebol society",
+  "status": "pending",
+  "response_note": null,
+  "created_at": "2026-11-05T21:10:00-03:00",
+  "responded_at": null
+}
+```
+
+| Campo | Regra |
+| :---- | :---- |
+| `status` | `pending`, `approved`, `declined`, `cancelled` ou `expired` (sem resposta até o início do horário) |
+| `response_note` | Motivo da recusa, quando o dono escreveu; senão `null` |
+
+### `GET /me/requests`
+
+Jogador logado. Os pedidos da pessoa, mais recentes primeiro, paginados como o `GET /venues`
+(`?page=`, `meta`). Filtro opcional `?status=pending`.
+
+### `DELETE /me/requests/{id}`
+
+Jogador logado. Cancela o pedido: se `pending`, a qualquer momento; se `approved`, até **2 horas**
+antes do início (a partida sai da agenda e o dono é avisado). Resposta: **`200`** com o objeto
+`request` atualizado. Erros: `404 NOT_FOUND` (pedido de outra pessoa ou inexistente),
+`409 CANNOT_CANCEL` (fora do prazo, ou já recusado, cancelado ou expirado).
+
+### `GET /me/notifications`
+
+Jogador logado. Lista paginada (`?page=`), mais recentes primeiro.
+
+```json
+{
+  "data": [
+    {
+      "id": 120,
+      "type": "request_approved",
+      "title": "Pedido aprovado",
+      "body": "Arena Central aprovou seu horário de 12/11, 19:00 às 20:00.",
+      "data": { "request_id": 31, "venue_id": 2 },
+      "read_at": null,
+      "created_at": "2026-11-06T10:02:00-03:00"
+    }
+  ],
+  "meta": { "current_page": 1, "last_page": 1, "per_page": 20, "total": 1, "unread": 1 }
+}
+```
+
+- `type` para o jogador: `request_approved`, `request_declined`, `request_expired`. Tipos novos
+  podem aparecer depois: o app mostra `title` e `body` como vierem.
+- `title` e `body` vêm no idioma do cabeçalho `Accept-Language` (padrão `pt-BR`).
+- `data` traz os ids para abrir a tela certa (o pedido ou a quadra).
+
+### `POST /me/notifications/read`
+
+Jogador logado. Marca como lidas: `{ "ids": [120, 121] }` ou `{ "all": true }`. Resposta **`204`**.
 
 ---
 
