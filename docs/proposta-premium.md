@@ -1,8 +1,8 @@
 # Proposta: Kolae Premium para quadras (plano, estatísticas, anúncios, solicitações e notificações)
 
-**Situação:** proposta para **antes do congelamento (21/11/2026)**, escrita em 05/11/2026. Precisa da
-revisão do João e do Rafael antes do código. Cada parte aprovada vira uma decisão (a partir da
-D61) e o contrato entra no [`api.md`](api.md).
+**Situação:** **aprovada** (05/11/2026; ideia do Rafael, aprovada pelo João). Virou as
+[D61 a D64](decisoes.md#d61--kolae-premium-por-quadra-ativado-pelo-admin-05112026); o contrato está no
+[`api.md`](api.md#kolae-premium-v170-d61d64). Sai na **v1.7.0**, uma PR por parte.
 **Esforço:** G no total, dividido em quatro partes de esforço M. Backend em 05–17/11; o app
 integra em paralelo, a partir dos mocks, e liga na API até 20/11.
 
@@ -244,9 +244,9 @@ entra junto com a sua tela (a `main` publica direto).
   preenche 90 dias de eventos.
 - **Spam de pedidos.** Limites por jogador e por quadra, e-mail confirmado obrigatório.
 
-## Para decidir na aprovação
+## Decidido na aprovação
 
-1. Validade padrão do Premium ao ativar (30 dias? sem prazo durante a demonstração?).
-2. O selo "Premium" deve aparecer para o jogador? (proposta: não).
-3. Quanto tempo antes o jogador pode cancelar um pedido aprovado (proposta: 2 horas).
-4. E-mail ao dono a cada pedido novo: sempre, ou só um resumo por dia?
+1. **Validade do Premium:** 30 dias por padrão; o admin escolhe outra data ou "sem prazo" ao ativar.
+2. **Selo "Premium":** só no painel do dono, nunca para o jogador.
+3. **Cancelar pedido aprovado:** até 2 horas antes do início.
+4. **E-mail ao dono:** um a cada pedido novo (não resumo diário).

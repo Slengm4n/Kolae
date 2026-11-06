@@ -20,6 +20,9 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 - **Visão geral e página pública da quadra:** seção "Redes sociais" abaixo do endereço, com os links. Na página pública, sem redes, a seção some (como no app).
 - Testes: `tests/venue_socials_test.php` (53 casos, sem banco) e o de clique `tests/e2e/testes/redes.js` (40 passos: painel, API, Visão geral, página pública, celular, inglês e admin).
 
+### Documentação
+- **Kolae Premium aprovado** (D61–D64): plano da quadra, estatísticas, anúncios, solicitações de horário e notificações, em `docs/proposta-premium.md`; contrato no `docs/api.md` (`ad`, `GET /ads`, `POST /venues/{id}/events`, pedidos de horário e notificações do jogador). O código sai em PRs separadas, na v1.7.0.
+
 ## [1.6.0] - 2026-11-02
 
 Versão de entrega: Sprints 3 a 6 e o polimento antes do congelamento. Quadras com status ao vivo na API, telas do dono no site (horário, agenda, dados, fotos e visão geral), página pública da quadra, página Quadras com mapa, QR Code, segurança essencial (CSRF, limite de login, "lembrar de mim"), Termos e Privacidade, produção na HostGator com e-mail pelo Titan, testes antes de cada deploy e, por fim, telas de entrada redesenhadas, avisos no visual do Kolae, confirmação de e-mail, miniaturas das fotos e ajustes de desempenho e acessibilidade.
