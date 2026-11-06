@@ -31,6 +31,7 @@ const TESTES = {
     qr: ['A', 'E'],
     redes: ['D', 'A'],
     plano: [],
+    estatisticas: ['A'],
 };
 
 const pedidos = process.argv.slice(2);

@@ -6,6 +6,7 @@ use App\Core\ApiFormat;
 use App\Core\BaseApiController;
 use App\Core\VenueSchedule;
 use App\Core\VenueSocials;
+use App\Core\VenueStats;
 use App\Models\Game;
 use App\Models\Venue;
 use App\Models\VenueHour;
@@ -125,6 +126,7 @@ class VenueApiController extends BaseApiController
             ];
         }
 
+        $this->recordView($row);
         $this->sendSuccess($venue + [
             'description' => self::nullIfBlank($row['description']),
             'leisure_area_capacity' => self::intOrNull($row['leisure_area_capacity']),
@@ -149,6 +151,46 @@ class VenueApiController extends BaseApiController
             // Redes sociais (D60): sempre as quatro chaves, null no que o dono não informou
             'socials' => VenueSocials::forApi($row)
         ]);
+    }
+
+    /**
+     * Abrir o detalhe no app conta como visualização (D62). Chamado antes de responder;
+     * o próprio VenueStats ignora o dono, o admin e a repetição em menos de 30 minutos.
+     */
+    private function recordView(array $row): void
+    {
+        VenueStats::record($row, 'view', 'app', $this->optionalUser());
+    }
+
+    /**
+     * POST /api/v1/venues/{id}/events
+     * Registra um clique para as estatísticas do dono (D62). Login opcional. Responde 204.
+     * Usado pelo app ("source": "app") e pela página pública da quadra ("source": "site").
+     */
+    public function event($id)
+    {
+        $row = ctype_digit((string)$id) ? Venue::findForApi((int)$id) : false;
+        if (!$row) {
+            $this->sendError('Quadra não encontrada.', 'NOT_FOUND', 404);
+        }
+        $input = $this->getJsonInput();
+        $type = is_string($input['type'] ?? null) ? $input['type'] : '';
+        $source = is_string($input['source'] ?? null) ? $input['source'] : 'app';
+        $errors = [];
+        if (!in_array($type, VenueStats::CLICK_TYPES, true)) {
+            $errors['type'] = ['Tipo inválido. Use: ' . implode(', ', VenueStats::CLICK_TYPES) . '.'];
+        }
+        if (!in_array($source, VenueStats::SOURCES, true)) {
+            $errors['source'] = ['Origem inválida. Use: ' . implode(', ', VenueStats::SOURCES) . '.'];
+        }
+        $this->failIfInvalid($errors);
+        if (VenueStats::overLimit((int)$row['id'])) {
+            header('Retry-After: 3600');
+            $this->sendError('Muitos registros deste aparelho. Tente mais tarde.', 'TOO_MANY_ATTEMPTS', 429);
+        }
+        VenueStats::record($row, $type, $source, $this->optionalUser());
+        http_response_code(204);
+        exit;
     }
 
     /**

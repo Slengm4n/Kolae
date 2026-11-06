@@ -41,7 +41,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const r = jsQR(img.data, img.width, img.height);
     return r ? r.data : null;
   });
-  check('QR leva à página pública da quadra', decoded, `${BASE}/quadra/${ARENA}`);
+  // ?ref=qr: a visita pelo cartaz conta como origem "QR Code" nas estatísticas (D62)
+  check('QR leva à página pública da quadra, marcado como QR', decoded, `${BASE}/quadra/${ARENA}?ref=qr`);
   await p.screenshot({ path: lib.OUT + '/qr-janela.png' });
   // Salva o cartaz como ficou
   const png = await p.$eval('#qr-download', a => a.href.split(',')[1]);

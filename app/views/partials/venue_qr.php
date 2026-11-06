@@ -9,7 +9,7 @@
  */
 $qe = fn($s) => htmlspecialchars((string)$s);
 $qrData = [
-    'url' => $publicUrl,
+    'url' => $publicUrl . '?ref=qr', // visita pelo QR conta como origem "QR Code" nas estatísticas (D62)
     'name' => $venue['name'],
     'cta' => $lang['qr_poster_cta'],
     'file' => 'kolae-qr-' . (int)$venue['id'] . '.png',

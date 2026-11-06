@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (21 roteiros, uns 12 minutos)
+npm run test:e2e                     # todos (22 roteiros, uns 12 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -58,6 +58,7 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 - **Perto da meia-noite** alguns testes da agenda falham: o seed cria uma partida "agora" que passa para o dia seguinte. Não é bug; rodar em outro horário.
 - Os testes de clique das abas Horário e Agenda marcam o guia passo a passo (D50) como visto depois do login; um teste novo que abra essas abas precisa fazer o mesmo, senão o guia cobre os botões.
 - O teste `fotos`, o `otimizar` e o `publica` apagam e recriam as fotos das quadras de teste em `uploads/venues/`.
+- O `estatisticas` usa um navegador "comum" (`setUserAgent`): o filtro de robôs ignora o HeadlessChrome do Puppeteer.
 - O teste `qr` usa o `jsQR` (jsDelivr) para ler o QR desenhado; precisa de internet. O `quadras` também, para os mapas do OpenStreetMap.
 - O `avisos` tira o CNPJ do `dono-s3` para testar a regra do CNPJ; o `rodar.js` devolve antes do teste seguinte. Rodando o arquivo sozinho (sem o `rodar.js`), rode `php tests/e2e/preparar_banco.php` depois.
 - O `confirmacao` gera os links de confirmação de e-mail com `tests/e2e/link_confirmacao.php` (só no banco local; imprime só o link).
@@ -87,4 +88,6 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `preferencias` | Menu e tema em todas as páginas do dono; Preferências (tema automático e idioma) |
 | `avisos` | Avisos (toast) e URL limpa; CNPJ exigido em todas as páginas de gerenciar quadra |
 | `confirmacao` | Confirmação de e-mail: aviso, reenviar com espera, link válido, vencido e adulterado, selo, API |
+| `plano` | Aba Premium (D61): pedir, admin ativa com validade, selo no painel, validade vencida, desativar, acesso de outro dono |
+| `estatisticas` | Registro de visualizações e cliques (página pública, QR, API), filtros (dono, robô, repetição) e a aba Estatísticas no Grátis e no Premium |
 | `plano` | Kolae Premium do dono (D61): pedir em Configurações, admin ativa no card do painel com validade, selo no painel, validade vencida, desativar |

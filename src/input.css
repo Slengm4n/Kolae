@@ -422,3 +422,24 @@
         }
     }
 }
+
+/* Mapa de calor da ocupação (aba Estatísticas, D62): um tom só, do claro ao escuro.
+   No tema escuro, mais ocupado = mais claro (destaca sobre o fundo escuro). */
+@layer components {
+    .heat-0 { background: var(--surface-secondary); }
+    .heat-1 { background: #cce6ff; }
+    .heat-2 { background: #66b5ff; }
+    .heat-3 { background: #0084ff; }
+    .heat-4 { background: #004f99; }
+    .dark .heat-0 { background: rgba(148, 163, 184, 0.12); }
+    .dark .heat-1 { background: #0b3a66; }
+    .dark .heat-2 { background: #0069cc; }
+    .dark .heat-3 { background: #339dff; }
+    .dark .heat-4 { background: #99ceff; }
+}
+
+/* Rolagem lateral sem barra (abas da quadra no celular, carrossel da galeria) */
+@layer utilities {
+    .no-scrollbar { scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+}

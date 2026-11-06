@@ -69,7 +69,7 @@ $editLinks = null;
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
                     <span class="status-badge <?php echo $statusClass; ?>"><?php echo $e($lang['home_status_' . $statusKey] ?? $statusKey); ?><?php if ($untilText !== ''): ?> <span class="font-normal opacity-80">· <?php echo $e($untilText); ?></span><?php endif; ?></span>
-                    <button type="button" id="share-btn" class="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold hover:bg-white/10 transition-colors" data-copied="<?php echo $e($lang['public_link_copied']); ?>">
+                    <button type="button" id="share-btn" data-track="share" class="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold hover:bg-white/10 transition-colors" data-copied="<?php echo $e($lang['public_link_copied']); ?>">
                         <span><i class="fas fa-share-nodes"></i></span><span class="label"><?php echo $lang['public_share']; ?></span>
                     </button>
                 </div>
@@ -118,7 +118,7 @@ $editLinks = null;
                         </div>
 
                         <?php if ($whatsappUrl): ?>
-                            <a href="<?php echo $e($whatsappUrl); ?>" target="_blank" rel="noopener" class="mt-5 w-full inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-neutral-950 font-semibold py-3 rounded-xl transition-colors">
+                            <a href="<?php echo $e($whatsappUrl); ?>" target="_blank" rel="noopener" data-track="whatsapp" class="mt-5 w-full inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-neutral-950 font-semibold py-3 rounded-xl transition-colors">
                                 <span class="text-lg"><i class="fab fa-whatsapp"></i></span><?php echo $lang['public_whatsapp_btn']; ?>
                             </a>
                             <p class="mt-2 text-xs text-center text-content-secondary"><?php echo $lang['public_whatsapp_hint']; ?></p>
@@ -167,6 +167,26 @@ $editLinks = null;
                     // Cancelar o menu não copia; outro erro (sem permissão etc.) cai na cópia
                     if (e.name !== 'AbortError') copy();
                 }
+            });
+        })();
+    </script>
+    <script>
+        // Cliques no WhatsApp, nas redes e no compartilhar, para as estatísticas do dono (D62).
+        // sendBeacon não atrasa a abertura do link; se falhar, a página segue igual.
+        (function () {
+            const url = <?php echo json_encode(BASE_URL . '/api/v1/venues/' . (int)$venue['id'] . '/events'); ?>;
+            const source = new URLSearchParams(location.search).get('ref') === 'qr' ? 'qr' : 'site';
+            const send = type => {
+                try {
+                    const body = new Blob([JSON.stringify({ type, source })], { type: 'application/json' });
+                    if (!navigator.sendBeacon || !navigator.sendBeacon(url, body)) {
+                        fetch(url, { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'application/json' } }).catch(() => {});
+                    }
+                } catch (e) {}
+            };
+            document.addEventListener('click', ev => {
+                const el = ev.target.closest('[data-track], #venue-socials a[data-network]');
+                if (el) send(el.dataset.track || el.dataset.network);
             });
         })();
     </script>

@@ -120,6 +120,7 @@ No uso normal, o app aponta para a produção: `https://kolae.online/api/v1`. Os
 6. **Dados para o app ter o que mostrar** (no notebook, nunca na produção):
    - `database/seeds/teste_status.sql`: 5 quadras de teste, uma para cada status. Usado pelos testes da S3.
    - `database/seeds/demo_notebook.sql`: dá horário, esportes e WhatsApp fictício às quadras de verdade e cria partidas a partir da hora atual, para o mapa ter quadras "Em uso" e "Disponível".
+   - `database/seeds/demo_estatisticas.sql`: 90 dias de visitas e cliques inventados para **uma** quadra (troque o `0` pelo id), para ver a aba Estatísticas com números (D62). Só em quadra de demonstração.
    - Os status dependem do relógio. Antes de um teste com o app, renovar: `teste_status_limpar.sql`, `teste_status.sql` e `demo_notebook.sql`, nessa ordem.
    - **Fotos:** a pasta `uploads/` fica fora do git. Para as quadras copiadas da produção terem foto, baixar `public_html/uploads/` da produção (Gerenciador de Arquivos do cPanel da HostGator: compactar a pasta e baixar o `.zip`) para a pasta `uploads/` do projeto.
 
