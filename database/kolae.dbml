@@ -86,6 +86,9 @@ Table users {
   password varchar(255) [not null, note: 'Hash bcrypt (password_hash do PHP)']
   role varchar(20) [not null, default: 'player', note: 'admin | owner | player. owner = quem cadastrou CNPJ (patch 003)']
   status varchar(20) [not null, default: 'active', note: 'active | inactive | suspended']
+  plan varchar(10) [not null, default: 'free', note: 'free | premium (D61): do dono, vale para todas as quadras']
+  plan_until date [note: 'Validade do Premium; NULL = sem prazo']
+  plan_requested_at timestamp [note: 'Quando o dono pediu o Premium']
   avatar_path varchar(255)
   force_password_change tinyint(1) [default: 0, note: 'Não é lido pelo código hoje']
   email_verified_at timestamp
@@ -260,3 +263,61 @@ Ref: venue_hours.venue_id > venues.id [delete: cascade]
 Ref: matches.venue_id > venues.id
 Ref: matches.sport_id > sports.id [delete: set null]
 Ref: matches.creator_user_id > users.id
+
+// Kolae Premium (D61–D64, patch 009)
+Table venue_events {
+  id bigint [pk, increment]
+  venue_id int [not null]
+  type varchar(20) [not null, note: 'view | whatsapp | instagram | tiktok | facebook | website | share | ad_view | ad_click']
+  source varchar(10) [not null, default: 'site', note: 'site | app | qr']
+  visitor char(16) [note: 'Hash do dia, sem IP']
+  created_at timestamp [not null, default: `now()`]
+  indexes {
+    (venue_id, created_at)
+  }
+}
+
+Table venue_ads {
+  id int [pk, increment]
+  venue_id int [not null]
+  title varchar(60) [not null]
+  body varchar(140) [not null]
+  image_path varchar(255)
+  starts_on date [not null]
+  ends_on date [not null]
+  status varchar(10) [not null, default: 'active', note: 'active | paused | ended | removed']
+  removed_reason varchar(200)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table match_requests {
+  id int [pk, increment]
+  venue_id int [not null]
+  user_id int [not null]
+  sport_id int
+  start_time datetime [not null]
+  end_time datetime [not null]
+  message varchar(200)
+  status varchar(10) [not null, default: 'pending', note: 'pending | approved | declined | cancelled | expired']
+  response_note varchar(200)
+  match_id int
+  created_at timestamp
+  responded_at timestamp
+}
+
+Table notifications {
+  id bigint [pk, increment]
+  user_id int [not null]
+  type varchar(30) [not null]
+  data text [note: 'JSON']
+  read_at timestamp
+  created_at timestamp [not null, default: `now()`]
+}
+
+Ref: venue_events.venue_id > venues.id [delete: cascade]
+Ref: venue_ads.venue_id > venues.id [delete: cascade]
+Ref: match_requests.venue_id > venues.id [delete: cascade]
+Ref: match_requests.user_id > users.id [delete: cascade]
+Ref: match_requests.match_id > matches.id [delete: set null]
+Ref: notifications.user_id > users.id [delete: cascade]

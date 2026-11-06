@@ -40,6 +40,7 @@ class UserController
             // Confirmação de e-mail (D58): aviso no painel enquanto não confirmar
             'emailPending' => empty($user['email_verified_at']),
             'userEmail' => $user['email'] ?? '',
+            'isPremium' => \App\Core\PremiumPlan::isPremium($user), // selo do Kolae Premium (D61)
         ];
 
         ViewHelper::render('users/dashboard', $data);

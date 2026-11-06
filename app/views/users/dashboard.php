@@ -106,6 +106,9 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             <h1 class="text-3xl md:text-4xl font-bold text-content-primary mb-2">
                 <?php echo $lang['dashboard_user_greetings']; ?> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-brand-700"><?php echo explode(' ', htmlspecialchars($userName))[0]; ?>!</span>
             </h1>
+            <?php if (!empty($data['isPremium'])): // Kolae Premium do dono (D61): o selo leva às Configurações ?>
+                <a href="<?php echo BASE_URL; ?>/dashboard/perfil/plano" data-premium-badge class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-400 text-amber-950 px-3 py-1 text-xs font-bold shadow-sm hover:bg-amber-300 transition-colors"><i class="fas fa-crown text-[10px]" aria-hidden="true"></i><?php echo htmlspecialchars($lang['plan_badge']); ?></a>
+            <?php endif; ?>
             <p class="text-content-secondary"><?php echo $lang['dashboard_user_activity']; ?></p>
         </section>
 

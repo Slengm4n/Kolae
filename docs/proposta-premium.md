@@ -8,7 +8,7 @@ integra em paralelo, a partir dos mocks, e liga na API até 20/11.
 
 ## O que é
 
-Um plano **Premium por quadra**, ativado pelo admin (sem pagamento dentro do Kolae), e quatro
+Um plano **Premium do dono** (perfil, vale para todas as quadras dele; era por quadra na versão de 05/11), ativado pelo admin (sem pagamento dentro do Kolae), e quatro
 telas novas no painel do dono:
 
 | Tela | Para quem | O que faz |
@@ -45,7 +45,7 @@ sem tirar do dono o controle da agenda (D02 continua: nada entra na agenda sem e
 
 ## Proposta de banco (patch 009)
 
-### Plano: colunas em `venues`
+### Plano: colunas em `users` (o plano é do dono)
 
 | Coluna | Tipo | O que guarda |
 | :---- | :---- | :---- |
@@ -188,7 +188,7 @@ quadra (`venue` no mesmo formato da lista). Ordem aleatória a cada dia.
 
 ## Telas no site
 
-- **Plano** (`/dashboard/quadras/{id}/plano`, aba nova da quadra): tabela Grátis x Premium,
+- **Plano** (`/dashboard/perfil/plano`, em Configurações > Kolae Premium; era uma aba da quadra na versão de 05/11): tabela Grátis x Premium,
   plano atual e validade, botão "Quero o Premium" (vira pedido para o admin) e, no Premium,
   "Seu plano vale até 30/11".
 - **Estatísticas** (`/dashboard/quadras/{id}/estatisticas`): seletor de período (7, 28, 90 dias);

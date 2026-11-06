@@ -1,13 +1,17 @@
 <?php
 /**
- * Menu lateral das Configurações (perfil, segurança e preferências).
- * Variáveis: $lang, $configActive ('profile' | 'security' | 'preferences').
+ * Menu lateral das Configurações (perfil, segurança, preferências e, para o dono, o Kolae Premium).
+ * Variáveis: $lang, $configActive ('profile' | 'security' | 'preferences' | 'premium').
  */
 $configItems = [
     'profile' => ['/dashboard/perfil', 'fa-user-edit', $lang['config_custom_profile']],
     'security' => ['/dashboard/perfil/seguranca', 'fa-shield-alt', $lang['config_security']],
     'preferences' => ['/dashboard/perfil/preferencias', 'fa-sliders', $lang['config_preferences']],
 ];
+// Kolae Premium (D61): o plano é do dono, então o item só aparece para quem tem papel de dono
+if (($_SESSION['user_role'] ?? '') === 'owner') {
+    $configItems['premium'] = ['/dashboard/perfil/plano', 'fa-crown', $lang['plan_tab']];
+}
 ?>
 <nav class="bg-surface-elevated p-2 rounded-2xl border border-content-secondary/10 shadow-lg" aria-label="<?php echo htmlspecialchars($lang['global_menu_config']); ?>">
     <ul class="space-y-1">
