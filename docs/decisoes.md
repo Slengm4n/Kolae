@@ -335,10 +335,11 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Versão:** funcionalidade nova depois da v1.6.0, então sai na **v1.7.0** (D59).
 - **Onde:** `docs/api.md` (`GET /venues/{id}`); patch `database/patches/008_redes_sociais_da_quadra.sql`; regra em `App\Core\VenueSocials` (usada no painel, na API e nas páginas); seção "Redes sociais" na aba Dados (item opcional da "Quadra completa", D47); `socials` no `VenueApiController`; links no bloco `partials/venue_details.php`, que aparece na Visão geral e na página pública (D49). Os cards da página "Quadras" (D51) ficaram sem os ícones. No app, já pronto com dados de exemplo (PR #7 do `kolae-mobile`). Testes: `tests/venue_socials_test.php` e `tests/e2e/testes/redes.js`.
 
-### D61 · Kolae Premium por quadra, ativado pelo admin (05/11/2026)
-- **O quê:** cada quadra tem um plano, `free` (Grátis) ou `premium`. O dono pede o Premium numa aba nova da quadra ("Plano"); o admin ativa com uma data de validade (padrão: 30 dias; pode escolher outra ou "sem prazo") e desativa quando quiser. Vencida a data, a quadra volta a contar como Grátis sozinha. **Não há pagamento dentro do Kolae.**
-- **Grátis x Premium:** as duas têm mapa, status ao vivo, página pública, QR Code, solicitações e notificações. O Premium soma **anúncios** (D63) e **estatísticas completas** (D62). O selo "Premium" aparece só no painel do dono, nunca para o jogador, para não parecer "quadra melhor".
-- **Banco:** colunas `plan`, `plan_until` e `plan_requested_at` em `venues` (patch 009).
+### D61 · Kolae Premium do dono, ativado pelo admin (05/11/2026; por perfil desde 06/11)
+- **O quê:** o plano é do **dono** (perfil), `free` (Grátis) ou `premium`, e vale para **todas as quadras dele**. O dono pede em **Configurações > Kolae Premium**; o admin ativa no card "Kolae Premium" do painel, com uma data de validade (padrão: 30 dias; pode escolher outra ou "sem prazo"), e desativa quando quiser. Vencida a data, a conta volta a contar como Grátis sozinha. **Não há pagamento dentro do Kolae.**
+- **Por que no perfil (06/11):** a proposta de 05/11 era por quadra; ficou no dono porque é mais simples de usar (um pedido só, mesmo com várias quadras), de administrar e de apresentar ("o dono assina o Kolae Premium para o negócio dele"), e segue a lógica do CNPJ, que também é do perfil. **Anúncios e estatísticas continuam por quadra:** cada quadra tem os próprios números e o próprio anúncio.
+- **Grátis x Premium:** as duas têm mapa, status ao vivo, página pública, QR Code, solicitações e notificações. O Premium soma **anúncios** (D63) e **estatísticas completas** (D62) em todas as quadras do dono. O selo "Premium" aparece só no painel do dono (ao lado do "Olá"), nunca para o jogador, para não parecer "quadra melhor".
+- **Banco:** colunas `plan`, `plan_until` e `plan_requested_at` em `users` (patch 009). Regra em `App\Core\PremiumPlan` (`isPremium` para o dono, `forVenue` para a quadra).
 - **Por quê:** ideia do Rafael, aprovada pelo João. Mostra o modelo de negócio (pergunta clássica da banca) sem integrar pagamento antes do congelamento.
 - **Onde:** `docs/proposta-premium.md`.
 

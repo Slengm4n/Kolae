@@ -2,7 +2,9 @@
 -- Patch 009 — Kolae Premium (D61–D64)
 -- =====================================================================
 -- O que faz (tudo só se ainda não existir):
---   * venues.plan, venues.plan_until, venues.plan_requested_at: plano da quadra (D61)
+--   * users.plan, users.plan_until, users.plan_requested_at: Kolae Premium do dono, vale para todas as
+--     quadras dele (D61). Uma versão anterior deste patch criava essas colunas em venues; se ela já
+--     foi aplicada, as colunas de venues ficam sem uso e não atrapalham.
 --   * venue_events: registro de visualizações e cliques para as estatísticas (D62)
 --   * venue_ads: anúncios das quadras Premium (D63)
 --   * match_requests: pedidos de horário dos jogadores (D64)
@@ -21,21 +23,21 @@ SET @banco := DATABASE();
 SELECT IF(@banco IS NULL, 'Nenhum banco selecionado: clique no banco do Kolae na lista da esquerda e rode de novo na aba SQL dele', CONCAT('Aplicando no banco ', @banco)) AS aviso;
 
 -- ---------------------------------------------------------------------
--- Plano da quadra (D61)
+-- Kolae Premium do dono (D61)
 -- ---------------------------------------------------------------------
-SET @sql := IF(@banco IS NULL OR (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @banco AND TABLE_NAME = 'venues' AND COLUMN_NAME = 'plan') > 0,
-  'SELECT ''venues.plan ok''',
-  'ALTER TABLE `venues` ADD COLUMN `plan` varchar(10) NOT NULL DEFAULT ''free'' COMMENT ''free | premium (D61)'' AFTER `status`');
+SET @sql := IF(@banco IS NULL OR (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @banco AND TABLE_NAME = 'users' AND COLUMN_NAME = 'plan') > 0,
+  'SELECT ''users.plan ok''',
+  'ALTER TABLE `users` ADD COLUMN `plan` varchar(10) NOT NULL DEFAULT ''free'' COMMENT ''free | premium (D61)'' AFTER `status`');
 PREPARE passo FROM @sql; EXECUTE passo; DEALLOCATE PREPARE passo;
 
-SET @sql := IF(@banco IS NULL OR (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @banco AND TABLE_NAME = 'venues' AND COLUMN_NAME = 'plan_until') > 0,
-  'SELECT ''venues.plan_until ok''',
-  'ALTER TABLE `venues` ADD COLUMN `plan_until` date DEFAULT NULL COMMENT ''Validade do Premium; NULL = sem prazo (D61)'' AFTER `plan`');
+SET @sql := IF(@banco IS NULL OR (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @banco AND TABLE_NAME = 'users' AND COLUMN_NAME = 'plan_until') > 0,
+  'SELECT ''users.plan_until ok''',
+  'ALTER TABLE `users` ADD COLUMN `plan_until` date DEFAULT NULL COMMENT ''Validade do Premium; NULL = sem prazo (D61)'' AFTER `plan`');
 PREPARE passo FROM @sql; EXECUTE passo; DEALLOCATE PREPARE passo;
 
-SET @sql := IF(@banco IS NULL OR (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @banco AND TABLE_NAME = 'venues' AND COLUMN_NAME = 'plan_requested_at') > 0,
-  'SELECT ''venues.plan_requested_at ok''',
-  'ALTER TABLE `venues` ADD COLUMN `plan_requested_at` timestamp NULL DEFAULT NULL COMMENT ''Quando o dono pediu o Premium (D61)'' AFTER `plan_until`');
+SET @sql := IF(@banco IS NULL OR (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @banco AND TABLE_NAME = 'users' AND COLUMN_NAME = 'plan_requested_at') > 0,
+  'SELECT ''users.plan_requested_at ok''',
+  'ALTER TABLE `users` ADD COLUMN `plan_requested_at` timestamp NULL DEFAULT NULL COMMENT ''Quando o dono pediu o Premium (D61)'' AFTER `plan_until`');
 PREPARE passo FROM @sql; EXECUTE passo; DEALLOCATE PREPARE passo;
 
 -- ---------------------------------------------------------------------

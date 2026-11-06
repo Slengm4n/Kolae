@@ -87,4 +87,4 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `preferencias` | Menu e tema em todas as páginas do dono; Preferências (tema automático e idioma) |
 | `avisos` | Avisos (toast) e URL limpa; CNPJ exigido em todas as páginas de gerenciar quadra |
 | `confirmacao` | Confirmação de e-mail: aviso, reenviar com espera, link válido, vencido e adulterado, selo, API |
-| `plano` | Aba Premium (D61): pedir, admin ativa com validade, selo no painel, validade vencida, desativar, acesso de outro dono |
+| `plano` | Kolae Premium do dono (D61): pedir em Configurações, admin ativa no card do painel com validade, selo no painel, validade vencida, desativar |

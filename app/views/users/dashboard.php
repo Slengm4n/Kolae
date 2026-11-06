@@ -106,6 +106,9 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             <h1 class="text-3xl md:text-4xl font-bold text-content-primary mb-2">
                 <?php echo $lang['dashboard_user_greetings']; ?> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-brand-700"><?php echo explode(' ', htmlspecialchars($userName))[0]; ?>!</span>
             </h1>
+            <?php if (!empty($data['isPremium'])): // Kolae Premium do dono (D61): o selo leva às Configurações ?>
+                <a href="<?php echo BASE_URL; ?>/dashboard/perfil/plano" data-premium-badge class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-400 text-amber-950 px-3 py-1 text-xs font-bold shadow-sm hover:bg-amber-300 transition-colors"><i class="fas fa-crown text-[10px]" aria-hidden="true"></i><?php echo htmlspecialchars($lang['plan_badge']); ?></a>
+            <?php endif; ?>
             <p class="text-content-secondary"><?php echo $lang['dashboard_user_activity']; ?></p>
         </section>
 
@@ -168,9 +171,6 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
                                         onerror="this.onerror=null; this.src='<?php echo $placeholder; ?>';">
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
                                     <span class="absolute top-3 left-3 status-badge <?php echo $badgeClass; ?> shadow-sm"><?php echo htmlspecialchars($badgeText); ?><?php if ($badgeUntil !== ''): ?> <span class="font-normal opacity-80">· <?php echo htmlspecialchars($badgeUntil); ?></span><?php endif; ?></span>
-                                    <?php if (\App\Core\VenuePlan::isPremium($venue)): // Selo só para o dono (D61) ?>
-                                        <span class="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-amber-400 text-amber-950 px-2.5 py-1 text-xs font-bold shadow-sm" data-premium-badge><i class="fas fa-crown text-[10px]" aria-hidden="true"></i><?php echo htmlspecialchars($lang['plan_badge']); ?></span>
-                                    <?php endif; ?>
                                 </div>
                                 <div class="p-5 pb-3">
                                     <h3 class="font-bold text-lg text-content-primary truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"><?php echo htmlspecialchars($venue['name']); ?></h3>

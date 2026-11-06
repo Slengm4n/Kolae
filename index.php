@@ -12,7 +12,7 @@ use App\Controllers\VenueHoursController;
 use App\Controllers\VenueAgendaController;
 use App\Controllers\VenuePhotosController;
 use App\Controllers\VenueOverviewController;
-use App\Controllers\VenuePlanController;
+use App\Controllers\PremiumController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
 use App\Controllers\AuthApiController;
@@ -163,6 +163,9 @@ $router->group('/dashboard', function ($router) {
     $router->get('/perfil/seguranca', [UserController::class, 'showSecurityPage']);
     $router->post('/perfil/seguranca/atualizar', [UserController::class, 'updatePasswordFromProfile']);
     $router->get('/perfil/preferencias', [UserController::class, 'preferences']);
+    // Kolae Premium do dono (D61)
+    $router->get('/perfil/plano', [PremiumController::class, 'show']);
+    $router->post('/perfil/plano/pedir', [PremiumController::class, 'request']);
     $router->post('/verificar-email/reenviar', [AuthController::class, 'resendVerification']);
 
     // --- ROTAS DE QUADRAS DO UTILIZADOR ---
@@ -179,9 +182,6 @@ $router->group('/dashboard', function ($router) {
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
         $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
-        // Aba Premium (D61)
-        $router->get('/{id}/plano', [VenuePlanController::class, 'show']);
-        $router->post('/{id}/plano/pedir', [VenuePlanController::class, 'request']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
@@ -196,6 +196,9 @@ $router->group('/admin', function ($router) {
     $router->get('/', [AdminController::class, 'dashboard']);
     $router->get('/mapa', [AdminController::class, 'showMap']);
     $router->post('/fotos/otimizar', [AdminController::class, 'optimizePhotos']);
+    // Kolae Premium (D61): o admin ativa e desativa por dono
+    $router->post('/premium/{id}/ativar', [PremiumController::class, 'activate']);
+    $router->post('/premium/{id}/desativar', [PremiumController::class, 'deactivate']);
 
     // Gerenciamento de Usuarios
     $router->group('/usuarios', function ($router) {
@@ -232,10 +235,6 @@ $router->group('/admin', function ($router) {
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
         $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
-        // Aba Premium (D61): o admin ativa e desativa
-        $router->get('/{id}/plano', [VenuePlanController::class, 'show']);
-        $router->post('/{id}/plano/ativar', [VenuePlanController::class, 'activate']);
-        $router->post('/{id}/plano/desativar', [VenuePlanController::class, 'deactivate']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
