@@ -26,6 +26,12 @@
         --content-secondary: #94a3b8;
     }
 
+    /* Reserva sempre o espaço da barra de rolagem: página curta e comprida ficam com a mesma
+       largura, e o cabeçalho não pula ao trocar de aba ou de item em Configurações */
+    html {
+        scrollbar-gutter: stable;
+    }
+
     /* Títulos na fonte da marca (a mesma do app); o texto corrido continua em Poppins */
     h1,
     h2,

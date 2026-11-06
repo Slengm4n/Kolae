@@ -26,10 +26,6 @@ $backUrl = $data['backUrl'] ?? '/dashboard';
     <?php include 'app/views/partials/theme_script.php'; ?>
 
     <style>
-        html {
-            overflow-y: scroll;
-        }
-
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;

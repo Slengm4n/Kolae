@@ -24,6 +24,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ### Alterado
 - **Animações na troca de tela:** ao trocar de aba da quadra, de item em Configurações ou de período nas Estatísticas, o cabeçalho e a faixa de abas ficam parados, o destaque da aba ativa desliza até a nova e o conteúdo entra com um esmaecimento curto (View Transitions do navegador, sem JavaScript). A troca de tema claro/escuro também esmaece. Com "reduzir movimento" ligado, tudo troca na hora. As abas da quadra passam a usar a mesma largura, para a faixa não pular entre elas.
+- **Cabeçalho não pula mais:** o espaço da barra de rolagem fica sempre reservado (`scrollbar-gutter: stable`), então páginas curtas (Fotos, Preferências) e compridas (Dados, Segurança) têm a mesma largura; as páginas do painel do dono passam a usar o mesmo `<body>`.
 
 ### Documentação
 - **Kolae Premium aprovado** (D61–D64): plano da quadra, estatísticas, anúncios, solicitações de horário e notificações, em `docs/proposta-premium.md`; contrato no `docs/api.md` (`ad`, `GET /ads`, `POST /venues/{id}/events`, pedidos de horário e notificações do jogador). O código sai em PRs separadas, na v1.7.0.
