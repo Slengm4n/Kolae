@@ -10,12 +10,29 @@ function savedTheme() {
     }
 }
 
+// Troca o tema com um esmaecimento da tela inteira (View Transitions); sem suporte ou com
+// "reduzir movimento", troca na hora
+function withFade(change) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || reduce) {
+        change();
+        return;
+    }
+    const html = document.documentElement;
+    html.classList.add('kolae-theme-switching');
+    const t = document.startViewTransition(change);
+    t.finished.finally(() => html.classList.remove('kolae-theme-switching'));
+}
+
 // Aplica 'light', 'dark' ou 'system'; save = false só redesenha (ao carregar a página)
 function applyTheme(choice, save = true) {
     const html = document.documentElement;
-    html.classList.add('transition-colors', 'duration-500');
     const dark = choice === 'dark' || (choice === 'system' && systemDark.matches);
-    html.classList.toggle('dark', dark);
+    if (save && html.classList.contains('dark') !== dark) {
+        withFade(() => html.classList.toggle('dark', dark));
+    } else {
+        html.classList.toggle('dark', dark);
+    }
     if (!save) return;
     try {
         if (choice === 'system') localStorage.removeItem('theme');

@@ -219,6 +219,17 @@ quadra (`venue` no mesmo formato da lista). Ordem aleatória a cada dia.
 
 Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 
+## Andamento (06/11)
+
+| Parte | Situação | Site | App (Rafael) |
+| :---- | :---- | :---- | :---- |
+| Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
+| Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
+| Anúncios (D63) | ⏳ a fazer (até 13/11) | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
+| Solicitações e notificações (D64) | ⏳ a fazer (até 17/11) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
+
+Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
+As PRs são empilhadas: entram na ordem da tabela, e cada uma só depois da anterior.
 ## Cronograma até o congelamento
 
 | Data | Backend e site (João) | App (Rafael) |

@@ -25,7 +25,7 @@ $tabs = [
 ];
 $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['city'] ?? null]));
 ?>
-<div class="mb-6">
+<div class="mb-6" id="venue-head">
     <a href="<?php echo BASE_URL . $backUrl; ?>" class="inline-flex items-center gap-2 text-sm font-semibold text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
         <span><i class="fas fa-arrow-left"></i></span> <?php echo $lang['venue_back_panel']; ?>
     </a>

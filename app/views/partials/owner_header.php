@@ -8,7 +8,7 @@
  */
 $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
 ?>
-<header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-40 py-3">
+<header data-panel-header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-40 py-3">
     <div class="container mx-auto px-4 flex justify-between items-center gap-4">
         <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-2 group" aria-label="Kolae">
             <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Kolae" class="h-8 w-auto invert dark:invert-0 opacity-90 group-hover:opacity-100 transition-opacity">

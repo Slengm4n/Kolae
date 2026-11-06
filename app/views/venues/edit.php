@@ -63,7 +63,7 @@ $backUrl = $data['backUrl'] ?? '/dashboard'; // Painel de onde a pessoa veio (ad
     </style>
 </head>
 
-<body class="bg-surface-base text-content-primary transition-colors duration-500">
+<body class="bg-surface-base text-content-primary font-sans antialiased">
 
     <?php include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
 

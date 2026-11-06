@@ -53,6 +53,7 @@ const check = (label, got, want) => {
   await p.screenshot({ path: lib.OUT + '/avisos-toast.png' });
 
   // Regra do CNPJ: sem CNPJ, nenhuma página de gerenciar quadra abre
+  const cnpjAntes = lib.sql(`SELECT cnpj FROM users WHERE email = '${DONO}'`);
   lib.sql(`UPDATE users SET cnpj = NULL WHERE email = '${DONO}'`);
   const pages = ['/dashboard/quadras/criar', `/dashboard/quadras/editar/${A}`, `/dashboard/quadras/${A}/horario`,
     `/dashboard/quadras/${A}/agenda`, `/dashboard/quadras/${A}/fotos`, `/dashboard/quadras/${A}/visao-geral`];
@@ -70,6 +71,9 @@ const check = (label, got, want) => {
     return new URL(r.url).search;
   }, BASE, A);
   check('sem CNPJ: salvar a edição é recusado', [posted, lib.sql(`SELECT name FROM venues WHERE id=${A}`) !== 'Mudou sem CNPJ'], ['?error=cnpj_required', true]);
+
+  // Devolve o CNPJ, para os testes seguintes abrirem as páginas da quadra
+  lib.sql(`UPDATE users SET cnpj = '${cnpjAntes}' WHERE email = '${DONO}'`);
 
   check('nenhuma janela do navegador', dialogs, 0);
   check('sem erros de JS', errs, []);

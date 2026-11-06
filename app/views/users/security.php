@@ -24,7 +24,6 @@ $userId = $_SESSION['user_id'] ?? 0;
     <?php include 'app/views/partials/theme_script.php'; ?>
 
     <style>
-        html { overflow-y: scroll; }
         body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         
         .animate-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
@@ -41,7 +40,7 @@ $userId = $_SESSION['user_id'] ?? 0;
     </style>
 </head>
 
-<body class="bg-surface-base text-content-primary transition-colors duration-500">
+<body class="bg-surface-base text-content-primary font-sans antialiased">
 
     <?php $backUrl = '/dashboard';
     $toastContext = 'security';

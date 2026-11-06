@@ -34,6 +34,7 @@ const check = (label, got, want) => {
     await new Promise(r => setTimeout(r, 250));
     const open = await p.$eval('#profile-dropdown', e => !e.classList.contains('invisible'));
     await p.click('#theme-toggle');
+    await p.evaluate(() => document.activeViewTransition && document.activeViewTransition.finished); // espera o esmaecimento do tema
     const dark = await p.evaluate(() => document.documentElement.classList.contains('dark'));
     await p.evaluate(() => localStorage.setItem('theme', 'light'));
     const header = await p.$eval('header', h => h.className.includes('py-3'));
@@ -45,9 +46,11 @@ const check = (label, got, want) => {
   check('preferências: título e item ativo no menu', [await p.title(), await p.$eval('nav [aria-current=page]', a => a.textContent.trim())], ['Preferências · Kolae', 'Preferências']);
   check('preferências: "Claro" marcado (salvo)', await p.$eval('input[name=theme-choice]:checked', e => e.value), 'light');
   await p.click('input[name=theme-choice][value=dark] + span');
+  await p.evaluate(() => document.activeViewTransition && document.activeViewTransition.finished);
   check('escolher Escuro: aplica e guarda', await p.evaluate(() => [document.documentElement.classList.contains('dark'), localStorage.getItem('theme')]), [true, 'dark']);
   await p.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'light' }]);
   await p.click('input[name=theme-choice][value=system] + span');
+  await p.evaluate(() => document.activeViewTransition && document.activeViewTransition.finished);
   check('escolher Automático: segue o sistema (claro) e não guarda', await p.evaluate(() => [document.documentElement.classList.contains('dark'), localStorage.getItem('theme')]), [false, null]);
   await p.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
   await new Promise(r => setTimeout(r, 200));

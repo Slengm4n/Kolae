@@ -26,6 +26,12 @@
         --content-secondary: #94a3b8;
     }
 
+    /* Reserva sempre o espaço da barra de rolagem: página curta e comprida ficam com a mesma
+       largura, e o cabeçalho não pula ao trocar de aba ou de item em Configurações */
+    html {
+        scrollbar-gutter: stable;
+    }
+
     /* Títulos na fonte da marca (a mesma do app); o texto corrido continua em Poppins */
     h1,
     h2,
@@ -442,4 +448,51 @@
 @layer utilities {
     .no-scrollbar { scrollbar-width: none; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- Transições de troca de página e de aba (View Transitions) ----------
+   Ao trocar de página, a antiga esmaece e a nova entra com um leve deslize; cabeçalhos e a
+   faixa de abas ficam parados; a aba ou o item ativo desliza até o clicado.
+   Navegador sem suporte: troca instantânea, como antes. "Reduzir movimento": sem animação. */
+@view-transition {
+    navigation: auto;
+}
+::view-transition-old(root) {
+    animation: kolae-vt-out 160ms ease-in both;
+}
+::view-transition-new(root) {
+    animation: kolae-vt-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+[data-panel-header] { view-transition-name: panel-header; }
+[data-site-header] { view-transition-name: site-header; }
+/* Todas as abas da quadra usam a mesma largura (max-w-4xl), então a faixa fica parada e só a aba ativa desliza */
+#venue-tabs { view-transition-name: venue-tabs; }
+/* Voltar, nome da quadra e status: iguais em todas as abas, ficam parados (as abas vêm depois, com nome próprio) */
+#venue-head { view-transition-name: venue-head; }
+#venue-tabs [aria-current='page'] { view-transition-name: venue-tab-active; }
+#config-nav [aria-current='page'] { view-transition-name: config-active; }
+#stats-periods [aria-current='page'] { view-transition-name: stats-period; }
+/* O item ativo desliza de um lugar para o outro (o grupo anima posição e tamanho) */
+::view-transition-group(venue-tab-active),
+::view-transition-group(config-active),
+::view-transition-group(stats-period) {
+    animation-duration: 320ms;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* Troca de tema: a tela inteira esmaece de um tema para o outro */
+html.kolae-theme-switching::view-transition-old(root),
+html.kolae-theme-switching::view-transition-new(root) {
+    animation-duration: 350ms;
+    animation-name: kolae-vt-fade;
+}
+@keyframes kolae-vt-out { to { opacity: 0; } }
+@keyframes kolae-vt-in { from { opacity: 0; transform: translateY(10px); } }
+@keyframes kolae-vt-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }

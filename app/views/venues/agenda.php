@@ -44,10 +44,10 @@ $canSchedule = $hasHours && $opens && !$isPast;
 <head>
     <?php include BASE_PATH . '/app/views/partials/head.php'; ?>
 </head>
-<body class="bg-surface-base text-content-primary font-poppins">
+<body class="bg-surface-base text-content-primary font-sans antialiased">
     <?php include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
 
-    <main class="container mx-auto px-4 py-6 md:py-10 max-w-3xl">
+    <main class="container mx-auto px-4 py-6 md:py-10 max-w-4xl">
         <?php include BASE_PATH . '/app/views/partials/venue_top.php'; ?>
 
         <?php

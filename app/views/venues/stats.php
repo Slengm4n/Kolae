@@ -38,10 +38,10 @@ $hoursRange = range(6, 23);
 <head>
     <?php include BASE_PATH . '/app/views/partials/head.php'; ?>
 </head>
-<body class="bg-surface-base text-content-primary font-poppins">
+<body class="bg-surface-base text-content-primary font-sans antialiased">
     <?php include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
 
-    <main class="container mx-auto px-4 py-6 md:py-10 max-w-5xl pb-28 md:pb-10">
+    <main class="container mx-auto px-4 py-6 md:py-10 max-w-4xl pb-28 md:pb-10">
         <?php include BASE_PATH . '/app/views/partials/venue_top.php'; ?>
 
         <!-- Período -->
@@ -50,7 +50,7 @@ $hoursRange = range(6, 23);
                 <h2 class="text-xl font-bold"><?php echo $e($lang['stats_title']); ?></h2>
                 <p class="text-sm text-content-secondary mt-0.5" id="stats-range"><?php echo $e(strtr($lang['stats_range'], ['{from}' => $dateBr($stats['from']), '{to}' => $dateBr($stats['to'])])); ?></p>
             </div>
-            <nav class="inline-flex p-1 rounded-xl bg-surface-secondary border border-content-secondary/10 self-start" aria-label="<?php echo $e($lang['stats_period']); ?>">
+            <nav id="stats-periods" class="inline-flex p-1 rounded-xl bg-surface-secondary border border-content-secondary/10 self-start" aria-label="<?php echo $e($lang['stats_period']); ?>">
                 <?php foreach (\App\Core\VenueStats::PERIODS as $p):
                     $on = $p === $days;
                     $locked = !$premium && $p !== 7; ?>
