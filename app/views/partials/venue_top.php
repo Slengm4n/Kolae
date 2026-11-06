@@ -43,7 +43,7 @@ $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['c
         </div>
     </div>
 
-    <nav id="venue-tabs" class="mt-5 flex gap-1 p-1 bg-surface-secondary border border-content-secondary/10 rounded-xl overflow-x-auto no-scrollbar" aria-label="<?php echo htmlspecialchars($lang['venue_tabs_label']); ?>">
+    <nav id="venue-tabs" class="relative mt-5 flex gap-1 p-1 bg-surface-secondary border border-content-secondary/10 rounded-xl overflow-x-auto no-scrollbar" aria-label="<?php echo htmlspecialchars($lang['venue_tabs_label']); ?>">
         <?php foreach ($tabs as $key => $tab):
             $active = $key === $activeTab; ?>
             <?php if ($tab['url'] === null): ?>
