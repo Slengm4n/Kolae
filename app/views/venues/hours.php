@@ -27,7 +27,7 @@ $dayLabel = function (array $days) use ($lang): string {
 <body class="bg-surface-base text-content-primary font-poppins">
     <?php include BASE_PATH . '/app/views/partials/owner_header.php'; ?>
 
-    <main class="container mx-auto px-4 py-6 md:py-10 max-w-3xl pb-28 md:pb-10">
+    <main class="container mx-auto px-4 py-6 md:py-10 max-w-4xl pb-28 md:pb-10">
         <?php include BASE_PATH . '/app/views/partials/venue_top.php'; ?>
 
         <?php if ($flash === 'created'): ?>

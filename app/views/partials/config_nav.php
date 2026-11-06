@@ -13,7 +13,7 @@ if (($_SESSION['user_role'] ?? '') === 'owner') {
     $configItems['premium'] = ['/dashboard/perfil/plano', 'fa-crown', $lang['plan_tab']];
 }
 ?>
-<nav class="bg-surface-elevated p-2 rounded-2xl border border-content-secondary/10 shadow-lg" aria-label="<?php echo htmlspecialchars($lang['global_menu_config']); ?>">
+<nav id="config-nav" class="bg-surface-elevated p-2 rounded-2xl border border-content-secondary/10 shadow-lg" aria-label="<?php echo htmlspecialchars($lang['global_menu_config']); ?>">
     <ul class="space-y-1">
         <?php foreach ($configItems as $key => [$url, $icon, $label]): $on = $key === $configActive; ?>
             <li>
