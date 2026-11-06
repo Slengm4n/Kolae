@@ -12,9 +12,10 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
-**Banco:** patch 008 (`database/patches/008_redes_sociais_da_quadra.sql`), aplicado na produção em 05/11 antes do merge.
+**Banco:** patch 008 (`database/patches/008_redes_sociais_da_quadra.sql`), aplicado na produção em 05/11 antes do merge. Patch 009 (`database/patches/009_kolae_premium.sql`): todas as tabelas do Kolae Premium (D61–D64) de uma vez; aplicar **antes** do merge do plano.
 
 ### Adicionado
+- **Plano da quadra (Kolae Premium, D61):** aba **Premium** em cada quadra, com o plano atual, a comparação Grátis x Premium e o botão "Quero o Premium". O admin vê os pedidos num card do painel e ativa (validade padrão de 30 dias, outra data ou sem prazo) ou volta a quadra para o Grátis na mesma aba. Vencida a validade, a quadra volta ao Grátis sozinha. Selo "Premium" nos cards do painel do dono. Testes: `tests/venue_plan_test.php` (21 casos) e `tests/e2e/testes/plano.js` (24 passos).
 - **Redes sociais da quadra** (D60): o dono informa Instagram, TikTok, Facebook e site na aba Dados, colando o `@`, o usuário ou o link do perfil; o site guarda só o usuário no Instagram e no TikTok e completa o `https://` no Facebook e no site. Prévia ao vivo de como aparece no app, a mesma validação no navegador e no servidor e textos nos 7 idiomas. Entra na "Quadra completa" da Visão geral como item opcional, sem contar no total.
 - **API:** `GET /venues/{id}` ganha o objeto `socials` (`instagram`, `tiktok`, `facebook_url`, `website_url`), sempre presente, com `null` no que não foi informado. A lista `GET /venues` não muda.
 - **Visão geral e página pública da quadra:** seção "Redes sociais" abaixo do endereço, com os links. Na página pública, sem redes, a seção some (como no app).

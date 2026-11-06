@@ -138,6 +138,10 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 - phpMyAdmin → **clicar no banco `joao5502_kolae` na lista da esquerda** → aba **SQL** desse banco → colar e executar `database/patches/008_redes_sociais_da_quadra.sql`. Cria as quatro colunas das redes sociais em `venues` (D60), todas vazias.
 - **Precisa ser antes do merge:** o código novo lê e grava essas colunas e quebra sem elas. O código atual ignora as colunas, então aplicar antes não afeta nada. Rodar de novo só avisa "coluna ... já existe".
 
+### m) Patch 009 ANTES do merge do plano (Kolae Premium)
+- phpMyAdmin → **clicar no banco `joao5502_kolae`** → aba **SQL** → colar e executar `database/patches/009_kolae_premium.sql`. Cria as colunas do plano em `venues` e as tabelas `venue_events`, `venue_ads`, `match_requests` e `notifications` (D61–D64). Um patch só para as quatro partes do Premium.
+- O fim mostra "Patch 009 concluído". Pode rodar de novo sem problema.
+
 ## Checklist de cada release
 1. Patches novos de `database/patches/` aplicados no phpMyAdmin **antes** do merge (com o banco selecionado), seguindo o que cada patch diz.
 2. Merge do PR na `main`: o GitHub Actions roda os testes e só então publica por FTP.

@@ -12,6 +12,7 @@ use App\Controllers\VenueHoursController;
 use App\Controllers\VenueAgendaController;
 use App\Controllers\VenuePhotosController;
 use App\Controllers\VenueOverviewController;
+use App\Controllers\VenuePlanController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
 use App\Controllers\AuthApiController;
@@ -178,6 +179,9 @@ $router->group('/dashboard', function ($router) {
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
         $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
+        // Aba Premium (D61)
+        $router->get('/{id}/plano', [VenuePlanController::class, 'show']);
+        $router->post('/{id}/plano/pedir', [VenuePlanController::class, 'request']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);
@@ -228,6 +232,10 @@ $router->group('/admin', function ($router) {
         $router->post('/{id}/agenda', [VenueAgendaController::class, 'schedule']);
         $router->post('/{id}/agenda/cancelar/{matchId}', [VenueAgendaController::class, 'cancel']);
         $router->get('/{id}/visao-geral', [VenueOverviewController::class, 'show']);
+        // Aba Premium (D61): o admin ativa e desativa
+        $router->get('/{id}/plano', [VenuePlanController::class, 'show']);
+        $router->post('/{id}/plano/ativar', [VenuePlanController::class, 'activate']);
+        $router->post('/{id}/plano/desativar', [VenuePlanController::class, 'deactivate']);
         $router->get('/{id}/fotos', [VenuePhotosController::class, 'show']);
         $router->post('/{id}/fotos', [VenuePhotosController::class, 'upload']);
         $router->post('/{id}/fotos/{imageId}/capa', [VenuePhotosController::class, 'cover']);

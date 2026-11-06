@@ -129,6 +129,36 @@ $recentUsers = $data['recentUsers'] ?? [];
             </div>
 
             <!-- Fotos das quadras (D48): otimizar as que já estavam no servidor -->
+            <?php // Kolae Premium (D61): pedidos em aberto e quadras Premium
+            $plans = \App\Core\VenuePlan::adminList(); ?>
+            <section id="premium" class="bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 shadow-sm mb-10 scroll-mt-6">
+                <h2 class="text-xl font-semibold text-content-primary flex items-center gap-2"><span class="text-amber-500"><i class="fas fa-crown"></i></span>Kolae Premium</h2>
+                <?php if (!$plans): ?>
+                    <p class="text-sm text-content-secondary mt-2">Nenhum pedido de Premium e nenhuma quadra Premium por enquanto.</p>
+                <?php else: ?>
+                    <ul class="mt-4 divide-y divide-content-secondary/10">
+                        <?php foreach ($plans as $p):
+                            $state = \App\Core\VenuePlan::state($p); ?>
+                            <li class="py-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4" data-plan-row="<?php echo (int)$p['id']; ?>">
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($p['name']); ?></p>
+                                    <p class="text-xs text-content-secondary">Dono: <?php echo htmlspecialchars($p['owner_name']); ?></p>
+                                </div>
+                                <span class="text-xs font-semibold rounded-full px-2.5 py-1 <?php echo ['requested' => 'bg-amber-500/15 text-amber-700 dark:text-amber-300', 'premium' => 'bg-brand-500/10 text-brand-600 dark:text-brand-400', 'expired' => 'bg-content-secondary/10 text-content-secondary', 'free' => 'bg-content-secondary/10 text-content-secondary'][$state]; ?>">
+                                    <?php echo [
+                                        'requested' => 'Pediu em ' . date('d/m', strtotime($p['plan_requested_at'])),
+                                        'premium' => $p['plan_until'] ? 'Premium até ' . date('d/m/Y', strtotime($p['plan_until'])) : 'Premium sem prazo',
+                                        'expired' => 'Venceu em ' . date('d/m/Y', strtotime($p['plan_until'])),
+                                        'free' => 'Grátis',
+                                    ][$state]; ?>
+                                </span>
+                                <a href="<?php echo BASE_URL; ?>/admin/quadras/<?php echo (int)$p['id']; ?>/plano" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline whitespace-nowrap"><?php echo $state === 'requested' ? 'Analisar pedido' : 'Gerenciar'; ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+
             <?php
             $photoReport = $_SESSION['photo_report'] ?? null;
             unset($_SESSION['photo_report']);

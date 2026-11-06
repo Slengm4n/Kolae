@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (20 roteiros, uns 12 minutos)
+npm run test:e2e                     # todos (21 roteiros, uns 12 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -87,3 +87,4 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `preferencias` | Menu e tema em todas as páginas do dono; Preferências (tema automático e idioma) |
 | `avisos` | Avisos (toast) e URL limpa; CNPJ exigido em todas as páginas de gerenciar quadra |
 | `confirmacao` | Confirmação de e-mail: aviso, reenviar com espera, link válido, vencido e adulterado, selo, API |
+| `plano` | Aba Premium (D61): pedir, admin ativa com validade, selo no painel, validade vencida, desativar, acesso de outro dono |

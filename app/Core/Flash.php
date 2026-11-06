@@ -32,6 +32,14 @@ class Flash
                 'generic' => 'unknown_error',
             ],
         ],
+        'plan' => [
+            'status' => [
+                'plan_requested' => 'plan_flash_requested',
+                'plan_activated' => 'plan_flash_activated',
+                'plan_deactivated' => 'plan_flash_deactivated',
+            ],
+            'error' => ['plan_invalid_date' => 'plan_flash_invalid_date'],
+        ],
         'profile' => [
             'status' => ['updated' => 'profile_update_success'],
             'error' => [
