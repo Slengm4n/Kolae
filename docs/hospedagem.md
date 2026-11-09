@@ -144,7 +144,8 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 
 ### n) Patch 010 ANTES do merge do chat (parte B, `feat/chat-banco`)
 - phpMyAdmin → **clicar no banco `joao5502_kolae`** → aba **SQL** → colar e executar `database/patches/010_chat.sql`. Cria as tabelas `conversations` e `messages` (D66), vazias. Um patch só para todas as partes do chat.
-- O fim mostra "Patch 010 concluído". Pode rodar de novo sem problema. Sem banco escolhido, mostra o aviso e para sem mudar nada.
+- **Confira o topo da página antes de colar:** precisa aparecer "Server: localhost:3306 » **Database: joao5502_kolae**". Só "Server: localhost:3306" (ou outro banco, como o `information_schema`) é o lugar errado.
+- O fim mostra "Patch 010 concluído". Pode rodar de novo sem problema. No banco errado ou sem banco, mostra "Patch 010 NÃO aplicado" e não cria nada (o patch confere se o banco tem as tabelas `venues` e `users`).
 
 ## Checklist de cada release
 1. Patches novos de `database/patches/` aplicados no phpMyAdmin **antes** do merge (com o banco selecionado), seguindo o que cada patch diz.
