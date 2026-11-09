@@ -100,7 +100,7 @@ token (D10). O vínculo pelo e-mail só acontece porque o Google garante o e-mai
 
 ## Site (João)
 
-1. Patch 009, `App\Core\GoogleIdToken` (confere o token) e `AuthApiController::google()`, com
+1. Patch com o próximo número livre (o 009 é do Premium e o 010 do chat), `App\Core\GoogleIdToken` (confere o token) e `AuthApiController::google()`, com
    teste em `tests/` (token falso, `aud` errado, vencido, conta nova sem data, vínculo por e-mail).
 2. Contrato no `api.md` e a D65 em `decisoes.md`.
 3. **Opcional (+1 dia):** botão "Entrar com Google" no login do site (Google Identity Services),

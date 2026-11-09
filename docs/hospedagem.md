@@ -142,6 +142,10 @@ O site aceita fotos de até 10 MB (avatar e quadras), mas o PHP da hospedagem po
 - phpMyAdmin → **clicar no banco `joao5502_kolae`** → aba **SQL** → colar e executar `database/patches/009_kolae_premium.sql`. Cria as colunas do plano em `users` (o Kolae Premium é do dono) e as tabelas `venue_events`, `venue_ads`, `match_requests` e `notifications` (D61–D64). Um patch só para as quatro partes do Premium.
 - O fim mostra "Patch 009 concluído". Pode rodar de novo sem problema.
 
+### n) Patch 010 ANTES do merge do chat (parte B, `feat/chat-banco`)
+- phpMyAdmin → **clicar no banco `joao5502_kolae`** → aba **SQL** → colar e executar `database/patches/010_chat.sql`. Cria as tabelas `conversations` e `messages` (D66), vazias. Um patch só para todas as partes do chat.
+- O fim mostra "Patch 010 concluído". Pode rodar de novo sem problema. Sem banco escolhido, mostra o aviso e para sem mudar nada.
+
 ## Checklist de cada release
 1. Patches novos de `database/patches/` aplicados no phpMyAdmin **antes** do merge (com o banco selecionado), seguindo o que cada patch diz.
 2. Merge do PR na `main`: o GitHub Actions roda os testes e só então publica por FTP.
