@@ -105,6 +105,7 @@ $select = 'rounded-full border border-white/20 bg-neutral-900 text-white/90 px-3
     </section>
 
     <main class="container mx-auto px-4 sm:px-6 max-w-7xl py-6 md:py-8">
+        <?php $adHighlightsClass = 'mb-8'; include BASE_PATH . '/app/views/partials/ad_highlights.php'; ?>
         <div class="flex items-center justify-between gap-4">
             <p class="font-semibold" aria-live="polite"><?php echo $e(strtr($lang[$count === 1 ? 'list_count_one' : 'list_count_many'], ['{n}' => $count])); ?></p>
             <?php if ($mapPoints): ?>

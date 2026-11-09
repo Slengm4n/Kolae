@@ -822,4 +822,5 @@ return[
     'ad_flash_ended' => 'Ad ended.',
     'ad_flash_premium' => 'Ads are a Premium feature. Activate the plan to publish.',
     'ad_flash_failed' => 'That did not work. Please try again.',
+    'ad_highlights' => 'Featured',
 ];

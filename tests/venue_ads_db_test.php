@@ -64,7 +64,8 @@ try {
     check('outra quadra não tem anúncio em aberto', VenueAd::findOpenForVenue($beach, $hoje) === null);
 
     echo "aparece (visibleByVenue)\n";
-    check('aparece na lista do dia', $ids(VenueAd::visibleByVenue($hoje)) === [$arena]);
+    // Sem filtro vêm todas as quadras (o banco local pode ter outros anúncios): olha só as do teste
+    check('aparece na lista do dia', array_values(array_intersect($ids(VenueAd::visibleByVenue($hoje)), [$arena, $beach, $excluida])) === [$arena]);
     check('filtrando pelas quadras da página', $ids(VenueAd::visibleByVenue($hoje, [$arena, $beach])) === [$arena]);
     check('filtro sem a quadra dele', VenueAd::visibleByVenue($hoje, [$beach]) === []);
     check('filtro vazio', VenueAd::visibleByVenue($hoje, []) === []);
@@ -122,6 +123,15 @@ try {
         $eventos[] = (int)$pdo->lastInsertId();
     }
     check('conta vezes que apareceu e cliques do período', VenueAd::counts($ad) === ['views' => 2, 'clicks' => 1], var_export(VenueAd::counts($ad), true));
+
+    echo "dados do card (venuesForCards)\n";
+    $cards = VenueAd::venuesForCards([$arena, $beach, $arena]);
+    check('uma linha por quadra', array_map('intval', array_keys($cards)) == [$arena, $beach] || array_map('intval', array_keys($cards)) == [$beach, $arena], var_export(array_keys($cards), true));
+    $c = $cards[$arena] ?? [];
+    check('nome, dono, bairro e cidade', [$c['name'] ?? null, (int)($c['user_id'] ?? 0), $c['neighborhood'] ?? null, $c['city'] ?? null]
+        === ['Arena Teste S3', $dono, 'Centro Teste S3', 'Ferraz Teste S3'], var_export($c, true));
+    check('traz a coluna da capa (nula sem foto)', array_key_exists('cover', $c));
+    check('lista vazia', VenueAd::venuesForCards([]) === []);
 } finally {
     // Devolve tudo como estava
     $pdo->exec("DELETE FROM venue_ads WHERE venue_id IN ($arena, $beach, $excluida)");

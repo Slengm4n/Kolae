@@ -4,6 +4,7 @@
 const lib = require('../lib');
 const puppeteer = require('puppeteer-core');
 const { execFileSync } = require('child_process');
+const { devNull } = require('os'); // o curl do Windows não aceita -o /dev/null
 const BASE = lib.BASE;
 const [ARENA] = process.argv.slice(2);
 const sql = lib.sql;
@@ -18,7 +19,7 @@ const check = (label, got, want) => {
 };
 const count = (type, source) => sql(`SELECT COUNT(*) FROM venue_events WHERE venue_id=${ARENA} AND type='${type}'${source ? ` AND source='${source}'` : ''}`);
 const curl = (args) => execFileSync('curl', ['-s', ...args]).toString();
-const postEvent = (body, ua = UA, extra = []) => curl(['-o', '/dev/null', '-w', '%{http_code}', '-A', ua, '-X', 'POST', '-H', 'Content-Type: application/json', ...extra, '-d', JSON.stringify(body), `${BASE}/api/v1/venues/${ARENA}/events`]);
+const postEvent = (body, ua = UA, extra = []) => curl(['-o', devNull, '-w', '%{http_code}', '-A', ua, '-X', 'POST', '-H', 'Content-Type: application/json', ...extra, '-d', JSON.stringify(body), `${BASE}/api/v1/venues/${ARENA}/events`]);
 
 async function browserPage(b, viewport = { width: 1366, height: 900 }) {
   const ctx = await b.createBrowserContext();
@@ -54,7 +55,7 @@ async function login(p, email) {
   await outro.setUserAgent(UA + ' Outro');
   await outro.goto(`${BASE}/quadra/${ARENA}?ref=qr`, { waitUntil: 'networkidle2' });
   check('visita pelo QR Code (?ref=qr) conta como "qr"', count('view', 'qr'), '1');
-  curl(['-o', '/dev/null', '-A', 'Googlebot/2.1 (+http://www.google.com/bot.html)', `${BASE}/quadra/${ARENA}`]);
+  curl(['-o', devNull, '-A', 'Googlebot/2.1 (+http://www.google.com/bot.html)', `${BASE}/quadra/${ARENA}`]);
   check('robô não conta', count('view'), '2');
   check('o QR do cartaz aponta para ?ref=qr', (await (async () => {
     const dono = await browserPage(b);
@@ -72,8 +73,8 @@ async function login(p, email) {
   check('POST /events: gravado como app', count('whatsapp', 'app'), '1');
   check('POST /events: tipo inválido responde 422', postEvent({ type: 'xyz' }), '422');
   check('POST /events: "view" não é aceito (vem do GET)', postEvent({ type: 'view' }), '422');
-  check('POST /events: quadra inexistente responde 404', curl(['-o', '/dev/null', '-w', '%{http_code}', '-X', 'POST', '-H', 'Content-Type: application/json', '-d', '{"type":"share"}', `${BASE}/api/v1/venues/99999999/events`]), '404');
-  curl(['-o', '/dev/null', '-A', 'okhttp/4.12 Kolae', `${BASE}/api/v1/venues/${ARENA}`]);
+  check('POST /events: quadra inexistente responde 404', curl(['-o', devNull, '-w', '%{http_code}', '-X', 'POST', '-H', 'Content-Type: application/json', '-d', '{"type":"share"}', `${BASE}/api/v1/venues/99999999/events`]), '404');
+  curl(['-o', devNull, '-A', 'okhttp/4.12 Kolae', `${BASE}/api/v1/venues/${ARENA}`]);
   check('GET /venues/{id} conta como visualização do app', count('view', 'app'), '1');
   const token = JSON.parse(curl(['-X', 'POST', '-H', 'Content-Type: application/json', '-d', JSON.stringify({ email: 'dono-s3@kolae.test', password: 'teste123' }), `${BASE}/api/v1/auth/login`])).data.token;
   postEvent({ type: 'instagram', source: 'app' }, UA, ['-H', `Authorization: Bearer ${token}`]);

@@ -814,4 +814,5 @@ return[
     'ad_flash_ended' => '广告已结束。',
     'ad_flash_premium' => '广告是 Premium 功能。开通套餐后即可发布。',
     'ad_flash_failed' => '操作失败，请重试。',
+    'ad_highlights' => '精选',
 ];

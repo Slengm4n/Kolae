@@ -798,4 +798,5 @@ return[
     'ad_flash_ended' => 'Annuncio terminato.',
     'ad_flash_premium' => 'Gli annunci sono di Premium. Attiva il piano per pubblicare.',
     'ad_flash_failed' => 'Non è stato possibile. Riprova.',
+    'ad_highlights' => 'In evidenza',
 ];

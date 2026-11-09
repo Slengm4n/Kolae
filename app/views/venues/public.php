@@ -80,6 +80,17 @@ $editLinks = null;
     <main class="container mx-auto px-4 sm:px-6 max-w-5xl py-8 md:py-10">
         <?php include BASE_PATH . '/app/views/partials/venue_gallery.php'; ?>
 
+        <?php if (!empty($adCard)): // Faixa do anúncio da quadra (D63) ?>
+            <aside id="venue-ad" data-ad-id="<?php echo (int)$adCard['id']; ?>" class="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 rounded-2xl border border-amber-400/50 bg-amber-50 dark:bg-amber-400/10 p-4 sm:p-5">
+                <span class="self-start sm:self-center shrink-0 inline-flex items-center gap-1.5 rounded-md bg-amber-400 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-neutral-900"><i class="fas fa-bullhorn" aria-hidden="true"></i><?php echo $e($lang['ad_sponsored']); ?></span>
+                <div class="min-w-0 flex-1">
+                    <p class="font-bold leading-snug break-words"><?php echo $e($adCard['title']); ?></p>
+                    <p class="mt-0.5 text-sm text-content-secondary break-words"><?php echo $e($adCard['body']); ?></p>
+                </div>
+                <p class="shrink-0 text-xs text-content-secondary flex items-center gap-1.5"><span><i class="far fa-clock" aria-hidden="true"></i></span><?php echo $e(strtr($lang['ad_until'], ['{date}' => date('d/m', strtotime($adCard['ends_on']))])); ?></p>
+            </aside>
+        <?php endif; ?>
+
         <div class="mt-10 lg:grid lg:grid-cols-[1fr_21rem] lg:gap-10">
             <?php include BASE_PATH . '/app/views/partials/venue_details.php'; ?>
 

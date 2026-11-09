@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\AdDisplay;
 use App\Core\ViewHelper;
 use App\Core\AuthHelper;
 use App\Models\Venue;
@@ -19,7 +20,8 @@ class HomeController
 
         //Carrega a view (o header da view vai se adaptar sozinho se a sessão existir)
         ViewHelper::render('home/index', [
-            'featuredVenues' => $this->featuredVenues()
+            'featuredVenues' => $this->featuredVenues(),
+            'adCards' => AdDisplay::cards(), // Patrocinado no topo (D63)
         ]);
     }
 

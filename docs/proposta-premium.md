@@ -225,7 +225,7 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | :---- | :---- | :---- | :---- |
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
-| Anúncios (D63) | 🔧 em andamento (até 13/11): partes A e B de 5 prontas | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
+| Anúncios (D63) | 🔧 em andamento (até 13/11): partes A, B e C de 5 prontas | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
 | Solicitações e notificações (D64) | ⏳ a fazer (até 17/11) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
@@ -267,6 +267,27 @@ por vez).
     o `?status=`. Uma rodada interrompida deixou uma pasta vazia em `uploads/ads/`, apagada. O
     teste `estatisticas` não roda neste PC: o `curl` do Windows não aceita `-o /dev/null` (erro 23);
     é do ambiente, não do código.
+- **09/11, parte C (`feat/premium-anuncios-site`):** "Patrocinado" para o jogador no site.
+  Bloco **Destaques** logo abaixo da abertura da home e no topo da `/quadras` (até 3, sorteados por
+  dia, os mesmos nas duas páginas e o dia todo; na `/quadras` aparece com ou sem filtro), com o card
+  da parte B (`partials/ad_highlights.php`), e faixa do anúncio na página pública da quadra (sem
+  foto, porque a galeria já está ali). `AppCoreAdDisplay` monta os cards e conta: cada card
+  mostrado é uma vez que apareceu (`ad_view`, contado no servidor ao montar a página); o card leva a
+  `/quadra/{id}?ref=ad`, que conta o clique (`ad_click`) e redireciona para o endereço limpo, para
+  atualizar, trocar o idioma ou compartilhar não contar de novo. Mesmos filtros das estatísticas:
+  robô, dono, admin e repetição não contam. Anúncio nunca derruba a página: se der erro, ela abre
+  sem o bloco. Teste de clique `tests/e2e/testes/patrocinado.js` (28 passos) e 4 casos novos no
+  `tests/venue_ads_db_test.php`.
+  - **O que deu errado:** a primeira versão buscava o bairro e a cidade em colunas que não existem na
+    `venues` (ficam em `addresses`); a home abriu sem o bloco e o erro foi para o log, como
+    planejado, e foi corrigido. O teste `quadras` pegou rolagem para o lado no celular: o nome
+    comprido da quadra alargava o card (faltava `min-w-0`); na home o card ficava cortado. O teste
+    novo, na primeira versão, não pegava isso (as quadras de teste têm nome curto); agora usa um nome
+    comprido e foi conferido falhando sem a correção. No `venue_ads_db_test`, um caso exigia que só o
+    anúncio do teste estivesse no ar e falhou com um anúncio criado à mão no banco local; agora olha
+    só as quadras do teste. O `estatisticas` passou a usar o `devNull` do Node no lugar de
+    `/dev/null` e roda neste PC (31 passos).
+
 ## Cronograma até o congelamento
 
 | Data | Backend e site (João) | App (Rafael) |
