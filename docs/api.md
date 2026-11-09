@@ -9,6 +9,7 @@ O formato segue o padrão do Laravel, para o Kolae 2.0 (Laravel) herdar o contra
 > - **S3 (v1.6.0):** revisado pelo Rafael em 28/10/2026 (D29–D33), em produção desde 28/10 e lançado na **v1.6.0** (02/11/2026).
 > - **Depois da S3 (v1.6.0):** `429 TOO_MANY_ATTEMPTS` no login (D45), limite de envios no `forgot-password` (D52), fotos na ordem do dono e otimizadas (D46, D48) e `email_verified` no objeto `user` (D58). Nenhuma mudança quebrou o app.
 > - **Kolae Premium (v1.7.0, D61–D64):** aprovado em 05/11/2026. Anúncios (`ad`, `GET /ads`), registro de cliques, pedidos de horário e notificações do jogador; só acréscimos, ver a seção [Kolae Premium](#kolae-premium-v170-d61d64).
+> - **Chat (v1.7.0, D66):** aprovado em 09/11/2026. Conversa entre a pessoa e o responsável pela quadra (o dono responde pelo site); só acréscimos, ver a seção [Chat](#chat-v170-d66).
 
 ## Base URL
 
@@ -628,9 +629,107 @@ Antes da S3, a produção respondia no formato antigo: lista sem paginação, pr
 
 ---
 
+## Chat (v1.7.0, D66)
+
+Aprovado em 09/11/2026. A pessoa conversa com o responsável pela quadra; **o dono responde pelo
+painel do site** (D02). Uma conversa por pessoa e quadra, só texto. Proposta completa (banco,
+painel, plano B) em [`proposta-chat.md`](proposta-chat.md).
+
+- **Todas as rotas exigem token.** Sem token ou com token inválido: os `401 AUTH_*` de sempre (seção [Formato das respostas](#formato-das-respostas)).
+- **Quem não faz parte da conversa recebe `404 NOT_FOUND`**, igual a uma conversa que não existe
+  (não revela que ela existe).
+- No app, o `GET /conversations` traz só as conversas em que a pessoa logada é **quem pergunta**.
+- As mensagens chegam por **consulta periódica** (a HostGator não mantém conexão aberta): conversa
+  aberta a cada 5 s com `after_id`, lista a cada 30 s, nada com o app em segundo plano.
+- Datas com `-03:00` (D16).
+
+### Objetos
+
+**Conversa**
+
+```json
+{
+  "id": 12,
+  "venue": { "id": 8, "name": "Quadra do Xuxa", "cover_image_url": "https://..." },
+  "last_message": { "id": 340, "body": "Tem horário sábado?", "mine": true, "created_at": "2026-11-10T19:02:00-03:00" },
+  "unread_count": 0,
+  "blocked": false
+}
+```
+
+| Campo | Regra |
+| :---- | :---- |
+| `venue.cover_image_url` | Capa da quadra, como na lista; `null` sem foto |
+| `last_message` | Última mensagem, de qualquer lado; `null` numa conversa ainda sem mensagens |
+| `unread_count` | Mensagens do responsável que a pessoa ainda não leu (`POST /conversations/{id}/read`) |
+| `blocked` | O responsável bloqueou: dá para ler, não para enviar (`403 CHAT_BLOCKED`). Ele pode desbloquear |
+
+**Mensagem**
+
+```json
+{ "id": 341, "body": "Tem sim, das 8h às 12h.", "mine": false, "created_at": "2026-11-10T19:05:00-03:00" }
+```
+
+`mine` = foi a pessoa logada que enviou (o app não precisa comparar ids de usuário).
+
+### `GET /conversations`
+
+Conversas da pessoa logada, **a mais recente primeiro** (pela última mensagem). **Conversas sem
+mensagem ficam de fora.** Sem paginação nesta versão.
+
+```json
+{ "data": [ { "...": "objeto conversa" } ] }
+```
+
+### `POST /venues/{id}/conversations`
+
+Abre a conversa com a quadra, ou devolve a que já existe. Sem corpo. **`201`** (nova) ou **`200`**
+(já existia), com o objeto conversa (`last_message` = `null` se ainda não há mensagem).
+
+| Erro | Quando |
+| :---- | :---- |
+| `404 VENUE_NOT_FOUND` | Quadra não existe ou está desativada (D34) |
+| `422 CHAT_OWN_VENUE` | O responsável tentando falar com a própria quadra |
+
+### `GET /conversations/{id}/messages`
+
+| Parâmetro | Regra |
+| :---- | :---- |
+| `after_id` | Só as mais novas que esta (polling). Sem mensagem nova: `"data": []` |
+| `before_id` | As mais antigas que esta (rolar para cima) |
+| `per_page` | 1 a 50 (padrão 30) |
+
+Sem `after_id` nem `before_id`: as `per_page` **mais recentes**. Sempre em **ordem crescente de
+`id`**. `after_id` e `before_id` juntos, ou valor que não é número inteiro positivo:
+`422 VALIDATION_ERROR`. Conversa de quadra desativada continua legível.
+
+```json
+{ "data": [ { "...": "objeto mensagem" } ] }
+```
+
+### `POST /conversations/{id}/messages`
+
+Corpo `{ "body": "..." }` → **`201`** com o objeto mensagem. Quem envia já conta como tendo lido.
+
+| Erro | Quando |
+| :---- | :---- |
+| `422 VALIDATION_ERROR`, `errors.body` | Vazio, mais de 1000 caracteres, ou com link (`http`, `www.`, domínio) |
+| `403 CHAT_BLOCKED` | O responsável bloqueou a conversa |
+| `404 VENUE_NOT_FOUND` | A quadra foi desativada (a conversa fica só para leitura) |
+| `404 NOT_FOUND` | Conversa que não existe ou não é sua |
+| `429 TOO_MANY_ATTEMPTS` | Mais de 20 mensagens por minuto; cabeçalho `Retry-After` em segundos (o app pode mostrar só a mensagem) |
+
+### `POST /conversations/{id}/read`
+
+Corpo `{ "last_message_id": 341 }` → **`204`**. Marca como lidas as mensagens até essa (zera o
+`unread_count` se for a última). Só avança: um id menor que o já lido não muda nada. Id que não é
+número inteiro positivo: `422 VALIDATION_ERROR`.
+
+---
+
 ## Fora do escopo da entrega
 
 - **Troca de e-mail com código** (`POST /me/email`, `POST /me/email/confirm`): cortada com o prazo novo (D28); a tela fica no mock do app.
-- **Avaliações, favoritos, chat e duas etapas**: vitrine no app, sem backend (D04).
+- **Avaliações, favoritos e duas etapas**: vitrine no app, sem backend (D04). O chat saiu da vitrine com a D66.
 
 Cada endpoint novo é descrito aqui (parâmetros, resposta, erros) antes de ser implementado.

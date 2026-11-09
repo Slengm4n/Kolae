@@ -14,7 +14,7 @@ Comece por aqui. Cada assunto tem **um** lugar; se a informação estiver em doi
 | [`sugestoes.md`](sugestoes.md) | Ideias de funcionalidades e melhorias, com o porquê e quando fazer (ainda não são decisões) | João e Rafael |
 | [`proposta-redes-sociais.md`](proposta-redes-sociais.md) | Proposta das redes sociais da quadra (aprovada: virou a D60) | João e Rafael |
 | [`proposta-login-google.md`](proposta-login-google.md) | Proposta de "Entrar com Google": fluxo, contrato do `POST /auth/google`, configuração no Google Cloud, datas, plano B e registro do andamento (vira a D65 se aprovada) | João e Rafael |
-| [`proposta-chat.md`](proposta-chat.md) | Proposta do chat com o responsável pela quadra: banco, contrato, painel, app, push opcional, datas, plano B e registro do andamento (vira a D66 se aprovada) | João e Rafael |
+| [`proposta-chat.md`](proposta-chat.md) | Proposta do chat com o responsável pela quadra: banco, contrato, painel, app, push opcional, datas, plano B e registro do andamento (D66, aprovada em 09/11) | João e Rafael |
 | [`proposta-premium.md`](proposta-premium.md) | Proposta do Kolae Premium: plano da quadra, estatísticas, anúncios, solicitações de horário e notificações; banco, contrato, telas, app e cronograma até 21/11 | João e Rafael |
 | [`proposta-partidas.md`](proposta-partidas.md) | Proposta das partidas com jogadores para o Kolae 2.0: fases, banco, endpoints, telas e o que decidir | João e Rafael |
 | [`hospedagem.md`](hospedagem.md) | Produção na HostGator (`https://kolae.online`, D41): como foi montada, e-mail pelo Titan, patches e o que falta no cPanel | João |
