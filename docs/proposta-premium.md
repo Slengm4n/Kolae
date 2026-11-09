@@ -225,11 +225,32 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | :---- | :---- | :---- | :---- |
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
-| Anúncios (D63) | ⏳ a fazer (até 13/11) | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
+| Anúncios (D63) | 🔧 em andamento (até 13/11): parte A de 5 pronta | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
 | Solicitações e notificações (D64) | ⏳ a fazer (até 17/11) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
 As PRs são empilhadas: entram na ordem da tabela, e cada uma só depois da anterior.
+
+### Registro do andamento dos anúncios (D63)
+
+Cinco partes, uma PR cada, empilhadas: **A** regras e banco → **B** aba Anúncio do dono → **C**
+"Patrocinado" no site → **D** API (`ad` e `GET /ads`) → **E** remoção pelo admin.
+
+Regras combinadas em 09/11: período de **até 30 dias contando o primeiro** (10/11 a 09/12), início
+hoje ou depois; **um anúncio "em aberto" por quadra** (ativo ou pausado, ainda no período; encerrado,
+removido ou vencido libera outro); com o **Premium vencido**, o anúncio fica salvo e só deixa de
+aparecer (volta sozinho se o plano for renovado); quadra em manutenção continua mostrando o anúncio,
+só a desativada (D34) esconde. "Vezes que apareceu" e cliques do anúncio saem dos eventos `ad_view` e
+`ad_click` da quadra dentro do período dele (a `venue_events` não guarda o id do anúncio, e só há um
+por vez).
+
+- **09/11, parte A (`feat/premium-anuncios-regras`):** `App\Core\VenueAds` (validação, quando
+  aparece, situação para o dono, ações e sorteio do dia, igual o dia todo) e o model `VenueAd`. Sem
+  tela e sem rota. Testes: `tests/venue_ads_test.php` (64 casos, sem banco) e
+  `tests/venue_ads_db_test.php` (36, no banco local, deixa tudo como encontrou).
+  - **O que deu errado:** o banco local deste PC não tinha o patch 009 (o Premium nem abria aqui);
+    aplicado só no local, com backup antes. Nos testes, dois erros meus nos próprios testes (um caso
+    de 31 dias tratado como 30, e eventos gravados antes de o anúncio existir); a regra estava certa.
 ## Cronograma até o congelamento
 
 | Data | Backend e site (João) | App (Rafael) |
