@@ -799,4 +799,8 @@ return[
     'ad_flash_premium' => 'Gli annunci sono di Premium. Attiva il piano per pubblicare.',
     'ad_flash_failed' => 'Non è stato possibile. Riprova.',
     'ad_highlights' => 'In evidenza',
+    'ad_flash_removed' => 'Annuncio rimosso. Il proprietario è stato avvisato.',
+    'ad_flash_reason_required' => 'Scrivi il motivo della rimozione: il proprietario lo leggerà.',
+    'ad_flash_reason_too_short' => 'Il motivo deve avere almeno 5 caratteri.',
+    'ad_flash_reason_too_long' => 'Il motivo può avere al massimo 200 caratteri.',
 ];

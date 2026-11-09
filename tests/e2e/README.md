@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (25 roteiros, uns 13 minutos)
+npm run test:e2e                     # todos (26 roteiros, uns 13 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -93,4 +93,5 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `anuncio` | Aba Anúncio (D63): convite no Grátis, criar com prévia ao vivo e foto, erros no navegador e no servidor, editar, voltar para a capa, pausar, retomar, Premium vencido, números, encerrar, histórico, motivo da remoção, celular, inglês e admin |
 | `patrocinado` | "Patrocinado" no site (D63): destaques na home e na `/quadras` (até 3, iguais o dia todo), faixa na página da quadra, quem aparece e quem não, vezes que apareceu e cliques (sem dono, robô e repetição), link limpo depois do clique, celular e inglês |
 | `anuncio_api` | API dos anúncios (D63), sem navegador: `ad` na lista e no detalhe, `GET /ads`, foto do anúncio, capa ou null, quem aparece e quem não, `ad_view` e `ad_click` pelo `POST /events` só com anúncio no ar |
+| `anuncio_admin` | Remoção de anúncio pelo admin (D63): card Anúncios no painel, motivo obrigatório no navegador e no servidor, confirmação, sai do ar, notificação para o dono, motivo na aba do dono, remover de novo, dono sem acesso, celular |
 | `plano` | Kolae Premium do dono (D61): pedir em Configurações, admin ativa no card do painel com validade, selo no painel, validade vencida, desativar |

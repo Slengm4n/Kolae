@@ -17,6 +17,7 @@ use App\Controllers\VenueStatsController;
 use App\Controllers\VenueAdController;
 use App\Controllers\SportController;
 use App\Controllers\AdminController;
+use App\Controllers\AdminAdController;
 use App\Controllers\AuthApiController;
 use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
@@ -207,6 +208,8 @@ $router->group('/admin', function ($router) {
     // Kolae Premium (D61): o admin ativa e desativa por dono
     $router->post('/premium/{id}/ativar', [PremiumController::class, 'activate']);
     $router->post('/premium/{id}/desativar', [PremiumController::class, 'deactivate']);
+    // Anúncios (D63): o admin remove com motivo, no card "Anúncios" do painel
+    $router->post('/anuncios/{id}/remover', [AdminAdController::class, 'remove']);
 
     // Gerenciamento de Usuarios
     $router->group('/usuarios', function ($router) {

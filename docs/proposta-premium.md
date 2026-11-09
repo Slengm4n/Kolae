@@ -225,7 +225,7 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | :---- | :---- | :---- | :---- |
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
-| Anúncios (D63) | 🔧 em andamento (até 13/11): partes A a D de 5 prontas | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
+| Anúncios (D63) | ✅ pronto (5 partes, PRs `feat/premium-anuncios-*`) | Aba Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública; admin remove com motivo | **Pode ligar agora:** carrossel "Destaques" (`GET /ads`), faixa `ad` no detalhe e `ad_view`/`ad_click` no `POST /venues/{id}/events` |
 | Solicitações e notificações (D64) | ⏳ a fazer (até 17/11) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
@@ -303,6 +303,22 @@ por vez).
     então foi conferido falhando com a regra do `ad_view`/`ad_click` desligada. Não deu para testar
     o limite de 5 do `GET /ads` no teste de clique (o seed só tem 4 quadras que podem ter anúncio);
     o corte é o mesmo `dailyPick` coberto no `tests/venue_ads_test.php`.
+- **09/11, parte E (`feat/premium-anuncios-admin`):** card **Anúncios** no painel do admin, abaixo
+  do Kolae Premium, com os anúncios em aberto (ativos, agendados e pausados; quadra, dono, período e
+  situação, com link para a aba Anúncio da quadra no admin). **Remover com motivo**: o motivo é
+  obrigatório (5 a 200 caracteres, uma linha; conferido no navegador e no servidor, em
+  `VenueAds::cleanReason`), pede confirmação, tira do ar na hora e o dono lê o motivo na aba
+  Anúncio (feito na parte B). O dono recebe a notificação `ad_removed` na tabela `notifications`
+  (quadra, anúncio e motivo em `data`); ela aparece no sino quando ele existir (D64). Se a
+  notificação falhar, a remoção continua valendo. Removido não volta; o dono pode criar outro.
+  Avisos nos 7 idiomas. Teste de clique `tests/e2e/testes/anuncio_admin.js` (20 passos) e 8 casos
+  novos no `tests/venue_ads_test.php`.
+  - **O que deu errado:** nada no código. O teste novo passou de primeira e foi conferido falhando
+    com a notificação desligada. **Fica para depois:** e-mail ao dono na remoção (hoje só a
+    notificação e o motivo na aba) e o histórico de anúncios removidos no admin (o card mostra só os
+    em aberto).
+
+**D63 concluída em 09/11**, antes do prazo de 13/11.
 
 ## Cronograma até o congelamento
 
