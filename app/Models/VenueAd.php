@@ -181,6 +181,25 @@ class VenueAd
     }
 
     /**
+     * Anúncios em aberto (ativos ou pausados, ainda no período), para o admin revisar e remover
+     * (parte E). Os mais novos primeiro, com a quadra e o dono.
+     */
+    public static function openForAdmin(DateTimeImmutable $today): array
+    {
+        $stmt = Database::getConnection()->prepare(
+            'SELECT ' . self::COLUMNS . ", v.name AS venue_name, v.status AS venue_status, v.deleted_at AS venue_deleted_at,
+                    u.id AS owner_id, u.name AS owner_name, u.email AS owner_email, u.plan AS owner_plan, u.plan_until AS owner_plan_until
+               FROM venue_ads a
+               JOIN venues v ON v.id = a.venue_id
+               JOIN users u ON u.id = v.user_id
+              WHERE a.status IN ('active', 'paused') AND a.ends_on >= ? AND v.deleted_at IS NULL
+              ORDER BY a.created_at DESC, a.id DESC"
+        );
+        $stmt->execute([$today->format('Y-m-d')]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * O que o card "Patrocinado" precisa de cada quadra: dono (para não contar a visita dele),
      * nome, bairro, cidade e capa (foto do anúncio quando ele não tem uma).
      * @return array<int, array> venue_id => [id, user_id, name, neighborhood, city, cover]

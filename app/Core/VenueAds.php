@@ -20,6 +20,9 @@ class VenueAds
     public const SITE_LIMIT = 3;
     /** Quantos vêm no GET /ads (carrossel "Destaques" do app). */
     public const API_LIMIT = 5;
+    /** Motivo da remoção pelo admin (coluna removed_reason), que o dono lê na aba Anúncio. */
+    public const REASON_MIN = 5;
+    public const REASON_MAX = 200;
 
     public const STATUSES = ['active', 'paused', 'ended', 'removed'];
 
@@ -161,6 +164,27 @@ class VenueAds
         $day = $today->format('Y-m-d');
         usort($items, fn($a, $b) => [crc32($day . '#' . $a['id']), $a['id']] <=> [crc32($day . '#' . $b['id']), $b['id']]);
         return array_slice($items, 0, max(0, $limit));
+    }
+
+    /**
+     * Motivo da remoção (parte E): uma linha, de 5 a 200 caracteres. O dono lê o motivo, então
+     * não pode ficar vazio nem ser só "x".
+     * @return array{0: ?string, 1: ?string} [motivo limpo, código do erro: 'required' | 'too_short' | 'too_long']
+     */
+    public static function cleanReason($input): array
+    {
+        $reason = is_string($input) ? self::cleanText($input) : '';
+        $length = mb_strlen($reason);
+        if ($length === 0) {
+            return [null, 'required'];
+        }
+        if ($length < self::REASON_MIN) {
+            return [null, 'too_short'];
+        }
+        if ($length > self::REASON_MAX) {
+            return [null, 'too_long'];
+        }
+        return [$reason, null];
     }
 
     // --- Ajudantes ---

@@ -816,4 +816,8 @@ return[
     'ad_flash_premium' => 'Los anuncios son de Premium. Activa el plan para publicar.',
     'ad_flash_failed' => 'No se pudo hacer. Inténtalo de nuevo.',
     'ad_highlights' => 'Destacados',
+    'ad_flash_removed' => 'Anuncio eliminado. Se avisó al dueño.',
+    'ad_flash_reason_required' => 'Escribe el motivo de la eliminación: el dueño lo leerá.',
+    'ad_flash_reason_too_short' => 'El motivo necesita al menos 5 caracteres.',
+    'ad_flash_reason_too_long' => 'El motivo puede tener hasta 200 caracteres.',
 ];  

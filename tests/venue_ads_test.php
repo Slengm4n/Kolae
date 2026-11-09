@@ -1,6 +1,6 @@
 <?php
 // Testa as regras dos anúncios (App\Core\VenueAds, D63): formulário, quando aparece, situação
-// para o dono, ações e sorteio do dia. Não usa o banco. Rodar da raiz do projeto:
+// para o dono, ações, sorteio do dia e motivo da remoção. Não usa o banco. Rodar da raiz do projeto:
 //   php tests/venue_ads_test.php
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -113,6 +113,18 @@ for ($d = 1; $d <= 5 && !$mudou; $d++) {
 check('outro dia, outra ordem', $mudou);
 check('sem repetir nem perder itens', (function () use ($itens, $hoje) { $r = array_column(VenueAds::dailyPick($itens, 8, $hoje), 'id'); sort($r); return $r === range(1, 8); })());
 check('lista vazia', VenueAds::dailyPick([], 3, $hoje) === []);
+
+echo "cleanReason (remoção pelo admin)
+";
+check('motivo certo', VenueAds::cleanReason('Texto enganoso sobre preço') === ['Texto enganoso sobre preço', null]);
+check('junta espaços e quebras de linha', VenueAds::cleanReason("  Foto  de
+ outra   quadra ") === ['Foto de outra quadra', null]);
+check('vazio', VenueAds::cleanReason('   ') === [null, 'required']);
+check('não é texto', VenueAds::cleanReason(['x']) === [null, 'required'] && VenueAds::cleanReason(null) === [null, 'required']);
+check('curto demais (4)', VenueAds::cleanReason('abcd') === [null, 'too_short']);
+check('5 passa', VenueAds::cleanReason('abcde')[1] === null);
+check('200 passa (com acento)', VenueAds::cleanReason(str_repeat('é', 200))[1] === null);
+check('201 não passa', VenueAds::cleanReason(str_repeat('é', 201)) === [null, 'too_long']);
 
 echo "\nRESULTADO: $ok ok, $falhas falha(s)\n";
 exit($falhas > 0 ? 1 : 0);

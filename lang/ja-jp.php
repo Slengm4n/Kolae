@@ -842,4 +842,8 @@ return[
     'ad_flash_premium' => '広告はPremiumの機能です。掲載するにはプランを有効にしてください。',
     'ad_flash_failed' => 'できませんでした。もう一度お試しください。',
     'ad_highlights' => 'おすすめ',
+    'ad_flash_removed' => '広告を削除しました。オーナーに通知しました。',
+    'ad_flash_reason_required' => '削除の理由を入力してください。オーナーが読みます。',
+    'ad_flash_reason_too_short' => '理由は5文字以上で入力してください。',
+    'ad_flash_reason_too_long' => '理由は200文字以内で入力してください。',
 ];

@@ -815,4 +815,8 @@ return[
     'ad_flash_premium' => '广告是 Premium 功能。开通套餐后即可发布。',
     'ad_flash_failed' => '操作失败，请重试。',
     'ad_highlights' => '精选',
+    'ad_flash_removed' => '广告已删除，已通知场地主。',
+    'ad_flash_reason_required' => '请填写删除原因：场地主会看到。',
+    'ad_flash_reason_too_short' => '原因至少需要 5 个字符。',
+    'ad_flash_reason_too_long' => '原因最多 200 个字符。',
 ];

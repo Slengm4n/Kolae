@@ -50,8 +50,16 @@ class Flash
                 'plan_requested' => 'plan_flash_requested',
                 'plan_activated' => 'plan_flash_activated',
                 'plan_deactivated' => 'plan_flash_deactivated',
+                // Painel do admin, card "Anúncios" (D63)
+                'ad_removed' => 'ad_flash_removed',
             ],
-            'error' => ['plan_invalid_date' => 'plan_flash_invalid_date'],
+            'error' => [
+                'plan_invalid_date' => 'plan_flash_invalid_date',
+                'ad_failed' => 'ad_flash_failed',
+                'ad_reason_required' => 'ad_flash_reason_required',
+                'ad_reason_too_short' => 'ad_flash_reason_too_short',
+                'ad_reason_too_long' => 'ad_flash_reason_too_long',
+            ],
         ],
         'profile' => [
             'status' => ['updated' => 'profile_update_success'],
