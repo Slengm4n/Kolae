@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Core\ApiFormat;
 use App\Core\Database;
 use App\Core\PremiumPlan;
 use App\Core\VenueAds;
@@ -43,6 +44,22 @@ class VenueAd
             "UPDATE venue_ads SET title = ?, body = ?, starts_on = ?, ends_on = ? WHERE id = ? AND venue_id = ?"
         );
         return $stmt->execute([$values['title'], $values['body'], $values['starts_on'], $values['ends_on'], $id, $venueId]);
+    }
+
+    /** Pasta das fotos de um anúncio (uploads/ads/{id}/; o .htaccess de uploads/ vale aqui também). */
+    public static function uploadDir(int $id): string
+    {
+        return BASE_PATH . '/uploads/ads/' . $id . '/';
+    }
+
+    /**
+     * Foto que o anúncio mostra: a dele ou, sem foto, a capa da quadra ($coverFile, nome do arquivo
+     * em uploads/venues/{venue_id}/). null se nenhuma das duas existir no servidor.
+     */
+    public static function imageUrl(array $ad, ?string $coverFile): ?string
+    {
+        return ApiFormat::uploadUrl('ads/' . (int)$ad['id'], $ad['image_path'] ?? null)
+            ?? ApiFormat::uploadUrl('venues/' . (int)$ad['venue_id'], $coverFile);
     }
 
     /** Troca a foto do anúncio (nome do arquivo em uploads/ads/{id}/, ou null para usar a capa). */

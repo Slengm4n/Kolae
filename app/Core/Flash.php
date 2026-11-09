@@ -32,6 +32,19 @@ class Flash
                 'generic' => 'unknown_error',
             ],
         ],
+        'ad' => [
+            'status' => [
+                'ad_created' => 'ad_flash_created',
+                'ad_updated' => 'ad_flash_updated',
+                'ad_pause' => 'ad_flash_paused',
+                'ad_resume' => 'ad_flash_resumed',
+                'ad_end' => 'ad_flash_ended',
+            ],
+            'error' => [
+                'ad_premium' => 'ad_flash_premium',
+                'ad_failed' => 'ad_flash_failed',
+            ],
+        ],
         'plan' => [
             'status' => [
                 'plan_requested' => 'plan_flash_requested',

@@ -1,9 +1,9 @@
 <?php
 /**
  * Topo das páginas de gerenciar uma quadra (D35): voltar ao painel, nome, selo de status
- * ao vivo (mesma regra da API, D40) e as abas Visão geral, Dados, Fotos, Horário, Agenda e Estatísticas (D62).
+ * ao vivo (mesma regra da API, D40) e as abas Visão geral, Dados, Fotos, Horário, Agenda, Estatísticas (D62) e Anúncio (D63).
  *
- * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('overview' | 'data' | 'photos' | 'hours' | 'agenda' | 'stats'),
+ * Variáveis: $lang, $venue, $status (VenueAccess::currentStatus), $activeTab ('overview' | 'data' | 'photos' | 'hours' | 'agenda' | 'stats' | 'ad'),
  *            $routePrefix ('/dashboard' | '/admin'), $backUrl.
  */
 use App\Core\VenueAccess;
@@ -22,6 +22,7 @@ $tabs = [
     'hours' => ['label' => $lang['venue_tab_hours'], 'icon' => 'fa-clock', 'url' => "$topBase/$topVenueId/horario"],
     'agenda' => ['label' => $lang['venue_tab_agenda'], 'icon' => 'fa-calendar-days', 'url' => "$topBase/$topVenueId/agenda"],
     'stats' => ['label' => $lang['stats_tab'], 'icon' => 'fa-chart-line', 'url' => "$topBase/$topVenueId/estatisticas"],
+    'ad' => ['label' => $lang['ad_tab'], 'icon' => 'fa-bullhorn', 'url' => "$topBase/$topVenueId/anuncio"],
 ];
 $place = implode(' · ', array_filter([$venue['neighborhood'] ?? null, $venue['city'] ?? null]));
 ?>

@@ -32,6 +32,7 @@ const TESTES = {
     redes: ['D', 'A'],
     plano: [],
     estatisticas: ['A'],
+    anuncio: ['A'],
 };
 
 const pedidos = process.argv.slice(2);

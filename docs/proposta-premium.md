@@ -225,7 +225,7 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | :---- | :---- | :---- | :---- |
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
-| Anúncios (D63) | 🔧 em andamento (até 13/11): parte A de 5 pronta | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
+| Anúncios (D63) | 🔧 em andamento (até 13/11): partes A e B de 5 prontas | Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública | Montar com mock: carrossel "Destaques" (`GET /ads`) e faixa `ad` no detalhe |
 | Solicitações e notificações (D64) | ⏳ a fazer (até 17/11) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
@@ -251,6 +251,22 @@ por vez).
   - **O que deu errado:** o banco local deste PC não tinha o patch 009 (o Premium nem abria aqui);
     aplicado só no local, com backup antes. Nos testes, dois erros meus nos próprios testes (um caso
     de 31 dias tratado como 30, e eventos gravados antes de o anúncio existir); a regra estava certa.
+- **09/11, parte B (`feat/premium-anuncios-dono`):** aba **Anúncio** da quadra
+  (`{painel}/quadras/{id}/anuncio`, no painel do dono e no do admin), com o card "Patrocinado"
+  num partial (`partials/ad_card.php`) que a parte C reaproveita. Premium: formulário com prévia ao
+  vivo (título, texto, período em que o fim acompanha o início, foto opcional ou a capa), anúncio no
+  ar com a situação, os números (vezes que apareceu, cliques, taxa) e pausar, retomar, editar e
+  encerrar (com confirmação); histórico dos anteriores. Grátis: convite para o Premium; o servidor
+  também recusa criar. Premium vencido: o anúncio fica salvo, dá para pausar e encerrar, mas não
+  para editar nem retomar. Removido pelo admin: o dono vê o motivo. Fotos em `uploads/ads/{id}/`,
+  com a mesma validação e otimização das fotos da quadra. Textos nos 7 idiomas. Teste de clique
+  `tests/e2e/testes/anuncio.js` (44 passos).
+  - **O que deu errado:** a primeira rodada do teste de clique teve 3 falhas, todas do teste: a
+    quadra do seed não tem foto (a tela fez certo em esconder a capa; o teste agora põe uma capa e
+    tira no fim), uma variável usada dentro do navegador e a URL conferida depois de o aviso limpar
+    o `?status=`. Uma rodada interrompida deixou uma pasta vazia em `uploads/ads/`, apagada. O
+    teste `estatisticas` não roda neste PC: o `curl` do Windows não aceita `-o /dev/null` (erro 23);
+    é do ambiente, não do código.
 ## Cronograma até o congelamento
 
 | Data | Backend e site (João) | App (Rafael) |
