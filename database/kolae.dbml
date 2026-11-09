@@ -321,3 +321,42 @@ Ref: match_requests.venue_id > venues.id [delete: cascade]
 Ref: match_requests.user_id > users.id [delete: cascade]
 Ref: match_requests.match_id > matches.id [delete: set null]
 Ref: notifications.user_id > users.id [delete: cascade]
+
+// ==========================================================
+// Chat (D66, patch 010)
+// ==========================================================
+
+Table conversations {
+  id int [pk, increment]
+  venue_id int [not null]
+  user_id int [not null, note: 'Quem pergunta; o responsável é o dono da quadra (venues.user_id)']
+  user_last_read_id int [note: 'Última mensagem que a pessoa leu']
+  owner_last_read_id int [note: 'Última mensagem que o responsável leu']
+  blocked_at timestamp [note: 'O responsável bloqueou: a pessoa lê, mas não envia']
+  last_message_at timestamp [note: 'NULL = conversa ainda vazia (fica fora das listas)']
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (venue_id, user_id) [unique]
+    (user_id, last_message_at)
+    (venue_id, last_message_at)
+  }
+}
+
+Table messages {
+  id int [pk, increment]
+  conversation_id int [not null]
+  sender_id int [not null]
+  body varchar(1000) [not null, note: 'Só texto, sem links (ChatRules)']
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (conversation_id, id)
+    (sender_id, created_at)
+  }
+}
+
+Ref: conversations.venue_id > venues.id [delete: cascade]
+Ref: conversations.user_id > users.id [delete: cascade]
+Ref: messages.conversation_id > conversations.id [delete: cascade]
+Ref: messages.sender_id > users.id [delete: cascade]

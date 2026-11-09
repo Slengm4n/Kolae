@@ -1,5 +1,5 @@
 -- Kolae - estrutura do banco (sem dados)
--- Gerado do kolae_db local apos database/patches/001 a 004, com os patches seguintes (005 a 009) aplicados a mao. Desenho: database/kolae.dbml
+-- Gerado do kolae_db local apos database/patches/001 a 004, com os patches seguintes (005 a 010) aplicados a mao. Desenho: database/kolae.dbml
 -- Uso: criar um banco vazio (utf8mb4) e importar este arquivo.
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -25,6 +25,22 @@ CREATE TABLE `cities` (
   UNIQUE KEY `uq_cities_state_name` (`state_id`,`name`),
   KEY `fk_cities_state` (`state_id`),
   CONSTRAINT `fk_cities_state` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `conversations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `venue_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'Quem pergunta; o responsável é o dono da quadra (venues.user_id)',
+  `user_last_read_id` int(11) DEFAULT NULL COMMENT 'Última mensagem que a pessoa leu',
+  `owner_last_read_id` int(11) DEFAULT NULL COMMENT 'Última mensagem que o responsável leu',
+  `blocked_at` timestamp NULL DEFAULT NULL COMMENT 'O responsável bloqueou: a pessoa lê, mas não envia',
+  `last_message_at` timestamp NULL DEFAULT NULL COMMENT 'NULL = conversa ainda vazia (fica fora das listas)',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_conversations_venue_user` (`venue_id`, `user_id`),
+  KEY `idx_conversations_user` (`user_id`, `last_message_at`),
+  KEY `idx_conversations_venue` (`venue_id`, `last_message_at`),
+  CONSTRAINT `fk_conversations_venue` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_conversations_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `countries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -81,6 +97,18 @@ CREATE TABLE `matches` (
   CONSTRAINT `fk_matches_creator` FOREIGN KEY (`creator_user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_matches_sport` FOREIGN KEY (`sport_id`) REFERENCES `sports` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_matches_venue` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `conversation_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `body` varchar(1000) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_messages_conversation` (`conversation_id`, `id`),
+  KEY `idx_messages_sender` (`sender_id`, `created_at`),
+  CONSTRAINT `fk_messages_conversation` FOREIGN KEY (`conversation_id`) REFERENCES `conversations` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_messages_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `neighborhoods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

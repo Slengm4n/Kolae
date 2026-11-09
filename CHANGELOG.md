@@ -12,7 +12,7 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
-**Banco:** patch 008 (`database/patches/008_redes_sociais_da_quadra.sql`), aplicado na produção em 05/11 antes do merge. Patch 009 (`database/patches/009_kolae_premium.sql`): todas as tabelas do Kolae Premium (D61–D64) de uma vez; aplicar **antes** do merge do plano.
+**Banco:** patch 008 (`database/patches/008_redes_sociais_da_quadra.sql`), aplicado na produção em 05/11 antes do merge. Patch 009 (`database/patches/009_kolae_premium.sql`): todas as tabelas do Kolae Premium (D61–D64) de uma vez; aplicar **antes** do merge do plano. Patch 010 (`database/patches/010_chat.sql`): tabelas do chat (D66); aplicar **antes** do merge da parte B do chat.
 
 ### Adicionado
 - **Anúncio da quadra (Kolae Premium, D63):** aba **Anúncio** no painel do dono (e do admin). O dono Premium monta um anúncio por vez, com título, texto, período de até 30 dias e foto opcional (sem foto, usa a capa), vendo ao vivo o card "Patrocinado" como o jogador vai ver; depois pausa, retoma, edita e encerra, e acompanha as vezes que o anúncio apareceu e os cliques. Dono Grátis vê o convite para o Premium. Com o Premium vencido, o anúncio fica salvo e só deixa de aparecer. Textos nos 7 idiomas.
