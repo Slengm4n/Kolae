@@ -275,6 +275,7 @@ $router->group('/api/v1', function ($router) {
     $router->get('/venues/{id}', [VenueApiController::class, 'show']);
     $router->post('/venues/{id}/events', [VenueApiController::class, 'event']); // estatísticas (D62)
     $router->get('/venues/{id}/schedule', [VenueApiController::class, 'schedule']);
+    $router->get('/ads', [VenueApiController::class, 'ads']); // carrossel "Destaques" (D63)
 
     // Esportes
     $router->get('/sports', [SportApiController::class, 'getActiveSports']);

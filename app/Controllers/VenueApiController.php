@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Core\AdDisplay;
 use App\Core\ApiFormat;
 use App\Core\BaseApiController;
+use App\Core\VenueAds;
 use App\Core\VenueSchedule;
 use App\Core\VenueSocials;
 use App\Core\VenueStats;
@@ -64,6 +66,7 @@ class VenueApiController extends BaseApiController
         $hours = VenueHour::findByVenueIds($ids);
         $matches = Game::findScheduledOn($ids, $now->format('Y-m-d'));
         $sports = VenueSport::findByVenueIds($ids);
+        $ads = AdDisplay::visibleFor($ids); // anúncio no ar de cada quadra (D63)
         $hasPosition = isset($f['lat']);
 
         $venues = [];
@@ -82,7 +85,8 @@ class VenueApiController extends BaseApiController
                 continue;
             }
 
-            $venues[] = self::summary($row, $status, $sports[$id] ?? [], $distance);
+            $venues[] = self::summary($row, $status, $sports[$id] ?? [], $distance)
+                + ['ad' => AdDisplay::forApi($ads[$id] ?? null, $row['image_path'])];
         }
 
         // As linhas já vêm em ordem alfabética; o usort do PHP 8 é estável, então empates mantêm o nome
@@ -149,8 +153,31 @@ class VenueApiController extends BaseApiController
                 'whatsapp' => self::nullIfBlank($row['owner_whatsapp'])
             ],
             // Redes sociais (D60): sempre as quatro chaves, null no que o dono não informou
-            'socials' => VenueSocials::forApi($row)
+            'socials' => VenueSocials::forApi($row),
+            // Anúncio no ar (D63) ou null; a capa é a primeira foto, igual ao cover_image_url
+            'ad' => AdDisplay::forApi(AdDisplay::visibleAd($id), $images[0]['file_path'] ?? null),
         ]);
+    }
+
+    /**
+     * GET /api/v1/ads
+     * Até 5 anúncios no ar para o carrossel "Destaques" do app (D63), sorteados por dia (a mesma
+     * ordem o dia todo, igual ao site). Cada um traz a quadra no formato da lista, sem o `ad`.
+     * Não conta a aparição: o app envia ad_view e ad_click pelo POST /venues/{id}/events.
+     */
+    public function ads()
+    {
+        $today = VenueSchedule::now()->setTime(0, 0);
+        $items = [];
+        foreach (self::listVenues([]) as $venue) {
+            if ($venue['ad'] === null) {
+                continue;
+            }
+            $ad = $venue['ad'];
+            unset($venue['ad'], $venue['distance_km']);
+            $items[] = $ad + ['venue' => $venue];
+        }
+        $this->sendSuccess(VenueAds::dailyPick($items, VenueAds::API_LIMIT, $today));
     }
 
     /**
@@ -188,7 +215,10 @@ class VenueApiController extends BaseApiController
             header('Retry-After: 3600');
             $this->sendError('Muitos registros deste aparelho. Tente mais tarde.', 'TOO_MANY_ATTEMPTS', 429);
         }
-        VenueStats::record($row, $type, $source, $this->optionalUser());
+        // Aparição e clique de anúncio só contam com anúncio no ar (D63); a resposta é a mesma
+        if (!str_starts_with($type, 'ad_') || AdDisplay::visibleAd((int)$row['id'])) {
+            VenueStats::record($row, $type, $source, $this->optionalUser());
+        }
         http_response_code(204);
         exit;
     }
