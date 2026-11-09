@@ -21,6 +21,7 @@ use App\Controllers\AdminAdController;
 use App\Controllers\AuthApiController;
 use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
+use App\Controllers\ChatApiController;
 use App\Controllers\SportApiController;
 use App\Core\AuthHelper;
 
@@ -279,6 +280,13 @@ $router->group('/api/v1', function ($router) {
     $router->post('/venues/{id}/events', [VenueApiController::class, 'event']); // estatísticas (D62)
     $router->get('/venues/{id}/schedule', [VenueApiController::class, 'schedule']);
     $router->get('/ads', [VenueApiController::class, 'ads']); // carrossel "Destaques" (D63)
+
+    // Chat (D66, exigem token): o dono responde pelo painel do site
+    $router->get('/conversations', [ChatApiController::class, 'index']);
+    $router->post('/venues/{id}/conversations', [ChatApiController::class, 'open']);
+    $router->get('/conversations/{id}/messages', [ChatApiController::class, 'messages']);
+    $router->post('/conversations/{id}/messages', [ChatApiController::class, 'send']);
+    $router->post('/conversations/{id}/read', [ChatApiController::class, 'read']);
 
     // Esportes
     $router->get('/sports', [SportApiController::class, 'getActiveSports']);
