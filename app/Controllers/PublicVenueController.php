@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\AdDisplay;
 use App\Core\ApiFormat;
 use App\Core\VenueSchedule;
 use App\Core\VenueStats;
@@ -68,6 +69,7 @@ class PublicVenueController
             'sports' => Sport::getAll(),
             'form' => $form,
             'coords' => $form['perto'] ? ['lat' => $lat, 'lng' => $lng] : null,
+            'adCards' => AdDisplay::cards(), // Patrocinado no topo (D63)
         ]);
     }
 
@@ -87,6 +89,13 @@ class PublicVenueController
         // Visualização para as estatísticas do dono (D62); quem chega pelo QR Code vem com ?ref=qr
         VenueStats::record($row, 'view', ($_GET['ref'] ?? '') === 'qr' ? 'qr' : 'site',
             isset($_SESSION['user_id']) ? ['id' => $_SESSION['user_id'], 'role' => $_SESSION['user_role'] ?? ''] : null);
+        // Chegou pelo card Patrocinado da home ou da /quadras: conta o clique no anúncio (D63) e
+        // volta para o endereço limpo, para atualizar, trocar o idioma ou compartilhar não contar de novo
+        if (($_GET['ref'] ?? '') === AdDisplay::REF) {
+            AdDisplay::recordClick($row);
+            header('Location: ' . BASE_URL . '/quadra/' . (int)$row['id'], true, 302);
+            exit;
+        }
         $now = VenueSchedule::now();
         $hours = VenueHour::findByVenueId($venueId);
         $matches = Game::findScheduledOn([$venueId], $now->format('Y-m-d'))[$venueId] ?? [];
@@ -105,6 +114,7 @@ class PublicVenueController
             'busy' => $busy,
             'now' => $now,
             'ownerAvatarUrl' => ApiFormat::uploadUrl('avatars/' . $row['user_id'], $row['owner_avatar_path']),
+            'adCard' => AdDisplay::forVenue($row), // faixa do anúncio (D63)
             'coverUrl' => $images ? BASE_URL . '/uploads/venues/' . $venueId . '/' . rawurlencode(basename($images[0]['file_path'])) : null,
         ]);
     }

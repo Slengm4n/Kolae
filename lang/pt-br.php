@@ -879,4 +879,5 @@ return [
     'ad_flash_ended' => 'Anúncio encerrado.',
     'ad_flash_premium' => 'Anúncios são do Premium. Ative o plano para publicar.',
     'ad_flash_failed' => 'Não foi possível fazer isso. Tente de novo.',
+    'ad_highlights' => 'Destaques',
 ];

@@ -140,6 +140,15 @@ $partners = [
             </div>
         </section>
 
+        <!-- ===================== Destaques (anúncios, D63) ===================== -->
+        <?php if (!empty($adCards)): ?>
+            <section class="pt-12 md:pt-16">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <?php include BASE_PATH . '/app/views/partials/ad_highlights.php'; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+
         <!-- ===================== Como funciona ===================== -->
         <section id="como-funciona" class="scroll-mt-20 py-20 md:py-28">
             <div class="container mx-auto px-4 sm:px-6">

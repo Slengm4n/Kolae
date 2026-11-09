@@ -179,4 +179,33 @@ class VenueAd
         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
         return ['views' => (int)($row['views'] ?? 0), 'clicks' => (int)($row['clicks'] ?? 0)];
     }
+
+    /**
+     * O que o card "Patrocinado" precisa de cada quadra: dono (para não contar a visita dele),
+     * nome, bairro, cidade e capa (foto do anúncio quando ele não tem uma).
+     * @return array<int, array> venue_id => [id, user_id, name, neighborhood, city, cover]
+     */
+    public static function venuesForCards(array $venueIds): array
+    {
+        $venueIds = array_values(array_unique(array_map('intval', $venueIds)));
+        if (!$venueIds) {
+            return [];
+        }
+        $stmt = Database::getConnection()->prepare(
+            'SELECT v.id, v.user_id, v.name, n.name AS neighborhood, c.name AS city,
+                    (SELECT file_path FROM venues_images vi WHERE vi.venue_id = v.id ORDER BY vi.position ASC, vi.id ASC LIMIT 1) AS cover
+               FROM venues v
+               LEFT JOIN addresses ad ON v.address_id = ad.id
+               LEFT JOIN streets s ON ad.street_id = s.id
+               LEFT JOIN neighborhoods n ON s.neighborhood_id = n.id
+               LEFT JOIN cities c ON n.city_id = c.id
+              WHERE v.id IN (' . implode(',', array_fill(0, count($venueIds), '?')) . ')'
+        );
+        $stmt->execute($venueIds);
+        $rows = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $rows[(int)$row['id']] = $row;
+        }
+        return $rows;
+    }
 }

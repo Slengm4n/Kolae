@@ -841,4 +841,5 @@ return[
     'ad_flash_ended' => '広告を終了しました。',
     'ad_flash_premium' => '広告はPremiumの機能です。掲載するにはプランを有効にしてください。',
     'ad_flash_failed' => 'できませんでした。もう一度お試しください。',
+    'ad_highlights' => 'おすすめ',
 ];
