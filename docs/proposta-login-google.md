@@ -1,7 +1,7 @@
 # Proposta: entrar com Google
 
 **Situação:** proposta (05/11/2026). Decidido fazer antes do congelamento, se der tempo; vira a
-**D61** quando o contrato abaixo for aprovado pelo João e pelo Rafael.
+**D65** quando o contrato abaixo for aprovado pelo João e pelo Rafael.
 **Esforço:** M (3 a 5 dias somando os dois). **Data de corte: 12/11** (ver "Se der errado").
 **Versão:** funcionalidade nova depois da v1.6.0, sai na **v1.7.0** (D59).
 
@@ -28,7 +28,7 @@ App                      Google                      API (kolae.online)
 O app **nunca** manda senha nem dados do Google por conta própria: só o `id_token`. Quem confere
 se ele é verdadeiro é a API, com as chaves públicas do Google.
 
-## Proposta de banco (patch `009_login_google.sql`)
+## Proposta de banco (patch `NNN_login_google.sql`, com o próximo número livre na hora de fazer)
 
 | Coluna | Tipo | O que guarda |
 | :---- | :---- | :---- |
@@ -102,7 +102,7 @@ token (D10). O vínculo pelo e-mail só acontece porque o Google garante o e-mai
 
 1. Patch 009, `App\Core\GoogleIdToken` (confere o token) e `AuthApiController::google()`, com
    teste em `tests/` (token falso, `aud` errado, vencido, conta nova sem data, vínculo por e-mail).
-2. Contrato no `api.md` e a D61 em `decisoes.md`.
+2. Contrato no `api.md` e a D65 em `decisoes.md`.
 3. **Opcional (+1 dia):** botão "Entrar com Google" no login do site (Google Identity Services),
    usando a mesma `GoogleIdToken`.
 
@@ -132,3 +132,4 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 | Data | O quê | Resultado |
 | :---- | :---- | :---- |
 | 05/11 | Proposta escrita | Esperando aprovação |
+| 09/11 | Renumerada de D61 para **D65** (D61–D64 foram para o Kolae Premium) e patch sem número fixo (o 009 é o do Premium) | Ainda esperando aprovação; nada feito no código |

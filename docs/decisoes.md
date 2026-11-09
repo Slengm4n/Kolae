@@ -24,6 +24,7 @@ Cada decisão tem: **o quê**, **por quê** e **onde isso aparece** (código ou 
 ### D04 · Avaliações, favoritos, chat e duas etapas são vitrine (28/10/2026)
 - **O quê:** existem só no app, com dados falsos e o aviso "Prévia". Não há backend para eles.
 - **Por quê:** mostrar o futuro na feira sem gastar o prazo.
+- **Mudou em 09/11:** o chat saiu da vitrine (D66). Avaliações, favoritos e duas etapas continuam.
 
 ### D05 · `owner` = quem cadastrou CNPJ (28/10/2026)
 - **O quê:** cadastrar CNPJ no site troca o papel de `player` para `owner`. Admin continua admin. Todo cadastro novo começa como `player`.
@@ -362,3 +363,11 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Privacidade:** o dono vê o primeiro nome de quem pediu; o WhatsApp da pessoa só depois de aprovar e só se ela tiver cadastrado.
 - **Banco:** tabelas `match_requests` e `notifications` (patch 009). **Plano B:** se o app não ligar até 17/11, a demonstração usa a aprovação pelo site e as telas do app ficam para a v1.7.x.
 - **Versão:** D61–D64 saem na **v1.7.0**, antes do congelamento (21/11), cada parte numa PR. **Onde:** `docs/proposta-premium.md`; contrato em `docs/api.md`.
+
+### D66 · Chat entre a pessoa e o responsável pela quadra (09/11/2026)
+- **O quê:** no detalhe da quadra, além do WhatsApp (D24), a pessoa manda mensagem pelo próprio Kolae; **o dono responde pelo painel do site** (D02). Uma conversa por pessoa e quadra, só texto: até 1000 caracteres, **sem links**, até 20 mensagens por minuto. O dono pode bloquear (e desbloquear) a conversa.
+- **Como chega:** consulta periódica, porque a HostGator compartilhada não mantém conexão aberta: app a cada 5 s na conversa e 30 s na lista; site a cada 10 s na conversa.
+- **Contrato:** as 5 dúvidas do app foram respondidas em 09/11 e todas as suposições do app valeram: conversa vazia com `last_message` `null` e fora da lista; mensagens sem `after_id`/`before_id` = as mais recentes em ordem crescente; `404 NOT_FOUND` para conversa que não é sua e `404 VENUE_NOT_FOUND` ao enviar com a quadra desativada (fica só para leitura); `Retry-After` no 429.
+- **Banco:** `conversations` e `messages` (patch `010_chat.sql`); "lida" pela última mensagem lida de cada lado.
+- **Plano B:** se até **18/11** não funcionar de ponta a ponta, o app volta para a vitrine (D04) e as rotas não sobem. A API só vai para a `main` junto com o painel do dono.
+- **Onde:** `docs/proposta-chat.md`; contrato em `docs/api.md`. Sai na v1.7.0.

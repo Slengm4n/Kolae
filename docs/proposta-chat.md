@@ -1,7 +1,8 @@
 # Proposta: chat entre a pessoa e o responsável pela quadra
 
-**Situação:** proposta (05/11/2026). Decidido tentar antes do congelamento; vira a **D62**
-quando o contrato abaixo for aprovado pelo João e pelo Rafael. Muda a **D04** em parte (o chat
+**Situação:** **aprovada em 09/11/2026: é a D66.** O app do Rafael já foi feito seguindo este
+contrato (com mock), e as 5 dúvidas dele foram respondidas pelo João (seção "Respostas às dúvidas
+do app"). Contrato final no [`api.md`](api.md#chat-v170-d66). Muda a **D04** em parte (o chat
 deixa de ser vitrine).
 **Esforço:** G (8 a 12 dias somando os dois, sem push; mais 2 a 3 com push). **Data de corte:
 18/11** (ver "Se der errado").
@@ -36,7 +37,7 @@ aberta **pergunta à API se há mensagem nova**:
 A consulta usa `after_id` e só devolve o que é novo, então é uma consulta leve no banco. No
 Laravel (depois da entrega) dá para trocar por tempo real de verdade sem mudar as telas.
 
-## Proposta de banco (patch `010_chat.sql`)
+## Banco (patch `010_chat.sql`)
 
 ```
 conversations
@@ -176,6 +177,11 @@ pelo número de não lidas no app.
 A API só sobe na `main` junto com o painel (rota nova entra com a sua tela). Até lá, testar no
 backend local (`setup.md`).
 
+**Partes do site (João), uma PR cada, empilhadas:** **A** documentação (estas respostas e o
+contrato no `api.md`) → **B** banco e regras, sem rota (patch `010_chat.sql` aplicado na produção
+antes do merge) → **C** API → **D** Mensagens no painel do dono. **C e D vão para a `main` juntas**,
+para o jogador nunca mandar mensagem sem o dono ter onde ler.
+
 ## Se der errado
 
 - **Até 18/11 não funcionou de ponta a ponta:** o app volta para a vitrine com o aviso "Prévia"
@@ -191,3 +197,29 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 | Data | O quê | Resultado |
 | :---- | :---- | :---- |
 | 05/11 | Proposta escrita | Esperando aprovação |
+| 09/11 | Renumerada de D62 para **D66** (D61–D64 foram para o Kolae Premium) e patch sem número fixo (o 009 é o do Premium) | — |
+| 09/11 | **App pronto com mock** (Rafael, PR #12 do `kolae-mobile`): as 5 rotas, conversa com polling, Menu › Mensagens, estados de envio, bloqueio e quadra desativada; `EXPO_PUBLIC_MOCK_CHAT=true` até a API subir. Ainda não testado no celular | Falta a API e o painel. O Rafael anotou 5 dúvidas do contrato (abaixo) |
+| 09/11 | **Proposta aprovada (D66)**; as 5 dúvidas do app respondidas: todas as suposições do app estavam certas, nada muda no app. Contrato final no `api.md`. Parte A do site (`docs/chat-contrato`) | Próximo: parte B (banco e regras) |
+
+### Respostas às dúvidas do app (09/11)
+
+O app assumiu o que estava entre parênteses; **as cinco suposições valem**, então o app não muda.
+
+1. **`last_message` de uma conversa sem mensagens:** `null`. Na prática só aparece na resposta do
+   `POST /venues/{id}/conversations`, porque a lista esconde as conversas vazias (item 4).
+2. **`GET /conversations/{id}/messages` sem `after_id` nem `before_id`:** as `per_page` mais
+   recentes (padrão 30), em ordem crescente de `id`. Os dois juntos: `422 VALIDATION_ERROR`.
+3. **Códigos dos 404:** conversa que não é sua (ou que não existe): `404 NOT_FOUND`. Enviar
+   mensagem com a quadra desativada: `404 VENUE_NOT_FOUND`. O app pode continuar olhando só o
+   status. A conversa de quadra desativada continua na lista e dá para ler; só não dá para enviar.
+4. **Conversas vazias:** ficam fora do `GET /conversations` e do painel do dono e não contam como
+   não lidas. Não são apagadas: abrir de novo devolve a mesma conversa.
+5. **`Retry-After` do 429:** o servidor manda o cabeçalho (em segundos); o app pode ignorar e
+   mostrar só a mensagem.
+
+**Também ficou definido:** o dono responde só pelo painel do site (D02). No app, o
+`GET /conversations` traz só as conversas em que a pessoa logada é quem pergunta (um dono que
+pergunta na quadra de outro vê essa conversa no app). Quem envia já conta como tendo lido a própria
+mensagem. O bloqueio pode ser desfeito pelo dono no painel. As mensagens novas para o dono têm o
+próprio contador em "Mensagens" no painel; quando o sino da D64 existir, passam a aparecer nele
+também.
