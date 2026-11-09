@@ -190,6 +190,28 @@ para o jogador nunca mandar mensagem sem o dono ter onde ler.
 - **Funciona, mas o push não:** entrega sem push; fica anotado.
 - **HostGator reclamar de carga:** subir os intervalos (10 s na conversa, 60 s na lista).
 
+## Onde parei (09/11, fim do dia)
+
+- **Na `main` e na produção:** partes A (#87, contrato) e B (#88, banco e regras). Patch 010
+  aplicado e conferido na produção. Nada do chat aparece ainda para quem usa o site ou o app.
+- **Só no PC do João, sem push:** branch `feat/chat-api` com a correção do patch (`5cac54e`) e
+  a parte C, a API (`b438ac9`, teste `chat_api` com 46 passos passando).
+- **Próximo: parte D, "Mensagens" no painel do dono** (na mesma branch ou empilhada nela; C e D
+  vão juntas para a `main`):
+  1. Item "Mensagens" no `owner_header.php` com o número de não lidas
+     (`Conversation::unreadForOwner`), em todas as páginas do dono.
+  2. Rotas `/dashboard/mensagens` (lista, `Conversation::forOwner`, filtro por quadra quando o dono
+     tem mais de uma), `/dashboard/mensagens/{id}` (conversa; ao abrir, `markRead` do lado
+     `owner`), `POST .../{id}` (responder, com `ChatRules::cleanBody` e `Message::waitSeconds`),
+     `POST .../{id}/bloquear` e `/desbloquear` (`Conversation::setBlocked`), e um JSON
+     `.../{id}/novas?after_id=` para a consulta a cada 10 s.
+  3. Mostrar o nome e a foto de quem pergunta, **nunca o e-mail**. Quadra desativada: só leitura.
+  4. Textos nos 7 idiomas; avisos pelo `Flash::MAP` (contexto novo); teste de clique
+     `tests/e2e/testes/chat_painel.js` e, no fim, um teste ponta a ponta: mensagem pela API →
+     aparece no painel → resposta no painel → aparece na API.
+  5. CHANGELOG, `api.md` (nada muda no contrato) e este registro. Depois: push das partes C e D e
+     o teste com o Rafael pelo app (data de corte: 18/11).
+
 ## Registro do andamento
 
 Anotar aqui cada passo, inclusive o que não deu certo, com a data.
