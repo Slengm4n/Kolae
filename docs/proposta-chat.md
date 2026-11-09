@@ -1,6 +1,6 @@
 # Proposta: chat entre a pessoa e o responsável pela quadra
 
-**Situação:** proposta (05/11/2026). Decidido tentar antes do congelamento; vira a **D62**
+**Situação:** proposta (05/11/2026). Decidido tentar antes do congelamento; vira a **D66**
 quando o contrato abaixo for aprovado pelo João e pelo Rafael. Muda a **D04** em parte (o chat
 deixa de ser vitrine).
 **Esforço:** G (8 a 12 dias somando os dois, sem push; mais 2 a 3 com push). **Data de corte:
@@ -36,7 +36,7 @@ aberta **pergunta à API se há mensagem nova**:
 A consulta usa `after_id` e só devolve o que é novo, então é uma consulta leve no banco. No
 Laravel (depois da entrega) dá para trocar por tempo real de verdade sem mudar as telas.
 
-## Proposta de banco (patch `010_chat.sql`)
+## Proposta de banco (patch `NNN_chat.sql`, com o próximo número livre na hora de fazer)
 
 ```
 conversations
@@ -191,3 +191,18 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 | Data | O quê | Resultado |
 | :---- | :---- | :---- |
 | 05/11 | Proposta escrita | Esperando aprovação |
+| 09/11 | Renumerada de D62 para **D66** (D61–D64 foram para o Kolae Premium) e patch sem número fixo (o 009 é o do Premium) | — |
+| 09/11 | **App pronto com mock** (Rafael, PR #12 do `kolae-mobile`): as 5 rotas, conversa com polling, Menu › Mensagens, estados de envio, bloqueio e quadra desativada; `EXPO_PUBLIC_MOCK_CHAT=true` até a API subir. Ainda não testado no celular | Falta a API e o painel. O Rafael anotou 5 dúvidas do contrato (abaixo) |
+
+### Dúvidas do contrato levantadas pelo app (09/11)
+
+O app assumiu o que está entre parênteses; confirmar ao fazer a API.
+
+1. `last_message` de uma conversa sem mensagens (`null`).
+2. `GET /conversations/{id}/messages` sem `after_id`/`before_id` (as `per_page` mais recentes, em
+   ordem crescente de `id`).
+3. Códigos dos 404: conversa que não é sua e envio com a quadra desativada (o app olha só o
+   status 404).
+4. Abrir a tela já cria a conversa, então podem surgir conversas vazias: o painel e o
+   `GET /conversations` deveriam esconder as que não têm mensagem.
+5. `Retry-After` do 429: o app mostra só a mensagem.
