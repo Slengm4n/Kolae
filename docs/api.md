@@ -278,7 +278,8 @@ Calculado pela API a cada requisição, no horário de Brasília. **O app nunca 
   "city": "Ferraz de Vasconcelos",
   "latitude": -23.5428,
   "longitude": -46.3686,
-  "distance_km": 1.8
+  "distance_km": 1.8,
+  "ad": null
 }
 ```
 
@@ -292,6 +293,7 @@ Calculado pela API a cada requisição, no horário de Brasília. **O app nunca 
 | `sports` | Esportes que a quadra atende (lista, pode ser vazia até o dono marcar) (D29) |
 | `latitude`, `longitude` | `null` quando o endereço não foi geolocalizado: a quadra aparece na lista, mas não no mapa |
 | `distance_km` | Distância em km (uma casa decimal) até `lat`/`lng` enviados; `null` quando a busca não manda posição |
+| `ad` | Anúncio no ar da quadra (D63, a partir da v1.7.0) ou `null`; sempre presente. Formato na seção [Anúncio da quadra](#anúncio-da-quadra-ad). Não vem dentro do `venue` do `GET /ads` |
 
 ### `GET /venues`
 
@@ -464,7 +466,14 @@ anúncio ativo da quadra ou `null`.
 | `ends_on` | Último dia do anúncio (`YYYY-MM-DD`) |
 
 Mostrar sempre com a etiqueta **"Patrocinado"**. Só vem com a quadra Premium, o anúncio ativo
-e dentro do período (D63).
+e dentro do período (D63). Quadra em manutenção continua com o anúncio.
+
+**Números do anúncio (o app que envia):** quando o anúncio aparecer na tela (item do carrossel
+"Destaques" ou faixa no detalhe), envie `ad_view`; quando a pessoa tocar nele, envie `ad_click`,
+os dois pelo [`POST /venues/{id}/events`](#post-venuesidevents) com o `id` da quadra. A API não
+conta sozinha ao responder o `GET /ads` nem o `ad` do detalhe. Pode enviar a cada vez que aparecer:
+o servidor ignora a repetição do mesmo aparelho (30 minutos para `ad_view`, 1 minuto para
+`ad_click`) e o que chegar sem anúncio no ar.
 
 ### `GET /ads`
 
@@ -479,13 +488,16 @@ Público. Até 5 anúncios ativos para o carrossel "Destaques", em ordem sortead
       "body": "Reserve pelo WhatsApp e ganhe desconto às terças.",
       "image_url": "https://kolae.online/uploads/ads/7/ad_abc.jpg",
       "ends_on": "2026-11-30",
-      "venue": { "...": "mesmo formato do objeto venue da lista" }
+      "venue": { "...": "mesmo formato do objeto venue da lista, sem ad e sem distance_km" }
     }
   ]
 }
 ```
 
-Lista vazia (`"data": []`) quando não há anúncio: esconder o carrossel.
+- Lista vazia (`"data": []`) quando não há anúncio: esconder o carrossel.
+- A ordem é sorteada uma vez por dia (horário de Brasília) e fica igual o dia todo; o site usa o
+  mesmo sorteio nos destaques da home e da `/quadras` (até 3).
+- Sem paginação e sem filtros. Tocar no item abre o detalhe da quadra (`venue.id`).
 
 ### `POST /venues/{id}/events`
 
@@ -498,6 +510,7 @@ as estatísticas do dono (D62). A visualização (`view`) **não** precisa ser e
 ```
 
 - `type`: `whatsapp`, `instagram`, `tiktok`, `facebook`, `website`, `share`, `ad_view`, `ad_click`.
+  `ad_view` e `ad_click` só contam se a quadra tiver anúncio no ar (a resposta é `204` do mesmo jeito).
 - `source`: `app` (padrão, para o app), `site` (usado pela página pública da quadra) ou `qr`.
 - Resposta: **`204`** sem corpo. Erros: `404 NOT_FOUND` (quadra inexistente ou desativada),
   `422 VALIDATION_ERROR` (`type` inválido), `429 TOO_MANY_ATTEMPTS` (cliques demais do mesmo aparelho).

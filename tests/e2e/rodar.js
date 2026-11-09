@@ -34,6 +34,7 @@ const TESTES = {
     estatisticas: ['A'],
     anuncio: ['A'],
     patrocinado: ['A', 'B', 'C', 'D', 'E'],
+    anuncio_api: ['A', 'B', 'C', 'D', 'E'],
 };
 
 const pedidos = process.argv.slice(2);

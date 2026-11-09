@@ -7,7 +7,9 @@ use DateTimeImmutable;
 
 /**
  * Anúncios "Patrocinado" para o jogador no site (D63, parte C): no topo da home e da /quadras
- * (até 3, sorteados por dia) e na página pública da quadra (o anúncio dela).
+ * (até 3, sorteados por dia) e na página pública da quadra (o anúncio dela). Também monta o
+ * objeto `ad` da API (parte D); no app, quem conta a aparição e o clique é o próprio app
+ * (POST /venues/{id}/events).
  *
  * Cada anúncio mostrado conta uma vez que apareceu (ad_view); o clique (ad_click) é contado
  * quando a página da quadra abre com ?ref=ad (PublicVenueController::show). Os filtros são os
@@ -69,18 +71,52 @@ class AdDisplay
         return VenueStats::record($venue, 'ad_click', 'site', self::viewer());
     }
 
-    // --- Ajudantes ---
+    // --- API (D63, parte D) ---
 
-    private static function visibleAd(int $venueId, ?DateTimeImmutable $today): ?array
+    /**
+     * Anúncios no ar das quadras pedidas, para o campo `ad` da API. Erro vira "sem anúncio":
+     * a lista de quadras nunca cai por causa dele.
+     * @return array<int, array> venue_id => linha do anúncio
+     */
+    public static function visibleFor(array $venueIds, ?DateTimeImmutable $today = null): array
     {
+        if (!$venueIds) {
+            return [];
+        }
         $today = ($today ?? VenueSchedule::now())->setTime(0, 0);
         try {
-            return VenueAd::visibleByVenue($today, [$venueId])[$venueId] ?? null;
+            return VenueAd::visibleByVenue($today, $venueIds);
         } catch (\Throwable $e) {
-            error_log('Anúncios: não leu o anúncio da quadra: ' . $e->getMessage());
-            return null;
+            error_log('Anúncios: não leu os anúncios da API: ' . $e->getMessage());
+            return [];
         }
     }
+
+    /**
+     * Objeto `ad` do contrato (docs/api.md): id, title, body, image_url (foto do anúncio, ou a
+     * capa, ou null) e ends_on. null sem anúncio no ar.
+     */
+    public static function forApi(?array $ad, ?string $coverFile): ?array
+    {
+        if (!$ad) {
+            return null;
+        }
+        return [
+            'id' => (int)$ad['id'],
+            'title' => $ad['title'],
+            'body' => $ad['body'],
+            'image_url' => VenueAd::imageUrl($ad, $coverFile),
+            'ends_on' => $ad['ends_on'],
+        ];
+    }
+
+    /** A quadra tem anúncio no ar hoje? (ad_view e ad_click do app só contam assim) */
+    public static function visibleAd(int $venueId, ?DateTimeImmutable $today = null): ?array
+    {
+        return self::visibleFor([$venueId], $today)[$venueId] ?? null;
+    }
+
+    // --- Ajudantes ---
 
     private static function card(array $ad, array $venue, ?string $url): array
     {

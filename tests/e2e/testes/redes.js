@@ -81,7 +81,7 @@ const row = () => sql(`SELECT CONCAT_WS('|', IFNULL(instagram,'NULL'), IFNULL(ti
   // API: o que o dono salvou chega no detalhe, no formato do contrato (docs/api.md)
   check('API: socials no detalhe com o que foi salvo', api(`/venues/${DUDA}`).data.socials,
     { instagram: 'arenadoxuxa', tiktok: 'arena.tk', facebook_url: 'https://facebook.com/arenadoxuxa', website_url: 'https://arenadoxuxa.com.br' });
-  check('API: socials vem depois do owner, como no contrato', Object.keys(api(`/venues/${DUDA}`).data).slice(-2), ['owner', 'socials']);
+  check('API: socials vem depois do owner, e o ad (D63) por último, como no contrato', Object.keys(api(`/venues/${DUDA}`).data).slice(-3), ['owner', 'socials', 'ad']);
   check('API: quadra sem redes manda as quatro chaves com null', api(`/venues/${ARENA}`).data.socials, NULLS);
   const lista = api('/venues?per_page=50').data;
   check('API: a lista (GET /venues) não tem socials', [lista.length > 0, lista.some(v => 'socials' in v)], [true, false]);
