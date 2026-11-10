@@ -226,7 +226,7 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
 | Anúncios (D63) | ✅ pronto (5 partes, PRs `feat/premium-anuncios-*`) | Aba Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública; admin remove com motivo | **Pode ligar agora:** carrossel "Destaques" (`GET /ads`), faixa `ad` no detalhe e `ad_view`/`ad_click` no `POST /venues/{id}/events` |
-| Solicitações e notificações (D64) | ⏳ a fazer (até 17/11) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
+| Solicitações e notificações (D64) | 🔧 em andamento (até 17/11): parte A de 4 pronta | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
 As PRs são empilhadas: entram na ordem da tabela, e cada uma só depois da anterior.
@@ -319,6 +319,36 @@ por vez).
     em aberto).
 
 **D63 concluída em 09/11**, antes do prazo de 13/11.
+
+### Registro do andamento das solicitações e notificações (D64)
+
+Retomada em 10/11 (o João escolheu fazer a D64 antes do login com Google, porque o sino também
+serve para o chat). Quatro partes: **A** regras e banco, sem rota → **B** API do app (as 5 rotas do
+contrato) → **C** painel do dono (sino no cabeçalho, "Notificações e solicitações" com aprovar e
+recusar, e-mail ao dono a cada pedido novo) → **D** o que o Rafael precisa fazer no app. **B e C vão
+para a `main` juntas**, para um pedido feito pelo app sempre ter onde ser respondido. As tabelas
+`match_requests` e `notifications` já estão na produção (patch 009): nenhum patch novo.
+
+- **10/11, parte A (`feat/pedidos-regras`):** `AppCoreMatchRequests` (data e hora do contrato
+  com fuso; no futuro e até 30 dias; blocos de 30 minutos; de 30 min a 4 h; funcionamento e
+  conflito pela mesma `VenueSchedule::validateMatch` da aba Agenda; esporte que a quadra tem;
+  mensagem até 200; limite de 3 pendentes por pessoa e 1 por quadra; cancelar pendente a qualquer
+  hora e aprovado até 2 h antes; motivo da recusa opcional; só o primeiro nome de quem pediu) e
+  `AppCoreNotificationText` (título e texto montados no idioma de quem lê, pelo
+  `Accept-Language` na API; o banco guarda só o tipo e os dados). Model `MatchRequest` com o
+  fluxo: pedir (avisa o dono), aprovar (confere o horário de novo, cria a partida com o primeiro
+  nome e recusa sozinho os outros pendentes no mesmo horário; dois cliques ao mesmo tempo não
+  aprovam duas vezes), recusar, cancelar (o aprovado tira a partida da agenda) e expirar. **Expirar
+  não depende de cron** (a HostGator compartilhada não garante): os pendentes que passaram do início
+  expiram na próxima leitura. `Notification` ganhou lista, não lidas e marcar como lidas (só as da
+  própria pessoa). 16 textos de notificação nos 7 idiomas, incluindo o `ad_removed` da D63, que já
+  era gravado e não tinha texto. Testes: `tests/match_requests_test.php` (68 casos, sem banco) e
+  `tests/match_requests_db_test.php` (36, no banco do seed; deixa tudo como encontrou).
+  - **O que deu errado:** nos textos em português, "na {quadra}" e "da {quadra}" erravam com nomes
+    masculinos ("na Clube do Zé"); agora "em {quadra}" e "({quadra})". Os testes passaram de
+    primeira, então o do banco foi conferido falhando com a recusa automática desligada (2 falhas).
+    A limpeza do teste apagava as notificações novas de qualquer conta; agora só as das três contas
+    do teste.
 
 ## Cronograma até o congelamento
 
