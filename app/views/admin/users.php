@@ -2,18 +2,7 @@
 <html lang="pt-BR" class="transition-colors duration-500">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Usuários · Kolae</title>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
-
-    <?php include 'app/views/partials/theme_script.php'; ?>
+    <?php $pageTitle = 'Usuários · Kolae'; include BASE_PATH . '/app/views/partials/head.php'; ?>
 
     <style>
         body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
@@ -36,6 +25,8 @@
 </head>
 
 <body class="bg-surface-base text-content-primary transition-colors duration-500">
+    <?php $adminActive = 'usuarios'; include BASE_PATH . '/app/views/partials/admin_header.php'; ?>
+
 
     <div id="toast" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 100;"
         class="flex items-center w-full max-w-xs p-4 mb-4 bg-surface-elevated text-content-primary rounded-xl shadow-2xl border border-content-secondary/10 transform transition-all duration-300 translate-x-full opacity-0" role="alert">
@@ -57,76 +48,20 @@
     }
     ?>
 
-    <div class="flex min-h-screen w-full overflow-hidden">
 
-        <aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-surface-elevated border-r border-content-secondary/10 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
-            <button id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-content-secondary hover:text-content-primary transition-colors">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
 
-            <div class="p-8 text-center border-b border-content-secondary/10">
-                <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
-                </div>
-                <h2 class="text-lg font-bold text-content-primary tracking-wide">
-                    <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
-                </h2>
-                <p class="text-xs text-content-secondary uppercase tracking-wider mt-1">Admin Kolae</p>
-            </div>
 
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-home w-5 text-center group-hover:text-brand-500"></i>
-                    <span>Início</span>
-                </a>
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all">
-                    <i class="fas fa-users w-5 text-center"></i>
-                    <span>Usuários</span>
-                </a>
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-running w-5 text-center group-hover:text-purple-500"></i>
-                    <span>Esportes</span>
-                </a>
-                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-500"></i>
-                    <span>Mapa</span>
-                </a>
-                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-500"></i>
-                    <span>Quadras</span>
-                </a>
-            </nav>
-
-            <div class="p-4 border-t border-content-secondary/10 space-y-2">
-                <button id="theme-toggle" class="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary rounded-lg transition-colors group text-left cursor-pointer">
-                    <i class="fas fa-moon w-5 text-center group-hover:text-yellow-400 transition-colors"></i>
-                    <span class="dark:hidden">Modo Escuro</span>
-                    <span class="hidden dark:inline">Modo Claro</span>
-                </button>
-
-                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
-                    <i class="fas fa-sign-out-alt w-5 text-center"></i>
-                    <span>Sair</span>
-                </a>
-            </div>
-        </aside>
-
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
-
-        <main class="md:ml-64 flex-1 p-4 md:p-10 relative z-10 w-full max-w-[100vw]">
+        <main class="container mx-auto px-4 py-6 md:py-10 max-w-6xl">
 
             <div class="flex items-center gap-3 md:hidden mb-4 animate-up">
-                <button id="sidebar-toggle" class="p-2.5 bg-surface-elevated rounded-lg text-content-secondary border border-content-secondary/10 active:bg-surface-base">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
                 <div>
-                    <h1 class="text-xl font-bold text-content-primary leading-tight">Gerir Usuários</h1>
+                    <h1 class="text-xl font-bold text-content-primary leading-tight">Gerenciar usuários</h1>
                 </div>
             </div>
 
             <div class="hidden md:flex justify-between items-center mb-8 animate-up">
                 <div>
-                    <h1 class="text-3xl font-bold mb-1 text-content-primary">Gerir Usuários</h1>
+                    <h1 class="text-3xl font-bold mb-1 text-content-primary">Gerenciar usuários</h1>
                     <p class="text-content-secondary text-sm">Administre o acesso e permissões do sistema.</p>
                 </div>
                 <a href="<?php echo BASE_URL; ?>/admin/usuarios/criar" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl inline-flex justify-center items-center transition-all hover:shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5">
@@ -188,7 +123,7 @@
                                                     <div class="text-xs text-content-secondary truncate max-w-[140px]"><?php echo htmlspecialchars($user['email']); ?></div>
                                                     <div class="md:hidden mt-1">
                                                         <span class="text-[10px] border border-content-secondary/20 rounded px-1.5 py-0.5 bg-surface-base text-content-secondary uppercase">
-                                                            <?php echo htmlspecialchars($user['role']); ?>
+                                                            <?php echo htmlspecialchars(['admin' => 'Admin', 'owner' => 'Dono', 'player' => 'Jogador'][$user['role']] ?? $user['role']); ?>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -199,7 +134,7 @@
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-content-secondary capitalize">
                                             <span class="px-2 py-1 rounded bg-surface-base border border-content-secondary/20 text-xs">
-                                                <?php echo htmlspecialchars($user['role']); ?>
+                                                <?php echo htmlspecialchars(['admin' => 'Admin', 'owner' => 'Dono', 'player' => 'Jogador'][$user['role']] ?? $user['role']); ?>
                                             </span>
                                         </td>
                                         <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
@@ -238,7 +173,6 @@
                 </div>
             </div>
         </main>
-    </div>
 
     <div id="password-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm hidden transition-opacity duration-300 p-4">
         <div class="bg-surface-elevated border border-content-secondary/20 rounded-2xl shadow-2xl p-6 w-full max-w-sm transform scale-100 transition-transform duration-300">
@@ -338,21 +272,6 @@
         });
         if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
-        // --- SIDEBAR & SEARCH ---
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-        });
-        document.getElementById('sidebar-close-btn')?.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
-        overlay?.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
 
         const searchInput = document.getElementById('searchInput');
         const tableRows = document.querySelectorAll('#userTable tbody tr');
@@ -365,21 +284,6 @@
             });
         }
 
-        // --- THEME TOGGLE ---
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        if (themeToggleBtn) {
-            themeToggleBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.theme = 'light';
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.theme = 'dark';
-                }
-            });
-        }
     </script>
-    <?php include BASE_PATH . '/app/views/partials/toasts.php'; ?>
 </body>
 </html>

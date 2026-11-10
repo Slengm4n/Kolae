@@ -64,7 +64,7 @@ const postDirect = (p, url, fields, tokenPage) => p.evaluate(async (url, fields,
 
     // --- Painel do admin: card Anúncios ---
     const a = await login(b, 'admin@teste.local');
-    await go(a, `${BASE}/admin`);
+    await go(a, `${BASE}/admin/anuncios`);
     const mine = (await rows(a)).filter(([id]) => [idA, idB, idC, idD].includes(id));
     check('card Anúncios: ativo, pausado e agendado (sem o encerrado)', mine.sort((x, y) => x[0] - y[0]), [[idA, 'running'], [idB, 'paused'], [idC, 'scheduled']].sort((x, y) => x[0] - y[0]));
     check('linha mostra título, quadra com link para a aba e situação', await a.$eval(`[data-ad-row="${idA}"]`, (e, A) => [
@@ -78,15 +78,15 @@ const postDirect = (p, url, fields, tokenPage) => p.evaluate(async (url, fields,
     check('motivo vazio: nada enviado (sem confirmação)', [!!(await a.$('.kolae-modal')), adStatus(idA)], [false, 'active|NULL']);
 
     // O servidor confere de novo
-    const curto = await postDirect(a, `${BASE}/admin/anuncios/${idA}/remover`, { reason: 'ruim' }, `${BASE}/admin`);
+    const curto = await postDirect(a, `${BASE}/admin/anuncios/${idA}/remover`, { reason: 'ruim' }, `${BASE}/admin/anuncios`);
     check('servidor: motivo curto volta com erro e o formulário aberto', [curto.includes('error=ad_reason_too_short'), curto.includes(`remover=${idA}`), adStatus(idA)], [true, true, 'active|NULL']);
     await go(a, curto);
     check('aviso do motivo curto e formulário daquele anúncio aberto', [await toast(a), await a.$eval(`[data-ad-row="${idA}"] details`, d => d.open)], ['O motivo precisa de pelo menos 5 caracteres.', true]);
-    const longo = await postDirect(a, `${BASE}/admin/anuncios/${idA}/remover`, { reason: 'x'.repeat(201) }, `${BASE}/admin`);
+    const longo = await postDirect(a, `${BASE}/admin/anuncios/${idA}/remover`, { reason: 'x'.repeat(201) }, `${BASE}/admin/anuncios`);
     check('servidor: motivo com 201 caracteres não passa', [longo.includes('error=ad_reason_too_long'), adStatus(idA)], [true, 'active|NULL']);
 
     // Remove com motivo, pela tela, com a confirmação do Kolae
-    await go(a, `${BASE}/admin`);
+    await go(a, `${BASE}/admin/anuncios`);
     await a.click(`[data-ad-row="${idA}"] summary`);
     await a.type(`#reason-${idA}`, '  O texto promete   um desconto que a quadra não oferece. ');
     await a.click(`[data-ad-row="${idA}"] [data-ad-remove]`);
@@ -101,9 +101,9 @@ const postDirect = (p, url, fields, tokenPage) => p.evaluate(async (url, fields,
     check('sai do ar: API sem ad', (await (await fetch(`${BASE}/api/v1/venues/${A}`)).json()).data.ad, null);
 
     // Remover de novo não cria outra notificação
-    const deNovo = await postDirect(a, `${BASE}/admin/anuncios/${idA}/remover`, { reason: 'Mais uma vez, por engano' }, `${BASE}/admin`);
+    const deNovo = await postDirect(a, `${BASE}/admin/anuncios/${idA}/remover`, { reason: 'Mais uma vez, por engano' }, `${BASE}/admin/anuncios`);
     check('remover de novo: erro e uma notificação só', [deNovo.includes('error=ad_failed'), notifications().split('\n').length], [true, 1]);
-    const naoExiste = await postDirect(a, `${BASE}/admin/anuncios/99999999/remover`, { reason: 'Não existe esse' }, `${BASE}/admin`);
+    const naoExiste = await postDirect(a, `${BASE}/admin/anuncios/99999999/remover`, { reason: 'Não existe esse' }, `${BASE}/admin/anuncios`);
     check('anúncio que não existe: erro', naoExiste.includes('error=ad_failed'), true);
     check('nenhum erro de JavaScript (admin)', a.jsErrors, []);
 
@@ -117,11 +117,11 @@ const postDirect = (p, url, fields, tokenPage) => p.evaluate(async (url, fields,
 
     // --- Celular ---
     const m = await login(b, 'admin@teste.local', { width: 390, height: 844, isMobile: true, hasTouch: true });
-    await go(m, `${BASE}/admin`);
+    await go(m, `${BASE}/admin/anuncios`);
     await m.click(`[data-ad-row="${idB}"] summary`);
     check('celular: sem rolagem para o lado', await m.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
     await (await m.$('#anuncios')).screenshot({ path: path.join(lib.OUT, 'anuncio_admin_celular.png') });
-    await go(a, `${BASE}/admin`);
+    await go(a, `${BASE}/admin/anuncios`);
     await (await a.$('#anuncios')).screenshot({ path: path.join(lib.OUT, 'anuncio_admin.png') });
   } finally {
     // Deixa como encontrou

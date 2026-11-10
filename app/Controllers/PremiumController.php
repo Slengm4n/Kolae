@@ -66,7 +66,7 @@ class PremiumController
 
     private function back(string $query): void
     {
-        header('Location: ' . BASE_URL . '/admin?' . $query . '#premium');
+        header('Location: ' . BASE_URL . '/admin/premium?' . $query);
         exit;
     }
 }

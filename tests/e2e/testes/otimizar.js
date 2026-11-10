@@ -66,7 +66,7 @@ const check = (label, got, want) => {
   const beforeOrder = sql(`SELECT GROUP_CONCAT(id ORDER BY position) FROM venues_images WHERE venue_id=${BEACH}`);
 
   const a = await login('admin@teste.local');
-  await a.goto(`${BASE}/admin`, { waitUntil: 'networkidle2' });
+  await a.goto(`${BASE}/admin/fotos`, { waitUntil: 'networkidle2' });
   const card = await a.$eval('#fotos', e => e.innerText);
   check('card mostra as pesadas', /\d+ pesada\(s\)/.test(card), true);
   await Promise.all([a.waitForNavigation({ waitUntil: 'networkidle2', timeout: 120000 }), a.click('#fotos button[type=submit]')]);

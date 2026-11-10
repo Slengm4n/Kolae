@@ -9,7 +9,7 @@ use App\Models\Venue;
 use App\Models\VenueAd;
 
 /**
- * Remoção de anúncio pelo admin (D63, parte E), no card "Anúncios" do painel do admin.
+ * Remoção de anúncio pelo admin (D63, parte E), na página Anúncios do admin (/admin/anuncios, D67).
  * O anúncio sai do ar na hora, o dono vê o motivo na aba Anúncio e recebe uma notificação
  * (ad_removed), que aparece no sino quando ele existir (D64).
  */
@@ -49,10 +49,10 @@ class AdminAdController
         $this->back('status=ad_removed');
     }
 
-    /** Volta para o card "Anúncios"; com erro no motivo, abre de novo o formulário daquele anúncio. */
+    /** Volta para a página Anúncios; com erro no motivo, abre de novo o formulário daquele anúncio. */
     private function back(string $query, ?int $adId = null): void
     {
-        header('Location: ' . BASE_URL . '/admin?' . $query . ($adId ? '&remover=' . $adId : '') . '#anuncios');
+        header('Location: ' . BASE_URL . '/admin/anuncios?' . $query . ($adId ? '&remover=' . $adId : '') . '#anuncios');
         exit;
     }
 }
