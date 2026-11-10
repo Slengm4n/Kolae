@@ -52,6 +52,16 @@ class Router
     }
 
     /**
+     * Adiciona uma rota para o método DELETE (usado pela API, ex.: cancelar pedido, D64).
+     * @param string $path
+     * @param mixed $handler
+     */
+    public function delete(string $path, $handler)
+    {
+        $this->addRoute('DELETE', $path, $handler);
+    }
+
+    /**
      * Adiciona uma rota ao array de rotas, considerando o prefixo do grupo.
      * @param string $method
      * @param string $path

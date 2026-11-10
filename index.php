@@ -22,6 +22,7 @@ use App\Controllers\AuthApiController;
 use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
 use App\Controllers\ChatApiController;
+use App\Controllers\RequestApiController;
 use App\Controllers\ChatController;
 use App\Controllers\SportApiController;
 use App\Core\AuthHelper;
@@ -296,6 +297,13 @@ $router->group('/api/v1', function ($router) {
     $router->get('/conversations/{id}/messages', [ChatApiController::class, 'messages']);
     $router->post('/conversations/{id}/messages', [ChatApiController::class, 'send']);
     $router->post('/conversations/{id}/read', [ChatApiController::class, 'read']);
+
+    // Pedidos de horário e notificações (D64, exigem token): o dono responde pelo painel do site
+    $router->post('/venues/{id}/requests', [RequestApiController::class, 'store']);
+    $router->get('/me/requests', [RequestApiController::class, 'index']);
+    $router->delete('/me/requests/{id}', [RequestApiController::class, 'cancel']);
+    $router->get('/me/notifications', [RequestApiController::class, 'notifications']);
+    $router->post('/me/notifications/read', [RequestApiController::class, 'readNotifications']);
 
     // Esportes
     $router->get('/sports', [SportApiController::class, 'getActiveSports']);

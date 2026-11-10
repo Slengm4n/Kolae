@@ -349,6 +349,18 @@ para a `main` juntas**, para um pedido feito pelo app sempre ter onde ser respon
     primeira, então o do banco foi conferido falhando com a recusa automática desligada (2 falhas).
     A limpeza do teste apagava as notificações novas de qualquer conta; agora só as das três contas
     do teste.
+- **10/11, parte B (`feat/pedidos-api`, local, empilhada na A):** `RequestApiController` com as 5
+  rotas do contrato: `POST /venues/{id}/requests` (token; `403 EMAIL_NOT_VERIFIED`, `403 OWN_VENUE`,
+  `404 NOT_FOUND`, `422` por campo com os textos de `MatchRequests::MESSAGES`, `409 REQUEST_LIMIT`),
+  `GET /me/requests` (página, `per_page`, filtro `status`), `DELETE /me/requests/{id}` (`409
+  CANNOT_CANCEL`), `GET /me/notifications` (título e texto pelo `Accept-Language`, `data` só com os
+  ids, `meta.unread`) e `POST /me/notifications/read` (`ids` ou `all`). O `Router` ganhou o método
+  DELETE (não existia). Teste `tests/e2e/testes/pedidos_api.js` (47 passos, só HTTP; a resposta do
+  dono é gravada direto no banco até o painel existir).
+  - **O que deu errado:** um passo falhou porque o teste gravava no banco uma notificação com
+    acento ("manutenção") pelo `lib.sql`, que passa pela linha de comando do Windows (perde os
+    acentos) e pelo MySQL (come a barra invertida). O código estava certo; o teste agora grava o
+    JSON só com ASCII (`ç`, com a barra dobrada). Não sobe sozinha: vai junto com a parte C.
 
 ## Cronograma até o congelamento
 
