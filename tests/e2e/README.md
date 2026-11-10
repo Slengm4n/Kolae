@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (26 roteiros, uns 13 minutos)
+npm run test:e2e                     # todos (30 roteiros, uns 13 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -96,4 +96,6 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `anuncio_admin` | Remoção de anúncio pelo admin (D63): card Anúncios no painel, motivo obrigatório no navegador e no servidor, confirmação, sai do ar, notificação para o dono, motivo na aba do dono, remover de novo, dono sem acesso, celular |
 | `chat_api` | API do chat (D66), sem navegador: abrir conversa, lista sem as vazias, mensagens (após, antes, mais recentes), enviar (vazio, longo, link, bloqueio, quadra desativada, limite com `Retry-After`), lida que só avança, quem não faz parte (404) e token. |
 | `chat_painel` | Mensagens no painel do dono (D66): não lidas no cabeçalho, lista sem e-mail, filtro por quadra, lida ao abrir, responder com Enter, link recusado, mensagem nova pela consulta de 10 s, bloquear e desbloquear (com o efeito na API), quadra desativada só para leitura, outro dono e admin barrados, celular. Inclui o caminho completo app → painel → app. |
+| `pedidos_api` | API dos pedidos de horário e notificações (D64), sem navegador: token, e-mail confirmado, própria quadra, erros por campo, conflito, limites, lista, cancelar (pendente e aprovado), expirar sozinho, notificações no idioma do celular e marcar como lidas |
+| `pedidos_painel` | Notificações e solicitações do dono (D64): pedidos pela API no sino, aprovar com confirmação (vira partida na agenda e recusa o outro no mesmo horário), recusar com motivo, erros no servidor, outro dono e admin sem acesso, avisos marcados como lidos, atalho para Mensagens, WhatsApp só depois de aprovar, nunca o e-mail, celular e inglês |
 | `plano` | Kolae Premium do dono (D61): pedir em Configurações, admin ativa no card do painel com validade, selo no painel, validade vencida, desativar |

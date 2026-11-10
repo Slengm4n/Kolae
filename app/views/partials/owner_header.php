@@ -16,7 +16,9 @@ if (($_SESSION['user_role'] ?? '') === 'owner') {
         $chatUnread = 0;
     }
 }
-$chatBadge = fn(string $extra = '') => $chatUnread ? '<span data-chat-unread class="min-w-[1.25rem] h-5 px-1.5 rounded-full bg-brand-600 text-white text-[0.6875rem] font-bold flex items-center justify-center ' . $extra . '">' . ($chatUnread > 99 ? '99+' : $chatUnread) . '</span>' : '';
+// Sino (D64): pedidos esperando resposta e avisos não lidos, só para o dono
+$bellCount = ($_SESSION['user_role'] ?? '') === 'owner' ? \App\Controllers\RequestController::bellCount((int)$_SESSION['user_id']) : null;
+$chatBadge = fn(string $extra = '') => $chatUnread ?'<span data-chat-unread class="min-w-[1.25rem] h-5 px-1.5 rounded-full bg-brand-600 text-white text-[0.6875rem] font-bold flex items-center justify-center ' . $extra . '">' . ($chatUnread > 99 ? '99+' : $chatUnread) . '</span>' : '';
 ?>
 <header data-panel-header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-40 py-3">
     <div class="container mx-auto px-4 flex justify-between items-center gap-4">
@@ -35,6 +37,17 @@ $chatBadge = fn(string $extra = '') => $chatUnread ? '<span data-chat-unread cla
             <?php endif; ?>
         </nav>
 
+        <div class="flex items-center gap-2">
+        <?php if ($bellCount !== null): ?>
+            <a href="<?php echo BASE_URL; ?>/dashboard/notificacoes" id="nav-bell"
+                class="relative w-10 h-10 rounded-full flex items-center justify-center text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 hover:bg-surface-secondary transition-colors"
+                aria-label="<?php echo htmlspecialchars($lang['req_title'] . ($bellCount ? ' (' . strtr($lang['req_bell_aria'], ['{n}' => $bellCount]) . ')' : '')); ?>">
+                <span class="text-lg"><i class="fas fa-bell" aria-hidden="true"></i></span>
+                <?php if ($bellCount): ?>
+                    <span data-bell-count class="absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 rounded-full bg-red-600 text-white text-[0.6875rem] font-bold flex items-center justify-center ring-2 ring-surface-elevated"><?php echo $bellCount > 99 ? '99+' : $bellCount; ?></span>
+                <?php endif; ?>
+            </a>
+        <?php endif; ?>
         <div class="relative">
             <button id="user-menu-button" type="button" class="flex items-center gap-2 p-1.5 pr-3 border border-content-secondary/20 rounded-full transition-colors hover:bg-surface-secondary" aria-haspopup="true">
                 <?php if (!empty($_SESSION['user_avatar'])): ?>
@@ -70,6 +83,7 @@ $chatBadge = fn(string $extra = '') => $chatUnread ? '<span data-chat-unread cla
                     <li><a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-3 px-5 py-3 text-red-500 hover:bg-red-500/10 transition-colors"><span class="w-4 text-center"><i class="fas fa-sign-out-alt"></i></span><?php echo $lang['global_menu_exit']; ?></a></li>
                 </ul>
             </div>
+        </div>
         </div>
     </div>
 </header>

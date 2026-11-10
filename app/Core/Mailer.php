@@ -125,6 +125,63 @@ class Mailer
     }
 
     /**
+     * Aviso ao dono de um pedido de horário novo (D64). Falhar não desfaz o pedido: o dono também
+     * vê no sino do painel.
+     * @param array $request pedido no formato de MatchRequest::findById
+     */
+    public static function sendRequestNew(string $email, string $ownerName, array $request): bool
+    {
+        if (self::isTestAddress($email)) {
+            error_log('Pedido de horário: endereço de teste, e-mail não enviado.');
+            return true;
+        }
+        try {
+            $mail = self::create();
+            $mail->addAddress($email, $ownerName);
+            [$html, $text] = self::requestNewMessage($ownerName, $request);
+            $mail->isHTML(true);
+            $mail->Subject = 'Novo pedido de horário: ' . $request['venue_name'];
+            $mail->Body = $html;
+            $mail->AltBody = $text;
+            return $mail->send();
+        } catch (MailException $e) {
+            error_log("PHPMailer Error: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            error_log("Erro ao preparar o e-mail do pedido de horário: " . $e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * E-mail do pedido novo: HTML no visual do Kolae e a versão em texto puro.
+     * @return array [html, texto]
+     */
+    public static function requestNewMessage(string $ownerName, array $request): array
+    {
+        $person = MatchRequests::firstName($request['user_name'] ?? '') ?: 'Alguém';
+        $venueName = (string)$request['venue_name'];
+        $when = date('d/m', strtotime($request['start_time'])) . ', das ' . date('H:i', strtotime($request['start_time']))
+            . ' às ' . date('H:i', strtotime($request['end_time']));
+        $sport = $request['sport_name'] ?? null;
+        $message = $request['message'] ?? null;
+        $link = BASE_URL . '/dashboard/notificacoes';
+        ob_start();
+        include BASE_PATH . '/app/views/emails/request_new.php';
+        $html = ob_get_clean();
+
+        $firstName = explode(' ', trim($ownerName))[0] ?: 'olá';
+        $text = "Olá, $firstName!\n\n"
+            . "$person pediu um horário pelo aplicativo do Kolae:\n\n"
+            . "$venueName\n$when\n"
+            . ($sport ? "Esporte: $sport\n" : '')
+            . ($message ? "\"$message\"\n" : '')
+            . "\nO horário só entra na sua agenda quando você aprovar. Veja o pedido:\n$link\n\n"
+            . "Se ninguém responder, o pedido expira sozinho no início do horário.\n\n"
+            . "Kolae · " . preg_replace('#^https?://#', '', BASE_URL);
+        return [$html, $text];
+    }
+
+    /**
      * Domínios reservados para testes (RFC 2606/6761): nunca recebem e-mail de verdade.
      * Os testes criam contas como dono@teste.local; mandar para elas pelo Titan só geraria
      * devoluções e prejudicaria a reputação do remetente.

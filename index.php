@@ -22,7 +22,9 @@ use App\Controllers\AuthApiController;
 use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
 use App\Controllers\ChatApiController;
+use App\Controllers\RequestApiController;
 use App\Controllers\ChatController;
+use App\Controllers\RequestController;
 use App\Controllers\SportApiController;
 use App\Core\AuthHelper;
 
@@ -181,6 +183,11 @@ $router->group('/dashboard', function ($router) {
     $router->post('/mensagens/{id}/bloquear', [ChatController::class, 'block']);
     $router->post('/mensagens/{id}/desbloquear', [ChatController::class, 'unblock']);
 
+    // Notificações e solicitações (D64): o dono aprova ou recusa os pedidos de horário do app
+    $router->get('/notificacoes', [RequestController::class, 'index']);
+    $router->post('/notificacoes/pedidos/{id}/aprovar', [RequestController::class, 'approve']);
+    $router->post('/notificacoes/pedidos/{id}/recusar', [RequestController::class, 'decline']);
+
     // --- ROTAS DE QUADRAS DO UTILIZADOR ---
     $router->group('/quadras', function ($router) {
         $router->get('/criar', [VenueController::class, 'create']);
@@ -296,6 +303,13 @@ $router->group('/api/v1', function ($router) {
     $router->get('/conversations/{id}/messages', [ChatApiController::class, 'messages']);
     $router->post('/conversations/{id}/messages', [ChatApiController::class, 'send']);
     $router->post('/conversations/{id}/read', [ChatApiController::class, 'read']);
+
+    // Pedidos de horário e notificações (D64, exigem token): o dono responde pelo painel do site
+    $router->post('/venues/{id}/requests', [RequestApiController::class, 'store']);
+    $router->get('/me/requests', [RequestApiController::class, 'index']);
+    $router->delete('/me/requests/{id}', [RequestApiController::class, 'cancel']);
+    $router->get('/me/notifications', [RequestApiController::class, 'notifications']);
+    $router->post('/me/notifications/read', [RequestApiController::class, 'readNotifications']);
 
     // Esportes
     $router->get('/sports', [SportApiController::class, 'getActiveSports']);
