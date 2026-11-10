@@ -7,6 +7,16 @@
  * $toastContext (avisos da URL como pop-up, ver App\Core\Flash e partials/toasts.php).
  */
 $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
+// Mensagens do chat (D66): só o dono, com o número de não lidas (sem as tabelas do chat, fica 0)
+$chatUnread = null;
+if (($_SESSION['user_role'] ?? '') === 'owner') {
+    try {
+        $chatUnread = \App\Models\Conversation::unreadForOwner((int)$_SESSION['user_id']);
+    } catch (\Throwable $e) {
+        $chatUnread = 0;
+    }
+}
+$chatBadge = fn(string $extra = '') => $chatUnread ? '<span data-chat-unread class="min-w-[1.25rem] h-5 px-1.5 rounded-full bg-brand-600 text-white text-[0.6875rem] font-bold flex items-center justify-center ' . $extra . '">' . ($chatUnread > 99 ? '99+' : $chatUnread) . '</span>' : '';
 ?>
 <header data-panel-header class="bg-surface-elevated/80 backdrop-blur-md border-b border-content-secondary/10 sticky top-0 z-40 py-3">
     <div class="container mx-auto px-4 flex justify-between items-center gap-4">
@@ -14,10 +24,15 @@ $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
             <img src="<?php echo BASE_URL; ?>/assets/img/kolae_branca.png" alt="Kolae" class="h-8 w-auto invert dark:invert-0 opacity-90 group-hover:opacity-100 transition-opacity">
         </a>
 
-        <nav class="hidden md:flex items-center">
+        <nav class="hidden md:flex items-center gap-6">
             <a href="<?php echo BASE_URL . $backUrl; ?>" class="font-semibold text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                 <?php echo $lang['global_home_panel']; ?>
             </a>
+            <?php if ($chatUnread !== null): ?>
+                <a href="<?php echo BASE_URL; ?>/dashboard/mensagens" id="nav-messages" class="flex items-center gap-2 font-semibold text-content-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors"<?php echo $chatUnread ? ' aria-label="' . htmlspecialchars($lang['chat_title'] . ' (' . strtr($lang['chat_unread_aria'], ['{n}' => $chatUnread]) . ')') . '"' : ''; ?>>
+                    <?php echo $lang['chat_title']; ?><?php echo $chatBadge(); ?>
+                </a>
+            <?php endif; ?>
         </nav>
 
         <div class="relative">
@@ -30,6 +45,7 @@ $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
                 <?php else: ?>
                     <span class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm"><?php echo htmlspecialchars($userInitial); ?></span>
                 <?php endif; ?>
+                <?php if ($chatUnread): ?><span class="md:hidden w-2.5 h-2.5 rounded-full bg-brand-600" aria-hidden="true"></span><?php endif; ?>
                 <span class="text-xs text-content-secondary"><i class="fas fa-chevron-down"></i></span>
             </button>
 
@@ -40,6 +56,9 @@ $userInitial = strtoupper(mb_substr($_SESSION['user_name'] ?? 'U', 0, 1));
                 </div>
                 <ul class="py-2 text-sm text-content-secondary">
                     <li><a href="<?php echo BASE_URL . $backUrl; ?>" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors md:hidden"><span class="w-4 text-center"><i class="fas fa-home"></i></span><?php echo $lang['global_home_panel']; ?></a></li>
+                    <?php if ($chatUnread !== null): ?>
+                        <li><a href="<?php echo BASE_URL; ?>/dashboard/mensagens" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors md:hidden"><span class="w-4 text-center"><i class="fas fa-comments"></i></span><span class="flex-1"><?php echo $lang['chat_title']; ?></span><?php echo $chatBadge(); ?></a></li>
+                    <?php endif; ?>
                     <li><a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors"><span class="w-4 text-center"><i class="fas fa-cog"></i></span><?php echo $lang['global_menu_config']; ?></a></li>
                     <li>
                         <button id="theme-toggle" type="button" class="w-full flex items-center gap-3 px-5 py-3 hover:bg-surface-secondary hover:text-content-primary transition-colors text-left">

@@ -45,6 +45,21 @@ class Flash
                 'ad_failed' => 'ad_flash_failed',
             ],
         ],
+        // Mensagens do painel do dono (D66)
+        'chat' => [
+            'status' => [
+                'chat_blocked' => 'chat_flash_blocked',
+                'chat_unblocked' => 'chat_flash_unblocked',
+            ],
+            'error' => [
+                'chat_not_found' => 'chat_err_not_found',
+                'chat_required' => 'chat_err_required',
+                'chat_too_long' => 'chat_err_too_long',
+                'chat_link' => 'chat_err_link',
+                'chat_rate' => 'chat_err_rate',
+                'chat_readonly' => 'chat_err_readonly',
+            ],
+        ],
         'plan' => [
             'status' => [
                 'plan_requested' => 'plan_flash_requested',

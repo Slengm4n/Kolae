@@ -190,6 +190,16 @@ para o jogador nunca mandar mensagem sem o dono ter onde ler.
 - **Funciona, mas o push não:** entrega sem push; fica anotado.
 - **HostGator reclamar de carga:** subir os intervalos (10 s na conversa, 60 s na lista).
 
+## Onde parei (09/11, noite)
+
+- **Na `main` e na produção:** partes A (#87) e B (#88); patch 010 aplicado na produção.
+- **Branch `feat/chat-api`, pronta para a PR:** parte C (API) e parte D (Mensagens no painel do
+  dono), juntas, como combinado. Testes: `chat_api` (46) e `chat_painel` (26, com o caminho
+  completo app → painel → app), mais os testes PHP do chat.
+- **Depois do merge:** o teste com o Rafael pelo app, pelo 4G, contra a produção (data de corte:
+  18/11); atualizar Termos e Privacidade (as mensagens ficam guardadas no Kolae); push no celular
+  só se sobrar tempo.
+
 ## Registro do andamento
 
 Anotar aqui cada passo, inclusive o que não deu certo, com a data.
@@ -201,6 +211,9 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 | 09/11 | **App pronto com mock** (Rafael, PR #12 do `kolae-mobile`): as 5 rotas, conversa com polling, Menu › Mensagens, estados de envio, bloqueio e quadra desativada; `EXPO_PUBLIC_MOCK_CHAT=true` até a API subir. Ainda não testado no celular | Falta a API e o painel. O Rafael anotou 5 dúvidas do contrato (abaixo) |
 | 09/11 | **Proposta aprovada (D66)**; as 5 dúvidas do app respondidas: todas as suposições do app estavam certas, nada muda no app. Contrato final no `api.md`. Parte A do site (`docs/chat-contrato`) | Próximo: parte B (banco e regras) |
 | 09/11 | **Parte B** (`feat/chat-banco`): patch `010_chat.sql` (no `schema.sql` e no DBML), regras em `App\Core\ChatRules` (texto até 1000, sem links, quebras de linha mantidas, parâmetros da lista, limite de 20 por minuto, "última lida" que só avança) e os models `Conversation` e `Message`. Sem rota. Testes: `tests/chat_rules_test.php` (56 casos, sem banco) e `tests/chat_db_test.php` (49, no banco do seed, deixa tudo como encontrou). **O que deu errado:** a primeira versão da regra de links tratava como link frases com o espaço esquecido depois do ponto ("Pode ser.De tarde", "Tá bom.Com certeza"); agora o domínio só conta em minúsculas e os domínios curtos que são palavras em português (`.de`, `.to`, `.es`...) saíram da lista. E-mail na mensagem também conta como link (fica bloqueado, o que protege o dado pessoal). Descoberto ao fazer: **conta excluída no Kolae só fica inativa**, então "as mensagens somem com a conta" não acontecia sozinho; as consultas agora escondem as conversas e as mensagens de conta inativa (e a cascata apaga se a conta for apagada de verdade) | Antes do merge: patch 010 na produção. Próximo: parte C (API) |
+| 09/11 | **Patch 010 na produção, 1ª tentativa: erro.** O patch foi rodado com o `information_schema` escolhido (o topo do phpMyAdmin mostrava só "Server: localhost:3306"), e o `CREATE TABLE` falhou ali; nada foi criado nem mudado. O aviso do patch só pegava "nenhum banco". **Correção:** o patch agora só cria as tabelas se o banco escolhido tiver `venues` e `users`; em qualquer outro, mostra "Patch 010 NÃO aplicado" sem erro. Testado em 5 situações (banco certo, de novo, `information_schema`, sem banco, banco vazio). A produção é MySQL 5.7.44 | Rodar de novo no banco `joao5502_kolae` |
+| 09/11 | Patch 010 rodado de novo no banco certo: `conversations` e `messages` conferidas na produção (`SHOW TABLES`). Partes A (#87) e B (#88) na `main`; deploy com os testes do chat passando no Actions | ✅ |
+| 09/11 | **Parte C** (`feat/chat-api`, local): `ChatApiController` com as 5 rotas do contrato e a correção do patch. Pela API, a pessoa só acessa as conversas em que é quem pergunta (o dono e o admin recebem 404). Teste `tests/e2e/testes/chat_api.js` (46 passos, só HTTP; a resposta do dono é gravada direto no banco até o painel existir). **O que deu errado:** na primeira rodada 3 passos falharam porque o teste esperava `errors.body` como texto; o contrato (e o resto da API) usa lista de textos (`"body": ["..."]`), então o teste estava errado | Não sobe sozinha: vai junto com a parte D (painel) |
 
 ### Respostas às dúvidas do app (09/11)
 
@@ -224,3 +237,4 @@ pergunta na quadra de outro vê essa conversa no app). Quem envia já conta como
 mensagem. O bloqueio pode ser desfeito pelo dono no painel. As mensagens novas para o dono têm o
 próprio contador em "Mensagens" no painel; quando o sino da D64 existir, passam a aparecer nele
 também.
+| 09/11 | **Parte D** (`feat/chat-api`): **Mensagens** no painel do dono (`ChatController`, telas `chat/index` e `chat/show`): item no cabeçalho com as não lidas (`Conversation::unreadForOwner`), lista com filtro por quadra (sem as excluídas), conversa com balões por dia, resposta pelo `fetch` (sem JavaScript, o formulário funciona com redirecionamento), consulta a cada 10 s só com a aba visível, bloquear e desbloquear, quadra desativada só leitura (409 no envio direto). Nome e foto de quem pergunta, nunca o e-mail; o admin não lê conversas. Enter envia só com teclado de verdade (no celular, pula linha). Avisos no contexto `chat` do `Flash::MAP`, 29 textos nos 7 idiomas. Teste `tests/e2e/testes/chat_painel.js` (26 passos). **O que deu errado:** o teste não conseguia clicar em "Desbloquear" porque o aviso "Conversa bloqueada." fica por cima do botão (o mesmo do teste do plano); o teste fecha o aviso antes. Neste PC, o Edge dos testes só abre pelo PowerShell (pelo Git Bash ele fecha na hora) | Próximo: PR das partes C e D; teste com o Rafael |

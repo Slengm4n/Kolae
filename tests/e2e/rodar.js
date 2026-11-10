@@ -36,6 +36,8 @@ const TESTES = {
     patrocinado: ['A', 'B', 'C', 'D', 'E'],
     anuncio_api: ['A', 'B', 'C', 'D', 'E'],
     anuncio_admin: ['A', 'B', 'C', 'D'],
+    chat_api: ['A', 'B', 'E'],
+    chat_painel: ['A', 'B'],
 };
 
 const pedidos = process.argv.slice(2);
