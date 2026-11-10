@@ -41,6 +41,8 @@ class UserController
             'emailPending' => empty($user['email_verified_at']),
             'userEmail' => $user['email'] ?? '',
             'isPremium' => \App\Core\PremiumPlan::isPremium($user), // selo do Kolae Premium (D61)
+            // Bloco "Hoje" (D67): só para quem já tem quadra
+            'today' => $venues ? \App\Core\OwnerToday::load($user, $venues, $matches, $now) : null,
         ];
 
         ViewHelper::render('users/dashboard', $data);

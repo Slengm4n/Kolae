@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (30 roteiros, uns 13 minutos)
+npm run test:e2e                     # todos (31 roteiros, uns 13 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -73,6 +73,7 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `dados` | Aba Dados: preço, descrição, esportes, situação, WhatsApp |
 | `cadastro` | Cadastro de quadra em passos, até cair na aba Horário |
 | `painel` | Painel do dono com status ao vivo |
+| `painel_hoje` | Bloco "Hoje" do painel do dono (D67): pedidos esperando, mensagens não lidas, partidas de hoje, Kolae Premium e anúncio, com número, texto e link certos; "Novo local"; celular e inglês |
 | `s5` | CSRF, "lembrar de mim", senha mínima, limite de login (site e API), XSS do mapa |
 | `fotos` | Aba Fotos: enviar, miniaturas, capa, ordem, apagar (com a confirmação do Kolae), limite de 10 |
 | `visao` | Visão geral: galeria, tela cheia, informações, "Quadra completa" |

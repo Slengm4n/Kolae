@@ -39,6 +39,7 @@ const TESTES = {
     chat_api: ['A', 'B', 'E'],
     pedidos_api: ['A', 'B', 'C', 'D', 'E'],
     pedidos_painel: ['A', 'B'],
+    painel_hoje: ['A', 'B'],
     chat_painel: ['A', 'B'],
 };
 

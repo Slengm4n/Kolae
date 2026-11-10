@@ -80,7 +80,9 @@ try {
     check('painel do dono: pendentes do horário mais próximo', array_map(fn($r) => (int)$r['id'], $painel['pending']) === [(int)$r1['id'], (int)$r2['id'], (int)$r3['id']]);
     check('painel: filtro por quadra', MatchRequest::forOwner($dono, $beach['id'])['pending'] === []);
     check('número de pendentes do dono', MatchRequest::pendingForOwner($dono) === 3);
-    check('lista de quem pediu', MatchRequest::forUser($beto['id'], null, 1, 20)['total'] === 2 && MatchRequest::forUser($beto['id'], 'approved', 1, 20)['total'] === 0);
+    // Só os pedidos das quadras do teste: o banco local pode ter outros pedidos da mesma conta
+    $doTeste = fn(array $list) => count(array_filter($list['items'], fn($r) => in_array((int)$r['venue_id'], [$arena['id'], $beach['id']], true)));
+    check('lista de quem pediu', $doTeste(MatchRequest::forUser($beto['id'], null, 1, 100)) === 2 && $doTeste(MatchRequest::forUser($beto['id'], 'approved', 1, 100)) === 0);
 
     echo "aprovar\n";
     $res = MatchRequest::approve($r1, $dono);

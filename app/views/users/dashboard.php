@@ -112,37 +112,78 @@ $showCnpjModal = $data['showCnpjModal'] ?? false;
             <p class="text-content-secondary"><?php echo $lang['dashboard_user_activity']; ?></p>
         </section>
 
-        <section class="mb-16 animate-up delay-200">
-            <h2 class="text-xl font-semibold text-content-primary mb-6 flex items-center gap-2"><i class="fas fa-bolt text-yellow-500"></i> <?php echo $lang['dashboard_user_actions']; ?></h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" class="group bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all duration-300 hover:-translate-y-1 flex items-center gap-5">
-                    <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 dark:text-brand-400 group-hover:bg-brand-700 group-hover:text-white transition-colors">
-                        <i class="fas fa-plus text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg text-content-primary group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors"><?php echo $lang['dashboard_user_location_title']; ?></h3>
-                        <p class="text-sm text-content-secondary"><?php echo $lang['dashboard_user_location_text']; ?></p>
-                    </div>
-                    <i class="fas fa-arrow-right ml-auto text-content-secondary group-hover:text-brand-500 group-hover:translate-x-1 transition-all"></i>
-                </a>
-
-                <a href="<?php echo BASE_URL; ?>/dashboard/perfil" class="group bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300 hover:-translate-y-1 flex items-center gap-5">
-                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                        <i class="fas fa-user-cog text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg text-content-primary group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors"><?php echo $lang['dashboard_user_account_title']; ?></h3>
-                        <p class="text-sm text-content-secondary"><?php echo $lang['dashboard_user_account_text']; ?></p>
-                    </div>
-                    <i class="fas fa-arrow-right ml-auto text-content-secondary group-hover:text-purple-500 group-hover:translate-x-1 transition-all"></i>
-                </a>
-            </div>
-        </section>
+        <?php if (!empty($data['today'])):
+            // Bloco "Hoje" (D67): o que pede atenção no dia, cada número levando à tela que resolve
+            $t = $data['today'];
+            $q = BASE_URL . '/dashboard/quadras';
+            $tE = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+            $plural = fn(int $n, string $one, string $many) => strtr($lang[$n === 1 ? $one : $many], ['{n}' => $n]);
+            $next = $t['matches']['next'];
+            $agendaVenue = $next['venue_id'] ?? $t['first_venue_id'];
+            $premium = $t['premium'];
+            $ad = $t['ad'];
+            $adVenue = $ad['venue_id'] ?? $t['first_venue_id'];
+            $cards = [
+                [
+                    'key' => 'requests', 'icon' => 'fa-calendar-plus', 'title' => $lang['today_requests_title'],
+                    'value' => $t['requests'], 'href' => BASE_URL . '/dashboard/notificacoes?aba=solicitacoes',
+                    'text' => $t['requests'] ? $plural($t['requests'], 'today_requests_one', 'today_requests_many') : $lang['today_requests_none'],
+                ],
+                [
+                    'key' => 'messages', 'icon' => 'fa-comments', 'title' => $lang['today_messages_title'],
+                    'value' => $t['messages'], 'href' => BASE_URL . '/dashboard/mensagens',
+                    'text' => $t['messages'] ? $plural($t['messages'], 'today_messages_one', 'today_messages_many') : $lang['today_messages_none'],
+                ],
+                [
+                    'key' => 'matches', 'icon' => 'fa-futbol', 'title' => $lang['today_matches_title'],
+                    'value' => $t['matches']['count'], 'href' => $agendaVenue ? $q . '/' . (int)$agendaVenue . '/agenda' : null,
+                    'text' => $next
+                        ? strtr($lang[$next['ongoing'] ? 'today_matches_now' : 'today_matches_next'], ['{start}' => $next['start'], '{end}' => $next['end'], '{venue}' => $next['venue_name']])
+                        : $lang[$t['matches']['done'] ? 'today_matches_done' : 'today_matches_none'],
+                ],
+                [
+                    'key' => 'premium', 'icon' => 'fa-crown', 'title' => $lang['today_premium_title'], 'value' => null,
+                    'href' => $premium['state'] === 'premium' && $adVenue ? $q . '/' . (int)$adVenue . '/anuncio' : BASE_URL . '/dashboard/perfil/plano',
+                    'text' => [
+                        'free' => $lang['today_premium_free'],
+                        'requested' => $lang['today_premium_requested'],
+                        'expired' => strtr($lang['today_premium_expired'], ['{date}' => $premium['until'] ? date('d/m', strtotime($premium['until'])) : '']),
+                        'premium' => $premium['until'] ? strtr($lang['today_premium_until'], ['{date}' => date('d/m', strtotime($premium['until']))]) : $lang['today_premium_nolimit'],
+                    ][$premium['state']] ?? '',
+                    'sub' => $premium['state'] === 'premium'
+                        ? strtr($lang['today_ad_' . $ad['state']], ['{venue}' => (string)$ad['venue_name']]) : null,
+                    'highlight' => $premium['state'] === 'premium',
+                ],
+            ]; ?>
+            <section id="today" class="mb-14 animate-up delay-200" aria-labelledby="today-title">
+                <h2 id="today-title" class="text-xl font-semibold text-content-primary mb-4"><?php echo $tE($lang['today_title']); ?></h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <?php foreach ($cards as $c):
+                        $on = $c['value'] !== null ? $c['value'] > 0 : !empty($c['highlight']);
+                        $tag = $c['href'] ? 'a' : 'div'; ?>
+                        <<?php echo $tag; ?> <?php echo $c['href'] ? 'href="' . $tE($c['href']) . '"' : ''; ?> data-today="<?php echo $c['key']; ?>" data-value="<?php echo $c['value'] ?? ''; ?>"
+                            class="group flex items-start gap-4 p-5 rounded-2xl border transition-all <?php echo $on ? 'bg-brand-500/5 border-brand-500/30' : 'bg-surface-elevated border-content-secondary/10'; ?> <?php echo $c['href'] ? 'hover:border-brand-500/50 hover:shadow-lg hover:-translate-y-0.5' : ''; ?>">
+                            <span class="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center text-lg <?php echo $on ? 'bg-brand-600 text-white' : 'bg-surface-secondary text-content-secondary'; ?>" aria-hidden="true"><i class="fas <?php echo $c['icon']; ?>"></i></span>
+                            <span class="flex-1 min-w-0">
+                                <span class="flex items-baseline justify-between gap-2">
+                                    <span class="text-sm font-semibold text-content-secondary"><?php echo $tE($c['title']); ?></span>
+                                    <?php if ($c['value'] !== null): ?><span class="text-2xl font-bold tabular-nums <?php echo $on ? 'text-brand-600 dark:text-brand-400' : 'text-content-secondary/60'; ?>"><?php echo (int)$c['value']; ?></span><?php endif; ?>
+                                </span>
+                                <span class="block mt-1 text-sm <?php echo $on ? 'text-content-primary font-medium' : 'text-content-secondary'; ?>" data-text><?php echo $tE($c['text']); ?></span>
+                                <?php if (!empty($c['sub'])): ?><span class="block mt-0.5 text-xs text-content-secondary truncate" data-sub><?php echo $tE($c['sub']); ?></span><?php endif; ?>
+                            </span>
+                        </<?php echo $tag; ?>>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endif; ?>
 
         <section class="animate-up delay-300">
-            <div class="flex justify-between items-end mb-6">
+            <div class="flex justify-between items-center gap-4 mb-6">
                 <h2 class="text-2xl font-bold text-content-primary flex items-center gap-2"><i class="fas fa-map-marked-alt text-brand-500"></i> <?php echo $lang['dashboard_user_venues_title']; ?></h2>
+                <?php if (!empty($userVenues)): ?>
+                    <a href="<?php echo BASE_URL; ?>/dashboard/quadras/criar" id="new-venue" class="shrink-0 inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors"><span><i class="fas fa-plus" aria-hidden="true"></i></span><?php echo $lang['today_new_venue']; ?></a>
+                <?php endif; ?>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
