@@ -17,7 +17,7 @@ São **só para o ambiente local** (XAMPP). Não rodam no GitHub Actions: lá ro
 Da raiz do projeto:
 
 ```bash
-npm run test:e2e                     # todos (31 roteiros, uns 13 minutos)
+npm run test:e2e                     # todos (32 roteiros, uns 13 minutos)
 node tests/e2e/rodar.js fotos visao  # só alguns
 ```
 
@@ -89,6 +89,7 @@ Exemplo (Git Bash): `KOLAE_URL=http://localhost:8080/kolae npm run test:e2e`
 | `preferencias` | Menu e tema em todas as páginas do dono; Preferências (tema automático e idioma) |
 | `avisos` | Avisos (toast) e URL limpa; CNPJ exigido em todas as páginas de gerenciar quadra |
 | `confirmacao` | Confirmação de e-mail: aviso, reenviar com espera, link válido, vencido e adulterado, selo, API |
+| `admin_paginas` | Visual comum do admin (D67): as 12 páginas com o cabeçalho novo (item marcado, sem o menu lateral antigo, menu visível no computador), tema trocando uma vez só, menu do celular, Início com "Precisa de atenção" e números, páginas Premium, Anúncios e Fotos |
 | `plano` | Aba Premium (D61): pedir, admin ativa com validade, selo no painel, validade vencida, desativar, acesso de outro dono |
 | `estatisticas` | Registro de visualizações e cliques (página pública, QR, API), filtros (dono, robô, repetição) e a aba Estatísticas no Grátis e no Premium |
 | `anuncio` | Aba Anúncio (D63): convite no Grátis, criar com prévia ao vivo e foto, erros no navegador e no servidor, editar, voltar para a capa, pausar, retomar, Premium vencido, números, encerrar, histórico, motivo da remoção, celular, inglês e admin |

@@ -221,11 +221,15 @@ $router->group('/dashboard', function ($router) {
 $router->group('/admin', function ($router) {
     $router->get('/', [AdminController::class, 'dashboard']);
     $router->get('/mapa', [AdminController::class, 'showMap']);
+    // Fotos das quadras (D48), página própria desde a D67
+    $router->get('/fotos', [AdminController::class, 'photos']);
     $router->post('/fotos/otimizar', [AdminController::class, 'optimizePhotos']);
-    // Kolae Premium (D61): o admin ativa e desativa por dono
+    // Kolae Premium (D61): o admin ativa e desativa por dono (página própria desde a D67)
+    $router->get('/premium', [AdminController::class, 'premium']);
     $router->post('/premium/{id}/ativar', [PremiumController::class, 'activate']);
     $router->post('/premium/{id}/desativar', [PremiumController::class, 'deactivate']);
-    // Anúncios (D63): o admin remove com motivo, no card "Anúncios" do painel
+    // Anúncios (D63): o admin remove com motivo (página própria desde a D67)
+    $router->get('/anuncios', [AdminController::class, 'ads']);
     $router->post('/anuncios/{id}/remover', [AdminAdController::class, 'remove']);
 
     // Gerenciamento de Usuarios

@@ -1,342 +1,117 @@
 <?php
-// Define variáveis padrão se não vierem do controller
-$userName = $data['userName'] ?? 'Admin';
-$totalUsers = $data['totalUsers'] ?? '0';
-$totalSports = $data['totalSports'] ?? '0';
-$totalLocations = $data['totalLocations'] ?? '0';
-$recentUsers = $data['recentUsers'] ?? [];
+/**
+ * Início do painel do admin (D67, parte C): "Precisa de atenção" (o que espera uma ação, com o
+ * link para a página que resolve), os números do Kolae e os usuários recentes. Premium, Anúncios e
+ * Fotos têm páginas próprias. Só em português (D19). Dados do AdminController::dashboard.
+ */
+$pageTitle = 'Início · Admin · Kolae';
+$e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+$attention = $attention ?? ['premium' => 0, 'ads' => 0, 'photos' => 0];
+$items = [
+    ['key' => 'premium', 'icon' => 'fa-crown', 'n' => $attention['premium'], 'href' => '/admin/premium',
+        'one' => '1 pedido de Premium esperando ativação', 'many' => '{n} pedidos de Premium esperando ativação'],
+    ['key' => 'ads', 'icon' => 'fa-bullhorn', 'n' => $attention['ads'], 'href' => '/admin/anuncios',
+        'one' => '1 anúncio em aberto para revisar', 'many' => '{n} anúncios em aberto para revisar'],
+    ['key' => 'photos', 'icon' => 'fa-images', 'n' => $attention['photos'], 'href' => '/admin/fotos',
+        'one' => '1 foto pesada ou sem miniatura', 'many' => '{n} fotos pesadas ou sem miniatura'],
+];
+$pending = array_values(array_filter($items, fn($i) => $i['n'] > 0));
+$numbers = [
+    ['Usuários', $totalUsers ?? 0, 'fa-users', '/admin/usuarios'],
+    ['Quadras', $totalLocations ?? 0, 'fa-flag', '/admin/quadras'],
+    ['Esportes', $totalSports ?? 0, 'fa-person-running', '/admin/esportes'],
+];
+$roles = ['admin' => 'Admin', 'owner' => 'Dono', 'player' => 'Jogador'];
+$card = 'bg-surface-elevated rounded-2xl border border-content-secondary/10 shadow-sm';
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR" class="transition-colors duration-500">
+<html lang="pt-BR">
 
 <head>
-    <link rel="icon" href="https://i.postimg.cc/Ss21pvVJ/Favicon.png" type="image/png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do admin · Kolae</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="<?php echo \App\Core\ViewHelper::asset('assets/css/style.css'); ?>" rel="stylesheet">
-
-    <?php include 'app/views/partials/theme_script.php'; ?>
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        .animate-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    <?php include BASE_PATH . '/app/views/partials/head.php'; ?>
 </head>
 
-<body class="bg-surface-base text-content-primary transition-colors duration-500">
+<body class="bg-surface-base text-content-primary font-sans antialiased">
+    <?php $adminActive = 'inicio'; $toastContext = 'plan'; include BASE_PATH . '/app/views/partials/admin_header.php'; ?>
 
-    <div class="flex h-screen overflow-hidden">
-        
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-surface-elevated border-r border-content-secondary/10 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 shadow-2xl">
-            <button name="close-btn" id="sidebar-close-btn" class="md:hidden absolute top-4 right-4 text-content-secondary hover:text-content-primary transition-colors">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
+    <main class="container mx-auto px-4 py-6 md:py-10 max-w-6xl">
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold">Início</h1>
+            <p class="text-sm text-content-secondary mt-1">Olá, <?php echo $e(explode(' ', trim((string)($userName ?? 'Admin')))[0]); ?>. Aqui fica o que precisa da sua atenção.</p>
+        </div>
 
-            <div class="p-8 text-center border-b border-content-secondary/10">
-                <div class="w-20 h-20 rounded-full bg-surface-base border border-content-secondary/20 mx-auto flex items-center justify-center mb-4 shadow-inner">
-                    <i class="fas fa-user-shield text-3xl text-brand-500"></i>
+        <!-- Precisa de atenção -->
+        <section id="attention" class="mb-8" aria-labelledby="attention-title">
+            <h2 id="attention-title" class="text-sm font-semibold uppercase tracking-widest text-content-secondary mb-3">Precisa de atenção</h2>
+            <?php if (!$pending): ?>
+                <div id="attention-ok" class="<?php echo $card; ?> p-5 flex items-center gap-3">
+                    <span class="w-10 h-10 shrink-0 rounded-full bg-green-500/15 text-green-700 dark:text-green-300 flex items-center justify-center" aria-hidden="true"><i class="fas fa-check"></i></span>
+                    <p class="font-semibold">Tudo em dia. Nenhum pedido de Premium, anúncio ou foto esperando.</p>
                 </div>
-                <h2 class="text-lg font-bold text-content-primary tracking-wide">
-                    <?php echo htmlspecialchars($userName); ?>
-                </h2>
-                <p class="text-xs text-content-secondary uppercase tracking-wider mt-1">Admin Kolae</p>
+            <?php else: ?>
+                <ul class="<?php echo $card; ?> divide-y divide-content-secondary/10 overflow-hidden">
+                    <?php foreach ($pending as $i): ?>
+                        <li>
+                            <a href="<?php echo BASE_URL . $i['href']; ?>" data-attention="<?php echo $i['key']; ?>" data-value="<?php echo (int)$i['n']; ?>" class="flex items-center gap-4 px-5 py-4 hover:bg-surface-secondary transition-colors">
+                                <span class="w-10 h-10 shrink-0 rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-300 flex items-center justify-center" aria-hidden="true"><i class="fas <?php echo $i['icon']; ?>"></i></span>
+                                <span class="flex-1 font-semibold"><?php echo $e(strtr($i['n'] === 1 ? $i['one'] : $i['many'], ['{n}' => $i['n']])); ?></span>
+                                <span class="text-content-secondary"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </section>
+
+        <!-- Números -->
+        <section id="numbers" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" aria-label="Números do Kolae">
+            <?php foreach ($numbers as [$label, $value, $icon, $href]): ?>
+                <a href="<?php echo BASE_URL . $href; ?>" data-number="<?php echo $e($label); ?>" class="<?php echo $card; ?> p-5 flex items-center gap-4 hover:border-brand-500/40 hover:shadow-md transition-all">
+                    <span class="w-11 h-11 rounded-xl bg-surface-secondary text-content-secondary flex items-center justify-center text-lg" aria-hidden="true"><i class="fas <?php echo $icon; ?>"></i></span>
+                    <span>
+                        <span class="block text-sm font-semibold text-content-secondary"><?php echo $e($label); ?></span>
+                        <span class="block text-3xl font-bold tabular-nums"><?php echo (int)$value; ?></span>
+                    </span>
+                </a>
+            <?php endforeach; ?>
+        </section>
+
+        <!-- Usuários recentes -->
+        <section id="recent-users" class="<?php echo $card; ?> p-5 sm:p-6" aria-labelledby="recent-title">
+            <div class="flex items-center justify-between gap-3 mb-4">
+                <h2 id="recent-title" class="text-lg font-semibold">Usuários recentes</h2>
+                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">Ver todos</a>
             </div>
-
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border-l-4 border-brand-500 rounded-r-lg transition-all shadow-sm">
-                    <i class="fas fa-home w-5 text-center"></i>
-                    <span>Início</span>
-                </a>
-
-                <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-users w-5 text-center"></i>
-                    <span>Usuários</span>
-                </a>
-
-                <a href="<?php echo BASE_URL; ?>/admin/esportes" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-running w-5 text-center group-hover:text-purple-500 transition-colors"></i>
-                    <span>Esportes</span>
-                </a>
-
-                <a href="<?php echo BASE_URL; ?>/admin/mapa" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fas fa-map-marker-alt w-5 text-center group-hover:text-green-500 transition-colors"></i>
-                    <span>Mapa</span>
-                </a>
-
-                <a href="<?php echo BASE_URL; ?>/admin/quadras" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary hover:translate-x-1 rounded-lg transition-all duration-200 group">
-                    <i class="fa-solid fa-flag w-5 text-center group-hover:text-yellow-500 transition-colors"></i>
-                    <span>Quadras</span>
-                </a>
-            </nav>
-
-            <div class="p-4 border-t border-content-secondary/10 space-y-2">
-                <button id="theme-toggle" class="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:bg-surface-base hover:text-content-primary rounded-lg transition-colors group cursor-pointer text-left">
-                    <i class="fas fa-moon w-5 text-center group-hover:text-yellow-400 transition-colors"></i>
-                    <span class="dark:hidden">Modo Escuro</span>
-                    <span class="hidden dark:inline">Modo Claro</span>
-                </button>
-
-                <a href="<?php echo BASE_URL; ?>/logout" class="flex items-center gap-4 px-4 py-3 text-sm font-semibold text-content-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors group">
-                    <i class="fas fa-sign-out-alt w-5 text-center group-hover:rotate-180 transition-transform duration-300"></i>
-                    <span>Sair</span>
-                </a>
-            </div>
-        </aside>
-
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
-
-        <main class="md:ml-64 flex-1 p-6 sm:p-10 overflow-y-auto h-full">
-            <button id="sidebar-toggle" class="md:hidden mb-6 text-content-secondary hover:text-content-primary">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-
-            <h1 class="text-3xl font-bold mb-8 animate-up text-content-primary">Dashboard</h1>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <div class="bg-gradient-to-br from-green-500 to-green-600 p-6 rounded-2xl shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-green-500/20 animate-up delay-100 text-white">
-                    <p class="text-sm text-green-100 font-medium">Total de Usuários</p>
-                    <p class="text-4xl font-bold mt-2"><?php echo $totalUsers; ?></p>
-                </div>
-
-                <div class="bg-gradient-to-br from-purple-500 to-purple-600 p-6 rounded-2xl shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/20 animate-up delay-200 text-white">
-                    <p class="text-sm text-purple-100 font-medium">Total de Esportes</p>
-                    <p class="text-4xl font-bold mt-2"><?php echo $totalSports; ?></p>
-                </div>
-
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 p-6 rounded-2xl shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-yellow-500/20 animate-up delay-300 text-white">
-                    <p class="text-sm text-yellow-100 font-medium">Total de Locais</p>
-                    <p class="text-4xl font-bold mt-2"><?php echo $totalLocations; ?></p>
-                </div>
-            </div>
-
-            <!-- Fotos das quadras (D48): otimizar as que já estavam no servidor -->
-            <?php // Kolae Premium (D61): o plano é do dono; pedidos em aberto e donos Premium
-            $plans = \App\Core\PremiumPlan::adminList();
-            $defaultUntil = \App\Core\PremiumPlan::defaultUntil(); ?>
-            <section id="premium" class="bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 shadow-sm mb-10 scroll-mt-6">
-                <h2 class="text-xl font-semibold text-content-primary flex items-center gap-2"><span class="text-amber-500"><i class="fas fa-crown"></i></span>Kolae Premium</h2>
-                <p class="text-sm text-content-secondary mt-1">O plano é do dono e vale para todas as quadras dele. Validade padrão: 30 dias.</p>
-                <?php if (!$plans): ?>
-                    <p class="text-sm text-content-secondary mt-4">Nenhum pedido de Premium e nenhum dono Premium por enquanto.</p>
-                <?php else: ?>
-                    <ul class="mt-4 divide-y divide-content-secondary/10">
-                        <?php foreach ($plans as $p):
-                            $state = \App\Core\PremiumPlan::state($p); ?>
-                            <li class="py-4 flex flex-col lg:flex-row lg:items-center gap-3" data-plan-row="<?php echo (int)$p['id']; ?>" data-state="<?php echo $state; ?>">
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-content-primary truncate"><?php echo htmlspecialchars($p['name']); ?></p>
-                                    <p class="text-xs text-content-secondary truncate"><?php echo htmlspecialchars($p['email']); ?> · <?php echo (int)$p['venues']; ?> quadra(s)</p>
-                                </div>
-                                <span class="self-start lg:self-auto text-xs font-semibold rounded-full px-2.5 py-1 <?php echo ['requested' => 'bg-amber-500/15 text-amber-700 dark:text-amber-300', 'premium' => 'bg-brand-500/10 text-brand-600 dark:text-brand-400', 'expired' => 'bg-content-secondary/10 text-content-secondary', 'free' => 'bg-content-secondary/10 text-content-secondary'][$state]; ?>">
-                                    <?php echo [
-                                        'requested' => 'Pediu em ' . date('d/m', strtotime($p['plan_requested_at'])),
-                                        'premium' => $p['plan_until'] ? 'Premium até ' . date('d/m/Y', strtotime($p['plan_until'])) : 'Premium sem prazo',
-                                        'expired' => 'Venceu em ' . date('d/m/Y', strtotime((string)$p['plan_until'])),
-                                        'free' => 'Grátis',
-                                    ][$state]; ?>
-                                </span>
-                                <form method="POST" action="<?php echo BASE_URL; ?>/admin/premium/<?php echo (int)$p['id']; ?>/ativar" class="flex flex-wrap items-center gap-2">
-                                    <?php echo \App\Core\Csrf::field(); ?>
-                                    <label class="sr-only" for="until-<?php echo (int)$p['id']; ?>">Premium até</label>
-                                    <input type="date" id="until-<?php echo (int)$p['id']; ?>" name="plan_until" value="<?php echo htmlspecialchars($state === 'premium' && $p['plan_until'] ? $p['plan_until'] : $defaultUntil); ?>" min="<?php echo date('Y-m-d'); ?>" class="h-9 rounded-lg border border-content-secondary/25 bg-surface-base px-2 text-sm">
-                                    <label class="flex items-center gap-1.5 text-xs text-content-secondary"><input type="checkbox" name="no_limit" value="1" class="accent-brand-500" <?php echo $state === 'premium' && !$p['plan_until'] ? 'checked' : ''; ?>>Sem prazo</label>
-                                    <button type="submit" data-plan-activate class="h-9 px-3 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold"><?php echo $state === 'premium' ? 'Atualizar' : 'Ativar'; ?></button>
-                                </form>
-                                <form method="POST" action="<?php echo BASE_URL; ?>/admin/premium/<?php echo (int)$p['id']; ?>/desativar"
-                                    data-confirm="<?php echo $state === 'requested' ? 'Recusar o pedido de Premium deste dono?' : 'Voltar este dono para o Grátis? Os anúncios saem do ar e as estatísticas voltam ao resumo de 7 dias.'; ?>" data-confirm-danger data-confirm-ok="<?php echo $state === 'requested' ? 'Recusar' : 'Voltar para o Grátis'; ?>">
-                                    <?php echo \App\Core\Csrf::field(); ?>
-                                    <button type="submit" data-plan-deactivate class="text-sm font-semibold text-red-600 dark:text-red-400 hover:underline"><?php echo $state === 'requested' ? 'Recusar' : 'Desativar'; ?></button>
-                                </form>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-            </section>
-
-            <?php // Anúncios (D63): em aberto (ativos ou pausados, no período); o admin remove com motivo
-            $adToday = \App\Core\VenueSchedule::now();
-            $openAds = \App\Models\VenueAd::openForAdmin($adToday);
-            $removeOpen = isset($_GET['remover']) && ctype_digit((string)$_GET['remover']) ? (int)$_GET['remover'] : 0;
-            $adStateLabel = [
-                'running' => ['No ar', 'bg-green-500/15 text-green-700 dark:text-green-300'],
-                'scheduled' => ['Agendado', 'bg-brand-500/10 text-brand-600 dark:text-brand-400'],
-                'paused' => ['Pausado', 'bg-content-secondary/10 text-content-secondary'],
-                'premium_expired' => ['Premium vencido (fora do ar)', 'bg-content-secondary/10 text-content-secondary'],
-            ]; ?>
-            <section id="anuncios" class="bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 shadow-sm mb-10 scroll-mt-6">
-                <h2 class="text-xl font-semibold text-content-primary flex items-center gap-2"><span class="text-amber-500"><i class="fas fa-bullhorn"></i></span>Anúncios</h2>
-                <p class="text-sm text-content-secondary mt-1">Anúncios ativos, agendados e pausados. Remover tira do ar na hora; o dono lê o motivo na aba Anúncio e recebe uma notificação.</p>
-                <?php if (!$openAds): ?>
-                    <p class="text-sm text-content-secondary mt-4">Nenhum anúncio em aberto.</p>
-                <?php else: ?>
-                    <ul class="mt-4 divide-y divide-content-secondary/10">
-                        <?php foreach ($openAds as $ad):
-                            $adId = (int)$ad['id'];
-                            $ownerPremium = \App\Core\PremiumPlan::isPremium(['plan' => $ad['owner_plan'], 'plan_until' => $ad['owner_plan_until']], $adToday);
-                            $adState = ($ad['venue_status'] ?? '') === 'unavailable' ? 'venue_off' : \App\Core\VenueAds::ownerState($ad, $ownerPremium, $adToday);
-                            [$stateText, $stateClass] = $adStateLabel[$adState] ?? ['Quadra desativada (fora do ar)', 'bg-content-secondary/10 text-content-secondary']; ?>
-                            <li class="py-4" data-ad-row="<?php echo $adId; ?>" data-state="<?php echo $adState; ?>">
-                                <div class="flex flex-col lg:flex-row lg:items-start gap-3">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="font-semibold text-content-primary break-words"><?php echo htmlspecialchars($ad['title']); ?></p>
-                                        <p class="text-sm text-content-secondary break-words"><?php echo htmlspecialchars($ad['body']); ?></p>
-                                        <p class="mt-1 text-xs text-content-secondary">
-                                            <a href="<?php echo BASE_URL; ?>/admin/quadras/<?php echo (int)$ad['venue_id']; ?>/anuncio" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline"><?php echo htmlspecialchars($ad['venue_name']); ?></a>
-                                            · <?php echo htmlspecialchars($ad['owner_name']); ?> (<?php echo htmlspecialchars($ad['owner_email']); ?>)
-                                            · <?php echo date('d/m', strtotime($ad['starts_on'])); ?> a <?php echo date('d/m/Y', strtotime($ad['ends_on'])); ?>
-                                        </p>
-                                    </div>
-                                    <span class="self-start text-xs font-semibold rounded-full px-2.5 py-1 <?php echo $stateClass; ?>"><?php echo $stateText; ?></span>
-                                </div>
-                                <details class="mt-3" <?php echo $removeOpen === $adId ? 'open' : ''; ?>>
-                                    <summary class="inline-flex cursor-pointer text-sm font-semibold text-red-600 dark:text-red-400 hover:underline">Remover com motivo</summary>
-                                    <form method="POST" action="<?php echo BASE_URL; ?>/admin/anuncios/<?php echo $adId; ?>/remover" class="mt-3 max-w-xl"
-                                        data-confirm="Remover este anúncio? Ele sai do ar na hora e não pode voltar; o dono pode criar outro." data-confirm-danger data-confirm-ok="Remover">
-                                        <?php echo \App\Core\Csrf::field(); ?>
-                                        <label for="reason-<?php echo $adId; ?>" class="block text-sm font-medium text-content-primary">Motivo (o dono vai ler)</label>
-                                        <textarea id="reason-<?php echo $adId; ?>" name="reason" rows="2" required minlength="<?php echo \App\Core\VenueAds::REASON_MIN; ?>" maxlength="<?php echo \App\Core\VenueAds::REASON_MAX; ?>"
-                                            placeholder="Ex.: o texto promete um desconto que a quadra não oferece."
-                                            class="mt-1 w-full rounded-lg border border-content-secondary/25 bg-surface-base px-3 py-2 text-sm"></textarea>
-                                        <button type="submit" data-ad-remove class="mt-2 h-9 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold">Remover anúncio</button>
-                                    </form>
-                                </details>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-            </section>
-
-            <?php
-            $photoReport = $_SESSION['photo_report'] ?? null;
-            unset($_SESSION['photo_report']);
-            $mb = fn($bytes) => number_format($bytes / 1024 / 1024, 1, ',', '.') . ' MB';
-            ?>
-            <section id="fotos" class="bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 shadow-sm mb-10 scroll-mt-6">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h2 class="text-xl font-semibold text-content-primary flex items-center gap-2"><span class="text-brand-500"><i class="fas fa-images"></i></span>Fotos das quadras</h2>
-                        <p class="text-sm text-content-secondary mt-1">
-                            <?php echo (int)$photoStats['count']; ?> fotos · <?php echo $mb($photoStats['bytes']); ?> no total
-                            <?php if ($photoStats['heavy'] > 0): ?>· <span class="text-amber-700 dark:text-amber-300 font-semibold"><?php echo (int)$photoStats['heavy']; ?> pesada(s), acima de 600 KB</span><?php endif; ?>
-                            <?php if ($photoStats['no_thumb'] > 0): ?>· <span class="text-amber-700 dark:text-amber-300 font-semibold"><?php echo (int)$photoStats['no_thumb']; ?> sem miniatura</span><?php endif; ?>
-                        </p>
-                        <p class="text-xs text-content-secondary mt-1">Fotos novas já são otimizadas no envio. Este botão reduz as antigas para no máximo 1600 px em JPEG, o que deixa o app mais rápido no 4G.</p>
-                    </div>
-                    <form method="POST" action="<?php echo BASE_URL; ?>/admin/fotos/otimizar" onsubmit="this.querySelector('button').disabled = true; this.querySelector('button span:last-child').textContent = 'Otimizando...';">
-                        <?php echo \App\Core\Csrf::field(); ?>
-                        <button type="submit" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
-                            <span><i class="fas fa-wand-magic-sparkles"></i></span><span>Otimizar fotos</span>
-                        </button>
-                    </form>
-                </div>
-                <?php if ($photoReport): ?>
-                    <p class="mt-4 p-3 rounded-xl text-sm <?php echo $photoReport['failed'] ? 'bg-amber-500/10 text-amber-800 dark:text-amber-300' : 'bg-green-500/10 text-green-700 dark:text-green-400'; ?>" role="status">
-                        <?php echo (int)$photoReport['optimized']; ?> otimizada(s), <?php echo (int)$photoReport['skipped']; ?> já estavam boas<?php echo $photoReport['failed'] ? ', ' . (int)$photoReport['failed'] . ' não deu para processar' : ''; ?>.
-                        <?php if ($photoReport['saved_bytes'] > 0): ?>Economia de <?php echo $mb($photoReport['saved_bytes']); ?>.<?php endif; ?>
-                        <?php if (!empty($photoReport['thumbs'])): ?><?php echo (int)$photoReport['thumbs']; ?> miniatura(s) criada(s) para os cards.<?php endif; ?>
-                    </p>
-                <?php endif; ?>
-            </section>
-            <div class="bg-surface-elevated p-6 rounded-2xl border border-content-secondary/10 shadow-sm animate-up delay-300">
-                <h2 class="text-xl font-semibold mb-6 text-content-primary">Usuários Recentes</h2>
+            <?php if (empty($recentUsers)): ?>
+                <p class="text-sm text-content-secondary">Nenhum usuário recente.</p>
+            <?php else: ?>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-content-secondary/10">
+                    <table class="min-w-full text-sm">
                         <thead>
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-content-secondary uppercase tracking-wider">Nome</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-content-secondary uppercase tracking-wider">Função</th>
-                                <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-content-secondary uppercase tracking-wider">Email</th>
-                                <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-content-secondary uppercase tracking-wider">Status</th>
+                            <tr class="text-left text-xs uppercase tracking-wider text-content-secondary">
+                                <th class="py-2 pr-4 font-semibold">Nome</th>
+                                <th class="py-2 pr-4 font-semibold">Papel</th>
+                                <th class="hidden md:table-cell py-2 pr-4 font-semibold">E-mail</th>
+                                <th class="hidden sm:table-cell py-2 font-semibold">Situação</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-content-secondary/10">
-                            <?php if (!empty($recentUsers)) : ?>
-                                <?php foreach ($recentUsers as $user) : ?>
-                                    <tr class="hover:bg-surface-base transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-content-primary"><?php echo htmlspecialchars($user['name'] ?? 'N/D'); ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-content-secondary"><?php echo htmlspecialchars($user['role'] ?? 'N/D'); ?></td>
-                                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-content-secondary"><?php echo htmlspecialchars($user['email'] ?? 'N/D'); ?></td>
-                                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                                            <?php
-                                            $status = $user['status'] ?? 'inactive';
-                                            $statusClass = $status === 'active' ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20';
-                                            ?>
-                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $statusClass; ?>">
-                                                <?php echo htmlspecialchars($status); ?>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else : ?>
+                            <?php foreach ($recentUsers as $u): $active = ($u['status'] ?? '') === 'active'; ?>
                                 <tr>
-                                    <td colspan="4" class="px-6 py-8 text-center text-content-secondary">Nenhum usuário recente encontrado.</td>
+                                    <td class="py-3 pr-4 font-medium"><?php echo $e($u['name'] ?? ''); ?></td>
+                                    <td class="py-3 pr-4 text-content-secondary"><?php echo $e($roles[$u['role'] ?? ''] ?? ($u['role'] ?? '')); ?></td>
+                                    <td class="hidden md:table-cell py-3 pr-4 text-content-secondary"><?php echo $e($u['email'] ?? ''); ?></td>
+                                    <td class="hidden sm:table-cell py-3">
+                                        <span class="text-xs font-semibold rounded-full px-2.5 py-1 <?php echo $active ? 'bg-green-500/15 text-green-700 dark:text-green-300' : 'bg-content-secondary/10 text-content-secondary'; ?>"><?php echo $active ? 'Ativo' : 'Inativo'; ?></span>
+                                    </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar Logic
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebar-toggle');
-            const closeBtn = document.getElementById('sidebar-close-btn');
-            const overlay = document.getElementById('sidebar-overlay');
-
-            function openSidebar() {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            }
-
-            function closeSidebar() {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
-
-            if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
-            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-            if (overlay) overlay.addEventListener('click', closeSidebar);
-
-            // Theme Toggle Logic
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.theme = 'light';
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.theme = 'dark';
-                    }
-                });
-            }
-        });
-    </script>
-
-    <?php $toastContext = 'plan'; include BASE_PATH . '/app/views/partials/toasts.php'; ?>
+            <?php endif; ?>
+        </section>
+    </main>
 </body>
+
 </html>

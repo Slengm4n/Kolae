@@ -70,7 +70,7 @@ const row = id => `[data-plan-row="${id}"]`;
 
   // Admin: card do painel
   const admin = await login(b, 'admin@teste.local');
-  await go(admin, '/admin');
+  await go(admin, '/admin/premium');
   check('admin: dono aparece com o pedido', await admin.$eval(row(ID), r => [r.dataset.state, r.innerText.includes('Pediu em')]).catch(() => null), ['requested', true]);
   check('admin: validade padrão de 30 dias', await admin.$eval(`${row(ID)} input[type=date]`, e => e.value), daysFromNow(30));
   await admin.$eval(`${row(ID)} input[type=date]`, e => { e.removeAttribute('min'); e.value = '2020-01-01'; });
@@ -95,7 +95,7 @@ const row = id => `[data-plan-row="${id}"]`;
   check('vencido: sem selo no painel', await dono.$$eval('[data-premium-badge]', bs => bs.length), 0);
 
   // Admin: sem prazo e depois desativar (com a confirmação do Kolae)
-  await go(admin, '/admin');
+  await go(admin, '/admin/premium');
   await admin.click(`${row(ID)} input[name=no_limit]`);
   await clickNav(admin, `${row(ID)} [data-plan-activate]`);
   check('admin: Premium sem prazo', plan(), 'premium|NULL|sem pedido');
