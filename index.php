@@ -22,6 +22,7 @@ use App\Controllers\AuthApiController;
 use App\Controllers\MeApiController;
 use App\Controllers\VenueApiController;
 use App\Controllers\ChatApiController;
+use App\Controllers\ChatController;
 use App\Controllers\SportApiController;
 use App\Core\AuthHelper;
 
@@ -171,6 +172,14 @@ $router->group('/dashboard', function ($router) {
     $router->get('/perfil/plano', [PremiumController::class, 'show']);
     $router->post('/perfil/plano/pedir', [PremiumController::class, 'request']);
     $router->post('/verificar-email/reenviar', [AuthController::class, 'resendVerification']);
+
+    // Mensagens do chat (D66): o dono responde quem pergunta pelo app
+    $router->get('/mensagens', [ChatController::class, 'index']);
+    $router->get('/mensagens/{id}', [ChatController::class, 'show']);
+    $router->post('/mensagens/{id}', [ChatController::class, 'reply']);
+    $router->get('/mensagens/{id}/novas', [ChatController::class, 'poll']);
+    $router->post('/mensagens/{id}/bloquear', [ChatController::class, 'block']);
+    $router->post('/mensagens/{id}/desbloquear', [ChatController::class, 'unblock']);
 
     // --- ROTAS DE QUADRAS DO UTILIZADOR ---
     $router->group('/quadras', function ($router) {
