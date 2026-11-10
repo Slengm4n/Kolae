@@ -1,6 +1,8 @@
 # Proposta: chat entre a pessoa e o responsável pela quadra
 
-**Situação:** **aprovada em 09/11/2026: é a D66.** O app do Rafael já foi feito seguindo este
+**Situação:** **concluída e na produção em 10/11/2026** (PRs #87, #88 e #89), testada de ponta a ponta
+com o app pelo João. Falta só a fase opcional de notificação no celular (seção "Notificação no
+app"). Aprovada em 09/11/2026: é a **D66**. O app do Rafael já foi feito seguindo este
 contrato (com mock), e as 5 dúvidas dele foram respondidas pelo João (seção "Respostas às dúvidas
 do app"). Contrato final no [`api.md`](api.md#chat-v170-d66). Muda a **D04** em parte (o chat
 deixa de ser vitrine).
@@ -145,17 +147,58 @@ Corpo `{ "last_message_id": 341 }` → `204`. Zera o `unread_count` daquele lado
   só, com "Você" ou o nome da quadra, o texto e o horário. Textos nos 7 idiomas.
 - O botão do WhatsApp continua igual (D24).
 
-## Notificação push (fase opcional)
+## Notificação no app (fase opcional, a fazer)
 
-Só se o resto estiver pronto antes de 16/11. Sem push, o responsável vê pelo painel e a pessoa
-pelo número de não lidas no app.
+**Situação em 10/11:** o chat funciona sem notificação. A pessoa vê as respostas pelo número de
+não lidas (Menu › Mensagens, consulta a cada 30 s) e o dono pelo número no cabeçalho do painel.
+Esta fase faz o **celular avisar** quando o dono responde, mesmo com o app fechado. Entra só se
+sobrar tempo antes do congelamento (21/11) e depois de o contrato abaixo ser aprovado pelos dois.
 
-- Tabela `push_tokens` (`user_id`, `token`, `created_at`) e `POST /me/push-token`.
-- Ao gravar uma mensagem, a API avisa o outro lado pelo serviço de push da Expo (uma chamada
-  HTTP, sem servidor próprio).
-- App: `expo-notifications` e credenciais do Firebase (FCM) no EAS. Não funciona no Expo Go.
+**Para quem é:** só para **quem pergunta** (no app). O dono responde pelo site; o aviso de
+mensagem nova para ele vem com o sino da D64 (e, se combinado, por e-mail).
+
+### O que o Rafael precisa fazer (app)
+
+1. **Instalar** `expo-notifications` e `expo-device` (`npx expo install`, conferir a versão do SDK)
+   e o plugin no `app.json`.
+2. **Firebase (Android):** criar o projeto no Firebase, baixar o `google-services.json` e subir a
+   chave do FCM no EAS (`eas credentials`). **Não funciona no Expo Go:** testar num build do EAS
+   (APK `preview` ou `development`).
+3. **Pedir permissão** depois do login (no Android 13+ é obrigatório, `POST_NOTIFICATIONS`). Se a
+   pessoa negar, o app segue normal, só sem aviso.
+4. **Pegar o token** com `getExpoPushTokenAsync({ projectId })` e mandar para a API
+   (`POST /me/push-token`, abaixo). Mandar de novo quando o token mudar e a cada login.
+5. **No logout**, chamar `DELETE /me/push-token` com o mesmo token, para o celular não receber
+   aviso de outra conta.
+6. **Canal Android** `mensagens` (nome "Mensagens", importância alta), com os textos nos 7 idiomas.
+7. **Ao tocar no aviso:** abrir a conversa. O aviso traz em `data`:
+   `{ "type": "chat_message", "conversation_id": 12, "venue_id": 8 }` (abrir `chat/[venue_id]`).
+8. **Com a conversa aberta**, não mostrar o aviso (`setNotificationHandler`): a mensagem já aparece
+   pela consulta de 5 s.
+9. **Mock** da rota em `src/api/mocks/` e testar: permissão negada, sem internet, logout, duas
+   contas no mesmo celular.
+
+### O que o João faz (site e API)
+
+1. Patch com o próximo número livre: tabela `push_tokens` (`user_id`, `token` único,
+   `platform`, `created_at`, `last_used_at`), com a mesma proteção de banco errado do 010.
+2. Rotas (com token): `POST /me/push-token` `{ "token": "ExponentPushToken[...]", "platform": "android" }`
+   → `204` (o mesmo token em outra conta passa para a conta nova) e `DELETE /me/push-token`
+   `{ "token": "..." }` → `204`. Erro: `422` se o token não tiver o formato da Expo.
+3. Quando o dono responde no painel, avisar os celulares de quem perguntou pelo serviço da Expo
+   (`https://exp.host/--/api/v2/push/send`, uma chamada HTTP com tempo curto). Se falhar, a
+   mensagem continua gravada e a resposta do painel não espera. Token que a Expo disser que não
+   existe mais (`DeviceNotRegistered`) é apagado.
+4. Texto do aviso: título = nome da quadra; corpo = começo da mensagem (até 100 caracteres).
+5. Contrato no `api.md`, Política de Privacidade (o token do celular e o envio pela Expo e pelo
+   Google Firebase) e testes.
+
+**Esforço:** M (2 a 3 dias somando os dois). **Se não der tempo:** fica como está (sem aviso no
+celular), anotado neste registro.
 
 ## Privacidade (LGPD)
+
+**Feito em 10/11** (Termos de Uso e Política de Privacidade com data 10/11/2026):
 
 - Termos e Privacidade: as mensagens ficam guardadas para as duas partes; o Kolae não lê nem
   vende; só texto, sem links.
@@ -190,15 +233,13 @@ para o jogador nunca mandar mensagem sem o dono ter onde ler.
 - **Funciona, mas o push não:** entrega sem push; fica anotado.
 - **HostGator reclamar de carga:** subir os intervalos (10 s na conversa, 60 s na lista).
 
-## Onde parei (09/11, noite)
+## Situação final (10/11)
 
-- **Na `main` e na produção:** partes A (#87) e B (#88); patch 010 aplicado na produção.
-- **Branch `feat/chat-api`, pronta para a PR:** parte C (API) e parte D (Mensagens no painel do
-  dono), juntas, como combinado. Testes: `chat_api` (46) e `chat_painel` (26, com o caminho
-  completo app → painel → app), mais os testes PHP do chat.
-- **Depois do merge:** o teste com o Rafael pelo app, pelo 4G, contra a produção (data de corte:
-  18/11); atualizar Termos e Privacidade (as mensagens ficam guardadas no Kolae); push no celular
-  só se sobrar tempo.
+- **Na produção:** as quatro partes (A #87, B #88, C e D #89) e o patch 010. Testado de ponta a
+  ponta com o app pelo João em 10/11. Termos e Privacidade atualizados.
+- **Fica para depois (opcional):** notificação no celular (seção "Notificação no app"),
+  "carregar mensagens anteriores" na conversa do painel (hoje mostra as 50 últimas) e aviso por
+  e-mail ou pelo sino da D64 para o dono.
 
 ## Registro do andamento
 
@@ -214,6 +255,10 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 | 09/11 | **Patch 010 na produção, 1ª tentativa: erro.** O patch foi rodado com o `information_schema` escolhido (o topo do phpMyAdmin mostrava só "Server: localhost:3306"), e o `CREATE TABLE` falhou ali; nada foi criado nem mudado. O aviso do patch só pegava "nenhum banco". **Correção:** o patch agora só cria as tabelas se o banco escolhido tiver `venues` e `users`; em qualquer outro, mostra "Patch 010 NÃO aplicado" sem erro. Testado em 5 situações (banco certo, de novo, `information_schema`, sem banco, banco vazio). A produção é MySQL 5.7.44 | Rodar de novo no banco `joao5502_kolae` |
 | 09/11 | Patch 010 rodado de novo no banco certo: `conversations` e `messages` conferidas na produção (`SHOW TABLES`). Partes A (#87) e B (#88) na `main`; deploy com os testes do chat passando no Actions | ✅ |
 | 09/11 | **Parte C** (`feat/chat-api`, local): `ChatApiController` com as 5 rotas do contrato e a correção do patch. Pela API, a pessoa só acessa as conversas em que é quem pergunta (o dono e o admin recebem 404). Teste `tests/e2e/testes/chat_api.js` (46 passos, só HTTP; a resposta do dono é gravada direto no banco até o painel existir). **O que deu errado:** na primeira rodada 3 passos falharam porque o teste esperava `errors.body` como texto; o contrato (e o resto da API) usa lista de textos (`"body": ["..."]`), então o teste estava errado | Não sobe sozinha: vai junto com a parte D (painel) |
+| 09/11 | **Parte D** (`feat/chat-api`): **Mensagens** no painel do dono (`ChatController`, telas `chat/index` e `chat/show`): item no cabeçalho com as não lidas (`Conversation::unreadForOwner`), lista com filtro por quadra (sem as excluídas), conversa com balões por dia, resposta pelo `fetch` (sem JavaScript, o formulário funciona com redirecionamento), consulta a cada 10 s só com a aba visível, bloquear e desbloquear, quadra desativada só leitura (409 no envio direto). Nome e foto de quem pergunta, nunca o e-mail; o admin não lê conversas. Enter envia só com teclado de verdade (no celular, pula linha). Avisos no contexto `chat` do `Flash::MAP`, 29 textos nos 7 idiomas. Teste `tests/e2e/testes/chat_painel.js` (26 passos). **O que deu errado:** o teste não conseguia clicar em "Desbloquear" porque o aviso "Conversa bloqueada." fica por cima do botão (o mesmo do teste do plano); o teste fecha o aviso antes. Neste PC, o Edge dos testes só abre pelo PowerShell (pelo Git Bash ele fecha na hora) | Próximo: PR das partes C e D; teste com o Rafael |
+| 10/11 | **Partes C e D na `main`** (PR #89, feito no PC de casa na noite de 09/11): deploy com os testes passando no Actions. Conferido no PC da escola: os 362 casos de PHP e os testes de clique do chat (`chat_api` 46, `chat_painel` 26) e do cabeçalho do dono passando; produção respondendo nas rotas do chat (`/api/v1/conversations` dá 401 sem token, como no contrato) | ✅ |
+| 10/11 | **Teste de ponta a ponta com o app**, pelo João: mensagem pelo app, resposta pelo painel e resposta chegando no app | ✅ Funcionou |
+| 10/11 | **Termos de Uso e Política de Privacidade** atualizados (`docs/chat-legal`, data 10/11/2026): mensagens (só texto, sem links nem e-mails, limite, bloqueio, quem vê, guarda e exclusão), e também o Kolae Premium, os anúncios "Patrocinado" e as estatísticas (código do dia, sem IP), que já estavam no ar e não apareciam nos documentos. Notificação no app documentada para o Rafael. **O que deu errado:** a linha da parte D tinha ficado fora da tabela deste registro (aparecia quebrada no GitHub) e foi movida. O teste de clique `entrada` falha em 2 passos do botão de tema também na `main`, sem relação com o chat (fica para conferir à parte) | Chat concluído; falta só a notificação no app (opcional) |
 
 ### Respostas às dúvidas do app (09/11)
 
@@ -237,4 +282,3 @@ pergunta na quadra de outro vê essa conversa no app). Quem envia já conta como
 mensagem. O bloqueio pode ser desfeito pelo dono no painel. As mensagens novas para o dono têm o
 próprio contador em "Mensagens" no painel; quando o sino da D64 existir, passam a aparecer nele
 também.
-| 09/11 | **Parte D** (`feat/chat-api`): **Mensagens** no painel do dono (`ChatController`, telas `chat/index` e `chat/show`): item no cabeçalho com as não lidas (`Conversation::unreadForOwner`), lista com filtro por quadra (sem as excluídas), conversa com balões por dia, resposta pelo `fetch` (sem JavaScript, o formulário funciona com redirecionamento), consulta a cada 10 s só com a aba visível, bloquear e desbloquear, quadra desativada só leitura (409 no envio direto). Nome e foto de quem pergunta, nunca o e-mail; o admin não lê conversas. Enter envia só com teclado de verdade (no celular, pula linha). Avisos no contexto `chat` do `Flash::MAP`, 29 textos nos 7 idiomas. Teste `tests/e2e/testes/chat_painel.js` (26 passos). **O que deu errado:** o teste não conseguia clicar em "Desbloquear" porque o aviso "Conversa bloqueada." fica por cima do botão (o mesmo do teste do plano); o teste fecha o aviso antes. Neste PC, o Edge dos testes só abre pelo PowerShell (pelo Git Bash ele fecha na hora) | Próximo: PR das partes C e D; teste com o Rafael |

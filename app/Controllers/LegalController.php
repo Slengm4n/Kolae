@@ -11,7 +11,7 @@ use App\Core\ViewHelper;
 class LegalController
 {
     /** Data da versão atual dos dois documentos (mostrada em "Última atualização"). */
-    public const UPDATED_AT = '29/10/2026';
+    public const UPDATED_AT = '10/11/2026';
 
     /** E-mail de contato citado nos documentos. */
     public const CONTACT_EMAIL = 'contato@kolae.online';

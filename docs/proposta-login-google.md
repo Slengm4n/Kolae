@@ -36,8 +36,12 @@ se ele é verdadeiro é a API, com as chaves públicas do Google.
 
 - `users.birthdate` já aceita `NULL` no banco, mas o cadastro pelo Google **exige** a data, como
   o cadastro normal.
-- `users.password` é `NOT NULL`: conta criada pelo Google ganha um hash de senha aleatória
-  (como o `UserController` já faz em outro fluxo). Para ter senha, a pessoa usa "Esqueci a senha".
+- `users.password` é `NOT NULL`: conta criada pelo Google ganha um hash de senha aleatória,
+  gerada pelo sistema (ninguém conhece). **Mudou em 10/11 (pedido do João):** a pessoa pode
+  **criar a própria senha depois**, direto no perfil, sem informar a atual (ver "Senha da conta
+  criada pelo Google").
+- `users.password_set_at` (`TIMESTAMP NULL`, novo): quando a pessoa definiu a própria senha.
+  `NULL` = a senha ainda é a gerada pelo sistema. Contas antigas e cadastro normal: preenchido.
 
 ## Proposta de contrato (para revisar antes de entrar no `api.md`)
 
@@ -73,6 +77,23 @@ O `id_token` vale 1 hora: dá tempo de a pessoa escolher a data e reenviar.
 token (D10). O vínculo pelo e-mail só acontece porque o Google garante o e-mail
 (`email_verified`).
 
+## Senha da conta criada pelo Google (decidido em 10/11)
+
+O João decidiu: quem cria a conta pelo Google **recebe uma senha gerada automaticamente** e pode
+**trocar por uma própria depois**. Assim a conta também passa a entrar por e-mail e senha.
+
+- **No site** (Configurações › Segurança) e **no app** (Alterar senha): enquanto a senha for a
+  gerada (`password_set_at` = `NULL`), a tela vira **"Criar senha"** e não pede a senha atual.
+  Depois de criada, volta ao normal (pede a atual).
+- **API:** o objeto `user` ganha `has_password` (`true`/`false`, só acréscimo). O
+  `PUT /me/password` aceita ficar **sem** `current_password` só quando `has_password` for `false`;
+  com `has_password` `true`, continua obrigatório (`422` sem ele, como hoje).
+- **"Esqueci a senha"** continua funcionando para todo mundo.
+- **Segurança:** a criação sem a senha atual só vale uma vez e só para quem nunca definiu senha;
+  a sessão já é da pessoa (entrou pelo Google). Ao criar a senha, avisar por e-mail (como em
+  qualquer troca de senha), se o envio estiver ligado.
+- **Para o futuro:** verificação em duas etapas (2FA), anotada em `sugestoes.md`.
+
 ## O que precisa fora do código
 
 1. **Google Cloud** (projeto "Kolae", conta do João):
@@ -96,7 +117,8 @@ token (D10). O vínculo pelo e-mail só acontece porque o Google garante o e-mai
 - Tela "Falta pouco": a roleta de data (`DateField`) quando vier `GOOGLE_BIRTHDATE_REQUIRED`.
 - Mock de `POST /auth/google` com os casos da tabela (`EXPO_PUBLIC_MOCK_AUTH`).
 - Textos nos 7 idiomas.
-- Conta só do Google em "Alterar senha": aviso para usar "Esqueci a senha" primeiro.
+- Conta criada pelo Google (`has_password` = `false`): "Alterar senha" vira **"Criar senha"**, sem o
+  campo da senha atual (mudou em 10/11; antes era o aviso para usar "Esqueci a senha").
 
 ## Site (João)
 
@@ -133,3 +155,4 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 | :---- | :---- | :---- |
 | 05/11 | Proposta escrita | Esperando aprovação |
 | 09/11 | Renumerada de D61 para **D65** (D61–D64 foram para o Kolae Premium) e patch sem número fixo (o 009 é o do Premium) | Ainda esperando aprovação; nada feito no código |
+| 10/11 | **Próxima no site, depois do chat** (decisão do João). Mudança pedida: conta criada pelo Google recebe senha gerada pelo sistema e pode **criar a própria senha depois** sem informar a atual (`users.password_set_at`, `user.has_password`, `PUT /me/password` sem `current_password` só nesse caso). A data de corte de 12/11 precisa ser revista com o Rafael (depende do SHA-1 do EAS) | Revisar o contrato com o Rafael antes do código |

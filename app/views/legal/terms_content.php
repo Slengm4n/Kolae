@@ -7,7 +7,7 @@ $email = '<a href="mailto:' . $contactEmail . '">' . $contactEmail . '</a>';
 
 return [
     ['sobre', 'O que é o Kolae', '
-        <p>O Kolae é uma plataforma, com site e aplicativo, que ajuda atletas a encontrar quadras esportivas particulares. Ele mostra onde ficam as quadras, se estão disponíveis, em uso ou fechadas, o horário de funcionamento, a agenda do dia e o contato do responsável por cada quadra.</p>
+        <p>O Kolae é uma plataforma, com site e aplicativo, que ajuda atletas a encontrar quadras esportivas particulares. Ele mostra onde ficam as quadras, se estão disponíveis, em uso ou fechadas, o horário de funcionamento, a agenda do dia e o contato do responsável por cada quadra, pelo WhatsApp ou por mensagens no próprio Kolae.</p>
         <p>O Kolae é um projeto acadêmico, desenvolvido como Projeto Integrador do curso da FATEC Ferraz de Vasconcelos.</p>'],
 
     ['aceite', 'Aceite destes termos', '
@@ -29,6 +29,25 @@ return [
             <li>cadastrar um número de WhatsApp para contato. Esse número aparece publicamente no aplicativo, no botão "Falar com o dono".</li>
         </ul>'],
 
+    ['premium', 'Kolae Premium', '
+        <p>Responsáveis por quadra podem ter o plano <strong>Kolae Premium</strong>, que vale para todas as quadras da conta e dá acesso às estatísticas completas e ao anúncio da quadra. Nesta versão, o plano é ativado pela equipe do Kolae, com uma data de validade; vencida a validade, a conta volta ao plano grátis.</p>
+        <ul>
+            <li>Os anúncios aparecem no site e no aplicativo sempre com a etiqueta <strong>"Patrocinado"</strong>.</li>
+            <li>O responsável responde pelo conteúdo do anúncio, que precisa ser verdadeiro e seguir estes termos (por exemplo, não prometer um desconto que a quadra não oferece).</li>
+            <li>A equipe do Kolae pode remover um anúncio que descumpra estes termos, informando o motivo ao responsável.</li>
+            <li>Com o plano vencido, o anúncio fica guardado, mas deixa de aparecer.</li>
+        </ul>'],
+
+    ['mensagens', 'Mensagens pelo Kolae', '
+        <p>Quem tem conta pode mandar mensagens, pelo aplicativo, ao responsável por uma quadra, que responde pelo painel do site. Há uma conversa por pessoa e por quadra.</p>
+        <ul>
+            <li>As mensagens são só de texto, com até 1000 caracteres, e <strong>não podem ter links nem e-mails</strong>. Para evitar abusos, cada conta pode enviar até 20 mensagens por minuto.</li>
+            <li>Use as mensagens para tirar dúvidas e combinar o aluguel. Valem as regras de "Uso adequado": nada de ofensas, golpes, propaganda ou mensagens repetidas.</li>
+            <li>O responsável pode bloquear uma conversa: a pessoa continua lendo o que já foi trocado, mas não envia mais nada. O bloqueio pode ser desfeito.</li>
+            <li>Se a quadra for desativada, a conversa fica só para leitura.</li>
+            <li>Como no aluguel, o Kolae não responde pelo que for combinado nas mensagens.</li>
+        </ul>'],
+
     ['aluguel', 'Aluguel e pagamento', '
         <p>O Kolae <strong>não intermedeia o aluguel nem o pagamento</strong> das quadras. A reserva, o valor, a forma de pagamento, o cancelamento e as regras de uso são combinados diretamente entre o atleta e o responsável pela quadra, fora da plataforma.</p>
         <p>Por isso, o Kolae não responde por esses acordos, nem pelo estado das quadras ou pelo que acontecer nelas.</p>'],
@@ -40,13 +59,13 @@ return [
         <p>Não é permitido:</p>
         <ul>
             <li>cadastrar informações falsas ou se passar por outra pessoa;</li>
-            <li>publicar conteúdo ofensivo, discriminatório, ilegal ou que viole direitos de terceiros;</li>
+            <li>publicar ou enviar conteúdo ofensivo, discriminatório, ilegal ou que viole direitos de terceiros, inclusive nas mensagens e nos anúncios;</li>
             <li>tentar acessar contas de outras pessoas, áreas restritas ou dados que não sejam seus;</li>
             <li>usar programas automáticos para coletar dados ou sobrecarregar a plataforma.</li>
         </ul>'],
 
     ['conteudo', 'Conteúdo que você envia', '
-        <p>Fotos, descrições e demais informações que você envia continuam sendo seus. Ao publicá-los, você autoriza o Kolae a exibi-los no site e no aplicativo enquanto estiverem cadastrados. Você pode alterar ou remover esse conteúdo a qualquer momento.</p>'],
+        <p>Fotos, descrições, anúncios, mensagens e demais informações que você envia continuam sendo seus. Ao publicá-los, você autoriza o Kolae a exibi-los no site e no aplicativo enquanto estiverem cadastrados. Você pode alterar ou remover esse conteúdo a qualquer momento.</p>'],
 
     ['suspensao', 'Suspensão e exclusão de conta', '
         <p>Contas que descumprirem estes termos podem ser suspensas ou excluídas, e quadras com informações falsas podem ser desativadas. Você também pode pedir a exclusão da sua conta pelo e-mail ' . $email . '.</p>'],

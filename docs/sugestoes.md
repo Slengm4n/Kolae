@@ -71,3 +71,5 @@ no repositório do app (`changelog/<branch>.md`).
 | **Apagar as fotos do disco** quando uma quadra é excluída | Hoje a exclusão é lógica e os arquivos ficam no servidor | Depois da entrega |
 | **Remover `users.remember_token`** | Ficou sem uso com a D44 | Na migração para Laravel |
 | **Traduzir o painel do admin** | Fora do escopo pela D19 | Depois da entrega |
+| **Verificação em duas etapas (2FA)** | Pedido do João em 10/11, para depois do login com Google: código por e-mail ou por aplicativo autenticador ao entrar; hoje é vitrine no app (D04) | Depois do login com Google |
+| **Rework do painel do admin** | Pedido do João em 10/11, por último na fila (depois do Google e da 2FA). O que entra ainda vai ser definido; ideias já anotadas: números neutros, "Precisa de atenção", tudo em português, `<head>` e tema comuns às outras páginas | Por último |

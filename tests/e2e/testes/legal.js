@@ -17,8 +17,8 @@ const check = (c, m) => { c ? ok++ : fail++; console.log((c ? 'OK  ' : 'FALHA ')
   await p.evaluate(() => localStorage.setItem('theme', 'light'));
   await p.reload({ waitUntil: 'networkidle2' });
   check((await p.$eval('h1', e => e.textContent)) === 'Termos de Uso', 'título termos');
-  check((await p.$$('article section')).length === 13, '13 seções nos termos');
-  check(await p.$eval('body', e => e.innerText.includes('29/10/2026')), 'data de atualização');
+  check((await p.$$('article section')).length === 15, '15 seções nos termos');
+  check(await p.$eval('body', e => e.innerText.includes('10/11/2026')), 'data de atualização');
   check(!(await p.$('.fa-language')), 'sem aviso pt-only em português');
   check(await p.$eval('footer', e => !!e.querySelector('a[href$="/privacidade"]') && !!e.querySelector('a[href$="/termos"]')), 'links no rodapé');
   const anchor = await p.$eval('[data-site-header] a[href*="#"]', e => e.getAttribute('href'));
@@ -34,7 +34,7 @@ const check = (c, m) => { c ? ok++ : fail++; console.log((c ? 'OK  ' : 'FALHA ')
 
   await p.goto(B + '/privacidade', { waitUntil: 'networkidle2' });
   check((await p.$eval('h1', e => e.textContent)) === 'Política de Privacidade', 'título privacidade');
-  check((await p.$$('article section')).length === 12, '12 seções na privacidade');
+  check((await p.$$('article section')).length === 13, '13 seções na privacidade');
   await p.evaluate(() => localStorage.setItem('theme', 'dark'));
   await p.reload({ waitUntil: 'networkidle2' });
   await p.evaluate(() => window.scrollTo(0, 700));

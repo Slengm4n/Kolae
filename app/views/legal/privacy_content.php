@@ -14,6 +14,9 @@ return [
             <li><strong>Conta:</strong> nome, e-mail, data de nascimento e senha. A senha é guardada de forma cifrada (hash) e ninguém da equipe consegue vê-la.</li>
             <li><strong>Foto de perfil:</strong> opcional, enviada por você.</li>
             <li><strong>Responsáveis por quadra:</strong> CNPJ (guardado criptografado), número de WhatsApp e os dados das quadras: endereço e coordenadas no mapa, fotos, preço, descrição, esportes, horário de funcionamento e a agenda de partidas, que pode incluir o nome de quem alugou o horário, se o responsável quiser anotar.</li>
+            <li><strong>Mensagens:</strong> o texto das mensagens que você troca com o responsável por uma quadra, com a data e a hora, e até qual mensagem cada lado já leu (veja "Mensagens com o responsável pela quadra").</li>
+            <li><strong>Anúncios (Kolae Premium):</strong> título, texto, foto e período do anúncio que o responsável por quadra publicar.</li>
+            <li><strong>Estatísticas das quadras:</strong> contamos as visualizações da página da quadra e os cliques (WhatsApp, redes sociais, compartilhar e anúncios), com a origem (site, aplicativo ou QR Code). Para não contar a mesma visita várias vezes, usamos um código que muda a cada dia e não permite descobrir o seu endereço IP. Não guardamos quem visitou cada quadra.</li>
             <li><strong>Localização no aplicativo:</strong> quando você permite, a posição do celular é usada só para buscar quadras próximas e calcular distâncias. Ela não é gravada.</li>
             <li><strong>Dados técnicos:</strong> registros de acesso ao servidor (como endereço IP, data e hora) e um cookie de sessão para manter você conectado no site.</li>
         </ul>'],
@@ -23,7 +26,8 @@ return [
             <li>criar e manter a sua conta e permitir o login no site e no aplicativo;</li>
             <li>conferir a idade mínima de 18 anos;</li>
             <li>mostrar as quadras, o status, o horário e a agenda;</li>
-            <li>permitir o contato com o responsável pela quadra, pelo WhatsApp;</li>
+            <li>permitir o contato com o responsável pela quadra, pelo WhatsApp ou pelas mensagens do Kolae;</li>
+            <li>mostrar ao responsável pela quadra os números de visualizações e cliques, sempre somados, sem identificar quem visitou;</li>
             <li>enviar o e-mail de recuperação de senha quando você pedir;</li>
             <li>manter a plataforma segura e prevenir abusos.</li>
         </ul>
@@ -36,7 +40,16 @@ return [
         <ul>
             <li><strong>Quadras:</strong> nome, endereço, fotos, preço, descrição, esportes, horário, status e os horários ocupados da agenda.</li>
             <li><strong>Responsável pela quadra:</strong> nome, foto de perfil, data em que entrou no Kolae e o número de WhatsApp, para o botão "Falar com o dono".</li>
-            <li><strong>Nunca aparecem publicamente:</strong> e-mail, data de nascimento, CNPJ, senha e o nome de quem alugou cada horário.</li>
+            <li><strong>Anúncios:</strong> título, texto e foto, sempre marcados como "Patrocinado".</li>
+            <li><strong>Nunca aparecem publicamente:</strong> e-mail, data de nascimento, CNPJ, senha, o nome de quem alugou cada horário e as mensagens.</li>
+        </ul>'],
+
+    ['mensagens', 'Mensagens com o responsável pela quadra', '
+        <ul>
+            <li><strong>Quem vê:</strong> só as duas pessoas da conversa. O responsável pela quadra vê o seu nome e a sua foto de perfil, <strong>nunca o seu e-mail</strong>; você vê o nome e a foto da quadra.</li>
+            <li><strong>O que guardamos:</strong> o texto, a data e a hora de cada mensagem, até qual mensagem cada lado leu e se a conversa foi bloqueada pelo responsável. As mensagens são só de texto, sem links e sem arquivos.</li>
+            <li><strong>Uso:</strong> as mensagens servem só para a conversa entre vocês. A equipe do Kolae não as lê, não as vende e não as usa para publicidade; só podemos consultá-las para apurar uma denúncia de abuso ou quando a lei exigir.</li>
+            <li><strong>Por quanto tempo:</strong> ficam guardadas para as duas pessoas enquanto as duas contas existirem. Quando a sua conta é excluída, as suas mensagens deixam de aparecer na conversa na hora e são apagadas junto com os demais dados da conta. Se a quadra for desativada, a conversa continua guardada, só para leitura.</li>
         </ul>'],
 
     ['compartilhamento', 'Com quem compartilhamos', '
