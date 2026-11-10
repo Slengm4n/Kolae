@@ -1,7 +1,6 @@
 # Proposta: rework do painel do dono, do admin e do cadastro de quadra
 
-**Situação:** proposta (10/11/2026), pedida pelo João antes do login com Google (D65). Vira a
-**D67** quando aprovada. **Só site:** nada muda na API nem no app do Rafael.
+**Situação:** **aprovada em 10/11/2026: é a D67.** Pedida pelo João antes do login com Google (D65). **Só site:** nada muda na API nem no app do Rafael.
 **Esforço:** M (4 a 5 dias, só o João). **Data de corte:** 15/11, para sobrar tempo até o
 congelamento (21/11). O Google (D65) vem depois.
 
@@ -107,4 +106,4 @@ Anotar aqui cada passo, inclusive o que não deu certo, com a data.
 
 | Data | O quê | Resultado |
 | :---- | :---- | :---- |
-| 10/11 | Proposta escrita a partir das capturas das três telas e das escolhas do João: "Hoje" no painel do dono; no admin, mesmo visual, "Precisa de atenção" e páginas separadas; cadastro com menos passos começando pelo essencial | Esperando aprovação |
+| 10/11 | Proposta escrita a partir das capturas das três telas e das escolhas do João: "Hoje" no painel do dono; no admin, mesmo visual, "Precisa de atenção" e páginas separadas; cadastro com menos passos começando pelo essencial | Aprovada pelo João (D67) |
