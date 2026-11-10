@@ -144,5 +144,18 @@ check('todos os tipos têm título e texto nos 7 idiomas', (function () {
 check('Accept-Language', NotificationText::langFromHeader('en-US,en;q=0.9') === 'en-us' && NotificationText::langFromHeader('es') === 'es-es'
     && NotificationText::langFromHeader('fr-FR') === 'pt-br' && NotificationText::langFromHeader(null) === 'pt-br' && NotificationText::langFromHeader('pt-BR') === 'pt-br');
 
+echo "e-mail ao dono (Mailer::requestNewMessage)\n";
+if (!defined('BASE_URL')) define('BASE_URL', 'https://kolae.online');
+if (!defined('BASE_PATH')) define('BASE_PATH', dirname(__DIR__));
+[$html, $text] = \App\Core\Mailer::requestNewMessage('Paulo Souza', ['user_name' => 'Maria Clara Souza', 'venue_name' => 'Arena Central',
+    'start_time' => '2026-11-12 19:00:00', 'end_time' => '2026-11-12 20:00:00', 'sport_name' => 'Futebol', 'message' => 'Somos 10 <b>', 'email' => 'maria@exemplo.com']);
+check('texto: primeiro nome, quadra, horário, esporte e mensagem', str_contains($text, 'Olá, Paulo!') && str_contains($text, 'Maria pediu') && !str_contains($text, 'Clara')
+    && str_contains($text, 'Arena Central') && str_contains($text, '12/11, das 19:00 às 20:00') && str_contains($text, 'Esporte: Futebol') && str_contains($text, '"Somos 10 <b>"'));
+check('texto e HTML levam o link da tela de solicitações', str_contains($text, 'https://kolae.online/dashboard/notificacoes') && str_contains($html, 'https://kolae.online/dashboard/notificacoes'));
+check('HTML escapa a mensagem de quem pediu', str_contains($html, 'Somos 10 &lt;b&gt;') && !str_contains($html, 'Somos 10 <b>'));
+check('nunca o e-mail de quem pediu', !str_contains($html . $text, 'maria@exemplo.com'));
+[, $semExtras] = \App\Core\Mailer::requestNewMessage('Paulo', ['user_name' => 'Maria', 'venue_name' => 'Arena', 'start_time' => '2026-11-12 19:00:00', 'end_time' => '2026-11-12 20:00:00', 'sport_name' => null, 'message' => null]);
+check('sem esporte e sem mensagem, as linhas somem', !str_contains($semExtras, 'Esporte:') && !str_contains($semExtras, '""'));
+
 echo "\nRESULTADO: $ok ok, $falhas falha(s)\n";
 exit($falhas > 0 ? 1 : 0);

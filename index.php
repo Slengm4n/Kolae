@@ -24,6 +24,7 @@ use App\Controllers\VenueApiController;
 use App\Controllers\ChatApiController;
 use App\Controllers\RequestApiController;
 use App\Controllers\ChatController;
+use App\Controllers\RequestController;
 use App\Controllers\SportApiController;
 use App\Core\AuthHelper;
 
@@ -181,6 +182,11 @@ $router->group('/dashboard', function ($router) {
     $router->get('/mensagens/{id}/novas', [ChatController::class, 'poll']);
     $router->post('/mensagens/{id}/bloquear', [ChatController::class, 'block']);
     $router->post('/mensagens/{id}/desbloquear', [ChatController::class, 'unblock']);
+
+    // Notificações e solicitações (D64): o dono aprova ou recusa os pedidos de horário do app
+    $router->get('/notificacoes', [RequestController::class, 'index']);
+    $router->post('/notificacoes/pedidos/{id}/aprovar', [RequestController::class, 'approve']);
+    $router->post('/notificacoes/pedidos/{id}/recusar', [RequestController::class, 'decline']);
 
     // --- ROTAS DE QUADRAS DO UTILIZADOR ---
     $router->group('/quadras', function ($router) {

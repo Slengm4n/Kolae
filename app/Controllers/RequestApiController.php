@@ -5,12 +5,14 @@ namespace App\Controllers;
 use App\Core\ApiFormat;
 use App\Core\BaseApiController;
 use App\Core\ImageHelper;
+use App\Core\Mailer;
 use App\Core\MatchRequests;
 use App\Core\NotificationText;
 use App\Core\VenueSchedule;
 use App\Models\Game;
 use App\Models\MatchRequest;
 use App\Models\Notification;
+use App\Models\User;
 use App\Models\Venue;
 use App\Models\VenueHour;
 use App\Models\VenueSport;
@@ -64,6 +66,11 @@ class RequestApiController extends BaseApiController
         }
 
         $request = MatchRequest::create($venue, $this->user, $result['values']);
+        // E-mail ao dono (o aviso no sino já foi criado); falhar não desfaz o pedido
+        $owner = User::findById((int)$venue['user_id']);
+        if ($owner && $owner['status'] === 'active' && !empty($owner['email'])) {
+            Mailer::sendRequestNew($owner['email'], (string)$owner['name'], $request);
+        }
         $this->sendSuccess(self::format($request), 201);
     }
 

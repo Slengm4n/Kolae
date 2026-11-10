@@ -42,11 +42,18 @@ class Notification
         return ['items' => $items, 'total' => $total];
     }
 
-    /** Quantas a pessoa ainda não leu (número do sino). */
-    public static function unreadCount(int $userId): int
+    /**
+     * Quantas a pessoa ainda não leu. $exceptTypes fica de fora da conta (o sino do dono não conta
+     * "novo pedido", porque o pedido pendente já conta).
+     */
+    public static function unreadCount(int $userId, array $exceptTypes = []): int
     {
-        $stmt = Database::getConnection()->prepare('SELECT COUNT(*) FROM notifications WHERE user_id = ? AND read_at IS NULL');
-        $stmt->execute([$userId]);
+        $sql = 'SELECT COUNT(*) FROM notifications WHERE user_id = ? AND read_at IS NULL';
+        if ($exceptTypes) {
+            $sql .= ' AND type NOT IN (' . implode(',', array_fill(0, count($exceptTypes), '?')) . ')';
+        }
+        $stmt = Database::getConnection()->prepare($sql);
+        $stmt->execute(array_merge([$userId], array_values($exceptTypes)));
         return (int)$stmt->fetchColumn();
     }
 

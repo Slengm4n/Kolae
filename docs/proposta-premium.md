@@ -226,7 +226,7 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
 | Anúncios (D63) | ✅ pronto (5 partes, PRs `feat/premium-anuncios-*`) | Aba Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública; admin remove com motivo | **Pode ligar agora:** carrossel "Destaques" (`GET /ads`), faixa `ad` no detalhe e `ad_view`/`ad_click` no `POST /venues/{id}/events` |
-| Solicitações e notificações (D64) | 🔧 em andamento (até 17/11): parte A de 4 pronta | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
+| Solicitações e notificações (D64) | 🔧 em andamento (até 17/11): partes A, B e C de 4 prontas | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
 As PRs são empilhadas: entram na ordem da tabela, e cada uma só depois da anterior.
@@ -360,7 +360,27 @@ para a `main` juntas**, para um pedido feito pelo app sempre ter onde ser respon
   - **O que deu errado:** um passo falhou porque o teste gravava no banco uma notificação com
     acento ("manutenção") pelo `lib.sql`, que passa pela linha de comando do Windows (perde os
     acentos) e pelo MySQL (come a barra invertida). O código estava certo; o teste agora grava o
-    JSON só com ASCII (`ç`, com a barra dobrada). Não sobe sozinha: vai junto com a parte C.
+    JSON só com ASCII (o "ç" escrito como código de escape, com a barra dobrada). Não sobe sozinha: vai junto com a parte C.
+- **10/11, parte C (`feat/pedidos-api`, local, junto com a B):** **"Notificações e solicitações"**
+  no painel do dono (`RequestController`, tela `requests/index`, rota `/dashboard/notificacoes`).
+  **Sino** no cabeçalho de todas as páginas do dono (também no celular), com o número do que pede
+  atenção: pedidos esperando resposta + avisos não lidos, sem contar o aviso de "novo pedido" (o
+  pedido pendente já conta), para o número só sumir quando o dono responde. **Aba Solicitações**
+  (abre sozinha quando há pedido esperando): cartão com o primeiro nome, dia e horário, quadra,
+  esporte e mensagem; **Aprovar** (com a confirmação do Kolae) vira partida na agenda e recusa
+  sozinho os outros no mesmo horário; **Recusar** com motivo opcional (até 200); histórico de 30
+  dias com o **WhatsApp de quem pediu só depois de aprovar** (se cadastrou). **Aba Avisos**: textos
+  no idioma do painel; abrir marca como lidos; atalho para Mensagens quando há mensagem do chat não
+  lida (as mensagens continuam com o próprio número, sem contar duas vezes). Só o dono (o admin é
+  levado ao painel dele; outro dono recebe "não encontrado"). **E-mail ao dono** a cada pedido novo
+  (`Mailer::sendRequestNew`, modelo `emails/request_new.php`, nunca com o e-mail de quem pediu;
+  endereços `.local`/`.test` não recebem). 40 textos nos 7 idiomas. Testes: teste de clique
+  `tests/e2e/testes/pedidos_painel.js` (35 passos: pedido pela API → sino → aprovar → agenda →
+  app) e 5 casos do e-mail no `tests/match_requests_test.php` (73).
+  - **O que deu errado:** o teste de clique do "outro dono" pegava o token de CSRF na página de
+    notificações, que não tem formulário quando não há pedido; sem token, o Kolae mostrava "Página
+    expirada" (recusa certa, mas não o caso testado). Agora o token vem do perfil. Depois da última
+    rodada, o XAMPP ficou desligado neste PC (Apache e MySQL); os testes finais rodam com ele ligado.
 
 ## Cronograma até o congelamento
 

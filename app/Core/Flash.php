@@ -60,6 +60,22 @@ class Flash
                 'chat_readonly' => 'chat_err_readonly',
             ],
         ],
+        // Notificações e solicitações do dono (D64)
+        'requests' => [
+            'status' => [
+                'req_approved' => 'req_flash_approved',
+                'req_approved_others' => 'req_flash_approved_others',
+                'req_declined' => 'req_flash_declined',
+            ],
+            'error' => [
+                'req_not_found' => 'req_err_not_found',
+                'req_not_pending' => 'req_err_not_pending',
+                'req_overlap' => 'req_err_overlap',
+                'req_outside' => 'req_err_outside',
+                'req_note_long' => 'req_err_note_long',
+                'req_failed' => 'req_err_failed',
+            ],
+        ],
         'plan' => [
             'status' => [
                 'plan_requested' => 'plan_flash_requested',

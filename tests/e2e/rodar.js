@@ -38,6 +38,7 @@ const TESTES = {
     anuncio_admin: ['A', 'B', 'C', 'D'],
     chat_api: ['A', 'B', 'E'],
     pedidos_api: ['A', 'B', 'C', 'D', 'E'],
+    pedidos_painel: ['A', 'B'],
     chat_painel: ['A', 'B'],
 };
 
