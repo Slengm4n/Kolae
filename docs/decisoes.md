@@ -371,3 +371,9 @@ Revisão do Rafael em 28/10/2026, cruzando o contrato com as telas do app (mapa,
 - **Banco:** `conversations` e `messages` (patch `010_chat.sql`); "lida" pela última mensagem lida de cada lado.
 - **Plano B:** se até **18/11** não funcionar de ponta a ponta, o app volta para a vitrine (D04) e as rotas não sobem. A API só vai para a `main` junto com o painel do dono.
 - **Onde:** `docs/proposta-chat.md`; contrato em `docs/api.md`. Sai na v1.7.0.
+
+### D67 · Rework do painel do dono, do admin e do cadastro de quadra (10/11/2026)
+- **O quê:** no painel do dono, um bloco **Hoje** (pedidos esperando, mensagens não lidas, partidas de hoje e Kolae Premium) no lugar das "Ações rápidas". No admin, o **mesmo visual** do resto do site (tudo em português, números neutros), **"Precisa de atenção"** no topo e páginas próprias para Premium, Anúncios e Fotos. O cadastro de quadra passa de 6 para **3 passos** (nome e endereço → como é a quadra → fotos) e termina na Visão geral.
+- **Por quê:** as telas não acompanharam o que entrou desde 05/11 (Premium, anúncios, chat, pedidos); o dono não via o que importa no dia, o admin tinha outro visual e uma página que só crescia, e o cadastro começava pelo piso.
+- **Limites:** só site, sem mudar a API nem o app; o cadastro grava os mesmos campos com as mesmas regras; o admin continua só em português (D19). Corte em 15/11; o login com Google (D65) vem depois.
+- **Onde:** `docs/proposta-rework-painel.md`.
