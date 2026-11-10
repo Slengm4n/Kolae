@@ -129,7 +129,7 @@ O token é um JWT (HS256) e vale **30 dias**. Não existe renovação: ao recebe
 
 - `role`: `admin` (administra o Kolae), `owner` (responsável por quadra: quem cadastrou CNPJ no site) ou `player`.
 - `avatar_url`: `null` quando não há foto ou o arquivo não existe no servidor.
-- `email_verified` (D58): `true` depois que a pessoa abre o link do e-mail de confirmação, enviado no cadastro (site e `POST /auth/register`). É só informativo: nada fica bloqueado sem confirmar, e o app pode ignorar o campo ou mostrar um aviso. O reenvio do link é pelo painel do site.
+- `email_verified` (D58): `true` depois que a pessoa abre o link do e-mail de confirmação, enviado no cadastro (site e `POST /auth/register`). Quase tudo funciona sem confirmar; **a exceção é pedir horário (D64)**, que responde `403 EMAIL_NOT_VERIFIED` enquanto o e-mail não for confirmado. Use o campo para mostrar "Confirme seu e-mail para pedir horário" antes de a pessoa preencher o pedido. O reenvio do link é pelo painel do site.
 
 ---
 
@@ -566,7 +566,14 @@ Jogador logado. Pede um horário na quadra (D64). Não bloqueia a agenda até o 
 ### `GET /me/requests`
 
 Jogador logado. Os pedidos da pessoa, mais recentes primeiro, paginados como o `GET /venues`
-(`?page=`, `meta`). Filtro opcional `?status=pending`.
+(`?page=`, `?per_page=` de 1 a 100, padrão 20; `meta` com `current_page`, `last_page`, `per_page`
+e `total`). Filtro opcional `?status=` com um dos cinco status. Página, `per_page` ou status
+inválidos: `422 VALIDATION_ERROR`.
+
+**Expirar não tem horário fixo:** um pedido `pending` que chegou ao início do horário sem resposta
+passa a `expired` na próxima consulta (desta lista, das notificações ou do painel do dono), e a
+pessoa recebe a notificação `request_expired`. O app não precisa calcular isso: mostra o `status`
+que vier.
 
 ### `DELETE /me/requests/{id}`
 
@@ -577,7 +584,8 @@ antes do início (a partida sai da agenda e o dono é avisado). Resposta: **`200
 
 ### `GET /me/notifications`
 
-Jogador logado. Lista paginada (`?page=`), mais recentes primeiro.
+Jogador logado. Lista paginada (`?page=`, `?per_page=` de 1 a 100, padrão 20), mais recentes
+primeiro.
 
 ```json
 {
@@ -596,14 +604,21 @@ Jogador logado. Lista paginada (`?page=`), mais recentes primeiro.
 }
 ```
 
-- `type` para o jogador: `request_approved`, `request_declined`, `request_expired`. Tipos novos
-  podem aparecer depois: o app mostra `title` e `body` como vierem.
-- `title` e `body` vêm no idioma do cabeçalho `Accept-Language` (padrão `pt-BR`).
-- `data` traz os ids para abrir a tela certa (o pedido ou a quadra).
+- `type` para o jogador: `request_approved`, `request_declined`, `request_expired`. Quem também
+  é dono de quadra pode receber `request_new`, `request_cancelled` e `ad_removed` (os avisos do
+  painel). Tipos novos podem aparecer depois: o app mostra `title` e `body` como vierem.
+- `title` e `body` vêm no idioma do cabeçalho `Accept-Language`: `pt-BR`, `en-US`, `es-ES`,
+  `it-IT`, `hi-IN`, `ja-JP` ou `zh-CN` (só o idioma também vale: `en` vira `en-US`). Outro idioma ou
+  sem o cabeçalho: português.
+- `data` traz só os ids para abrir a tela certa: `request_id` (o pedido) e `venue_id` (a quadra).
+  Nunca nomes ou textos de outras pessoas.
+- `meta.unread` é o número para o contador do ícone.
 
 ### `POST /me/notifications/read`
 
-Jogador logado. Marca como lidas: `{ "ids": [120, 121] }` ou `{ "all": true }`. Resposta **`204`**.
+Jogador logado. Marca como lidas: `{ "ids": [120, 121] }` (até 100 ids, números inteiros) ou
+`{ "all": true }`. Resposta **`204`**. Ids que não são da pessoa são ignorados. Sem `ids` nem
+`all: true`, lista vazia ou id que não é número: `422 VALIDATION_ERROR`.
 
 ---
 

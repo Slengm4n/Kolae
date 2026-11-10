@@ -214,10 +214,79 @@ quadra (`venue` no mesmo formato da lista). Ordem aleatória a cada dia.
    `GET /venues/{id}/schedule`), esporte e mensagem.
 3. Tela **"Meus pedidos"** (`GET /me/requests`), com cancelar.
 4. Tela **"Notificações"** com contador no ícone (`GET /me/notifications`).
+
+   Itens 2 a 4 em detalhe, com os estados e os erros: seção "O que o Rafael precisa fazer: pedidos
+   de horário e notificações (D64)", logo abaixo.
 5. Registrar os cliques (`POST /venues/{id}/events`) no WhatsApp, nas redes, no compartilhar e
    no anúncio.
 
 Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
+
+### O que o Rafael precisa fazer: pedidos de horário e notificações (D64)
+
+**Situação em 10/11:** o site e a API estão prontos (partes A a C; entram na `main` com as PRs
+`feat/pedidos-regras` e `feat/pedidos-api`). O dono já aprova e recusa no painel; falta o app
+pedir, acompanhar e receber os avisos. Contrato completo no [`api.md`](api.md#post-venuesidrequests).
+**Prazo do app: 17/11.**
+
+**1. Botão "Pedir horário" no detalhe da quadra**
+- Só para quem está logado. Sem login, o botão leva ao login.
+- Com `user.email_verified` = `false`, mostrar "Confirme seu e-mail para pedir horário" (a API
+  responde `403 EMAIL_NOT_VERIFIED`); o reenvio do link é pelo site.
+- O dono da própria quadra recebe `403 OWN_VENUE`: mostrar a `message` (ele marca pela agenda do
+  site).
+
+**2. Tela do pedido**
+- **Dia:** de hoje até 30 dias à frente. Ao escolher, carregar `GET /venues/{id}/schedule?date=` e
+  mostrar só as faixas `available`.
+- **Horário:** início e fim em blocos de 30 minutos (19:00, 19:30...), dentro de uma faixa livre,
+  de 30 min a 4 h. Mandar com o fuso: `2026-11-12T19:00:00-03:00`.
+- **Esporte** (opcional): um da lista `sports` da quadra. **Mensagem** (opcional): até 200
+  caracteres, com contador.
+- **Enviar:** `POST /venues/{id}/requests`.
+  - `201`: tela "Pedido enviado". Deixar claro que **o horário só fica reservado quando o dono
+    aprovar** (pedido pendente não aparece como ocupado na agenda).
+  - `422`: mostrar cada erro embaixo do campo (`errors.start_time`, `errors.end_time`,
+    `errors.sport_id`, `errors.message`, sempre listas de textos). Se for horário ocupado,
+    recarregar a agenda do dia.
+  - `409 REQUEST_LIMIT`: mostrar a `message` (já tem 1 pedido nesta quadra ou 3 no total) com um
+    atalho para "Meus pedidos".
+  - `404 NOT_FOUND`: quadra desativada; voltar.
+
+**3. Tela "Meus pedidos"** (no Menu)
+- `GET /me/requests` (paginado; `?status=pending` para a aba "Esperando").
+- Cada cartão: capa e nome da quadra, dia e horário, situação (`pending` Esperando resposta,
+  `approved` Aprovado, `declined` Recusado, `cancelled` Cancelado, `expired` Expirou) e o
+  `response_note` quando o dono recusou com motivo.
+- **Cancelar** (com confirmação): `DELETE /me/requests/{id}`. Mostrar o botão no pendente e no
+  aprovado com 2 horas ou mais de antecedência; quem decide é a API (`409 CANNOT_CANCEL`: mostrar
+  a `message`). Depois, recarregar a lista.
+- Tocar no cartão abre a quadra.
+
+**4. Tela "Notificações"** (sino no topo ou no Menu)
+- `GET /me/notifications`: mostrar `title`, `body` e a hora, com destaque nas não lidas
+  (`read_at` = `null`). O texto já vem pronto no idioma do cabeçalho `Accept-Language` (mandar o
+  idioma do app).
+- **Contador no ícone:** `meta.unread`. Buscar ao abrir o app, ao voltar para ele e a cada 60 s
+  com o app aberto (sem push, é assim que o aviso chega).
+- **Marcar como lidas:** `POST /me/notifications/read` com os `ids` mostrados, ou `{ "all": true }`
+  num botão "Marcar todas".
+- **Tocar:** `request_*` abre "Meus pedidos" (`data.request_id`); os outros, a quadra
+  (`data.venue_id`). Tipo desconhecido: só mostrar o texto.
+
+**5. Mock, textos e testes**
+- Mock em `src/api/mocks/` (ex.: `EXPO_PUBLIC_MOCK_REQUESTS`) com os casos acima: sucesso, cada
+  erro, limite, cancelar fora do prazo, lista vazia.
+- Textos nos 7 idiomas; leitor de tela: cada cartão é um elemento só (quadra, dia, horário e
+  situação).
+- **Teste de ponta a ponta com o João** (produção, pelo 4G): pedir pelo app → aparece no sino do
+  painel → aprovar → o app mostra "Aprovado" e a notificação; recusar com motivo; cancelar um
+  aprovado; pedir um horário daqui a 30 minutos e não responder (expira).
+
+**Plano B (17/11):** se o app não ficar pronto, a demonstração usa o painel do site; os pedidos de
+exemplo são criados pela API (como no teste de 10/11) e o dono aprova ao vivo.
+**Notificação no celular (push):** fica para depois, junto com a do chat (`proposta-chat.md`,
+"Notificação no app"); sem push, o contador do item 4 resolve.
 
 ## Andamento (06/11)
 
@@ -226,7 +295,7 @@ Tudo pode começar com mock a partir deste contrato, sem esperar o backend.
 | Plano do dono (D61) | ✅ pronto, PR `feat/premium-plano` (patch 009 antes) | Configurações > Kolae Premium; admin ativa no painel | Nada a fazer |
 | Estatísticas (D62) | ✅ pronto, PR `feat/premium-estatisticas-v2` | Aba Estatísticas da quadra | O `GET /venues/{id}` já conta a visualização; **pode ligar agora** o `POST /venues/{id}/events` nos cliques de WhatsApp, redes e compartilhar (sem esperar a resposta) |
 | Anúncios (D63) | ✅ pronto (5 partes, PRs `feat/premium-anuncios-*`) | Aba Anúncio do dono Premium; "Patrocinado" na home, em /quadras e na página pública; admin remove com motivo | **Pode ligar agora:** carrossel "Destaques" (`GET /ads`), faixa `ad` no detalhe e `ad_view`/`ad_click` no `POST /venues/{id}/events` |
-| Solicitações e notificações (D64) | 🔧 em andamento (até 17/11): partes A, B e C de 4 prontas | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
+| Solicitações e notificações (D64) | ✅ site e API prontos (10/11; PRs `feat/pedidos-regras` e `feat/pedidos-api`) | `/dashboard/notificacoes` com sino; e-mail para o dono | Montar com mock: "Pedir horário", "Meus pedidos", "Notificações" |
 
 Também prontas: animações na troca de abas, de Configurações e de tema (PR `feat/animacoes-troca`).
 As PRs são empilhadas: entram na ordem da tabela, e cada uma só depois da anterior.
@@ -381,6 +450,18 @@ para a `main` juntas**, para um pedido feito pelo app sempre ter onde ser respon
     notificações, que não tem formulário quando não há pedido; sem token, o Kolae mostrava "Página
     expirada" (recusa certa, mas não o caso testado). Agora o token vem do perfil. Depois da última
     rodada, o XAMPP ficou desligado neste PC (Apache e MySQL); os testes finais rodam com ele ligado.
+    Com ele ligado de novo: 471 casos de PHP e 8 testes de clique (201 passos), todos passando.
+- **10/11, parte D (documentação, na `feat/pedidos-api`):** seção "O que o Rafael precisa fazer:
+  pedidos de horário e notificações (D64)" (botão, tela do pedido, Meus pedidos, Notificações,
+  mock, testes e plano B). No `api.md`: paginação e erros do `GET /me/requests`, como o pedido
+  expira, os idiomas do `Accept-Language`, os tipos que um dono pode receber, `data` só com ids e as
+  regras do `POST /me/notifications/read`.
+  - **O que deu errado:** o `api.md` dizia que confirmar o e-mail "é só informativo: nada fica
+    bloqueado", mas pedir horário exige o e-mail confirmado (`403 EMAIL_NOT_VERIFIED`, no próprio
+    contrato da D64). Corrigido na seção do objeto `user`.
+  - **Teste no PC do João (10/11):** dois pedidos de exemplo na quadra dele (pela API, contas
+    `dono@teste.local` e `admin@teste.local`, esta com o e-mail confirmado só no banco local) para
+    ver o sino, aprovar e a recusa automática.
 
 ## Cronograma até o congelamento
 
