@@ -18,13 +18,15 @@ Projeto Integrador da FATEC Ferraz de Vasconcelos: este repositório é o **site
 
 ---
 
-## 🆕 Novidades da v1.6 (versão de entrega)
+## 🆕 Novidades da v1.7 (versão de entrega)
 
-* **Status ao vivo:** cada quadra aparece como Disponível, Em uso ou Fechada, calculado pelo horário de funcionamento e pelas partidas agendadas. A mesma regra vale no site, na API e no app.
-* **Painel do dono completo:** abas Visão geral, Dados, Horário, Agenda e Fotos, com guia passo a passo e a lista "Quadra completa".
-* **Para quem joga:** página `/quadras` com busca, filtros e mapa, e página pública de cada quadra com "Falar com o dono" pelo WhatsApp e QR Code para imprimir.
-* **Segurança:** proteção contra CSRF, limite de tentativas de login, "lembrar de mim", senha mínima de 8 caracteres, CNPJ obrigatório para gerenciar quadras e confirmação de e-mail.
-* **Acabamento:** telas de entrada redesenhadas, avisos e confirmações no visual do Kolae, tema automático, fotos otimizadas com miniaturas, Termos de Uso e Política de Privacidade.
+* **Kolae Premium do dono:** plano ativado pelo admin, que vale para todas as quadras do dono, com **estatísticas** no estilo YouTube Analytics (visualizações, visitantes, contatos, origem das visitas e mapa de calor) e **anúncios** "Patrocinado" na home, na página Quadras, na página da quadra e no app.
+* **Mensagens:** quem usa o app conversa com o dono da quadra pelo próprio Kolae; o dono responde pelo painel do site, com as não lidas no cabeçalho e bloqueio.
+* **Pedidos de horário:** o jogador pede um horário pelo app e o dono aprova ou recusa no painel, com sino de notificações e e-mail.
+* **Painéis revistos:** bloco "Hoje" no painel do dono (pedidos, mensagens, partidas do dia e Premium) e o painel do admin no mesmo visual do site, com "Precisa de atenção".
+* **Acabamento:** redes sociais da quadra, animações na troca de telas e de tema, Termos e Privacidade atualizados.
+
+Antes, na v1.6: status ao vivo das quadras, painel do dono completo, página Quadras com mapa, página pública com WhatsApp e QR Code, e a segurança essencial.
 
 Histórico completo no [CHANGELOG](CHANGELOG.md).
 
@@ -43,9 +45,12 @@ Histórico completo no [CHANGELOG](CHANGELOG.md).
 * **Horário e agenda:** horário de funcionamento por dia da semana e partidas agendadas, que mudam o status da quadra na hora.
 * **Fotos:** até 10 por quadra, com capa e ordem, otimizadas no envio.
 * **Visão geral:** a quadra como aparece no app, o dia de hoje, a lista "Quadra completa" e o QR Code.
+* **Painel "Hoje":** pedidos de horário esperando, mensagens não lidas, partidas do dia e o plano.
+* **Mensagens e pedidos:** conversa com quem pergunta pelo app e aprovação dos pedidos de horário, com notificações.
+* **Kolae Premium:** estatísticas da quadra e anúncio "Patrocinado".
 
 ### 🛠️ Painel administrativo
-* Usuários, modalidades esportivas e quadras, mapa de todas as quadras e o botão "Otimizar fotos".
+* "Precisa de atenção" no início; usuários, modalidades esportivas, quadras e mapa; Kolae Premium (ativar e desativar), anúncios (remover com motivo) e fotos (otimizar).
 
 ---
 

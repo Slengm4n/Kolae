@@ -12,7 +12,11 @@ Cada versão tem uma tag `vX.Y.Z` e uma release no GitHub com o texto da seção
 
 ## [Não lançado]
 
-**Banco:** patch 008 (`database/patches/008_redes_sociais_da_quadra.sql`), aplicado na produção em 05/11 antes do merge. Patch 009 (`database/patches/009_kolae_premium.sql`): todas as tabelas do Kolae Premium (D61–D64) de uma vez; aplicar **antes** do merge do plano. Patch 010 (`database/patches/010_chat.sql`): tabelas do chat (D66); aplicar **antes** do merge da parte B do chat.
+## [1.7.0] - 2026-11-24
+
+Kolae Premium, chat e painéis revistos, depois da v1.6.0 e até o congelamento (21/11). O dono ganha o plano **Kolae Premium** (estatísticas no estilo YouTube Analytics e anúncios "Patrocinado" no site e no app), **Mensagens** com quem pergunta pelo app, **pedidos de horário** com notificações e o bloco **Hoje** no painel; o admin passa a ter o mesmo visual do resto do site. Também: redes sociais da quadra, animações na troca de tela e Termos e Privacidade atualizados.
+
+**Banco:** patches 008 (redes sociais, D60), 009 (Kolae Premium, D61–D64) e 010 (chat, D66), todos já aplicados na produção antes dos merges. Ficou para depois da entrega: o cadastro de quadra em 3 passos (D67, parte D) e o login com Google (D65).
 
 ### Adicionado
 - **Chat entre a pessoa e o dono da quadra (D66):** quem usa o app manda mensagem sobre uma quadra pelo próprio Kolae, e o dono responde em **Mensagens**, no painel do site: item no cabeçalho com o número de não lidas, lista de conversas (a mais recente primeiro, com filtro por quadra) e a conversa com balões, resposta sem recarregar (Enter envia no computador), mensagens novas a cada 10 s e bloquear/desbloquear. O dono vê o nome e a foto de quem pergunta, nunca o e-mail; quadra desativada fica só para leitura; o admin não lê conversas. Texto até 1000 caracteres, sem links nem e-mails, até 20 mensagens por minuto. **API:** `GET /conversations`, `POST /venues/{id}/conversations`, `GET` e `POST /conversations/{id}/messages` e `POST /conversations/{id}/read` (contrato no `api.md`). **Banco:** patch `010_chat.sql`, já aplicado na produção. Testes: `tests/chat_rules_test.php` (56), `tests/chat_db_test.php` (49), `tests/e2e/testes/chat_api.js` (46) e `tests/e2e/testes/chat_painel.js` (26, com o caminho completo app → painel → app).
