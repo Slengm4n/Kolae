@@ -2,9 +2,11 @@
 
 [![Versão](https://img.shields.io/github/v/release/Slengm4n/Kolae?label=vers%C3%A3o)](https://github.com/Slengm4n/Kolae/releases/latest)
 ![PHP](https://img.shields.io/badge/php-%3E%3D%208.2-777bb4)
-![Licença](https://img.shields.io/badge/license-MIT-green)
+[![Licença](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 O **Kolae** conecta atletas a quadras esportivas particulares. Quem joga encontra quadras perto de si e vê **na hora** se cada uma está livre, em uso ou fechada; quem é dono de quadra cadastra o espaço, define o horário de funcionamento e agenda as partidas, e o status muda sozinho no site e no app.
+
+Pelo próprio Kolae, quem joga também **conversa com o dono** e **pede um horário**; o dono responde, aprova e, no plano **Kolae Premium**, acompanha as estatísticas da quadra e anuncia na vitrine do site e do app.
 
 Projeto Integrador da FATEC Ferraz de Vasconcelos: este repositório é o **site e a API**; o app mobile (React Native + Expo) fica em [`Thesatiru/kolae-mobile`](https://github.com/Thesatiru/kolae-mobile) e consome a API daqui.
 
@@ -123,11 +125,37 @@ Em pull request para a `main`, roda só a etapa de testes (o PR mostra ✓ ou �
 
 ---
 
-## 👥 Contribuição
+## 🔭 Trabalhos futuros
 
-Projeto desenvolvido em dupla, com fluxo baseado em Pull Requests:
+Ficaram de fora da entrega, por decisão, para não arriscar a estabilidade perto do prazo:
 
-* Uma branch por tarefa (`feat/...`, `fix/...`, `docs/...`, `ci/...`), com PR para a `main`. A `main` vai direto para produção.
+* **Entrar com Google** ([proposta](docs/proposta-login-google.md)) e verificação em duas etapas.
+* **Cadastro de quadra em 3 passos**, começando pelo essencial ([proposta](docs/proposta-rework-painel.md)).
+* **Notificação no celular** para mensagens e pedidos de horário.
+* **Partidas com jogadores**: achar gente para completar o time, com o dono aprovando o que entra na agenda ([proposta](docs/proposta-partidas.md)).
+* **Kolae 2.0 em Laravel** (branch `v2.0-laravel`), aproveitando o contrato da API, que já segue o formato do Laravel.
+
+Outras ideias em [docs/sugestoes.md](docs/sugestoes.md).
+
+---
+
+## 👥 Equipe
+
+| | Papel |
+| :---- | :---- |
+| **João Slengman** ([@Slengm4n](https://github.com/Slengm4n)) | Site, API, banco de dados, servidor e deploy |
+| **Rafael Lana dos Santos** ([@Thesatiru](https://github.com/Thesatiru)) | App mobile ([kolae-mobile](https://github.com/Thesatiru/kolae-mobile)) |
+| **Prof. Jeferson Roberto de Lima** | Orientador |
+
+Trabalho desenvolvido na **FATEC Ferraz de Vasconcelos**, 2026.
+
+---
+
+## 🤝 Contribuição
+
+Fluxo baseado em Pull Requests:
+
+* Uma branch por tarefa (`feat/...`, `fix/...`, `docs/...`, `ci/...`, `chore/...`, `release/...`), com PR para a `main`. A `main` vai direto para produção.
 * A `develop` é um espelho da `main`, atualizada após cada merge.
 * Versionamento [SemVer](https://semver.org/lang/pt-BR/) com tags `vX.Y.Z`: minor para entregas de sprint, patch para correções. Mudanças registradas no [CHANGELOG](CHANGELOG.md).
 
@@ -135,4 +163,4 @@ Projeto desenvolvido em dupla, com fluxo baseado em Pull Requests:
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a licença **MIT**.
+Este projeto está licenciado sob a licença **MIT**: veja o arquivo [LICENSE](LICENSE).
