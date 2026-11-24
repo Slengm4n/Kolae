@@ -104,8 +104,8 @@ npm run build   # ou npm run watch durante o desenvolvimento
 
 ### Testes
 ```bash
-php tests/venue_schedule_test.php   # regras do status e da agenda, sem banco
-npm run test:e2e                    # testes de clique no navegador (19 roteiros, uns 12 minutos)
+php tests/venue_schedule_test.php   # um dos 12 testes PHP (regras do status e da agenda, sem banco)
+npm run test:e2e                    # testes de clique no navegador (32 roteiros)
 ```
 Detalhes em [docs/setup.md](docs/setup.md#testes) e [tests/e2e/README.md](tests/e2e/README.md).
 
