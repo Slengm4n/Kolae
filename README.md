@@ -2,7 +2,7 @@
 
 [![Versão](https://img.shields.io/github/v/release/Slengm4n/Kolae?label=vers%C3%A3o)](https://github.com/Slengm4n/Kolae/releases/latest)
 ![PHP](https://img.shields.io/badge/php-%3E%3D%208.2-777bb4)
-[![Licença](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Licença](https://img.shields.io/badge/licen%C3%A7a-todos%20os%20direitos%20reservados-red)](LICENSE)
 
 O **Kolae** conecta atletas a quadras esportivas particulares. Quem joga encontra quadras perto de si e vê **na hora** se cada uma está livre, em uso ou fechada; quem é dono de quadra cadastra o espaço, define o horário de funcionamento e agenda as partidas, e o status muda sozinho no site e no app.
 
@@ -163,4 +163,4 @@ Fluxo baseado em Pull Requests:
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a licença **MIT**: veja o arquivo [LICENSE](LICENSE).
+**Todos os direitos reservados** a João Slengman e Rafael Lana dos Santos. O código está público apenas para consulta, avaliação acadêmica e portfólio: copiar, modificar, distribuir ou usar exige autorização por escrito dos autores. Detalhes em [LICENSE](LICENSE).
