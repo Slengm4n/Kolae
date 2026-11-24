@@ -13,10 +13,10 @@ Comece por aqui. Cada assunto tem **um** lugar; se a informação estiver em doi
 | [`../tests/e2e/README.md`](../tests/e2e/README.md) | Testes de clique: como rodar, dados de teste e o que cada um cobre | Quem mexer no site |
 | [`sugestoes.md`](sugestoes.md) | Ideias de funcionalidades e melhorias, com o porquê e quando fazer (ainda não são decisões) | João e Rafael |
 | [`proposta-redes-sociais.md`](proposta-redes-sociais.md) | Proposta das redes sociais da quadra (aprovada: virou a D60) | João e Rafael |
-| [`proposta-login-google.md`](proposta-login-google.md) | Proposta de "Entrar com Google": fluxo, contrato do `POST /auth/google`, configuração no Google Cloud, datas, plano B e registro do andamento (vira a D65 se aprovada) | João e Rafael |
-| [`proposta-chat.md`](proposta-chat.md) | Proposta do chat com o responsável pela quadra: banco, contrato, painel, app, push opcional, datas, plano B e registro do andamento (D66, aprovada em 09/11) | João e Rafael |
-| [`proposta-rework-painel.md`](proposta-rework-painel.md) | Proposta do rework do painel do dono (bloco "Hoje"), do admin (mesmo visual, "Precisa de atenção", páginas separadas) e do cadastro de quadra em 3 passos, com partes, datas e registro do andamento (D67, aprovada em 10/11) | João |
-| [`proposta-premium.md`](proposta-premium.md) | Proposta do Kolae Premium: plano da quadra, estatísticas, anúncios, solicitações de horário e notificações; banco, contrato, telas, app e cronograma até 21/11 | João e Rafael |
+| [`proposta-login-google.md`](proposta-login-google.md) | Proposta de "Entrar com Google": fluxo, contrato do `POST /auth/google`, configuração no Google Cloud, datas, plano B e registro do andamento (D65; **adiada para depois da entrega**) | João e Rafael |
+| [`proposta-chat.md`](proposta-chat.md) | Proposta do chat com o responsável pela quadra: banco, contrato, painel, app, push opcional, datas, plano B e registro do andamento (D66; **concluída na v1.7.0**) | João e Rafael |
+| [`proposta-rework-painel.md`](proposta-rework-painel.md) | Proposta do rework do painel do dono (bloco "Hoje"), do admin (mesmo visual, "Precisa de atenção", páginas separadas) e do cadastro de quadra em 3 passos, com partes, datas e registro do andamento (D67; partes B e C **na v1.7.0**, cadastro em 3 passos **adiado**) | João |
+| [`proposta-premium.md`](proposta-premium.md) | Proposta do Kolae Premium: plano da quadra, estatísticas, anúncios, solicitações de horário e notificações; banco, contrato, telas, app e cronograma até 21/11 (D61–D64; **concluída na v1.7.0**) | João e Rafael |
 | [`proposta-partidas.md`](proposta-partidas.md) | Proposta das partidas com jogadores para o Kolae 2.0: fases, banco, endpoints, telas e o que decidir | João e Rafael |
 | [`hospedagem.md`](hospedagem.md) | Produção na HostGator (`https://kolae.online`, D41): como foi montada, e-mail pelo Titan, patches e o que falta no cPanel | João |
 | [`../database/kolae.dbml`](../database/kolae.dbml) | Desenho do banco como ele é hoje (abrir no dbdiagram.io) | João |
@@ -28,7 +28,7 @@ O app tem o próprio `CLAUDE.md` no repositório `Thesatiru/kolae-mobile`. Para 
 
 ## Cronograma
 
-> **Prazo (D28):** entrega em **28/11/2026** e congelamento de funcionalidades em **21/11**. O backend andou adiantado: S3 a S6 ficaram prontas até 02/11 e saíram juntas na **v1.6.0**, a versão de entrega.
+> **Prazo (D28):** entrega em **28/11/2026** e congelamento de funcionalidades em **21/11**. O backend andou adiantado: S3 a S6 ficaram prontas até 02/11 e saíram juntas na **v1.6.0**. Depois, até o congelamento, entraram o Kolae Premium, o chat, os pedidos de horário e os painéis revistos, na **v1.7.0** (24/11), a versão de entrega.
 
 | Sprint | Backend e site (João) | App (Rafael) | Situação |
 | :---- | :---- | :---- | :---- |
@@ -38,6 +38,7 @@ O app tem o próprio `CLAUDE.md` no repositório `Thesatiru/kolae-mobile`. Para 
 | S4 · 09/11–15/11 | Telas do dono: horário, agenda, dados, cadastro em passos, painel com status ao vivo | Mapa e detalhe com a API real, agenda do dia, "Falar com o dono" | ✔ backend (v1.6.0) |
 | S5 · 16/11–21/11 | CSRF, XSS do mapa do admin, limite de login, "lembrar de mim" | Telas de vitrine, estados de erro e vazio | ✔ backend (v1.6.0) · **congelamento em 21/11** |
 | S6 · 22/11–28/11 | Testes antes do deploy, polimento, dados de demonstração, ensaio | Correções, APK final, ensaio | Testes e polimento ✔ (v1.6.0); falta demonstração e ensaio · **entrega em 28/11** |
+| Extra · 03/11–21/11 | Kolae Premium (D61–D64), redes sociais (D60), chat (D66), painéis do dono e do admin (D67) | Chat, pedidos de horário e anúncios no app | ✔ v1.7.0 |
 
 Além do planejado, entraram na v1.6.0: aba Fotos e Visão geral, página pública da quadra, página Quadras com mapa, QR Code, guia passo a passo, Termos e Privacidade, produção na HostGator com e-mail pelo Titan, telas de entrada redesenhadas, avisos no visual do Kolae, confirmação de e-mail e miniaturas das fotos (D42–D58).
 
